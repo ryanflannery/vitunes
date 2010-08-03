@@ -248,11 +248,6 @@ CURRENT LIST OF BIG "TODO"'s:
    the meta info of a song.  Dunno.  Still working the details of this out.
    Could provide a shell script "wrapper" around multiple players/viewers.
 
-*  My handling of colors and other text-attributes in paint.c (namely applying
-   them and un-applying them) seems needlessly complicated.  I need to take
-   the time to fully understand this and modify from there...
-   UPDATE: 15 Jan 2010: OK, after reading tons-o-stuff on ncurses and all of
-           the man pages, what I'm doing seems...about the best way.  Is it
-           really???  If so, god curses sucks when it comes to this.
+*  Update from using 8-color curses API to 256-API.
 
 :q
