@@ -7,7 +7,7 @@ CDEPS=`taglib-config --cflags`
 LDEPS=`taglib-config --libs` -ltag_c
 
 CC?=/usr/bin/gcc
-CFLAGS+=-c -std=c89 -Wall -g $(CDEPS)
+CFLAGS+=-c -std=c89 -Wall -Wextra -Wno-unused-value -g $(CDEPS)
 LDFLAGS+=-lm -lncurses -lutil $(LDEPS)
 
 

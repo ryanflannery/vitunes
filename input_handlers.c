@@ -212,13 +212,14 @@ execute_external_command(const char *cmd)
  ****************************************************************************/
 
 void
-quit_vitunes(Args a)
+quit_vitunes(Args a UNUSED)
 {
+   if (a.num == 2)
    VSIG_QUIT = 1;
 }
 
 void
-load_or_play(Args a)
+load_or_play(Args a UNUSED)
 {
    Args dummy;
    int  idx;
@@ -242,7 +243,7 @@ load_or_play(Args a)
 }
 
 void
-show_file_info(Args a)
+show_file_info(Args a UNUSED)
 {
    int idx;
 
@@ -264,13 +265,13 @@ show_file_info(Args a)
 }
 
 void
-pause_playback(Args a)
+pause_playback(Args a UNUSED)
 {
    player_pause();
 }
 
 void
-stop_playback(Args a)
+stop_playback(Args a UNUSED)
 {
    player_stop();
    playing_playlist = NULL;
@@ -282,7 +283,6 @@ seek_playback(Args a)
    int n, secs;
 
    /* determine number of seconds to seek */
-   secs = 0;
    switch (a.scale) {
       case SECONDS:
          secs = a.num;
@@ -318,7 +318,7 @@ seek_playback(Args a)
 }
 
 void
-switch_focus(Args a)
+switch_focus(Args a UNUSED)
 {
    if (ui.active == ui.library) {
       ui.active = ui.playlist;
@@ -338,14 +338,14 @@ switch_focus(Args a)
 }
 
 void
-redraw(Args a)
+redraw(Args a UNUSED)
 {
    ui_clear();
    paint_all();
 }
 
 void
-enter_cmd_mode(Args a)
+enter_cmd_mode(Args a UNUSED)
 {
    const char *errmsg = NULL;
    char  *cmd;
@@ -402,7 +402,7 @@ enter_cmd_mode(Args a)
 }
 
 void
-external_command(Args a)
+external_command(Args a UNUSED)
 {
    char  *cmd;
 
@@ -466,10 +466,10 @@ scroll_row(Args a)
 void
 scroll_col(Args a)
 {
-   int maxhoff;
-   int maxlen;
-   int n;
-   int i;
+   int   maxlen;
+   int   maxhoff;
+   int   n;
+   int   i;
 
    /* determine how many cols to scroll */
    n = 1;
@@ -486,7 +486,7 @@ scroll_col(Args a)
    } else {
       maxlen = 0;
       for (i = 0; i < mdb.nplaylists; i++) {
-         if (strlen(mdb.playlists[i]->name) > maxlen)
+         if ((int) strlen(mdb.playlists[i]->name) > maxlen)
             maxlen = strlen(mdb.playlists[i]->name);
       }
       if (maxlen > ui.active->w)
@@ -546,8 +546,6 @@ scroll_page(Args a)
    }
 
    /* determine how much crow should change */
-   diff = 1;
-   maintain_row_idx = false;
    switch (a.amount) {
       case SINGLE:
          diff = 1 * n;
@@ -675,7 +673,6 @@ jumpto_file(Args a)
    }
 
    /* get line number to jump to */
-   line = -1;
    switch (a.scale) {
       case NUMBER:
          if (n < 0 || n >= ui.active->nrows)
@@ -779,7 +776,6 @@ search_find(Args a)
    int   c;
 
    /* determine direction to do the search */
-   dir = FORWARDS;
    switch (a.direction) {
       case SAME:
          dir = search_dir_get();
@@ -799,7 +795,6 @@ search_find(Args a)
    /* start looking from current row */
    start_idx = ui.active->voffset + ui.active->crow;
    msg = NULL;
-   matches = false;
    for (c = 1; c < ui.active->nrows + 1; c++) {
 
       /* get idx of record */
@@ -846,7 +841,7 @@ search_find(Args a)
  ****************************************************************************/
 
 void
-yank(Args a)
+yank(Args a UNUSED)
 {
    bool got_target;
    int  start, end;
@@ -922,7 +917,7 @@ yank(Args a)
  * a yank or a delete
  */
 void
-cut(Args a)
+cut(Args a UNUSED)
 {
    playlist *p;
    char *warning;

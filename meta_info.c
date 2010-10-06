@@ -255,8 +255,8 @@ mi_extract(const char *filename)
 void
 str_sanitize(char *s)
 {
-   char c;
-   int  i;
+   size_t i;
+   char   c;
 
    for (i = 0; i < strlen(s); i++) {
       c = s[i];

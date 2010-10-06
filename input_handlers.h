@@ -21,6 +21,7 @@
 #include "paint.h"
 #include "str2argv.h"
 #include "vitunes.h"
+#include "debug.h"
 
 
 /* for working with number read from user for keybindings */

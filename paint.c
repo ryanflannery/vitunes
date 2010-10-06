@@ -230,7 +230,7 @@ paint_library()
          /* determine horizontal offset */
          str = mdb.playlists[index]->name;
          hoff = ui.library->hoffset;
-         if (hoff >= strlen(str))
+         if (hoff >= (int)strlen(str))
             hoff = strlen(str);
 
          /* draw it */
@@ -342,19 +342,19 @@ paint_playlist()
                strhoff = 0;
                if (str != NULL) {
                   if (mi_display.align[col] == LEFT) {
-                     if (hoff > strlen(str))
+                     if (hoff > (int)strlen(str))
                         strhoff = strlen(str);
                      else
                         strhoff = hoff;
                   } else {
-                     if (strlen(str) > mi_display.widths[col])
+                     if ((int)strlen(str) > mi_display.widths[col])
                         strhoff = hoff;
-                     else if (hoff < mi_display.widths[col] - strlen(str))
+                     else if (hoff < mi_display.widths[col] - (int)strlen(str))
                         strhoff = 0;
                      else
                         strhoff = hoff - (mi_display.widths[col] - strlen(str));
 
-                     if (strhoff > strlen(str))
+                     if (strhoff > (int)strlen(str))
                         strhoff = strlen(str);
                   }
                }
@@ -465,7 +465,7 @@ paint_playlist_file_info(const meta_info *m)
 
    ltime = localtime(&(m->last_updated));
    strftime(stime, sizeof(stime), "%d %B %Y at %H:%M:%S", ltime);
-   mvwprintw(ui.playlist->cwin, row++, 0, "%15s: %s", "Last Updated", stime);
+   mvwprintw(ui.playlist->cwin, row, 0, "%15s: %s", "Last Updated", stime);
 
    wattroff(ui.playlist->cwin, COLOR_PAIR(colors.playlist));
    wrefresh(ui.playlist->cwin);

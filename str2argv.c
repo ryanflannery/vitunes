@@ -255,7 +255,7 @@ argv2str(int argc, char *argv[])
  * see makefile for how to build
  */
 int
-str2argv_test_main(int argc, char *argv[])
+str2argv_test_main(int argc UNUSED, char *argv[] UNUSED)
 {
    char  s[255];
    int   i;

@@ -52,15 +52,17 @@ char *DEFAULT_PLAYER_ARGS[] = { "mplayer", "-slave", "-idle", "-quiet", "-msglev
  * List of keybindings.  See input_handlers.h for relevant structs.
  * Each function listed here is in input_handlers.*
  */
-const keybinding KeyBindings[] = {
-   { K_CNTRL_C,      quit_vitunes,     { 0 } },
-   { K_CNTRL_SLASH,  quit_vitunes,     { 0 } },
+#define ARG_NOT_USED  { .num = 0 }
 
-   { K_ENTER,        load_or_play,     { 0 } },
-   { 'm',            show_file_info,   { 0 } },
-   { K_CNTRL_P,      pause_playback,   { 0 } },
-   { 'z',            pause_playback,   { 0 } },
-   { 's',            stop_playback,    { 0 } },
+const keybinding KeyBindings[] = {
+   { K_CNTRL_C,      quit_vitunes,     ARG_NOT_USED },
+   { K_CNTRL_SLASH,  quit_vitunes,     ARG_NOT_USED },
+
+   { K_ENTER,        load_or_play,     ARG_NOT_USED },
+   { 'm',            show_file_info,   ARG_NOT_USED },
+   { K_CNTRL_P,      pause_playback,   ARG_NOT_USED },
+   { 'z',            pause_playback,   ARG_NOT_USED },
+   { 's',            stop_playback,    ARG_NOT_USED },
    { '[',            seek_playback,    { .direction = BACKWARDS, .scale = SECONDS, .num = 10 }},
    { ']',            seek_playback,    { .direction = FORWARDS,  .scale = SECONDS, .num = 10 }},
    { 'b',            seek_playback,    { .direction = BACKWARDS, .scale = SECONDS, .num = 10 }},
@@ -70,8 +72,8 @@ const keybinding KeyBindings[] = {
    { 'B',            seek_playback,    { .direction = BACKWARDS, .scale = MINUTES, .num = 1 }},
    { 'F',            seek_playback,    { .direction = FORWARDS,  .scale = MINUTES, .num = 1 }},
 
-   { K_TAB,          switch_focus,     { 0 } },
-   { K_CNTRL_L,      redraw,           { 0 } },
+   { K_TAB,          switch_focus,     ARG_NOT_USED },
+   { K_CNTRL_L,      redraw,           ARG_NOT_USED },
 
    { 'j',            scroll_row,       { .direction = DOWN }},
    { KEY_DOWN,       scroll_row,       { .direction = DOWN }},
@@ -106,8 +108,8 @@ const keybinding KeyBindings[] = {
    { 'M',            jumpto_page,      { .placement = MIDDLE }},
    { 'L',            jumpto_page,      { .placement = BOTTOM }},
 
-   { 'y',            yank,             { 0 } },
-   { 'd',            cut,              { 0 } },
+   { 'y',            yank,             ARG_NOT_USED },
+   { 'd',            cut,              ARG_NOT_USED },
    { 'p',            paste,            { .placement = AFTER }},
    { 'P',            paste,            { .placement = BEFORE }},
 
@@ -116,8 +118,8 @@ const keybinding KeyBindings[] = {
    { 'n',            search_find,      { .direction = SAME }},
    { 'N',            search_find,      { .direction = OPPOSITE }},
 
-   { ':',            enter_cmd_mode,   { 0 }},
-   { '!',            external_command, { 0 }}
+   { ':',            enter_cmd_mode,   ARG_NOT_USED },
+   { '!',            external_command, ARG_NOT_USED }
 };
 const int KeyBindingsSize = (sizeof(KeyBindings) / sizeof(keybinding));
 
