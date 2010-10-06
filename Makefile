@@ -9,6 +9,7 @@ LDEPS=`taglib-config --libs` -ltag_c
 CC?=/usr/bin/gcc
 CFLAGS+=-c -std=c89 -Wall -Wextra -Wno-unused-value -g $(CDEPS)
 LDFLAGS+=-lm -lncurses -lutil $(LDEPS)
+CTAGS=/usr/local/bin/ectags
 
 
 OBJS=input_handlers.o medialib.o meta_info.o paint.o player.o playlist.o str2argv.o uinterface.o vitunes.o
@@ -32,6 +33,9 @@ install: vitunes
 uninstall:
 	rm -f $(BINDIR)/vitunes
 	rm -f $(MANDIR)/vitunes.1
+
+tags: *.h *.c
+	$(CTAGS) *.h *.c
 
 # test program for str2argv
 test_str2argv:	str2argv.h str2argv.c
