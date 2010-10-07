@@ -214,7 +214,6 @@ execute_external_command(const char *cmd)
 void
 quit_vitunes(Args a UNUSED)
 {
-   if (a.num == 2)
    VSIG_QUIT = 1;
 }
 
