@@ -67,7 +67,7 @@ ybuffer_init()
 {
    _yank_buffer.files = calloc(YANK_BUFFER_CHUNK_SIZE, sizeof(meta_info*));
    if (_yank_buffer.files == NULL)
-      err(1, "ybuffer_init: failed to allocate");
+      err(1, "ybuffer_init: calloc(3) failed");
 
    _yank_buffer.capacity = YANK_BUFFER_CHUNK_SIZE;
    _yank_buffer.nfiles = 0;
@@ -98,7 +98,7 @@ ybuffer_add(meta_info *f)
       _yank_buffer.capacity += YANK_BUFFER_CHUNK_SIZE;
       new_capacity = _yank_buffer.capacity * sizeof(meta_info*);
       if ((new_buff = realloc(_yank_buffer.files, new_capacity)) == NULL)
-         err(1, "ybuffer_add: failed to realloc");
+         err(1, "ybuffer_add: realloc(3) failed [%i]", new_capacity);
 
       _yank_buffer.files = new_buff;
    }
@@ -176,7 +176,7 @@ match_command_name(const char *input, const char *cmd)
    /* check for '!' weirdness and abbreviations */
 
    if ((icopy = strdup(input)) == NULL)
-      err(1, "match_command_name: icopy strdup failed");
+      err(1, "match_command_name: strdup(3) failed");
 
    /* remove '!' from input, if present */
    if (strstr(icopy, "!") != NULL)
@@ -290,7 +290,7 @@ seek_playback(Args a)
          secs = a.num * 60;
          break;
       default:
-         errx(1, "seek_playback: bad scale");
+         errx(1, "seek_playback: invalid scale");
    }
 
    /* adjust for direction */
@@ -302,7 +302,7 @@ seek_playback(Args a)
          secs *= -1;
          break;
       default:
-         errx(1, "seek_playback: bad direction");
+         errx(1, "seek_playback: invalid direction");
    }
 
    /* is there a multiplier? */
@@ -437,7 +437,7 @@ scroll_row(Args a)
          ui.active->crow -= n;
          break;
       default:
-         errx(1, "scroll_row: bad direction");
+         errx(1, "scroll_row: invalid direction");
    }
 
    /* handle off-the-edge cases */
@@ -508,11 +508,11 @@ scroll_col(Args a)
                ui.active->hoffset = maxhoff;
                break;
             default:
-               errx(1, "scroll_col: bad direction");
+               errx(1, "scroll_col: invalid direction");
          }
          break;
       default:
-         errx(1, "scroll_col: bad amount");
+         errx(1, "scroll_col: invalid amount");
    }
 
    /* redraw */
@@ -559,7 +559,7 @@ scroll_page(Args a)
          maintain_row_idx = false;
          break;
       default:
-         errx(1, "bad amount in scroll_page");
+         errx(1, "scroll_page: invalid amount");
    }
    swindow_scroll(ui.active, a.direction, diff);
 
@@ -640,7 +640,7 @@ jumpto_page(Args a)
          ui.active->crow = max_row - n + 1;
          break;
       default:
-         errx(1, "bad loc in jumpto_page");
+         errx(1, "jumpto_page: invalid location");
    }
 
    /* sanitize current row */
@@ -690,7 +690,7 @@ jumpto_file(Args a)
          break;
 
       default:
-         errx(1, "jumpto_file: bad scale");
+         errx(1, "jumpto_file: invalid scale");
    }
 
    /* jump */
@@ -731,7 +731,7 @@ search(Args a)
          prompt = "?";
          break;
       default:
-         errx(1, "bad dir to search");
+         errx(1, "search: invalid direction");
    }
 
    /* get search phrase from user */
@@ -788,7 +788,7 @@ search_find(Args a)
          break;
 
       default:
-         errx(1, "search_find: bad direction");
+         errx(1, "search_find: invalid direction");
    }
 
    /* start looking from current row */
@@ -986,7 +986,7 @@ cut(Args a UNUSED)
 
       asprintf(&warning, "Are you sure you want to delete '%s'?", p->name);
       if (warning == NULL)
-         err(1, "cut: failed to asprintf");
+         err(1, "cut: asprintf(3) failed");
 
       /* make sure user wants this */
       if (user_get_yesno(warning, &response) != 0) {
@@ -1083,7 +1083,7 @@ paste(Args a)
             start = p->nfiles;
             break;
          default:
-            errx(1, "paste: bad location");
+            errx(1, "paste: invalid placement [if]");
       }
 
    } else {
@@ -1097,7 +1097,7 @@ paste(Args a)
             if (start > p->nfiles) start = p->nfiles;
             break;
          default:
-            errx(1, "paste: bad location");
+            errx(1, "paste: invalid placement [else]");
       }
    }
 
@@ -1200,7 +1200,7 @@ cmd_write(int argc, char *argv[])
       /* build filename for playlist */
       asprintf(&filename, "%s/%s.playlist", mdb.playlist_dir, argv[1]);
       if (filename == NULL)
-         err(1, "cmd_write: failed to allocate space for filename");
+         err(1, "cmd_write: asprintf(3) failed");
 
       /* check to see if playlist with that name already exists */
       will_clobber = false;
@@ -1302,7 +1302,7 @@ cmd_new(int argc, char *argv[])
       name = argv[1];
       asprintf(&filename, "%s/%s.playlist", mdb.playlist_dir, name);
       if (filename == NULL)
-         err(1, "cmd_new: asprintf failed");
+         err(1, "cmd_new: asprintf(3) failed");
    }
 
    /* create & setup playlist */
@@ -1310,7 +1310,7 @@ cmd_new(int argc, char *argv[])
    p->needs_saving = true;
    p->filename = filename;
    if ((p->name = strdup(name)) == NULL)
-      err(1, "cmd_new: strdup failed");
+      err(1, "cmd_new: strdup(3) failed");
 
    /* add playlist to media library and update ui */
    medialib_playlist_add(p);
@@ -1603,7 +1603,7 @@ cmd_reload(int argc, char *argv[])
       db_file = strdup(mdb.db_file);
       playlist_dir = strdup(mdb.playlist_dir);
       if (db_file == NULL || playlist_dir == NULL)
-         err(1, "cmd_reload: failed to strdup db/playlist info");
+         err(1, "cmd_reload: strdup(3) failed");
 
       /* stop playback TODO investigate a nice way around this */
       player_stop();
@@ -1661,7 +1661,7 @@ user_getstr(const char *prompt, char **response)
 
    /* allocate input space */
    if ((input = calloc(MAX_INPUT_SIZE, sizeof(char))) == NULL)
-      err(1, "user_getstr: calloc failed");
+      err(1, "user_getstr: calloc(3) failed for input string");
 
    /* start getting input */
    ret = 0;
@@ -1713,7 +1713,7 @@ user_getstr(const char *prompt, char **response)
 
       /* see todo above - realloc input buffer here if position reaches max */
       if (pos >= MAX_INPUT_SIZE)
-         errx(1, "shamefull limit reached in user_getstr");
+         errx(1, "user_getstr: shamefull limit reached");
    }
 
    /* NULL-terminate and trim off trailing whitespace */
@@ -1723,7 +1723,7 @@ user_getstr(const char *prompt, char **response)
 
    /* trim the fat */
    if ((*response = calloc(strlen(input) + 1, sizeof(char))) == NULL)
-      err(1, "user_getstr: failed to calloc result");
+      err(1, "user_getstr: calloc(3) failed for result");
 
    snprintf(*response, strlen(input) + 1, "%s", input);
 
