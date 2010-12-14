@@ -36,14 +36,15 @@
 #include "enums.h"
 
 /* the character-info fields.  used for all meta-info that's shown */
-#define MI_NUM_CINFO    7
-#define MI_CINFO_ARTIST 0
-#define MI_CINFO_ALBUM  1
-#define MI_CINFO_TITLE  2
-#define MI_CINFO_TRACK  3
-#define MI_CINFO_YEAR   4
-#define MI_CINFO_GENRE  5
-#define MI_CINFO_LENGTH 6
+#define MI_NUM_CINFO     8
+#define MI_CINFO_ARTIST  0
+#define MI_CINFO_ALBUM   1
+#define MI_CINFO_TITLE   2
+#define MI_CINFO_TRACK   3
+#define MI_CINFO_YEAR    4
+#define MI_CINFO_GENRE   5
+#define MI_CINFO_LENGTH  6
+#define MI_CINFO_COMMENT 7
 
 /* struct used to represent all meta information from a given file */
 typedef struct {

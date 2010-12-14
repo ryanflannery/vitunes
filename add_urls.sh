@@ -11,7 +11,8 @@
 #track number\n\
 #year\n\
 #genre\n\
-#play-length\n" | vitunes -e addurl "http://path.to/url"
+#play-length\n\
+#comment\n" | vitunes -e addurl "http://path.to/url"
 
 # two samples follow...
 
@@ -22,7 +23,8 @@ NPR\n\
 \n\
 \n\
 Radio\n\
-inf\n" | vitunes -e addurl "http://198.234.121.118:80/"
+inf\n\
+Local NPR Affiliate (All News)\n" | vitunes -e addurl "http://198.234.121.118:80/"
 
 # wnku
 echo "WNKU Online Radio\n\
@@ -31,6 +33,7 @@ NPR + Bluegrass\n\
 \n\
 \n\
 Radio\n\
-inf\n" | vitunes -e addurl "http://www.publicbroadcast.net/wnku/ppr/wnku.pls"
+inf\n\
+Local NPR Affliate (News+Music)\n" | vitunes -e addurl "http://www.publicbroadcast.net/wnku/ppr/wnku.pls"
 
 

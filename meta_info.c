@@ -24,7 +24,8 @@ const char *MI_CINFO_NAMES[] = {
    "Track",
    "Year",
    "Genre",
-   "Length"
+   "Length",
+   "Comment"
 };
 
 /*
@@ -212,10 +213,14 @@ mi_extract(const char *filename)
    if ((str = taglib_tag_genre(tag)) != NULL)
       mi->cinfo[MI_CINFO_GENRE] = strdup(str);
 
+   if ((str = taglib_tag_comment(tag)) != NULL)
+      mi->cinfo[MI_CINFO_COMMENT] = strdup(str);
+
    if (mi->cinfo[MI_CINFO_ARTIST] == NULL
    ||  mi->cinfo[MI_CINFO_ALBUM] == NULL
    ||  mi->cinfo[MI_CINFO_TITLE] == NULL
-   ||  mi->cinfo[MI_CINFO_GENRE] == NULL)
+   ||  mi->cinfo[MI_CINFO_GENRE] == NULL
+   ||  mi->cinfo[MI_CINFO_COMMENT] == NULL)
       err(1, "mi_extract: strdup for CINFO failed");
 
    /* track number */

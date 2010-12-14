@@ -716,13 +716,15 @@ ecmd_tag(int argc, char *argv[])
 {
    TagLib_File *tag_file;
    TagLib_Tag  *tag;
-   bool  set_artist = false;
-   bool  set_album  = false;
-   bool  set_title  = false;
-   bool  set_genre  = false;
-   bool  set_track  = false;
-   bool  set_year   = false;
-   char *artist = NULL, *album = NULL, *title = NULL, *genre = NULL;
+   bool  set_artist  = false;
+   bool  set_album   = false;
+   bool  set_title   = false;
+   bool  set_genre   = false;
+   bool  set_track   = false;
+   bool  set_year    = false;
+   bool  set_comment = false;
+   char *artist = NULL, *album = NULL, *title = NULL, *genre = NULL,
+        *comment = NULL;
    const char *errstr = NULL;
    unsigned int track = 0, year = 0;
    char   ch;
@@ -730,19 +732,20 @@ ecmd_tag(int argc, char *argv[])
    int nfiles, f;
 
    static struct option longopts[] = {
-      { "artist", required_argument, NULL, 'a' },
-      { "album",  required_argument, NULL, 'A' },
-      { "title",  required_argument, NULL, 't' },
-      { "genre",  required_argument, NULL, 'g' },
-      { "track",  required_argument, NULL, 'T' },
-      { "year",   required_argument, NULL, 'y' },
+      { "artist",  required_argument, NULL, 'a' },
+      { "album",   required_argument, NULL, 'A' },
+      { "title",   required_argument, NULL, 't' },
+      { "genre",   required_argument, NULL, 'g' },
+      { "track",   required_argument, NULL, 'T' },
+      { "year",    required_argument, NULL, 'y' },
+      { "comment", required_argument, NULL, 'c' },
       { NULL,     0,                 NULL,  0  }
    };
 
    /* parse options and get list of files */
    optreset = 1;
    optind = 0;
-   while ((ch = getopt_long_only(argc, argv, "a:A:t:g:T:y:", longopts, NULL)) != -1) {
+   while ((ch = getopt_long_only(argc, argv, "a:A:t:g:T:y:c:", longopts, NULL)) != -1) {
       switch (ch) {
          case 'a':
             set_artist = true;
@@ -776,6 +779,11 @@ ecmd_tag(int argc, char *argv[])
             if (errstr != NULL)
                errx(1, "%s: invalid year '%s': %s", argv[0], optarg, errstr);
             break;
+         case 'c':
+            set_comment = true;
+            if ((comment = strdup(optarg)) == NULL)
+               err(1, "%s: strdup COMMENT failed", argv[0]);
+            break;
          case 'h':
          case '?':
          default:
@@ -793,9 +801,10 @@ ecmd_tag(int argc, char *argv[])
    if (set_genre) printf("%10.10s => '%s'\n", "genre", genre);
    if (set_track) printf("%10.10s => %i\n", "track", track);
    if (set_year) printf("%10.10s => %i\n", "year", year);
+   if (set_comment) printf("%10.10s => '%s'\n", "comment", comment);
 
    if (!set_artist && !set_album && !set_title && !set_genre
-   &&  !set_track && !set_year)
+   &&  !set_track && !set_year && !set_comment)
       errx(1, "%s: nothing to set!  See 'vitunes -e help tag'", argv[0]);
 
    if (nfiles == 0)
@@ -823,6 +832,7 @@ ecmd_tag(int argc, char *argv[])
       if (set_genre) taglib_tag_set_genre(tag, genre);
       if (set_track) taglib_tag_set_track(tag, track);
       if (set_year) taglib_tag_set_year(tag, year);
+      if (set_comment) taglib_tag_set_comment(tag, comment);
 
 
       /* save changes and cleanup */
@@ -1057,6 +1067,7 @@ VITUNES COMMAND:\n\ttag - set meta-information tags to raw files\n\n\
 SYNOPSIS:\n\ttag [--artist=string] [-a string] [--album=string] [-A value]\n\
 \t    [--title=string] [-t string] [--genre=string] [-g string]\n\
 \t    [--track=number] [-T number] [--year=number] [-y number]\n\
+\t    [--comment=string] [-c string]\n\
 \t    file1 [ file2 ... ]\n\n\
 DESCRIPTION:\n\
    The tag command is provided to add/change the meta-information tags of\n\
@@ -1077,6 +1088,8 @@ DESCRIPTION:\n\
    -t string            Sets the title field to the provided string.\n\n\
    --genre=string\n\
    -g string            Sets the genre field to the provided string.\n\n\
+   --comment=string\n\
+   -c string            Sets the comment field to the provided string.\n\n\
    --track=number\n\
    -T number            Sets the track field to the provided number.\n\
                         Note that the number must be between 0 and\n\

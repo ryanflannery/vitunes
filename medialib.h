@@ -41,7 +41,7 @@
 #define MEDIALIB_PLAYLISTS_CHUNK_SIZE  100
 
 /* current database file-format version */
-#define DB_VERSION_MAJOR   1
+#define DB_VERSION_MAJOR   2
 #define DB_VERSION_MINOR   1
 #define DB_VERSION_OTHER   0
 
