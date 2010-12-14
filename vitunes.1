@@ -165,7 +165,7 @@ is first run.  If either of these already exist, they remain unchanged.
 .It vitunes Ar -e add path1 [ path2 ... ]
 This command takes any number of files/directories as parameters.  Each file
 provided is scanned for meta-information, specifically: artist, album, title,
-track number, year, and play-length.
+track number, year, comment, and play-length.
 .Xr TagLib 3
 is used for all meta-extraction, so any meta-data-format
 .Xr TagLib 3
@@ -309,6 +309,8 @@ The track column in the playlist window
 The year column in the playlist window
 .It genre
 The genre column in the playlist window
+.It comment
+The comment column in the playlist window
 .It length
 The play-length column in the playlist window
 .El
@@ -322,9 +324,10 @@ The display command is used to change which columns are displayed in the
 playlist window, their order, their width, and their alignment. The format of
 the display-description is a comma separated list of:
 .Ic [-]<field-name>.<size>  .
-Valid field-names are: artist, album, title, track, year, genre, and length.
-The size field indicates the number of columns.  If the field-name is preceded
-with a '-', the field will be right-aligned.  As an example, the command:
+Valid field-names are: artist, album, title, track, year, genre, comment, and
+length.  The size field indicates the number of columns.  If the field-name
+is preceded with a '-', the field will be right-aligned.  As an example, the
+command:
 .Pp
 .Ic :display title.10,artist.20,-track.4
 .Pp
@@ -448,7 +451,8 @@ descending.  As an example, the following command:
 would sort all records in the current playlist by artist (ascending) first,
 then album-name descending, then title.
 .Pp
-Valid field-names are: artist, album, title, track, year, genre, and length.
+Valid field-names are: artist, album, title, track, year, genre, comment,
+and length.
 .Pp
 Note that while most operations on playlists set the "needs-saving" flag
 (so you are prompted when quiting
