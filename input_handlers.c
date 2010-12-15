@@ -662,7 +662,7 @@ void
 jumpto_file(Args a)
 {
    float pct;
-   int   n, line;
+   int   n, line, input;
 
    /* determine line/percent to jump to */
    n = -1;
@@ -674,10 +674,37 @@ jumpto_file(Args a)
    /* get line number to jump to */
    switch (a.scale) {
       case NUMBER:
-         if (n < 0 || n >= ui.active->nrows)
-            line = ui.active->nrows;
-         else
-            line = n;
+         switch (a.num) {
+            case 'g':
+               /* retrieve second 'g' (or cancel) and determine jump-point */
+               while ((input = getch()) && input != 'g') {
+                  if (input != ERR) {
+                     ungetch(input);
+                     return;
+                  }
+               }
+
+               if (n < 0)
+                  line = 1;
+               else if (n >= ui.active->nrows)
+                  line = ui.active->nrows;
+               else
+                  line = n;
+
+               break;
+
+            case 'G':
+               /* determine jump-point */
+               if (n < 0 || n >= ui.active->nrows)
+                  line = ui.active->nrows;
+               else
+                  line = n;
+
+               break;
+
+            default:
+               errx(1, "jumpto_file: NUMBER type with no num!");
+         }
 
          break;
 

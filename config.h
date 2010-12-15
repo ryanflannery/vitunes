@@ -101,7 +101,8 @@ const keybinding KeyBindings[] = {
    { K_CNTRL_F,      scroll_page,      { .direction = DOWN, .amount = WHOLE }},
    { KEY_NPAGE,      scroll_page,      { .direction = DOWN, .amount = WHOLE }},
 
-   { 'G',            jumpto_file,      { .scale = NUMBER }},
+   { 'g',            jumpto_file,      { .scale = NUMBER, .num = 'g' }},
+   { 'G',            jumpto_file,      { .scale = NUMBER, .num = 'G' }},
    { '%',            jumpto_file,      { .scale = PERCENT }},
 
    { 'H',            jumpto_page,      { .placement = TOP }},
