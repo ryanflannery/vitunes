@@ -852,7 +852,7 @@ search_find(Args a)
 
          gnum_set(idx + 1);
          foo.scale = NUMBER;
-         foo.num = -1;
+         foo.num = 'G';
          jumpto_file(foo);
          return;
       }
