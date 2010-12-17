@@ -1,6 +1,7 @@
 # install locations
-BINDIR=/usr/local/bin
-MANDIR=/usr/local/man/man1
+PREFIX=/usr/local
+BINDIR=$(PREFIX)/bin
+MANDIR=$(PREFIX)/man/man1
 
 # non-base dependency build flags
 CDEPS=`taglib-config --cflags`
