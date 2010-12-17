@@ -32,6 +32,7 @@
 #include "medialib.h"
 #include "player.h"
 #include "uinterface.h"
+#include "e_commands.h"
 
 /* record keeping  */
 extern playlist   *viewing_playlist;

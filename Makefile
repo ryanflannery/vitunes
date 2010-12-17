@@ -10,9 +10,9 @@ CC?=/usr/bin/gcc
 CFLAGS+=-c -std=c89 -Wall -Wextra -Wno-unused-value -g $(CDEPS)
 LDFLAGS+=-lm -lncurses -lutil $(LDEPS)
 
-OBJS=input_handlers.o medialib.o meta_info.o \
-	  paint.o player.o playlist.o str2argv.o \
-	  uinterface.o vitunes.o
+OBJS=input_handlers.o e_commands.o medialib.o meta_info.o \
+	  paint.o player.o playlist.o str2argv.o uinterface.o \
+	  vitunes.o
 
 .PHONY: clean install uninstall
 
