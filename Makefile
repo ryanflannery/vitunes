@@ -15,7 +15,7 @@ OBJS=input_handlers.o e_commands.o medialib.o meta_info.o \
 	  paint.o player.o playlist.o str2argv.o uinterface.o \
 	  vitunes.o
 
-.PHONY: clean install uninstall
+.PHONY: clean install uninstall publish-repos
 
 vitunes: $(OBJS)
 	$(CC) -o $@ $(LDFLAGS) $(OBJS)
@@ -39,6 +39,11 @@ uninstall:
 
 cscope.out: *.h *.c
 	cscope -bke
+
+publish-repos:
+	hg push $(myhg)/vitunes
+	hg push $(mybb)/vitunes
+	hg push $(mygit)/vitunes
 
 # test program for str2argv
 test_str2argv:	str2argv.h str2argv.c
