@@ -39,7 +39,7 @@ ecmd_init(int argc, char *argv[])
    printf("Creating all necessary files and directories for vitunes...\n");
    medialib_setup_files(vitunes_dir, db_file, playlist_dir);
 
-   printf("\nNow use 'vitunes -e add dir1 dir2 ...' to add files to vitunes\n");
+   printf("\nNow use 'vitunes -e add dir1 dir2 ...' to add files to vitunes.\n");
    return 0;
 }
 
@@ -103,7 +103,7 @@ ecmd_addurl(int argc, char *argv[])
 
       printf("%10.10s: ", MI_CINFO_NAMES[field]);
       if (fgets(input, sizeof(input), stdin) == NULL) {
-         warnx("operation canceled. Database unchanged.");
+         warnx("Operation canceled. Database unchanged.");
          mi_free(m);
          return 0;
       }
@@ -203,13 +203,13 @@ ecmd_check(int argc, char *argv[])
    /* scan through files... */
    for (f = 0; f < nfiles; f++) {
 
-      printf("checking: '%s'\n", files[f]);
+      printf("Checking: '%s'\n", files[f]);
 
       /* show raw or sanitized information */
       if (show_raw || show_sanitized) {
          mi = mi_extract(files[f]);
          if (mi == NULL)
-            warnx("failed to extract any meta-information from '%s'", files[f]);
+            warnx("Failed to extract any meta-information from '%s'", files[f]);
          else {
             /* show raw info */
             if (show_raw) {
@@ -250,7 +250,7 @@ ecmd_check(int argc, char *argv[])
          }
 
          if (!found)
-            warnx("file '%s' does NOT exist in the database", files[f]);
+            warnx("File '%s' does NOT exist in the database", files[f]);
          else {
             printf("\tThe meta-information in the DATABASE is:\n");
             for (i = 0; i < MI_NUM_CINFO; i++)
