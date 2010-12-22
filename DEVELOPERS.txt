@@ -96,6 +96,7 @@ CODE STRUCTURE: NOTABLE GLOBALS
 
    There are other globals, but few are "exported" in any of the .h files.
    These include global structs in:
+
       *  meta_info.c       For maintaining the current display description,
                            sort description, and search/query filter.  With
                            the exception of the display description, none of
@@ -202,6 +203,10 @@ CODE STRUCTURE: THE MODULES
                      command-mode handlers.  This is the real "guts" of
                      vitunes.  To see which function corresponds to what, look
                      at config.h
+
+
+   e_commands        All code for each of the e-commands (vitunes -e CMD ...)
+                     is here.  Used excluviely in vitunes.c.
 
 
    vitunes           The "main" program.  In normal mode, does setup of media-
