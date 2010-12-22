@@ -129,12 +129,12 @@ ecmd_addurl(int argc, char *argv[])
    }
 
    if (found) {
-      printf("warning: file/URL '%s' already in the database.\n", argv[0]);
+      printf("Warning: file/URL '%s' already in the database.\n", argv[0]);
       printf("Do you want to replace the existing record? [y/n] ");
 
       if (fgets(input, sizeof(input), stdin) == NULL
       || (strcasecmp(input, "yes\n") != 0 && strcasecmp(input, "y\n") != 0)) {
-         warnx("operation canceled.  Database unchanged.");
+         warnx("Operation Canceled.  Database unchanged.");
          mi_free(m);
          medialib_destroy();
          return 0;
