@@ -22,6 +22,7 @@ const struct ecmd ECMD_PATH[] = {
    { "addurl",    ecmd_addurl,   ecmd_help_addurl },
    { "check",     ecmd_check,    ecmd_help_check },
    { "rmfile",    ecmd_rmfile,   ecmd_help_rmfile },
+   { "rm",        ecmd_rmfile,   ecmd_help_rmfile },
    { "update",    ecmd_update,   ecmd_help_update },
    { "flush",     ecmd_flush,    ecmd_help_flush },
    { "tag",       ecmd_tag,      ecmd_help_tag },
