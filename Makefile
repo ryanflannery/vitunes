@@ -1,5 +1,5 @@
 # install locations
-PREFIX=/usr/local
+PREFIX?=/usr/local
 BINDIR=$(PREFIX)/bin
 MANDIR=$(PREFIX)/man/man1
 
