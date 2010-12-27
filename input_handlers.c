@@ -1686,9 +1686,11 @@ user_getstr(const char *prompt, char **response)
    wmove(ui.command, 0, strlen(prompt));
    wrefresh(ui.command);
 
-   /* allocate input space */
+   /* allocate input space and clear */
    if ((input = calloc(MAX_INPUT_SIZE, sizeof(char))) == NULL)
       err(1, "user_getstr: calloc(3) failed for input string");
+
+   bzero(input, MAX_INPUT_SIZE);
 
    /* start getting input */
    ret = 0;
