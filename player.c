@@ -222,6 +222,7 @@ player_play()
 void
 player_play_next_song()
 {
+DFLOG("playing next song...");
    switch (player.mode) {
       case PLAYER_MODE_LINEAR:
          if (++player.qidx == player.queue->nfiles) {
@@ -293,6 +294,9 @@ player_seek(int seconds)
 
    player_send_cmd(cmd);
    free(cmd);
+
+   if (player_status.paused)
+      player_status.paused = false;
 }
 
 /*****************************************************************************
