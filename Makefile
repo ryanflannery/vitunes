@@ -32,7 +32,7 @@ debug:
 
 clean:
 	rm -f *.o
-	rm -f vitunes vitunes.core
+	rm -f vitunes vitunes.core vitunes-debug.log
 	rm -f test_str2argv
 
 
