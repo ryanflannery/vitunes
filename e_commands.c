@@ -623,18 +623,19 @@ void
 ecmd_help_rmfile(void)
 {
    printf("\
-VITUNES COMMAND:\n\trmfile - remove a single file/URL from the vitunes database\n\n\
-SYNOPSIS:\n\trmfile [-f] filename/URL\n\n\
+VITUNES COMMAND:\n\trm - remove a single file/URL from the vitunes database\n\n\
+SYNOPSIS:\n\trm [-f] filename/URL\n\n\
 DESCRIPTION:\n\
-   To remove a single file/URL from the vitunes database, the rmfile command\n\
-   may be used.  It takes a single parameter: the filename/URL of the file to\n\
+   To remove a single file/URL from the vitunes database, the rm command may\n\
+   be used.  It takes a single parameter: the filename/URL of the file to\n\
    remove.  Normally, you will be prompted if you are sure you want to\n\
    remove the file as a safety measure.  This prompt can be avoided using\n\
    the '-f' flag, to force the removal.\n\n\
    Note that to remove files, the full, absolute path to the file must be\n\
    provided, as obtained from realpath(3).\n\n\
 EXAMPLE:\n\
-   $ vitunes -e rmfile -f \"http://198.234.121.118/listen.pls\"\n\n\
+   $ vitunes -e rm -f \"http://198.234.121.118/listen.pls\"\n\n\
+ALIAS:\n\trmfile  -  As e-commands, \"rmfile\" and \"rm\" are interchangeable.\n\n\
 ");
 }
 
@@ -783,7 +784,8 @@ The list of available commands are:\n\n\
                information.\n\n\
    check       Check files to see what meta-information vitunes can extract,\n\
                sanitize, and whether or not it's in the database.\n\n\
-   rmfile      Remove a file/URL from the database.\n\n\
+   rm          Remove a file/URL from the database.\n\n\
+   rmfile      Alias for \"rm\".\n\n\
    tag         Add/modify meta-information tags of raw files.\n\n\
    flush       Load the existing database and dump it's information in an\n\
                easy-to-parse format to stdout.\n\n\
