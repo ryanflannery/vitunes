@@ -21,16 +21,6 @@ player_status_t player_status;
 player_t player;
 
 /*
- * The following flag is used to prevent some song-skipping.  Anytime the
- * player_play() function is called, and a song is loaded for playback, if
- * the player_monitor() function is called immediately after, before there
- * is any output from the media player, it will assume the song has finished
- * and start playing the next song.
- */
-bool just_started_playing = false;
-
-
-/*
  * Initialize the player and player_status global structs.  Note that all
  * player stuff is set to non-functional values, and these are used elsewhere
  * to indicate that the child process is not running.
@@ -59,7 +49,7 @@ player_init(char *prog, char *pargs[], playmode mode)
 }
 
 /*****************************************************************************
- * stuff for staring, stoping, and re-starting child process
+ * stuff for starting, stoping, and re-starting child process
  ****************************************************************************/
 
 void
@@ -146,13 +136,6 @@ player_child_kill()
 
    /* instruct media player to exit */
    player_send_cmd(cmd);
-   usleep(500000);
-   /*
-    * XXX This half-second sleep seems to be good-enough to wait for any
-    * grand-child processes to be killed.  When using mplayer, it fork()s
-    * a child process when playing internet radio streams to handle the
-    * buffering.
-    */
 
    /* close pipes and wait for media player to die */
    close(player.pipe_read);
@@ -187,7 +170,7 @@ player_send_cmd(const char *cmd)
 void
 player_play()
 {
-   static const char *cmd_fmt = "\nloadfile \"%s\" 0\nget_time_pos\n";
+   static const char *cmd_fmt = "\nloadfile \"%s\" 0\nget_property time_pos\n";
    char *cmd;
 
    /* assert valid queue/qidx */
@@ -210,9 +193,6 @@ player_play()
    player_status.playing = true;
    player_status.paused = false;
    player_status.position = 0;
-
-   /* set flag used by player_monitor */
-   just_started_playing = true;
 }
 
 /*
@@ -222,7 +202,6 @@ player_play()
 void
 player_play_next_song()
 {
-DFLOG("playing next song...");
    switch (player.mode) {
       case PLAYER_MODE_LINEAR:
          if (++player.qidx == player.queue->nfiles) {
@@ -282,7 +261,7 @@ player_pause()
 void
 player_seek(int seconds)
 {
-   static const char *cmd_fmt = "\nseek %i 0\nget_time_pos\n";
+   static const char *cmd_fmt = "\nseek %i 0\nget_property time_pos\n";
    char *cmd;
 
    if (!player_status.playing)
@@ -300,60 +279,54 @@ player_seek(int seconds)
 }
 
 /*****************************************************************************
- * Player monitor function
+ * Player monitor function, called repeatedly via the signal handler in the
+ * vitunes main loop.
+ *
  * This communicates with the child process periodically to accomplish the
  * following:
  *    1. If the player is currently playing a song, determine the position
  *       (in seconds) into the playback
  *    2. When the player finishes playing a song, it starts playing the next
- *       song, according to the current playmode, if necessary.
+ *       song, according to the current playmode.
  ****************************************************************************/
 void
 player_monitor()
 {
-   static const char *query = "\nget_time_pos\n";
-   static const char *answer = "ANS_TIME_POSITION";
+   static const char *query_cmd   = "\nget_property time_pos\n";
+   static const char *answer_fail = "ANS_ERROR=PROPERTY_UNAVAILABLE";
+   static const char *answer_good = "ANS_time_pos";
    static char response[1000];  /* mplayer can be noisy */
    char *s;
    int   nbytes;
 
-   /* if nothing is playing, or we're paused, there's nothing to do */
+   /* in this case, nothing to monitor */
    if (!player_status.playing || player_status.paused)
       return;
 
-   /* read output from the player */
+   /* read any output from the player */
+   bzero(response, sizeof(response));
    nbytes = read(player.pipe_read, &response, sizeof(response));
 
-   if (nbytes == -1) {
-      /*
-       * No output was available.  If we're supposed to be playing, then
-       * this means the song finished playing
-       */
-      if (errno == EAGAIN && player_status.playing && !player_status.paused) {
-         if (just_started_playing)
-            just_started_playing = false;
-         else
-            player_play_next_song();
-      }
+   if (nbytes == -1 && errno == EAGAIN)
+      return;
 
-   } else {
+   response[nbytes + 1] = '\0';
 
-      /* output was available... search it for an answer */
-      response[nbytes + 1] = '\0';
-
-      s = strstr(response, answer);
-      if (s != NULL) {
-         /* we have an answer, but there may be multiple. find the last one */
-         while (strstr(s + 1, answer) != NULL)
-            s = strstr(s + 1, answer);
-
-         if (sscanf(s, "ANS_TIME_POSITION=%f", &player_status.position) != 1)
-            errx(1, "player_monitor: player child is misbehaving.");
-      }
+   /* case: reached end of playback for a given file */
+   if (strstr(response, answer_fail) != NULL) {
+      player_play_next_song();
+      return;
    }
 
-   /* Re-query the media player for more stats. */
-   if (player_status.playing && !player_status.paused)
-      player_send_cmd(query);
+   /* case: continue in playing current file.  update position */
+   if ((s = strstr(response, answer_good)) != NULL) {
+      while (strstr(s + 1, answer_good) != NULL)
+         s = strstr(s + 1, answer_good);
 
+      if (sscanf(s, "ANS_time_pos=%f", &player_status.position) != 1)
+         errx(1, "player_monitor: player child is misbehaving.");
+
+   }
+
+   player_send_cmd(query_cmd);
 }
