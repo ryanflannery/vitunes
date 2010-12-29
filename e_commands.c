@@ -144,7 +144,7 @@ ecmd_addurl(int argc, char *argv[])
       playlist_file_replace(mdb.library, found_idx, m);
    } else {
       mi_sanitize(m);
-      playlist_file_append(mdb.library, m);
+      playlist_files_append(mdb.library, &m, 1);
    }
 
    medialib_db_save(db_file);
@@ -316,7 +316,7 @@ ecmd_rmfile(int argc, char *argv[])
          errx(1, "%s: operation canceled.  Database unchanged.", argv[0]);
    }
 
-   playlist_file_remove(mdb.library, found_idx);
+   playlist_files_remove(mdb.library, found_idx, 1);
    medialib_db_save(db_file);
    medialib_destroy();
    return 0;

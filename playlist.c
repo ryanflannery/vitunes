@@ -16,6 +16,20 @@
 
 #include "playlist.h"
 
+void
+playlist_increase_capacity(playlist *p)
+{
+   meta_info **new_files;
+   size_t      nbytes;
+
+   p->capacity += PLAYLIST_CHUNK_SIZE;
+   nbytes = p->capacity * sizeof(meta_info*);
+   if ((new_files = realloc(p->files, nbytes)) == NULL)
+      err(1, "%s: failed to realloc(3) files", __FUNCTION__);
+
+   p->files = new_files;
+}
+
 /*
  * Allocate a new playlist and return a pointer to it.  The resulting
  * structure must be free(2)'d using playlist_free().
@@ -35,6 +49,7 @@ playlist_new(void)
    p->filename = NULL;
    p->name     = NULL;
    p->nfiles   = 0;
+   p->history  = NULL;
    p->needs_saving = false;
 
    return p;
@@ -47,6 +62,7 @@ playlist_free(playlist *p)
    if (p->filename != NULL) free(p->filename);
    if (p->name != NULL) free(p->name);
    if (p->files != NULL) free(p->files);
+   /* TODO free history */
    free(p);
 }
 
@@ -65,6 +81,7 @@ playlist_dup(const playlist *original, const char *filename,
    newplist           = playlist_new();
    newplist->nfiles   = original->nfiles;
    newplist->capacity = original->nfiles;
+   newplist->history  = NULL;
 
    if (name != NULL) {
       if ((newplist->name = strdup(name)) == NULL)
@@ -87,58 +104,51 @@ playlist_dup(const playlist *original, const char *filename,
 }
 
 /*
- * Add a file to a playlist at the index specified.  Note that if index is
- * the length of the files array (strickly speaking "out of bounds") the
- * file is appended to the end.
+ * Add files to a playlist at the index specified by start.  Note that if
+ * start is the length of the files array the files are appended to the end.
  */
 void
-playlist_file_add(playlist *p, meta_info *f, int index)
+playlist_files_add(playlist *p, meta_info **f, int start, int size)
 {
-   meta_info **new_files;
-   int   size;
    int   i;
 
-   if (index < 0 || index > p->nfiles)
-      errx(1, "playlist_file_add: index %d out of range", index);
+   if (start < 0 || start > p->nfiles)
+      errx(1, "playlist_file_add: index %d out of range", start);
 
-   /* need to allocate more memory? */
-   if (p->capacity == p->nfiles) {
-      p->capacity += PLAYLIST_CHUNK_SIZE;
-      size = p->capacity * sizeof(meta_info*);
-      if ((new_files = realloc(p->files, size)) == NULL)
-         err(1, "playlist_file_add: failed to realloc files in playlist_file_add");
+   while (p->capacity <= p->nfiles + size)
+      playlist_increase_capacity(p);
 
-      p->files = new_files;
-   }
+   /* push everything after start back size places */
+   for (i = p->nfiles + size; i > start; i--)
+      p->files[i] = p->files[i - size];
 
-   /* push everything after index (if any) back by one */
-   for (i = p->nfiles; i > index; i--)
-      p->files[i] = p->files[i - 1];
+   /* add the files */
+   for (i = 0; i < size; i++)
+      p->files[start + i] = f[i];
 
-   p->files[index] = f;
-   p->nfiles++;
+   p->nfiles += size;
 }
 
 /* Append a file to the end of a playlist */
 void
-playlist_file_append(playlist *p, meta_info *f)
+playlist_files_append(playlist *p, meta_info **f, int size)
 {
-   return playlist_file_add(p, f, p->nfiles);
+   return playlist_files_add(p, f, p->nfiles, size);
 }
 
 /* Remove a file at a given index from a playlist. */
 void
-playlist_file_remove(playlist *p, int index)
+playlist_files_remove(playlist *p, int start, int size)
 {
    int i;
 
-   if (index < 0 || index >= p->nfiles)
-      errx(1, "playlist_remove_file: index %d out of range", index);
+   if (start < 0 || start >= p->nfiles)
+      errx(1, "playlist_remove_file: index %d out of range", start);
 
-   for (i = index + 1; i < p->nfiles; i++)
-      p->files[i - 1] = p->files[i];
+   for (i = start; i < p->nfiles; i++)
+      p->files[i] = p->files[i + size];
 
-   p->nfiles--;
+   p->nfiles -= size;
 }
 
 /* Replaces the file at a given index in a playlist with a new file */
@@ -198,7 +208,7 @@ playlist_load(const char *filename, meta_info **db, int ndb)
       }
 
       if (mi != NULL)   /* file DOES exist in DB */
-         playlist_file_append(p, mi);
+         playlist_files_append(p, &mi, 1);
       else {            /* file does NOT exist in DB */
          /* create empty meta-info object with just the file name */
          mi = mi_new();
@@ -207,7 +217,7 @@ playlist_load(const char *filename, meta_info **db, int ndb)
             err(1, "playlist_load: failed to strdup filename");
 
          /* add new record to the db and link it to the playlist */
-         playlist_file_append(p, mi);
+         playlist_files_append(p, &mi, 1);
          warnx("playlist \"%s\", file \"%s\" is NOT in media database (added for now)",
             p->name, entry);
       }
@@ -278,9 +288,9 @@ playlist_filter(const playlist *p, bool m)
    results = playlist_new();
    for (i = 0; i < p->nfiles; i++) {
       if (mi_match(p->files[i])) {
-         if (m)  playlist_file_append(results, p->files[i]);
+         if (m)  playlist_files_append(results, &(p->files[i]), 1);
       } else {
-         if (!m) playlist_file_append(results, p->files[i]);
+         if (!m) playlist_files_append(results, &(p->files[i]), 1);
       }
    }
 

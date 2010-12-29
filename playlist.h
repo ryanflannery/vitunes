@@ -34,9 +34,28 @@
 
 #define PLAYLIST_CHUNK_SIZE   100
 
+/* a change to a playlist */
+typedef enum {
+   ADD,
+   REMOVE
+} changeset_type;
+
+typedef struct {
+   changeset_type type;
+   size_t         num;
+   meta_info    **files;
+   int            location;
+
+} playlist_changeset;
+
+typedef struct _playlist_history {
+   playlist_changeset       *change;
+   struct _playlist_history *next;
+
+} playlist_history;
+
 /* the core playlist structure */
-typedef struct
-{
+typedef struct {
    char  *filename;     /* filename containing the playlist */
    char  *name;         /* name of the playlist used in display */
    bool   needs_saving; /* does this playlist have unsaved changes? */
@@ -45,6 +64,9 @@ typedef struct
    meta_info **files;
    int         nfiles;     /* number of files in the playlist */
    int         capacity;   /* current size malloc()'d for the files */
+
+   /* history of the playlist */
+   playlist_history  *history;
 
 } playlist;
 
@@ -69,10 +91,10 @@ void playlist_free(playlist *p);
 playlist *playlist_dup(const playlist *original, const char *filename,
                        const char* name);
 
-/* remove a file from a playlist */
-void playlist_file_add(playlist *p, meta_info *f, int index);
-void playlist_file_append(playlist *p, meta_info *f);
-void playlist_file_remove(playlist *p, int index);
+/* add/remove/replace files from a playlist */
+void playlist_files_add(playlist *p, meta_info **f, int start, int size);
+void playlist_files_append(playlist *p, meta_info **f, int size);
+void playlist_files_remove(playlist *p, int start, int size);
 void playlist_file_replace(playlist *p, int index, meta_info *newEntry);
 
 /* load/save/delete playlists from/to/from filesystem */

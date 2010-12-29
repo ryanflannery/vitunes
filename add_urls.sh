@@ -24,7 +24,7 @@ NPR\n\
 \n\
 Radio\n\
 inf\n\
-Local NPR Affiliate (All News)\n" | vitunes -e addurl "http://198.234.121.118:80/"
+Local NPR Affiliate (All News)\n" | vitunes -e addurl "http://cpr.streamguys.net/wvxu"
 
 # wnku
 echo "WNKU Online Radio\n\
@@ -35,5 +35,4 @@ NPR + Bluegrass\n\
 Radio\n\
 inf\n\
 Local NPR Affliate (News+Music)\n" | vitunes -e addurl "http://www.publicbroadcast.net/wnku/ppr/wnku.pls"
-
 

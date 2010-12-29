@@ -1058,9 +1058,7 @@ cut(Args a UNUSED)
       ybuffer_add(viewing_playlist->files[n]);
 
    /* delete files */
-   for (n = start; n < end; n++)
-      playlist_file_remove(viewing_playlist, start);
-
+   playlist_files_remove(viewing_playlist, start, end - start);
 
    /* update ui appropriately */
    viewing_playlist->needs_saving = true;
@@ -1129,11 +1127,10 @@ paste(Args a)
    }
 
    /* add files */
-   for (i = 0; i < _yank_buffer.nfiles; i++)
-      playlist_file_add(p, _yank_buffer.files[i], start + i);
+   playlist_files_add(p, _yank_buffer.files, start, _yank_buffer.nfiles);
 
    if (p == viewing_playlist)
-      ui.playlist->nrows += i;
+      ui.playlist->nrows = p->nfiles;
 
    p->needs_saving = true;
 
@@ -1141,9 +1138,9 @@ paste(Args a)
    paint_library();
    paint_playlist();
    if (ui.active == ui.library)
-      paint_message("Pasted %d files to '%s'", i, p->name);
+      paint_message("Pasted %d files to '%s'", _yank_buffer.nfiles, p->name);
    else
-      paint_message("Pasted %d files.", i);
+      paint_message("Pasted %d files.", _yank_buffer.nfiles);
 }
 
 
