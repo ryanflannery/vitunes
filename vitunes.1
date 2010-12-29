@@ -296,46 +296,48 @@ Change the color of the given item to fg-colored text on a bg-colored
 background.  Available items are:
 .Pp
 .Bl -tag -width Fl -compact
-.It tildas
-The tildas in empty rows
 .It bars
-The bars dividing the windows
-.It errors
-Error messages in the status window
-.It messages
-Informational messages in the status window
-.It status
-The normal status window
+The bars dividing the various windows.
 .It player
-Player window
+The player window.
+.It status
+The status window.
 .It library
-Library window
+The library window.
 .It playlist
-Playlist window
-.It playing
-Currently playing row in both library and playlist windows
+The playlist window.
+.It errors
+Error messages in the status window.
+.It messages
+Informational messages in the status window.
+.It tildas-library
+The tildas in empty rows of the library window.
+.It tildas-playlist
+The tildas in empty rows of the playlist window.
+.It playing-library
+Currently playing playlist in the library window.
+.It playing-playlist
+Currently playing file in the playlist window.
 .It artist
-The artist column in the playlist window
+The artist column in the playlist window.
 .It album
-The album column in the playlist window
+The album column in the playlist window.
 .It title
-The title column in the playlist window
+The title column in the playlist window.
 .It track
-The track column in the playlist window
+The track column in the playlist window.
 .It year
-The year column in the playlist window
+The year column in the playlist window.
 .It genre
-The genre column in the playlist window
+The genre column in the playlist window.
 .It comment
-The comment column in the playlist window
+The comment column in the playlist window.
 .It length
-The play-length column in the playlist window
+The play-length column in the playlist window.
 .El
 .Pp
 Available colors for fg and bg are: white, black, red, green, yellow, blue,
 magenta, and cyan. 
-.Pp
-256 color support is coming.
 .It :display Cm display-description
 The display command is used to change which columns are displayed in the
 playlist window, their order, their width, and their alignment. The format of

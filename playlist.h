@@ -55,7 +55,8 @@ typedef struct
 
 } playlist;
 
-/* IMPORTANT NOTES ABOUT THE "playlist" STRUCTURE:
+/*
+ * IMPORTANT NOTES ABOUT THE "playlist" STRUCTURE:
  * 1. The elements of the "files" array are simply pointers to the
  *    already existing meta-info elements in the media database.
  *

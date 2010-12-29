@@ -33,23 +33,28 @@
 
 /* colors used by paint - each of these will be a number for a COLOR_PAIR */
 typedef struct {
+   /* visual dividers of windows */
    int   bars;
-   int   tildas;
 
-   /* error/info messages */
-   int   errors;
-   int   messages;
-
-   /* windows */
+   /* individual windows */
    int   player;
    int   status;
    int   library;
    int   playlist;
 
-   /* currently playing rows in both lib & playlist windows */
-   int   playing;
+   /* error/info messages */
+   int   errors;
+   int   messages;
 
-   /* fields in the playlist window */
+   /* empty rows in library and playlist window */
+   int   tildas_library;
+   int   tildas_playlist;
+
+   /* currently playing rows in the library & playlist windows */
+   int   playing_library;
+   int   playing_playlist;
+
+   /* individual fields in the playlist window */
    int   cinfos[MI_NUM_CINFO];
    bool  cinfos_set[MI_NUM_CINFO];
 
