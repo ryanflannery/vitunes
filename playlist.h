@@ -37,21 +37,14 @@
 /* the core playlist structure */
 typedef struct
 {
-   char  *filename;  /* filename containing the playlist */
-   char  *name;      /* name of the playlist used in display */
+   char  *filename;     /* filename containing the playlist */
+   char  *name;         /* name of the playlist used in display */
+   bool   needs_saving; /* does this playlist have unsaved changes? */
 
    /* the array of files (their meta information) in the playlist */
    meta_info **files;
    int         nfiles;     /* number of files in the playlist */
    int         capacity;   /* current size malloc()'d for the files */
-
-   /* This is a flag for playlists indicating if they have any unsaved
-    * changes.  Since psuedo playlists are excluded, this flag is
-    * managed entirely by input_handlers.c, except for being set to a
-    * default of false in playlist_new.
-    * It is also used in paint.c.
-    */
-   bool        needs_saving;
 
 } playlist;
 
