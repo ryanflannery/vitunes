@@ -21,6 +21,7 @@ OBJS=input_handlers.o e_commands.o medialib.o meta_info.o \
 	  vitunes.o
 
 # main targets
+
 .PHONY: debug clean install uninstall publish-repos
 
 vitunes: $(OBJS)
@@ -45,6 +46,8 @@ install: vitunes
 uninstall:
 	rm -f $(BINDIR)/vitunes
 	rm -f $(MANDIR)/vitunes.1
+
+# misc.
 
 cscope.out: *.h *.c
 	cscope -bke
