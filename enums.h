@@ -9,14 +9,22 @@
 typedef enum {
    UP, DOWN,
    LEFT, RIGHT,
-   TOP, MIDDLE, BOTTOM,
-   SINGLE, HALF, PAGE, WHOLE,
-   BEFORE, AFTER,
-   FORWARDS, BACKWARDS,
-   SECONDS, MINUTES,
-   NUMBER, PERCENT,
+   BACKWARDS, FORWARDS,
    SAME, OPPOSITE
-} venum;
-/* vitunes enum */
+} Direction;
+
+typedef enum {
+   SECONDS, MINUTES,
+   NUMBER, PERCENT
+} Scale;
+
+typedef enum {
+   SINGLE, HALF, WHOLE
+} Amount;
+
+typedef enum {
+   TOP, MIDDLE, BOTTOM,
+   BEFORE, AFTER
+} Placement;
 
 #endif

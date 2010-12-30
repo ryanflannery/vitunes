@@ -163,10 +163,10 @@ int  mi_compare(const void *a, const void *b);
 
 /* structure used to describe how to display meta_info structs */
 typedef struct {
-   int    nfields;
-   int    order[MI_NUM_CINFO];
-   int    widths[MI_NUM_CINFO];
-   venum  align[MI_NUM_CINFO];
+   int       nfields;
+   int       order[MI_NUM_CINFO];
+   int       widths[MI_NUM_CINFO];
+   Direction align[MI_NUM_CINFO];
 } mi_display_description;
 extern mi_display_description mi_display;
 

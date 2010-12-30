@@ -78,7 +78,7 @@ main(int argc, char *argv[])
 {
    struct passwd *pwd;
    int    previous_command;
-   int    input, i;
+   int    input;
 
 #ifdef DEBUG
    if ((debug_log = fopen("vitunes-debug.log", "w")) == NULL)
@@ -163,6 +163,8 @@ main(int argc, char *argv[])
    /* initial painting of the display */
    paint_all();
 
+   kb_init();
+
    /* -----------------------------------------------------------------------
     * begin input loop
     * -------------------------------------------------------------------- */
@@ -178,16 +180,9 @@ main(int argc, char *argv[])
          if (isdigit(input) &&  (input != '0' || gnum_get() > 0))
             gnum_add(input - '0');
          else if (input == '\n' && gnum_get() > 0 && previous_command >= 0)
-            ExecuteKeyBinding(previous_command);
-         else {
-            /* check if input is bound and execute... */
-            for (i = 0; i < KeyBindingsSize; i++) {
-               if (KeyBindings[i].keycode == input) {
-                  ExecuteKeyBinding(i);
-                  previous_command = i;
-               }
-            }
-         }
+            kb_execute(previous_command);
+         else
+            kb_execute(input);
       }
    }
 

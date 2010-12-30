@@ -35,16 +35,18 @@
 #include "uinterface.h"
 #include "e_commands.h"
 
+/*
+ * These are the various things defined in vitunes.c used elsewhere.
+ */
+
 /* record keeping  */
 extern playlist   *viewing_playlist;
 extern playlist   *playing_playlist;
 
-/* signal flags (references elsewhere) */
+/* signal flags referenced elsewhere */
 extern volatile sig_atomic_t VSIG_QUIT;
-extern volatile sig_atomic_t VSIG_RESIZE;
-extern volatile sig_atomic_t VSIG_PLAYER_MONITOR;
-extern volatile sig_atomic_t VSIG_PLAYER_RESTART;
 
+/* other */
 void load_config();
 void process_signals(bool);
 

@@ -21,7 +21,7 @@ _colors colors;
 bool showing_file_info = false;
 
 char *player_get_field2show(const meta_info *mi);
-char *num2fmt(int n, venum a);
+char *num2fmt(int n, Direction d);
 
 
 /*
@@ -62,7 +62,7 @@ player_get_field2show(const meta_info *mi)
  * style string ("%Ns" or "%-Ns")
  */
 char *
-num2fmt(int n, venum a)
+num2fmt(int n, Direction d)
 {
    static char format[255];
 
@@ -71,7 +71,7 @@ num2fmt(int n, venum a)
       errx(1, "num2sfmt: invalid number %d provided", n);
    }
 
-   if (a == LEFT)
+   if (d == LEFT)
       snprintf(format, sizeof(format), "%%-%d.%ds", n, n);
    else
       snprintf(format, sizeof(format), "%%%d.%ds", n, n);

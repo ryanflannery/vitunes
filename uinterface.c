@@ -64,38 +64,38 @@ swindow_free(swindow *win)
 }
 
 void
-swindow_scroll(swindow *win, venum d, int n)
+swindow_scroll(swindow *win, Direction d, int n)
 {
    switch (d) {
-      case UP:
-         win->voffset -= n;
-         if (win->voffset < 0)
-            win->voffset = 0;
-         break;
+   case UP:
+      win->voffset -= n;
+      if (win->voffset < 0)
+         win->voffset = 0;
+      break;
 
-      case DOWN:
-         win->voffset += n;
-         if (win->voffset >= win->nrows - win->h)
-            win->voffset = win->nrows - win->h;
-         if (win->voffset < 0)
-            win->voffset = 0;
-         break;
+   case DOWN:
+      win->voffset += n;
+      if (win->voffset >= win->nrows - win->h)
+         win->voffset = win->nrows - win->h;
+      if (win->voffset < 0)
+         win->voffset = 0;
+      break;
 
-      case LEFT:
-         win->hoffset -= n;
-         if (win->hoffset < 0)
-            win->hoffset = 0;
-         break;
+   case LEFT:
+      win->hoffset -= n;
+      if (win->hoffset < 0)
+         win->hoffset = 0;
+      break;
 
-      case RIGHT:
-         win->hoffset += n;
-         /* NOTE: "overflow" here is handled elsewhere.
-          * see input_handlers.c, scroll_col()
-          */
-         break;
+   case RIGHT:
+      win->hoffset += n;
+      /* NOTE: "overflow" here is handled elsewhere.
+       * see input_handlers.c, scroll_col()
+       */
+      break;
 
-      default:
-         err(1, "swindow_scroll: bad direction");
+   default:
+      err(1, "swindow_scroll: bad direction");
    }
 }
 

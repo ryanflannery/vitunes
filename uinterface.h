@@ -48,7 +48,7 @@ typedef struct
 swindow *swindow_new(int h, int w, int y, int x);
 void swindow_free(swindow *win);
 void swindow_resize(swindow *win, int h, int w, int y, int x);
-void swindow_scroll(swindow *win, venum d, int n);
+void swindow_scroll(swindow *win, Direction d, int n);
 
 
 /* user interface struct & methods */
