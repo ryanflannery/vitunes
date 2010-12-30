@@ -14,8 +14,8 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#ifndef INPUT_HANDLERS_H
-#define INPUT_HANDLERS_H
+#ifndef KEYBINDINGS_H
+#define KEYBINDINGS_H
 
 #include "enums.h"
 #include "paint.h"
@@ -50,9 +50,7 @@ void ybuffer_add(meta_info *f);
 
 
 /* misc. handy functions used frequently */
-void setup_viewing_playlist(playlist *p);
 void redraw_active();
-int  str2bool(const char *s, bool *b);
 bool match_command_name(const char *s, const char *cmd);
 void execute_external_command(const char *cmd);
 
@@ -101,32 +99,5 @@ void undo(Args a);
 void redo(Args a);
 void search(Args a);
 void search_find(Args a);
-
-
-/* command-mode command struct */
-typedef struct {
-   char  *name;
-   int   (*func)(int argc, char **argv);
-} cmd;
-
-extern const cmd CommandPath[];
-extern const int CommandPathSize;
-
-
-/* command-mode command handlers */
-int cmd_quit(int argc, char *argv[]);
-int cmd_write(int argc, char *argv[]);
-int cmd_mode(int argc, char *argv[]);
-int cmd_new(int argc, char *argv[]);
-int cmd_filter(int argc, char *argv[]);
-int cmd_sort(int argc, char *argv[]);
-int cmd_display(int argc, char *argv[]);
-int cmd_color(int argc, char *argv[]);
-int cmd_set(int argc, char *argv[]);
-int cmd_reload(int argc, char *argv[]);
-
-/* functions to get input from user in the command/status window */
-int user_getstr(const char *prompt, char **response);
-int user_get_yesno(const char *prompt, int *response);
 
 #endif

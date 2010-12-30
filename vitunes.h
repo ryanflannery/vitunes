@@ -28,7 +28,8 @@
 
 #include "debug.h"
 #include "enums.h"
-#include "input_handlers.h"
+#include "commands.h"
+#include "keybindings.h"
 #include "medialib.h"
 #include "player.h"
 #include "uinterface.h"

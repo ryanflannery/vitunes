@@ -16,9 +16,10 @@ LDFLAGS+=-lm -lncurses -lutil $(LDEPS)
 CFLAGS+=-DDEBUG -g
 .endif
 
-OBJS=input_handlers.o e_commands.o medialib.o meta_info.o \
-	  paint.o player.o playlist.o str2argv.o uinterface.o \
-	  vitunes.o
+OBJS=commands.o e_commands.o keybindings.o \
+	  medialib.o meta_info.o paint.o \
+	  player.o playlist.o str2argv.o \
+	  uinterface.o vitunes.o
 
 # main targets
 
