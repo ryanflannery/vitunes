@@ -1058,7 +1058,7 @@ cut(Args a UNUSED)
       ybuffer_add(viewing_playlist->files[n]);
 
    /* delete files */
-   playlist_files_remove(viewing_playlist, start, end - start);
+   playlist_files_remove(viewing_playlist, start, end - start, true);
 
    /* update ui appropriately */
    viewing_playlist->needs_saving = true;
@@ -1127,7 +1127,7 @@ paste(Args a)
    }
 
    /* add files */
-   playlist_files_add(p, _yank_buffer.files, start, _yank_buffer.nfiles);
+   playlist_files_add(p, _yank_buffer.files, start, _yank_buffer.nfiles, true);
 
    if (p == viewing_playlist)
       ui.playlist->nrows = p->nfiles;
@@ -1141,6 +1141,51 @@ paste(Args a)
       paint_message("Pasted %d files to '%s'", _yank_buffer.nfiles, p->name);
    else
       paint_message("Pasted %d files.", _yank_buffer.nfiles);
+}
+
+
+void
+undo(Args a UNUSED)
+{
+   if (ui.active == ui.library) {
+      paint_message("Cannot undo in library window.");
+      return;
+   }
+
+   if (playlist_undo(viewing_playlist) != 0)
+      paint_message("Nothing to undo.");
+   else
+      paint_message("Undo successfull.");
+
+   /* TODO more informative message like in vim */
+
+   ui.playlist->nrows = viewing_playlist->nfiles;
+   if (ui.playlist->voffset + ui.playlist->crow >= ui.playlist->nrows)
+      ui.playlist->crow = ui.playlist->nrows - ui.playlist->voffset - 1;
+
+   paint_playlist();
+}
+
+void
+redo(Args a UNUSED)
+{
+   if (ui.active == ui.library) {
+      paint_message("Cannot redo in library window.");
+      return;
+   }
+
+   if (playlist_redo(viewing_playlist) != 0)
+      paint_message("Nothing to redo.");
+   else
+      paint_message("Redo successfull.");
+
+   /* TODO */
+
+   ui.playlist->nrows = viewing_playlist->nfiles;
+   if (ui.playlist->voffset + ui.playlist->crow >= ui.playlist->nrows)
+      ui.playlist->crow = ui.playlist->nrows - ui.playlist->voffset - 1;
+
+   paint_playlist();
 }
 
 

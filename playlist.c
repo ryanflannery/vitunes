@@ -16,6 +16,8 @@
 
 #include "playlist.h"
 
+int history_size = DEFAULT_HISTORY_SIZE;
+
 void
 playlist_increase_capacity(playlist *p)
 {
@@ -49,7 +51,8 @@ playlist_new(void)
    p->filename = NULL;
    p->name     = NULL;
    p->nfiles   = 0;
-   p->history  = NULL;
+   p->history  = playlist_history_new();
+   p->hist_present = -1;
    p->needs_saving = false;
 
    return p;
@@ -62,7 +65,7 @@ playlist_free(playlist *p)
    if (p->filename != NULL) free(p->filename);
    if (p->name != NULL) free(p->name);
    if (p->files != NULL) free(p->files);
-   /* TODO free history */
+   playlist_history_free(p);
    free(p);
 }
 
@@ -81,7 +84,6 @@ playlist_dup(const playlist *original, const char *filename,
    newplist           = playlist_new();
    newplist->nfiles   = original->nfiles;
    newplist->capacity = original->nfiles;
-   newplist->history  = NULL;
 
    if (name != NULL) {
       if ((newplist->name = strdup(name)) == NULL)
@@ -108,9 +110,10 @@ playlist_dup(const playlist *original, const char *filename,
  * start is the length of the files array the files are appended to the end.
  */
 void
-playlist_files_add(playlist *p, meta_info **f, int start, int size)
+playlist_files_add(playlist *p, meta_info **f, int start, int size, bool record)
 {
-   int   i;
+   playlist_changeset *changes;
+   int i;
 
    if (start < 0 || start > p->nfiles)
       errx(1, "playlist_file_add: index %d out of range", start);
@@ -127,28 +130,43 @@ playlist_files_add(playlist *p, meta_info **f, int start, int size)
       p->files[start + i] = f[i];
 
    p->nfiles += size;
+
+   /* update the history for this playlist */
+   if (record) {
+      changes = changeset_create(CHANGE_ADD, size, f, start);
+      playlist_history_push(p, changes);
+      p->needs_saving = true;
+   }
 }
 
 /* Append a file to the end of a playlist */
 void
-playlist_files_append(playlist *p, meta_info **f, int size)
+playlist_files_append(playlist *p, meta_info **f, int size, bool record)
 {
-   return playlist_files_add(p, f, p->nfiles, size);
+   return playlist_files_add(p, f, p->nfiles, size, record);
 }
 
 /* Remove a file at a given index from a playlist. */
 void
-playlist_files_remove(playlist *p, int start, int size)
+playlist_files_remove(playlist *p, int start, int size, bool record)
 {
+   playlist_changeset *changes;
    int i;
 
    if (start < 0 || start >= p->nfiles)
       errx(1, "playlist_remove_file: index %d out of range", start);
 
+   if (record) {
+      changes = changeset_create(CHANGE_REMOVE, size, &(p->files[start]), start);
+      playlist_history_push(p, changes);
+      p->needs_saving = true;
+   }
+
    for (i = start; i < p->nfiles; i++)
       p->files[i] = p->files[i + size];
 
    p->nfiles -= size;
+
 }
 
 /* Replaces the file at a given index in a playlist with a new file */
@@ -208,7 +226,7 @@ playlist_load(const char *filename, meta_info **db, int ndb)
       }
 
       if (mi != NULL)   /* file DOES exist in DB */
-         playlist_files_append(p, &mi, 1);
+         playlist_files_append(p, &mi, 1, false);
       else {            /* file does NOT exist in DB */
          /* create empty meta-info object with just the file name */
          mi = mi_new();
@@ -217,7 +235,7 @@ playlist_load(const char *filename, meta_info **db, int ndb)
             err(1, "playlist_load: failed to strdup filename");
 
          /* add new record to the db and link it to the playlist */
-         playlist_files_append(p, &mi, 1);
+         playlist_files_append(p, &mi, 1, false);
          warnx("playlist \"%s\", file \"%s\" is NOT in media database (added for now)",
             p->name, entry);
       }
@@ -288,9 +306,9 @@ playlist_filter(const playlist *p, bool m)
    results = playlist_new();
    for (i = 0; i < p->nfiles; i++) {
       if (mi_match(p->files[i])) {
-         if (m)  playlist_files_append(results, &(p->files[i]), 1);
+         if (m)  playlist_files_append(results, &(p->files[i]), 1, false);
       } else {
-         if (!m) playlist_files_append(results, &(p->files[i]), 1);
+         if (!m) playlist_files_append(results, &(p->files[i]), 1, false);
       }
    }
 
@@ -345,4 +363,140 @@ retrieve_playlist_filenames(const char *dirname, char ***fnames)
    free(glob_pattern);
 
    return fcount;
+}
+
+playlist_changeset*
+changeset_create(short type, size_t size, meta_info **files, int loc)
+{
+   size_t i;
+
+   playlist_changeset *c;
+
+   if ((c = malloc(sizeof(playlist_changeset))) == NULL)
+      err(1, "%s: malloc(3) failed", __FUNCTION__);
+
+   if ((c->files = calloc(size, sizeof(meta_info*))) == NULL)
+      err(1, "%s: calloc(3) failed", __FUNCTION__);
+
+   c->type = type;
+   c->size = size;
+   c->location = loc;
+
+   for (i = 0; i < size; i++)
+      c->files[i] = files[i];
+
+   return c;
+}
+
+void
+changeset_free(playlist_changeset *c)
+{
+   free(c->files);
+   free(c);
+}
+
+playlist_changeset**
+playlist_history_new(void)
+{
+   playlist_changeset **h;
+   int i;
+
+   if ((h = calloc(history_size, sizeof(playlist_changeset*))) == NULL)
+      err(1, "%s: calloc(3) failed", __FUNCTION__);
+
+   for (i = 0; i < history_size; i++)
+      h[i] = NULL;
+
+   return h;
+}
+
+void
+playlist_history_free_future(playlist *p)
+{
+   int i;
+
+   for (i = p->hist_present + 1; i < history_size; i++) {
+      if (p->history[i] != NULL) {
+         changeset_free(p->history[i]);
+         p->history[i] = NULL;
+      }
+   }
+}
+
+void
+playlist_history_free(playlist *p)
+{
+   p->hist_present = 0;
+   playlist_history_free_future(p);
+}
+
+void
+playlist_history_push(playlist *p, playlist_changeset *c)
+{
+   int i;
+
+   if (p->hist_present < history_size - 1)
+      playlist_history_free_future(p);
+   else {
+      for (i = 0; i < history_size - 1; i++)
+         p->history[i] = p->history[i + 1];
+
+      p->hist_present--;
+   }
+
+   p->hist_present++;
+   p->history[p->hist_present] = c;
+}
+
+/* returns 0 if successfull, 1 if there was no history to undo */
+int
+playlist_undo(playlist *p)
+{
+   playlist_changeset *c;
+
+   if (p->hist_present == -1)
+      return 1;
+
+   c = p->history[p->hist_present];
+
+   switch (c->type) {
+   case CHANGE_ADD:
+      playlist_files_remove(p, c->location, c->size, false);
+      break;
+   case CHANGE_REMOVE:
+      playlist_files_add(p, c->files, c->location, c->size, false);
+      break;
+   default:
+      errx(1, "%s: invalid change type", __FUNCTION__);
+   }
+
+   p->hist_present--;
+   return 0;
+}
+
+/* returns 0 if successfull, 1 if there was no history to re-do */
+int
+playlist_redo(playlist *p)
+{
+   playlist_changeset *c;
+
+   if (p->hist_present == history_size - 1
+   ||  p->history[p->hist_present + 1] == NULL)
+      return 1;
+
+   c = p->history[p->hist_present + 1];
+
+   switch (c->type) {
+   case CHANGE_ADD:
+      playlist_files_add(p, c->files, c->location, c->size, false);
+      break;
+   case CHANGE_REMOVE:
+      playlist_files_remove(p, c->location, c->size, false);
+      break;
+   default:
+      errx(1, "%s: invalid change type", __FUNCTION__);
+   }
+
+   p->hist_present++;
+   return 0;
 }

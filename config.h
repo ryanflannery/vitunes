@@ -43,6 +43,7 @@ char *DEFAULT_PLAYER_ARGS[] = { "mplayer", "-slave", "-idle", "-quiet", "-msglev
 #define K_CNTRL_F  6
 #define K_CNTRL_L  12
 #define K_CNTRL_P  16
+#define K_CNTRL_R  18
 #define K_CNTRL_U  21
 #define K_CNTRL_Y  25
 #define K_CNTRL_SLASH 28
@@ -113,6 +114,8 @@ const keybinding KeyBindings[] = {
    { 'd',            cut,              ARG_NOT_USED },
    { 'p',            paste,            { .placement = AFTER }},
    { 'P',            paste,            { .placement = BEFORE }},
+   { 'u',            undo,             ARG_NOT_USED },
+   { K_CNTRL_R,      redo,             ARG_NOT_USED },
 
    { '/',            search,           { .direction = FORWARDS }},
    { '?',            search,           { .direction = BACKWARDS }},

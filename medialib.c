@@ -70,6 +70,11 @@ medialib_load(const char *db_file, const char *playlist_dir)
       medialib_playlist_add(p);
       free(pfiles[i]);
    }
+
+   /* set all playlists as saved initially */
+   for (i = 0; i < mdb.nplaylists; i++)
+      mdb.playlists[i]->needs_saving = false;
+
    free(pfiles);
 }
 
@@ -230,7 +235,7 @@ medialib_db_load(const char *db_file)
       else if (ferror(fin))
          err(1, "medialib_db_load: error loading database file '%s'", db_file);
       else
-         playlist_files_append(mdb.library, &mi, 1);
+         playlist_files_append(mdb.library, &mi, 1, false);
    }
 
    fclose(fin);
@@ -341,7 +346,7 @@ medialib_db_update(bool show_skipped)
 
          if (errno == ENOENT) {
             /* file was removed, remove from library */
-            playlist_files_remove(mdb.library, i, 1);
+            playlist_files_remove(mdb.library, i, 1, false);
             i--;  /* since removed a file, we want to decrement i */
             printf("x %s\n", filename);
             count_removed_file_gone++;
@@ -363,7 +368,7 @@ medialib_db_update(bool show_skipped)
             mi = mi_extract(filename);
             if (mi == NULL) {
                /* file now has no meta-info, remove from library */
-               playlist_files_remove(mdb.library, i, 1);
+               playlist_files_remove(mdb.library, i, 1, false);
                i--;  /* since removed a file, we want to decrement i */
                printf("- %s\n", filename);
                count_removed_meta_gone++;
@@ -477,7 +482,7 @@ medialib_db_scan_dirs(char *dirlist[])
 
                   if (mi == NULL) {
                      /* file now has no meta-info, remove from library */
-                     playlist_files_remove(mdb.library, idx, 1);
+                     playlist_files_remove(mdb.library, idx, 1, false);
                      printf("- %s\n", ftsent->fts_accpath);
                      count_removed_lost_info++;
                   } else {
@@ -505,7 +510,7 @@ medialib_db_scan_dirs(char *dirlist[])
                } else {
                   /* file does have info, add it to library */
                   mi_sanitize(mi);
-                  playlist_files_append(mdb.library, &mi, 1);
+                  playlist_files_append(mdb.library, &mi, 1, false);
                   printf("+ %s\n", ftsent->fts_accpath);
                   count_added++;
                }

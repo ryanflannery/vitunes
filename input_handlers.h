@@ -97,6 +97,8 @@ void jumpto_page(Args a);
 void yank(Args a);
 void paste(Args a);
 void cut(Args a);
+void undo(Args a);
+void redo(Args a);
 void search(Args a);
 void search_find(Args a);
 

@@ -33,26 +33,18 @@
 #include "meta_info.h"
 
 #define PLAYLIST_CHUNK_SIZE   100
-
-/* a change to a playlist */
-typedef enum {
-   ADD,
-   REMOVE
-} changeset_type;
+#define DEFAULT_HISTORY_SIZE  100
+extern int history_size;
 
 typedef struct {
-   changeset_type type;
-   size_t         num;
-   meta_info    **files;
-   int            location;
+#define CHANGE_ADD    0
+#define CHANGE_REMOVE 1
+   short       type;
+   size_t      size;
+   meta_info **files;
+   int         location;
 
 } playlist_changeset;
-
-typedef struct _playlist_history {
-   playlist_changeset       *change;
-   struct _playlist_history *next;
-
-} playlist_history;
 
 /* the core playlist structure */
 typedef struct {
@@ -66,7 +58,8 @@ typedef struct {
    int         capacity;   /* current size malloc()'d for the files */
 
    /* history of the playlist */
-   playlist_history  *history;
+   playlist_changeset   **history;        /* complete history */
+   int                    hist_present;   /* current changeset in history */
 
 } playlist;
 
@@ -92,9 +85,9 @@ playlist *playlist_dup(const playlist *original, const char *filename,
                        const char* name);
 
 /* add/remove/replace files from a playlist */
-void playlist_files_add(playlist *p, meta_info **f, int start, int size);
-void playlist_files_append(playlist *p, meta_info **f, int size);
-void playlist_files_remove(playlist *p, int start, int size);
+void playlist_files_add(playlist *p, meta_info **f, int start, int size, bool);
+void playlist_files_append(playlist *p, meta_info **f, int size, bool);
+void playlist_files_remove(playlist *p, int start, int size, bool);
 void playlist_file_replace(playlist *p, int index, meta_info *newEntry);
 
 /* load/save/delete playlists from/to/from filesystem */
@@ -107,5 +100,16 @@ playlist *playlist_filter(const playlist *p, bool m);
 
 /* retrieve all playlist files in a given directory and return number found */
 int retrieve_playlist_filenames(const char *dirname, char ***files);
+
+/* for modification and use of the playlist history */
+playlist_changeset *changeset_create(short t, size_t s, meta_info **f, int l);
+void changeset_free(playlist_changeset *c);
+
+playlist_changeset **playlist_history_new();
+void playlist_history_free(playlist *p);
+
+void playlist_history_push(playlist *p, playlist_changeset *c);
+int  playlist_undo(playlist *p);
+int  playlist_redo(playlist *p);
 
 #endif
