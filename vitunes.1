@@ -108,20 +108,15 @@ absolute pathname, as obtained from
 If you move any of your media files around after adding them to the database,
 you will want to remove them from the database and then re-add them.
 .Sh DOCUMENTATION
-Documentation is divided into the following sections.  They are, in order,
-.Bl -enum -compact
-.It
-COMMAND LINE OPTIONS
-.It
-E-COMMANDS
-.It
-THE DISPLAY (a brief description)
-.It
-KEYBINDINGS (a partial list)
-.It
-RUN-TIME COMMANDS
-.It
-CONFIGURATION FILE
+Documentation is divided into the following sections.  They are, in order:
+.Bl -tag -enum -compact
+.It Cm 1. COMMAND LINE OPTIONS
+.It Cm 2. E-COMMANDS
+.It Cm 3. THE DISPLAY (a brief description)
+.It Cm 4. DEFAULT KEYBINDINGS (a partial list)
+.It Cm 5. RUN-TIME COMMANDS
+.It Cm 6. KEYBINDING DETAILS
+.It Cm 7. CONFIGURATION FILE
 .El
 .Sh COMMAND LINE OPTIONS
 .Bl -tag -width Fl
@@ -242,15 +237,15 @@ This window is to the right of the library window and occupies most of the
 display.  It shows the contents of whichever playlist has currently been
 selected in the library window.
 .El
-.Sh KEYBINDINGS
-The following is only a partial listing of the keybindings that
+.Sh DEFAULT KEYBINDINGS
+The following is only a partial listing of the default keybindings that
 .Nm
 supports.  Only those keybindings that are different from
 .Xr vi 1
 (or specific to
 .Nm )
-appear here.  See the website for a complete listing of supported
-keybindings.
+appear here.  See the KEYBINDING DETAILS section, or the  website, for a
+complete listing of supported keybindings.
 .Pp
 Note that for keybindings, '^' denotes 'CONTROL + '.
 .Pp
@@ -291,6 +286,16 @@ parameters (just like in
 Note that abbreviations are also supported.  That is, entering any non-ambiguous
 abbreviation of a command name will also execute the command.
 .Bl -tag -width Fl
+.It :bind Cm ACTION KEYCODE
+This will bind the action specified by ACTION to the keycode specified by
+KEYCODE.  After this command is issued (at run-time or in the configuration
+file), entering the given key specified by KEYCODE will result in firing the
+specified action.
+.Pp
+See the section
+.Sy KEYBINDING DETAILS
+for details on specifying KEYCODES and a complete list of actions, along with
+their default keybindings, 
 .It :color Cm item=fg,bg
 Change the color of the given item to fg-colored text on a bg-colored
 background.  Available items are:
@@ -488,7 +493,339 @@ is provided, then the playlist will be saved with this new name.  If, however,
 a playlist already exists with that name, then you will be prevented from saving
 with that name unless '!' is provided, in which case the existing playlist with
 that name will be deleted.
+.It :unbind Cm [ * | action ACTION | key KEYCODE ]
+This command is used to remove existing keybindings.  It has three forms.  The
+first is simply:
+.Pp
+.Ic :unbind *
+.Pp
+which will remove all existing keybindings.  This is handy in a configuration
+file where you may want to define all custom keybindings.  Issuing this at
+runtime will leave you with an instance of
+.Nm
+that will not respond to any keybdings!
+.Pp
+The second form is used to unbind actions:
+.Pp
+.Ic :unbind action ACTION
+.Pp
+This will remove any keybindings for the action specified by ACTION.
+.Pp
+The third form is used to unbind keys:
+.Pp
+.Ic :unbind key KEYCODE
+.Pp
+This will remove any action currently bound to the key specified by KEYCODE.
+.Pp
+See the section
+.Sy KEYBINDING DETAILS
+for details on specifying KEYCODES and a complete list of actions, along with
+their default keybindings, 
 .El
+.Sh KEYBINDING DETAILS
+
+This section describes how to specify keycodes and actions used in both the
+bind and unbind commands.
+.Pp
+Keycodes are specified in the following fashion:
+.Pp
+.Ic [CONTROL] [ KEY | SPECIALKEY ]
+.Pp
+Here,
+.Cm KEY
+is used to specify the actual, printable character entered which is
+case-sensitive (e.g. 'j', 'p', 'P'), and
+.Cm SPECIALKEY
+is used to specify various non-printable characters.
+.Pp
+If
+.Cm CONTROL
+is specified, then the keycode only applies when the control key is pressed
+in conjunction with the
+.Cm KEY
+or
+.Cm SPECIALKEY.
+.Pp
+Although
+.Cm KEY
+is case-sensitive ('p' and 'P' are treated differently), both
+.Cm CONTROL
+and
+.Cm SPECIALKEY
+are case-insensitive.
+.Pp
+The currently supported list of non-printable characters (
+.Cm SPECIALKEY's
+) is:
+.Pp
+.Bl -tag -width "backspace" -offset indent -compact
+.It Cm PageUp
+The page-up key.
+.It Cm PageDown
+The page-down key.
+.It Cm Up
+The up-arrow key.
+.It Cm Down
+The down-arrow key.
+.It Cm Left
+The left-arrow key.
+.It Cm Right
+The right-arrow key.
+.It Cm Backspace
+The backspace key.
+.It Cm Enter
+The enter key.
+.It Cm Space
+The space key.
+.It Cm Tab
+The tab key.
+.El
+.Pp
+The current list of available actions that keys may be bound to is the
+following.  For each action, the default keys bound to them are also listed.
+.Pp
+.Bl -tag -width "scroll_down_wholepage" -offset indent -compact
+.It Cm scroll_up
+Scroll the current row in the current window up by one line.
+.br
+DEFAULT BINDINGS: k, -, UP
+
+.It Cm scroll_down
+Scroll the current row in the current window down by one line.
+.br
+DEFAULT BINDINGS: j, DOWN
+
+.It Cm scroll_up_page
+Scroll the current window up by one line.
+.br
+DEFAULT BINDINGS: Control y
+
+.It Cm scroll_down_page
+Scroll the current window down by one line.
+.br
+DEFAULT BINDINGS: Control e
+
+.It Cm scroll_up_halfpage
+Scroll the current window up one half-page.
+.br
+DEFAULT BINDINGS: Control u
+
+.It Cm scroll_down_halfpage
+Scroll the current window down one half-page.
+.br
+DEFAULT BINDINGS: Control d
+
+.It Cm scroll_up_wholepage
+Scroll the current window up one whole page.
+.br
+DEFAULT BINDINGS: Control b, PageUp
+
+.It Cm scroll_down_wholepage
+Scroll the current window down one whole page.
+.br
+DEFAULT BINDINGS: Control f, PageDown
+
+.It Cm scroll_left
+Scroll the current window to the left one column.
+.br
+DEFAULT BINDINGS: h, LEFT, BACKSPACE
+
+.It Cm scroll_right
+Scroll the current window to the right one column.
+.br
+DEFAULT BINDINGS: l, RIGHT, SPACE
+
+.It Cm scroll_leftmost
+Scroll the current window to the left as far as possible.
+.br
+DEFAULT BINDINGS: ^, 0, |
+
+.It Cm scroll_rightmost
+Scroll the current window to the right as far as possible.
+.br
+DEFAULT BINDINGS: $
+
+.It Cm jumpto_screen_top
+Move the current line to the first line in the current window.
+.br
+DEFAULT BINDINGS: H
+
+.It Cm jumpto_screen_middle
+Move the current line to the middle line in the current window.
+.br
+DEFAULT BINDINGS: M
+
+.It Cm jumpto_screen_bottom
+Move the current line to the bottom line in the current window.
+.br
+DEFAULT BINDINGS: L
+
+.It Cm jumpto_line
+Jump to either a specified line (if a global input number is present) or to
+the last line in the current window's buffer.
+.br
+DEFAULT BINDINGS: G
+
+.It Cm jumpto_percent
+Using the global input number N, jump to the line N% the way through the
+current window's buffer.
+.br
+DEFAULT BINDINGS: %
+
+.It Cm search_forward
+Begin a search for the entered string searching forward in the current window.
+The current row will be updated to the next matching row.
+.br
+DEFAULT BINDINGS: /
+
+.It Cm search_backward
+Begin a search for the entered string searching backwards in the current
+The current row will be updated to the next matching row.
+window.
+.br
+DEFAULT BINDINGS: ?
+
+.It Cm find_next_forward
+Using the previous search-string, search in the same direction as the search
+was input for the next matching row.
+.br
+DEFAULT BINDINGS: n
+
+.It Cm find_next_backward
+Using the previous search-string, search in the opposite direction as the
+search was input for the next matching row.
+.br
+DEFAULT BINDINGS: N
+
+.It Cm cut
+Remove the following N lines from the current window, placing them in the copy
+buffer, where N is the global input number.  Note that if the library window
+is active, only one row (playlist) can be cut/deleted at a time, and that this
+action cannot be undone.
+.br
+DEFAULT BINDINGS: d
+
+.It Cm yank
+Copy the following N lines from the current window into the copy buffer, where
+N is the global input number.  This action cannot be used in the library window.
+.br
+DEFAULT BINDINGS: y
+
+.It Cm paste_after
+Paste the contents of the copy buffer after the current row in the playlist
+window.  This action cannot be used in the library window.
+.br
+DEFAULT BINDINGS: p
+
+.It Cm paste_before
+Paste the contents of the copy buffer before the current row in the playlist
+window.  This action cannot be used in the library window.
+.br
+DEFAULT BINDINGS: P
+
+.It Cm undo
+Undo the previous action on the currently viewed playlist.
+This action cannot be used in the library window.
+.br
+DEFAULT BINDINGS: u
+
+.It Cm redo
+Redo the previously undone action on the currently viewed playlist.
+This action cannot be used in the library window.
+.br
+DEFAULT BINDINGS: Control r
+
+.It Cm quit
+Exit
+.Nm .
+If there are unsaved changes in any playlists you will be prevented from
+exiting until you either save those changes or issue a ":q!" command.
+.br
+DEFAULT BINDINGS: Control c, Control /
+
+.It Cm redraw
+Clear and re-draw the entire display.
+.br
+DEFAULT BINDINGS: Control l
+
+.It Cm command_mode
+Enter command-mode, where the commands listed in the
+.Sy COMMANDS
+section may be issued.
+.br
+DEFAULT BINDINGS: :
+
+.It Cm shell
+Enter a command to be executed outsite of
+.Nm
+and in the current shell environment.  The output of the execution is shown
+before control and the display returns to
+.Nm .
+.br
+DEFAULT BINDINGS: !
+
+.It Cm switch_windows
+Toggle focus between the library and playlist windows.
+.br
+DEFAULT BINDINGS: TAB
+
+.It Cm show_file_info
+Show the file information (including meta-information) for the current row/file
+in the playlist window.  This action does not work in the library window.
+.br
+DEFAULT BINDINGS: m
+
+.It Cm load_playlist
+Load the playlist specified by the current row in the library window.
+.br
+DEFAULT BINDINGS: ENTER
+
+.It Cm media_play
+Begin playing the file specified by the current row in the playlist window.
+.br
+DEFAULT BINDINGS: ENTER
+
+.It Cm media_pause
+Pause playback of any playing media.
+.br
+DEFAULT BINDINGS: z
+
+.It Cm media_stop
+Stop all playback of any playing media.
+.br
+DEFAULT BINDINGS: s
+
+.It Cm seek_forward_seconds
+Seek forwards 10 seconds in any playing media.
+.br
+DEFAULT BINDINGS: f
+
+.It Cm seek_backward_seconds
+Seek backwards 10 seconds in any playing media.
+.br
+DEFAULT BINDINGS: b
+
+.It Cm seek_forward_minutes
+Seek forwards 1 minute in any playing media.
+.br
+DEFAULT BINDINGS: F
+
+.It Cm seek_backward_minutes
+Seek backwards 1 minute in any playing media.
+.br
+DEFAULT BINDINGS: B
+
+.El
+.Pp
+Some examples of using the above actions and keycodes to define the default
+keybdings are:
+.Bd -literal
+   bind  paste_after   p
+   bind  paste_bofore  P
+
+   bind  scroll_up_halfpage    Control u
+   bind  scroll_down_halfpage  Control u
+.Ed
 .Sh CONFIGURATION FILE
 The default configuration file loaded by
 .Nm
