@@ -21,6 +21,29 @@ bool sorts_need_saving = false;
 #define swap(type, x, y) \
    { type temp = x; x = y; y = temp;}
 
+/*
+ * List of command-mode commands.  Take note of the following: XXX
+ *    1. See 'match_cmd_name()' for the handling of abbreviations.
+ *    2. Commands that accept a '!' after their names are handled
+ *       in 'match_cmd_name()'.
+ */
+const cmd CommandPath[] = { 
+   {  "bind",     cmd_bind },
+   {  "color",    cmd_color },
+   {  "display",  cmd_display },
+   {  "filter",   cmd_filter },
+   {  "mode",     cmd_mode },
+   {  "new",      cmd_new },
+   {  "q",        cmd_quit },
+   {  "reload",   cmd_reload },
+   {  "set",      cmd_set },
+   {  "sort",     cmd_sort },
+   {  "unbind",   cmd_unbind },
+   {  "w",        cmd_write }
+};
+const int CommandPathSize = (sizeof(CommandPath) / sizeof(cmd));
+
+
 void
 setup_viewing_playlist(playlist *p)
 {
