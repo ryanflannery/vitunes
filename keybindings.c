@@ -184,9 +184,13 @@ const KeyBinding DefaultKeyBindings[] = {
    { 'z',               media_pause },
    { 's',               media_stop },
    { 'f',               seek_forward_seconds },
+   { ']',               seek_forward_seconds },
    { 'b',               seek_backward_seconds },
+   { '[',               seek_backward_seconds },
    { 'F',               seek_forward_minutes },
-   { 'B',               seek_backward_minutes }
+   { '}',               seek_forward_minutes },
+   { 'B',               seek_backward_minutes },
+   { '{',               seek_backward_minutes }
 };
 const size_t DefaultKeyBindingsSize = sizeof(DefaultKeyBindings) / sizeof(KeyBinding);
 
