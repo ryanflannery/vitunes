@@ -22,7 +22,10 @@
 #include "paint.h"
 #include "vitunes.h"
 
-/* keybinding actions */
+/*
+ * List of all actions that can be bound by keybindings.
+ * NOTE: Using "count" trick (see last element), so no enum should be defined.
+ */
 typedef enum {
    /* scrolling vertically */
    scroll_up,
@@ -72,26 +75,29 @@ typedef enum {
    seek_forward_seconds,
    seek_backward_seconds,
    seek_forward_minutes,
-   seek_backward_minutes,
-
+   seek_backward_minutes
 } KeyAction;
 
 typedef int KeyCode;
 
 
-/* keybinding manipulation & retrieval routines */
-void  kb_init();
-void  kb_free();
-void  kb_bind(KeyAction, KeyCode);
-bool  kb_execute(KeyCode k);
+/* Keybinding initializing and binding routines */
+void kb_init();
+void kb_free();
+void kb_bind(KeyAction, KeyCode);
+void kb_unbind_action(KeyAction);
+void kb_unbind_key(KeyCode);
+void kb_unbind_all();
+bool kb_execute(KeyCode);
 
-bool  kb_is_action(char *s);
-KeyAction kb_str2action(char * s);
+bool    kb_str2action(char*, KeyAction*);
+KeyCode kb_str2keycode(char*);
+KeyCode kb_str2keycode2(char*, char*);
 
 
 /* 
  * This is the generic argument structure for all keybinding action handlers.
- * This is used liberally to prevent any intricate parsing and make the use
+ * This is used liberally to prevent any intricate parsing and make heavy use
  * of code-reuse.
  */
 typedef struct {
@@ -101,10 +107,7 @@ typedef struct {
    Placement   placement;
    int         num;
 } KbaArgs;
-
-/* Function used to retrieve handler for a given keycode */
 typedef void(*ActionHandler)(KbaArgs a);
-ActionHandler kb_get_handler(KeyCode k);
 
 /* Individual keybinding action handlers */
 void kba_scroll_row(KbaArgs a);
@@ -144,9 +147,9 @@ void kba_seek(KbaArgs a);
  */
 void gnum_clear();
 void gnum_set(int x);
-int  gnum_get();
-int  gnum_retrieve();   /* XXX returns 1 if gnum not set, num otherwise */
 void gnum_add(int x);
+int  gnum_get();        /* Return current gnum. */
+int  gnum_retrieve();   /* Return current gnum and then clear it. */
 
 
 /* These are used to set/use the search direction */
@@ -154,7 +157,7 @@ Direction search_dir_get();
 void  search_dir_set(Direction d);
 
 
-/* These work with the copy/cut buffer */
+/* This is the copy/cut buffer and the routines used to manipulate it. */
 #define YANK_BUFFER_CHUNK_SIZE 100
 typedef struct {
    meta_info   **files;

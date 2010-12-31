@@ -35,6 +35,7 @@ char *DEFAULT_PLAYER_ARGS[] = { "mplayer", "-slave", "-idle", "-quiet", "-msglev
  * the enter_cmd_mode() function.
  */
 const cmd CommandPath[] = {
+   {  "bind",     cmd_bind },
    {  "color",    cmd_color },
    {  "display",  cmd_display },
    {  "filter",   cmd_filter },
@@ -44,6 +45,7 @@ const cmd CommandPath[] = {
    {  "reload",   cmd_reload },
    {  "set",      cmd_set },
    {  "sort",     cmd_sort },
+   {  "unbind",   cmd_unbind },
    {  "w",        cmd_write }
 };
 const int CommandPathSize = (sizeof(CommandPath) / sizeof(cmd));

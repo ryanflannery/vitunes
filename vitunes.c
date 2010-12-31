@@ -145,6 +145,7 @@ main(int argc, char *argv[])
    qsort(mdb.library->files, mdb.library->nfiles, sizeof(meta_info*), mi_compare);
 
    /* setup user interface and default colors */
+   kb_init();
    ui_init(DEFAULT_LIBRARY_WINDOW_WIDTH);
    paint_setup_colors();
 
@@ -162,8 +163,6 @@ main(int argc, char *argv[])
 
    /* initial painting of the display */
    paint_all();
-
-   kb_init();
 
    /* -----------------------------------------------------------------------
     * begin input loop

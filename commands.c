@@ -560,6 +560,85 @@ cmd_reload(int argc, char *argv[])
    return 0;
 }
 
+int
+cmd_bind(int argc, char *argv[])
+{
+   KeyAction action;
+   KeyCode code;
+
+   if (argc < 3 || argc > 4) {
+      paint_error("usage: %s <action> <keycode>", argv[0]);
+      return 1;
+   }
+
+   if (!kb_str2action(argv[1], &action)) {
+      paint_error("Unknown action '%s'", argv[1]);
+      return 1;
+   }
+
+   if (argc == 3) {
+      if ((code = kb_str2keycode(argv[2])) < 0) {
+         paint_error("Invalid keycode '%s'", argv[2]);
+         return 1;
+      }
+   } else {
+      if ((code = kb_str2keycode2(argv[2], argv[3])) < 0) {
+         paint_error("Invalid keycode '%s'", argv[2]);
+         return 1;
+      }
+   }
+
+   kb_bind(action, code);
+   return 0;
+}
+
+int
+cmd_unbind(int argc, char *argv[])
+{
+   KeyAction action;
+   KeyCode   key;
+
+   /* unbind all case ("unbind *") */
+   if (argc == 2 && strcmp(argv[1], "*") == 0) {
+      kb_unbind_all();
+      return 0;
+   }
+
+   /* unbind action case ("unbind action <ACTION>") */
+   if (argc == 3 && strcasecmp(argv[1], "action") == 0) {
+      if (kb_str2action(argv[2], &action)) {
+         kb_unbind_action(action);
+         return 0;
+      } else {
+         paint_error("Unknown action '%s'", argv[2]);
+         return 1;
+      }
+   }
+
+   /* unbind key case, no control ("unbind key X") */
+   if (argc == 3 && strcasecmp(argv[1], "key") == 0) {
+      if ((key = kb_str2keycode(argv[2])) < 0) {
+         paint_error("Invalid keycode '%s'", argv[2]);
+         return 1;
+      }
+
+      kb_unbind_key(key);
+   }
+
+   /* unbind key case, with control ("unbind key control X") */
+   if (argc == 4 && strcasecmp(argv[1], "key") == 0) {
+      if ((key = kb_str2keycode2(argv[2], argv[3])) < 0) {
+         paint_error("Invalid keycode '%s %s'", argv[2], argv[3]);
+         return 1;
+      }
+
+      kb_unbind_key(key);
+   }
+
+   paint_error("usage: unbind [* | action <ACTION> | key <KEYCODE> ]");
+   return 1;
+}
+
 
 /*****************************************************************************
  * command window input methods

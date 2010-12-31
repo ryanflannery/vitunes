@@ -16,6 +16,7 @@
 
 #include "keybindings.h"
 
+
 /* This table maps KeyActions to their string representations */
 typedef struct {
    KeyAction   action;
@@ -65,14 +66,14 @@ const KeyActionName KeyActionNames[] = {
    { seek_forward_minutes,    "seek_forward_minutes" },
    { seek_backward_minutes,   "seek_backward_minutes" }
 };
-const int KeyActionNamesSize = sizeof(KeyActionNames) / sizeof(KeyActionName);
+const size_t KeyActionNamesSize = sizeof(KeyActionNames) / sizeof(KeyActionName);
 
 
 /* This table maps KeyActions to their handler-functions (with arguments) */
 typedef struct {
-   KeyAction             action;
-   void (*handler)(KbaArgs);
-   KbaArgs               args;
+   KeyAction      action;
+   ActionHandler  handler;
+   KbaArgs        args;
 } KeyActionHandler;
 
 #define ARG_NOT_USED { .num = 0 }
@@ -92,7 +93,7 @@ const KeyActionHandler KeyActionHandlers[] = {
    {  jumpto_screen_top,      kba_jumpto_screen,{ .placement = TOP }},
    {  jumpto_screen_middle,   kba_jumpto_screen,{ .placement = MIDDLE }},
    {  jumpto_screen_bottom,   kba_jumpto_screen,{ .placement = BOTTOM }},
-   {  jumpto_line,            kba_jumpto_file,  { .scale = NUMBER }},
+   {  jumpto_line,            kba_jumpto_file,  { .scale = NUMBER, .num = 'G' }},
    {  jumpto_percent,         kba_jumpto_file,  { .scale = PERCENT }},
    {  search_forward,         kba_search,       { .direction = FORWARDS }},
    {  search_backward,        kba_search,       { .direction = BACKWARDS }},
@@ -119,7 +120,7 @@ const KeyActionHandler KeyActionHandlers[] = {
    {  seek_forward_minutes,   kba_seek,   { .direction = FORWARDS,  .scale = MINUTES, .num = 1 }},
    {  seek_backward_minutes,  kba_seek,   { .direction = BACKWARDS, .scale = MINUTES, .num = 1 }}
 };
-const int KeyActionHandlersSize = sizeof(KeyActionHandlers) / sizeof(KeyActionHandler);
+const size_t KeyActionHandlersSize = sizeof(KeyActionHandlers) / sizeof(KeyActionHandler);
 
 
 /* This table contains the default keybindings */
@@ -130,7 +131,7 @@ typedef struct {
 
 #define MY_K_TAB    9
 #define MY_K_ENTER 13
-#define kb_CONTROL(x)   (x - 'a' + 1)
+#define kb_CONTROL(x)   ((x) - 'a' + 1)
 
 const KeyBinding DefaultKeyBindings[] = {
    { 'k',               scroll_up },
@@ -187,7 +188,27 @@ const KeyBinding DefaultKeyBindings[] = {
    { 'F',               seek_forward_minutes },
    { 'B',               seek_backward_minutes }
 };
-const int DefaultKeyBindingsSize = sizeof(DefaultKeyBindings) / sizeof(KeyBinding);
+const size_t DefaultKeyBindingsSize = sizeof(DefaultKeyBindings) / sizeof(KeyBinding);
+
+
+/* Mapping of special keys to their values */
+typedef struct {
+   char    *str;
+   KeyCode  code;
+} SpecialKeyCode;
+SpecialKeyCode SpecialKeys[] = {
+   { "BACKSPACE", KEY_BACKSPACE },
+   { "ENTER",     MY_K_ENTER },
+   { "SPACE",     ' ' },
+   { "TAB",       MY_K_TAB },
+   { "UP",        KEY_UP },
+   { "DOWN",      KEY_DOWN },
+   { "LEFT",      KEY_LEFT },
+   { "RIGHT",     KEY_RIGHT },
+   { "PAGEUP",    KEY_PPAGE },
+   { "PAGEDOWN",  KEY_NPAGE }
+};
+const size_t SpecialKeysSize = sizeof(SpecialKeys) / sizeof(SpecialKeyCode);
 
 
 /* 
@@ -195,8 +216,24 @@ const int DefaultKeyBindingsSize = sizeof(DefaultKeyBindings) / sizeof(KeyBindin
  * loaded at initial runtime (kb_init()), and modified thereafter, either via
  * "bind" commands in the config file or issued during runtime.
  */
+#define KEYBINDINGS_CHUNK_SIZE 100
 KeyBinding *KeyBindings;
-int KeyBindingsSize;
+size_t KeyBindingsSize;
+size_t KeyBindingsCapacity;
+
+void
+kb_increase_capacity()
+{
+   KeyBinding  *new_buffer;
+   size_t       nbytes;
+
+   KeyBindingsCapacity += KEYBINDINGS_CHUNK_SIZE;
+   nbytes = KeyBindingsCapacity * sizeof(KeyBinding);
+   if ((new_buffer = realloc(KeyBindings, nbytes)) == NULL)
+      err(1, "%s: failed to realloc(3) keybindings", __FUNCTION__);
+
+   KeyBindings = new_buffer;
+}
 
 
 /****************************************************************************
@@ -209,9 +246,14 @@ int KeyBindingsSize;
 void
 kb_init()
 {
-   int i;
+   size_t i;
 
+   /* setup empty buffer */
    KeyBindingsSize = 0;
+   KeyBindingsCapacity = 0;
+   kb_increase_capacity();
+
+   /* install default bindings */
    for (i = 0; i < DefaultKeyBindingsSize; i++)
       kb_bind(DefaultKeyBindings[i].action, DefaultKeyBindings[i].key);
 }
@@ -226,43 +268,128 @@ kb_free()
 void
 kb_bind(KeyAction action, KeyCode key)
 {
-   size_t nbytes;
-   int    i, match;
+   kb_unbind_key(key);
 
-   /* Is the key already bound? */
-   match = -1;
-   for (i = 0; i < KeyBindingsSize; i++) {
-      if (KeyBindings[i].key == key) {
-         KeyBindings[i].action = action;
-         return;
-      }
-   }
-
-   /* No.  Add it. */
-   nbytes = (KeyBindingsSize + 1) * sizeof(KeyBinding);
-   if ((KeyBindings = realloc(KeyBindings, nbytes)) == NULL)
-      err(1, "%s: realloc(3) failed", __FUNCTION__);
+   if (KeyBindingsSize == KeyBindingsCapacity)
+      kb_increase_capacity();
 
    KeyBindings[KeyBindingsSize].action = action;
    KeyBindings[KeyBindingsSize].key = key;
    KeyBindingsSize++;
 }
 
+void
+kb_unbind_action(KeyAction action)
+{
+   size_t i, j;
+
+   for (i = 0; i < KeyBindingsSize; i++) {
+      if (KeyBindings[i].action == action) {
+         for (j = i; j < KeyBindingsSize - 1; j++)
+            KeyBindings[j] = KeyBindings[j + 1];
+
+         KeyBindingsSize--;
+      }
+   }
+}
+
+void
+kb_unbind_key(KeyCode key)
+{
+   size_t i, j;
+
+   for (i = 0; i < KeyBindingsSize; i++) {
+      if (KeyBindings[i].key == key) {
+         for (j = i; j < KeyBindingsSize - 1; j++)
+            KeyBindings[j] = KeyBindings[j + 1];
+
+         KeyBindingsSize--;
+      }
+   }
+}
+
+void
+kb_unbind_all()
+{
+   KeyBindingsSize = 0;
+}
+
+bool
+kb_str2action(char *s, KeyAction *action)
+{
+   size_t i;
+
+   for (i = 0; i < KeyActionNamesSize; i++) {
+      if (strcasecmp(KeyActionNames[i].name, s) == 0) {
+         *action = KeyActionNames[i].action;
+         return true;
+      }
+   }
+
+   return false;
+}
+
+KeyCode
+kb_str2specialKey(char *s)
+{
+   size_t i;
+
+   for (i = 0; i < SpecialKeysSize; i++) {
+      if (strcasecmp(SpecialKeys[i].str, s) == 0)
+         return SpecialKeys[i].code;
+   }
+
+   return -1;
+}
+
+KeyCode
+kb_str2keycode(char *s)
+{
+   KeyCode val;
+
+   if (strlen(s) == 1)
+      val = s[0];
+   else
+      val = kb_str2specialKey(s);
+
+   return val;
+}
+
+KeyCode
+kb_str2keycode2(char *control, char *key)
+{
+   KeyCode val;
+
+   if (strcasecmp(control, "control") != 0)
+      return -1;
+
+   if ((val = kb_str2keycode(key)) > 0)
+      return kb_CONTROL(val);
+   else
+      return -1;
+}
+
 bool
 kb_execute(KeyCode k)
 {
    KeyAction action;
-   int i;
+   size_t i;
+   bool   found;
 
-   action = NULL;
+   /* Is the key bound? */
+   found = false;
+   action = -1;
    for (i = 0; i < KeyBindingsSize; i++) {
-      if (KeyBindings[i].key == k)
+      if (KeyBindings[i].key == k) {
          action = KeyBindings[i].action;
+         found = true;
+      }
    }
 
-   if (action == NULL)
+   if (!found)
       return false;
 
+   /* Execute theaction handler. */
    for (i = 0; i < KeyActionHandlersSize; i++) {
       if (KeyActionHandlers[i].action == action) {
          ((KeyActionHandlers[i].handler)(KeyActionHandlers[i].args));
@@ -273,31 +400,6 @@ kb_execute(KeyCode k)
    return false;
 }
 
-bool
-kb_is_action(char *s)
-{
-   int i;
-
-   for (i = 0; i < KeyActionNamesSize; i++) {
-      if (strcasecmp(KeyActionNames[i].name, s) == 0)
-         return true;
-   }
-
-   return false;
-}
-
-KeyAction
-kb_str2action(char *s)
-{
-   int i;
-
-   for (i = 0; i < KeyActionNamesSize; i++) {
-      if (strcasecmp(KeyActionNames[i].name, s) == 0)
-         return KeyActionNames[i].action;
-   }
-
-   return -1;
-}
 
 
 /*****************************************************************************
