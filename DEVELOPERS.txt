@@ -199,10 +199,13 @@ CODE STRUCTURE: THE MODULES
                                    object in vitunes.
 
 
-   input_handlers    All of the keybinding-handlers in vitunes plus all of the
-                     command-mode handlers.  This is the real "guts" of
-                     vitunes.  To see which function corresponds to what, look
-                     at config.h
+   keybindings       All of the keybinding code is located here, including the
+                     code for the default keybindings, the core bind and
+                     unbind code, and more.
+
+
+   commands          The run-time commands (things like ':set ...',
+                     ':color ...', etc.) is all contained here.
 
 
    e_commands        All code for each of the e-commands (vitunes -e CMD ...)
@@ -230,10 +233,6 @@ References:
 
 CURRENT LIST OF BIG "TODO"'s:
 
-*  Add support for undo/re-do
-
-*  Add support for :map and :command
-
 *  Fix sorting of meta_info's so that numeric fields are sorted by their
    numeric values rather than character representations. This would require
    some re-working.
@@ -254,5 +253,7 @@ CURRENT LIST OF BIG "TODO"'s:
    Could provide a shell script "wrapper" around multiple players/viewers.
 
 *  Update from using 8-color curses API to 256-API.
+   -> complicated... wtf!?!?  I thought the [n]curses API was supposed to make
+      this easy?
 
 :q
