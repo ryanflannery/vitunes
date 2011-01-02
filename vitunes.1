@@ -12,7 +12,7 @@
 .\" ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 .\" OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 .\"
-.Dd $Mdocdate: December 23 2010$
+.Dd $Mdocdate$
 .Dt VITUNES 1
 .Os
 .Sh NAME
@@ -20,14 +20,11 @@
 .Nd A curses media indexer and player for vi-users
 .Sh SYNOPSIS
 .Nm vitunes
-.Bk -words
 .Op Fl f Ar config-file
 .Op Fl d Ar database-file
 .Op Fl p Ar playlist-dir
-.Bk -words
 .Op Fl m Ar media-player
 .Op Fl e Ar command ...
-.Ek
 .Sh DESCRIPTION
 .Nm
 is a curses-based music player and playlist manager for *nix whose goals are
@@ -48,7 +45,6 @@ can be run normally.  After that, files can be added, modified, or removed
 from the database, and on the next invocation,
 .Nm
 will see the changes (additionally, the database can be re-loaded at runtime).
-.Pp
 .Bl -bullet
 .It
 All database management is done using "e-commands", which are always of the
@@ -109,7 +105,7 @@ If you move any of your media files around after adding them to the database,
 you will want to remove them from the database and then re-add them.
 .Sh DOCUMENTATION
 Documentation is divided into the following sections.  They are, in order:
-.Bl -tag -enum -compact
+.Bl -tag -width 1i -compact
 .It Cm 1. COMMAND LINE OPTIONS
 .It Cm 2. E-COMMANDS
 .It Cm 3. THE DISPLAY (a brief description)
@@ -159,12 +155,12 @@ The default location is
 Execute one of the available e-commands to manipulate the database that
 .Nm
 uses.  See the section below titled E-COMMANDS for more information.
+.El
 .Sh E-COMMANDS
 Below is a brief summary of each e-command available in
 .Nm .
 Complete documentation for each e-command can be obtained by using:
 .Dl $ vitunes -e help command-name
-.Pp
 .Bl -tag -width Fl
 .It vitunes Ar -e init
 Create the necessary database file and playlist directory used by
@@ -248,7 +244,6 @@ appear here.  See the KEYBINDING DETAILS section, or the  website, for a
 complete listing of supported keybindings.
 .Pp
 Note that for keybindings, '^' denotes 'CONTROL + '.
-.Pp
 .Bl -tag -width Fl
 .It ENTER
 In the library window, this loads the currently selected playlist.
@@ -274,7 +269,6 @@ is typed), then playback will seek N minutes forwards/backwards.
 In the playlist window, this will show/hide the full filename and meta-information
 for the currently selected file.
 .El
-.Pp
 .Sh RUN-TIME COMMANDS
 Below is an alphabetical listing of all run-time commands supported by
 .Nm .
@@ -295,7 +289,7 @@ specified action.
 See the section
 .Sy KEYBINDING DETAILS
 for details on specifying KEYCODES and a complete list of actions, along with
-their default keybindings, 
+their default keybindings,
 .It :color Cm item=fg,bg
 Change the color of the given item to fg-colored text on a bg-colored
 background.  Available items are:
@@ -342,7 +336,7 @@ The play-length column in the playlist window.
 .El
 .Pp
 Available colors for fg and bg are: white, black, red, green, yellow, blue,
-magenta, and cyan. 
+magenta, and cyan.
 .It :display Cm display-description
 The display command is used to change which columns are displayed in the
 playlist window, their order, their width, and their alignment. The format of
@@ -520,10 +514,9 @@ This will remove any action currently bound to the key specified by KEYCODE.
 See the section
 .Sy KEYBINDING DETAILS
 for details on specifying KEYCODES and a complete list of actions, along with
-their default keybindings, 
+their default keybindings,
 .El
 .Sh KEYBINDING DETAILS
-
 This section describes how to specify keycodes and actions used in both the
 bind and unbind commands.
 .Pp
@@ -589,114 +582,114 @@ following.  For each action, the default keys bound to them are also listed.
 Scroll the current row in the current window up by one line.
 .br
 DEFAULT BINDINGS: k, -, UP
-
+.Pp
 .It Cm scroll_down
 Scroll the current row in the current window down by one line.
 .br
 DEFAULT BINDINGS: j, DOWN
-
+.Pp
 .It Cm scroll_up_page
 Scroll the current window up by one line.
 .br
 DEFAULT BINDINGS: Control y
-
+.Pp
 .It Cm scroll_down_page
 Scroll the current window down by one line.
 .br
 DEFAULT BINDINGS: Control e
-
+.Pp
 .It Cm scroll_up_halfpage
 Scroll the current window up one half-page.
 .br
 DEFAULT BINDINGS: Control u
-
+.Pp
 .It Cm scroll_down_halfpage
 Scroll the current window down one half-page.
 .br
 DEFAULT BINDINGS: Control d
-
+.Pp
 .It Cm scroll_up_wholepage
 Scroll the current window up one whole page.
 .br
 DEFAULT BINDINGS: Control b, PageUp
-
+.Pp
 .It Cm scroll_down_wholepage
 Scroll the current window down one whole page.
 .br
 DEFAULT BINDINGS: Control f, PageDown
-
+.Pp
 .It Cm scroll_left
 Scroll the current window to the left one column.
 .br
 DEFAULT BINDINGS: h, LEFT, BACKSPACE
-
+.Pp
 .It Cm scroll_right
 Scroll the current window to the right one column.
 .br
 DEFAULT BINDINGS: l, RIGHT, SPACE
-
+.Pp
 .It Cm scroll_leftmost
 Scroll the current window to the left as far as possible.
 .br
 DEFAULT BINDINGS: ^, 0, |
-
+.Pp
 .It Cm scroll_rightmost
 Scroll the current window to the right as far as possible.
 .br
 DEFAULT BINDINGS: $
-
+.Pp
 .It Cm jumpto_screen_top
 Move the current line to the first line in the current window.
 .br
 DEFAULT BINDINGS: H
-
+.Pp
 .It Cm jumpto_screen_middle
 Move the current line to the middle line in the current window.
 .br
 DEFAULT BINDINGS: M
-
+.Pp
 .It Cm jumpto_screen_bottom
 Move the current line to the bottom line in the current window.
 .br
 DEFAULT BINDINGS: L
-
+.Pp
 .It Cm jumpto_line
 Jump to either a specified line (if a global input number is present) or to
 the last line in the current window's buffer.
 .br
 DEFAULT BINDINGS: G
-
+.Pp
 .It Cm jumpto_percent
 Using the global input number N, jump to the line N% the way through the
 current window's buffer.
 .br
 DEFAULT BINDINGS: %
-
+.Pp
 .It Cm search_forward
 Begin a search for the entered string searching forward in the current window.
 The current row will be updated to the next matching row.
 .br
 DEFAULT BINDINGS: /
-
+.Pp
 .It Cm search_backward
 Begin a search for the entered string searching backwards in the current
 The current row will be updated to the next matching row.
 window.
 .br
 DEFAULT BINDINGS: ?
-
+.Pp
 .It Cm find_next_forward
 Using the previous search-string, search in the same direction as the search
 was input for the next matching row.
 .br
 DEFAULT BINDINGS: n
-
+.Pp
 .It Cm find_next_backward
 Using the previous search-string, search in the opposite direction as the
 search was input for the next matching row.
 .br
 DEFAULT BINDINGS: N
-
+.Pp
 .It Cm cut
 Remove the following N lines from the current window, placing them in the copy
 buffer, where N is the global input number.  Note that if the library window
@@ -704,37 +697,37 @@ is active, only one row (playlist) can be cut/deleted at a time, and that this
 action cannot be undone.
 .br
 DEFAULT BINDINGS: d
-
+.Pp
 .It Cm yank
 Copy the following N lines from the current window into the copy buffer, where
 N is the global input number.  This action cannot be used in the library window.
 .br
 DEFAULT BINDINGS: y
-
+.Pp
 .It Cm paste_after
 Paste the contents of the copy buffer after the current row in the playlist
 window.  This action cannot be used in the library window.
 .br
 DEFAULT BINDINGS: p
-
+.Pp
 .It Cm paste_before
 Paste the contents of the copy buffer before the current row in the playlist
 window.  This action cannot be used in the library window.
 .br
 DEFAULT BINDINGS: P
-
+.Pp
 .It Cm undo
 Undo the previous action on the currently viewed playlist.
 This action cannot be used in the library window.
 .br
 DEFAULT BINDINGS: u
-
+.Pp
 .It Cm redo
 Redo the previously undone action on the currently viewed playlist.
 This action cannot be used in the library window.
 .br
 DEFAULT BINDINGS: Control r
-
+.Pp
 .It Cm quit
 Exit
 .Nm .
@@ -742,19 +735,19 @@ If there are unsaved changes in any playlists you will be prevented from
 exiting until you either save those changes or issue a ":q!" command.
 .br
 DEFAULT BINDINGS: Control c, Control /
-
+.Pp
 .It Cm redraw
 Clear and re-draw the entire display.
 .br
 DEFAULT BINDINGS: Control l
-
+.Pp
 .It Cm command_mode
 Enter command-mode, where the commands listed in the
 .Sy COMMANDS
 section may be issued.
 .br
 DEFAULT BINDINGS: :
-
+.Pp
 .It Cm shell
 Enter a command to be executed outsite of
 .Nm
@@ -763,58 +756,58 @@ before control and the display returns to
 .Nm .
 .br
 DEFAULT BINDINGS: !
-
+.Pp
 .It Cm switch_windows
 Toggle focus between the library and playlist windows.
 .br
 DEFAULT BINDINGS: TAB
-
+.Pp
 .It Cm show_file_info
 Show the file information (including meta-information) for the current row/file
 in the playlist window.  This action does not work in the library window.
 .br
 DEFAULT BINDINGS: m
-
+.Pp
 .It Cm load_playlist
 Load the playlist specified by the current row in the library window.
 .br
 DEFAULT BINDINGS: ENTER
-
+.Pp
 .It Cm media_play
 Begin playing the file specified by the current row in the playlist window.
 .br
 DEFAULT BINDINGS: ENTER
-
+.Pp
 .It Cm media_pause
 Pause playback of any playing media.
 .br
 DEFAULT BINDINGS: z
-
+.Pp
 .It Cm media_stop
 Stop all playback of any playing media.
 .br
 DEFAULT BINDINGS: s
-
+.Pp
 .It Cm seek_forward_seconds
 Seek forwards 10 seconds in any playing media.
 .br
 DEFAULT BINDINGS: f, ]
-
+.Pp
 .It Cm seek_backward_seconds
 Seek backwards 10 seconds in any playing media.
 .br
 DEFAULT BINDINGS: b, [
-
+.Pp
 .It Cm seek_forward_minutes
 Seek forwards 1 minute in any playing media.
 .br
 DEFAULT BINDINGS: F, }
-
+.Pp
 .It Cm seek_backward_minutes
 Seek backwards 1 minute in any playing media.
 .br
 DEFAULT BINDINGS: B, {
-
+.Pp
 .El
 .Pp
 Some examples of using the above actions and keycodes to define the default
@@ -880,7 +873,7 @@ More information about TagLib can be found on the TagLib website:
 Additionally, the
 .Nm
 website has more information, such as a complete list of supported
-.Xr vi 1 
+.Xr vi 1
 -like keybindings and up-to-date bug information.
 .Pp
 .Pa http://www.vitunes.org

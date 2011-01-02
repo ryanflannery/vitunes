@@ -23,7 +23,7 @@ OBJS=commands.o e_commands.o keybindings.o \
 
 # main targets
 
-.PHONY: debug clean install uninstall publish-repos
+.PHONY: debug clean install uninstall publish-repos man-debug
 
 vitunes: $(OBJS)
 	$(CC) -o $@ $(LDFLAGS) $(OBJS)
@@ -49,6 +49,9 @@ uninstall:
 	rm -f $(MANDIR)/vitunes.1
 
 # misc.
+
+man-debug:
+	mandoc -Wall vitunes.1 > /dev/null
 
 cscope.out: *.h *.c
 	cscope -bke
