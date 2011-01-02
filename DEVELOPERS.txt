@@ -223,7 +223,7 @@ CODE STRUCTURE: THE MODULES
 Hope this helps anyone interested in hacking on vitunes (specifically me... 6
 months from now)
 
--Ryan Flannery  <ryan.flannery@gmail.com>  18 Jan. 2010
+-Ryan Flannery  <ryan.flannery@gmail.com>  2 Jan. 2011
 
 
 References:
