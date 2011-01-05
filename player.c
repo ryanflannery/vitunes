@@ -230,16 +230,10 @@ player_play_next_song()
 void
 player_stop()
 {
-   /*
-    * XXX This is documented for mplayer but doesn't work.
    static const char *cmd = "\nstop\n";
-    * Hence, i use the following hack.
-    */
-   static const char *cmd = "\nloadfile dummy.dummy.dummy\n";
 
    player_send_cmd(cmd);
 
-   /* update player status info */
    player_status.playing = false;
    player_status.paused = false;
 }
