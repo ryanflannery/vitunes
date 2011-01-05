@@ -20,10 +20,11 @@
 player_status_t player_status;
 player_t player;
 
+
 /*
- * Initialize the player and player_status global structs.  Note that all
- * player stuff is set to non-functional values, and these are used elsewhere
- * to indicate that the child process is not running.
+ * Initialize the player and player_status global structs.  Everything is set
+ * to non-functional values.  These are used elsewhere to indicate that the
+ * child process is not running.
  */
 void
 player_init(char *prog, char *pargs[], playmode mode)
@@ -59,39 +60,36 @@ player_child_launch()
    int pread[2];
    int flags;
 
-   /* create needed pipes */
    if (pipe(pwrite) == -1 || pipe(pread) == -1)
       err(1, "player_child_launch: pipe() failed");
 
-   /* fork the child */
    switch (player.pid = fork()) {
-      case -1:
-         err(1, "player_child_launch: fork() failed");
-         break;
+   case -1:
+      err(1, "player_child_launch: fork() failed");
+      break;
 
-      case 0:  /* child process */
-         if (close(0) == -1 || close(1) == -1 || close(2) == -1)
-            err(1, "player_child_launch: child close()'s failed(1)");
+   case 0:  /* child process */
+      if (close(0) == -1 || close(1) == -1 || close(2) == -1)
+         err(1, "player_child_launch: child close()'s failed(1)");
 
-         if (close(pwrite[1]) == -1 || close(pread[0]) == -1)
-            err(1, "player_child_launch: child close()'s failed(2)");
+      if (close(pwrite[1]) == -1 || close(pread[0]) == -1)
+         err(1, "player_child_launch: child close()'s failed(2)");
 
-         if (dup(pwrite[0]) == -1 || dup(pread[1]) == -1)
-            err(1, "player_child_launch: child dup()'s failed");
+      if (dup(pwrite[0]) == -1 || dup(pread[1]) == -1)
+         err(1, "player_child_launch: child dup()'s failed");
 
-         /* launch the media player */
-         if (execv(player.program, player.pargs) == -1)
-            kill(getppid(), SIGCHLD);  /* send signal NOW! */
+      if (execv(player.program, player.pargs) == -1)
+         kill(getppid(), SIGCHLD);  /* send signal NOW! */
 
-         /*
-          * If reached here, exit now.  Note that if the above fails, this is
-          * caught in vitunes.c signal handling.
-          */
-         exit(1);
-         break;
+      /*
+       * If reached here, mplayer failed.  Exit now.
+       * This is caught in vitunes.c signal handling.
+       */
+      exit(1);
+      break;
    }
 
-   /* back to the parent... */
+   /* Back to the parent... */
 
    /* close unnecessary pipe ends */
    if (close(pwrite[0]) == -1 || close(pread[1]) == -1)
@@ -115,10 +113,7 @@ player_child_relaunch()
    int previous_position;
    int status;
 
-   /* wait for child process to exit */
    wait(&status);
-
-   /* relaunch */
    player_child_launch();
 
    /* restart playback where left-off */
@@ -134,15 +129,12 @@ player_child_kill()
 {
    static const char *cmd = "\nquit\n";
 
-   /* instruct media player to exit */
    player_send_cmd(cmd);
 
-   /* close pipes and wait for media player to die */
    close(player.pipe_read);
    close(player.pipe_write);
    waitpid(player.pid, NULL, 0);
 
-   /* re-init the player & status to non-functional defaults */
    player_init(player.program, player.pargs, player.mode);
 }
 
@@ -151,7 +143,6 @@ player_child_kill()
  * player control functions (setting queue, playing, pausing, etc.)
  ****************************************************************************/
 
-/* setup the given playlist to be played by the media player */
 void
 player_set_queue(playlist *queue, int pos)
 {
@@ -159,14 +150,12 @@ player_set_queue(playlist *queue, int pos)
    player.qidx  = pos;
 }
 
-/* send command to child process */
 void
 player_send_cmd(const char *cmd)
 {
    write(player.pipe_write, cmd, strlen(cmd));
 }
 
-/* start playing */
 void
 player_play()
 {
@@ -180,12 +169,11 @@ player_play()
    if (player.qidx < 0 || player.qidx > player.queue->nfiles)
       errx(1, "player_play: qidx %i out-of-range", player.qidx);
 
-   /* build the command to send to the player */
+   /* build and send the command to the player */
    asprintf(&cmd, cmd_fmt, player.queue->files[player.qidx]->filename);
    if (cmd == NULL)
       err(1, "player_play: asprintf failed");
 
-   /* send command */
    player_send_cmd(cmd);
    free(cmd);
 
@@ -203,26 +191,26 @@ void
 player_play_next_song()
 {
    switch (player.mode) {
-      case PLAYER_MODE_LINEAR:
-         if (++player.qidx == player.queue->nfiles) {
-            player.qidx = 0;  /* this seems reasonable */
-            player_stop();
-         } else
-            player_play();
-
-         break;
-
-      case PLAYER_MODE_LOOP:
-         if (++player.qidx == player.queue->nfiles)
-            player.qidx = 0;
-
+   case PLAYER_MODE_LINEAR:
+      if (++player.qidx == player.queue->nfiles) {
+         player.qidx = 0;
+         player_stop();
+      } else
          player_play();
-         break;
 
-      case PLAYER_MODE_RANDOM:
-         player.qidx = rand() % player.queue->nfiles;
-         player_play();
-         break;
+      break;
+
+   case PLAYER_MODE_LOOP:
+      if (++player.qidx == player.queue->nfiles)
+         player.qidx = 0;
+
+      player_play();
+      break;
+
+   case PLAYER_MODE_RANDOM:
+      player.qidx = rand() % player.queue->nfiles;
+      player_play();
+      break;
    }
 }
 
