@@ -35,9 +35,8 @@
 #if defined(__linux) || ( defined(__APPLE__) && defined(__MACH__) )
 #define COMPAT_NEED_STRTONUM
 
-long long
-strtonum(const char *nptr, long long minval, long long maxval, const char
-   **errstr);
+#include <stdlib.h>
+long long strtonum(const char *, long long, long long, const char **);
 
 #endif
 
@@ -46,9 +45,14 @@ strtonum(const char *nptr, long long minval, long long maxval, const char
 #if defined(__linux)
 #define COMPAT_NEED_FPARSELN
 
-char *
-fparseln(FILE *stream, size_t *len, size_t *lineno, const char
-   delim[3], int flags);
+#include <stdio.h>
+#define FPARSELN_UNESCESC  0x01
+#define FPARSELN_UNESCCONT 0x02
+#define FPARSELN_UNESCCOMM 0x04
+#define FPARSELN_UNESCREST 0x08
+#define FPARSELN_UNESCALL  0x0f
+
+char *fparseln(FILE *, size_t *, size_t *, const char[3], int);
 
 #else
 #include <util.h>
@@ -58,6 +62,7 @@ fparseln(FILE *stream, size_t *len, size_t *lineno, const char
 /* Linux specific stuff */
 #if defined(__linux)
 #include <linux/limits.h>
+extern int optreset;
 #endif
 
 #endif

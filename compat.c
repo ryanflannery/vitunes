@@ -22,4 +22,5 @@
 
 #ifdef COMPAT_NEED_FPARSELN
 #include "compat/fparseln.c"
+int optreset;
 #endif
