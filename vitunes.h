@@ -23,7 +23,6 @@
 #include <locale.h>
 #include <pwd.h>
 #include <signal.h>
-#include <util.h>
 #include <unistd.h>
 
 #include "debug.h"
