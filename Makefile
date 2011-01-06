@@ -9,12 +9,8 @@ LDEPS=`taglib-config --libs` -ltag_c
 
 # build info
 CC?=/usr/bin/gcc
-CFLAGS+=-c -std=c89 -Wall -Wextra -Wno-unused-value -g $(CDEPS)
+CFLAGS+=-c -std=c89 -Wall -Wextra -Wno-unused-value $(CDEPS) $(CDEBUG)
 LDFLAGS+=-lm -lncurses -lutil $(LDEPS)
-
-.ifdef debug
-CFLAGS+=-DDEBUG -g
-.endif
 
 OBJS=commands.o e_commands.o keybindings.o \
 	  medialib.o meta_info.o paint.o \
@@ -32,7 +28,7 @@ vitunes: $(OBJS)
 	$(CC) $(CFLAGS) $<
 
 debug:
-	make debug=1
+	make CDEBUG="-DDEBUG -g"
 
 clean:
 	rm -f *.o
