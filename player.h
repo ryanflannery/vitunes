@@ -34,6 +34,8 @@
 #include "meta_info.h"
 #include "playlist.h"
 
+#include "compat.h"
+
 
 /*
  * Available play-modes.

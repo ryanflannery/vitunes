@@ -24,6 +24,8 @@
 #include "debug.h"
 #include "keybindings.h"
 
+#include "compat.h"
+
 
 /* command-mode command struct */
 typedef struct {

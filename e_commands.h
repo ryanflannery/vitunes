@@ -28,6 +28,8 @@
 #include "medialib.h"
 #include "playlist.h"
 
+#include "compat.h"
+
 /* from vitunes.c */
 extern char *vitunes_dir;
 extern char *playlist_dir;

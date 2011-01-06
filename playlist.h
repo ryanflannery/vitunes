@@ -32,6 +32,8 @@
 #include "debug.h"
 #include "meta_info.h"
 
+#include "compat.h"
+
 #define PLAYLIST_CHUNK_SIZE   100
 #define DEFAULT_HISTORY_SIZE  100
 extern int history_size;

@@ -33,6 +33,8 @@
 #include "debug.h"
 #include "enums.h"
 
+#include "compat.h"
+
 /* struct & methods for a scrollable window */
 typedef struct
 {

@@ -14,42 +14,42 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#ifndef VITUNES_H
-#define VITUNES_H
-
-#include <sys/time.h>
-
-#include <getopt.h>
-#include <locale.h>
-#include <pwd.h>
-#include <signal.h>
-#include <util.h>
-#include <unistd.h>
-
-#include "debug.h"
-#include "enums.h"
-#include "commands.h"
-#include "keybindings.h"
-#include "medialib.h"
-#include "player.h"
-#include "uinterface.h"
-#include "e_commands.h"
-
-#include "compat.h"
-
 /*
- * These are the various things defined in vitunes.c used elsewhere.
+ * Compatibility goo for other OS's.  Specifically,
+ *
+ *    1. Mac OS X
+ *          -  Requires strtonum(3) implementation.
+ *
+ *    2. Linux
+ *          -  Requires strtonum(3) implementation.
+ *          -  Requires fparseln(3) implementation.
+ *
+ * So far, all compatibility code is from the OpenBSD projects and each
+ * file has its own license.
  */
 
-/* record keeping  */
-extern playlist   *viewing_playlist;
-extern playlist   *playing_playlist;
+#ifndef COMPAT_H
+#define COMPAT_H
 
-/* signal flags referenced elsewhere */
-extern volatile sig_atomic_t VSIG_QUIT;
+/* strtonum(3) implementation */
+#if defined(__linux) || ( defined(__APPLE__) && defined(__MACH__) )
+#define COMPAT_NEED_STRTONUM
 
-/* other */
-void load_config();
-void process_signals(bool);
+long long
+strtonum(const char *nptr, long long minval, long long maxval, const char
+   **errstr);
+
+#endif
+
+
+/* fparseln(3) implementations */
+#if defined(__linux)
+#define COMPAT_NEED_FPARSELN
+
+char *
+fparseln(FILE *stream, size_t *len, size_t *lineno, const char
+   delim[3], int flags);
+
+#endif
 
 #endif

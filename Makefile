@@ -12,10 +12,10 @@ CC?=/usr/bin/gcc
 CFLAGS+=-c -std=c89 -Wall -Wextra -Wno-unused-value $(CDEPS) $(CDEBUG)
 LDFLAGS+=-lm -lncurses -lutil $(LDEPS)
 
-OBJS=commands.o e_commands.o keybindings.o \
-	  medialib.o meta_info.o paint.o \
-	  player.o playlist.o str2argv.o \
-	  uinterface.o vitunes.o
+OBJS=commands.o compat.o e_commands.o \
+	  keybindings.o medialib.o meta_info.o \
+	  paint.o player.o playlist.o \
+	  str2argv.o uinterface.o vitunes.o
 
 # main targets
 

@@ -38,6 +38,8 @@
 #include "meta_info.h"
 #include "playlist.h"
 
+#include "compat.h"
+
 #define MEDIALIB_PLAYLISTS_CHUNK_SIZE  100
 
 /* current database file-format version */
