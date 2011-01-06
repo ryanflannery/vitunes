@@ -54,4 +54,10 @@ fparseln(FILE *stream, size_t *len, size_t *lineno, const char
 #include <util.h>
 #endif
 
+
+/* Linux specific stuff */
+#if defined(__linux)
+#include <linux/limits.h>
+#endif
+
 #endif
