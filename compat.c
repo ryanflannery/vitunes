@@ -20,20 +20,3 @@
 #  include "compat/strtonum.c"
 #endif
 
-
-#ifdef COMPAT_NEED_FPARSELN
-#  define FLOCKFILE(fp)   do { if (__isthreaded) flockfile(fp); } while (0)
-#  define FUNLOCKFILE(fp) do { if (__isthreaded) funlockfile(fp); } while (0)
-#  include "compat/fgetln.c"
-#  define FPARSELN_UNESCESC  0x01
-#  define FPARSELN_UNESCCONT 0x02
-#  define FPARSELN_UNESCCOMM 0x04
-#  define FPARSELN_UNESCREST 0x08
-#  define FPARSELN_UNESCALL  0x0f
-#  include "compat/fparseln.c"
-#endif
-
-
-#if defined(__linux)
-int optreset;
-#endif

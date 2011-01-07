@@ -24,6 +24,7 @@
 #include <pwd.h>
 #include <signal.h>
 #include <unistd.h>
+#include <util.h>
 
 #include "debug.h"
 #include "enums.h"

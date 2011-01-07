@@ -26,6 +26,8 @@
  *
  * So far, all compatibility code is from the OpenBSD projects and each
  * file has its own license.
+ *
+ * Backed out Linux support on 7 Jan. 2011.
  */
 
 #ifndef COMPAT_H
@@ -37,28 +39,5 @@
 #  include <stdlib.h>
    long long strtonum(const char *, long long, long long, const char **);
 #endif
-
-
-/* fparseln(3) implementations */
-/*
- * FIXME
- * For Linux, this is broken.  fparseln(3) relies on fgetln(3), and Linux
- * doesn't have that either.
- */
-#if defined(__linux)
-#  define COMPAT_NEED_FPARSELN
-#  include <stdio.h>
-   char *fparseln(FILE *, size_t *, size_t *, const char[3], int);
-#else
-#  include <util.h>
-#endif
-
-
-/* Linux specific stuff */
-#if defined(__linux)
-#  include <linux/limits.h>
-   extern int optreset;
-#endif
-
 
 #endif
