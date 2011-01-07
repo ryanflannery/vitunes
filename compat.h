@@ -33,36 +33,32 @@
 
 /* strtonum(3) implementation */
 #if defined(__linux) || ( defined(__APPLE__) && defined(__MACH__) )
-#define COMPAT_NEED_STRTONUM
-
-#include <stdlib.h>
-long long strtonum(const char *, long long, long long, const char **);
-
+#  define COMPAT_NEED_STRTONUM
+#  include <stdlib.h>
+   long long strtonum(const char *, long long, long long, const char **);
 #endif
 
 
 /* fparseln(3) implementations */
+/*
+ * FIXME
+ * For Linux, this is broken.  fparseln(3) relies on fgetln(3), and Linux
+ * doesn't have that either.
+ */
 #if defined(__linux)
-#define COMPAT_NEED_FPARSELN
-
-#include <stdio.h>
-#define FPARSELN_UNESCESC  0x01
-#define FPARSELN_UNESCCONT 0x02
-#define FPARSELN_UNESCCOMM 0x04
-#define FPARSELN_UNESCREST 0x08
-#define FPARSELN_UNESCALL  0x0f
-
-char *fparseln(FILE *, size_t *, size_t *, const char[3], int);
-
+#  define COMPAT_NEED_FPARSELN
+#  include <stdio.h>
+   char *fparseln(FILE *, size_t *, size_t *, const char[3], int);
 #else
-#include <util.h>
+#  include <util.h>
 #endif
 
 
 /* Linux specific stuff */
 #if defined(__linux)
-#include <linux/limits.h>
-extern int optreset;
+#  include <linux/limits.h>
+   extern int optreset;
 #endif
+
 
 #endif
