@@ -131,9 +131,7 @@ Then just start normally with
 .Dl $ vitunes
 .El
 .Ss The Display
-When run normally as just
-.Nm ,
-the default display will show 4 windows.
+When run normally, the default display will show the following 4 windows:
 .Bl -tag -width Fl
 .It player
 This window occupies the top row of the display and contains information about
@@ -175,6 +173,7 @@ Seek forwards/backwards 1 minute.
 .It Cm m
 In the playlist window, show/hide information for the current file.
 .El
+.Pp
 See the
 .Sx KEYBINDING ACTIONS
 section for a complete listing.
@@ -249,7 +248,7 @@ parameters (just like in
 Note that abbreviations are also supported.
 That is, entering any non-ambiguous abbreviation of a command name will also
 execute the command.
-.Bl -tag -width Fl
+.Bl -tag -width Ds
 .It Pf : Ic bind Ar action Ar keycode
 This will bind the action specified by
 .Ar action
@@ -281,7 +280,10 @@ colored background.
 Available values for
 .Cm item
 are:
-.Bl -tag -width "playing-playlist" -compact
+.Pp
+.Bl -tag -width "playing-playlist" -compact -offset indent
+.It Em Item Name
+.Em Description
 .It Cm bars
 The bars dividing the various windows.
 .It Cm player
@@ -331,7 +333,7 @@ are: white, black, red, green, yellow, blue, magenta, and cyan.
 The display command is used to change which columns are displayed in the
 playlist window, their order, their width, and their alignment.
 .Pp
-The format of the
+The format of
 .Ar display-description
 is a comma separated list of:
 .Qq Oo Ar \- Oc Ns Ar field . Ns Ar size .
