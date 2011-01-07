@@ -20,29 +20,83 @@
 .Nd A curses media indexer and player for vi-users
 .Sh SYNOPSIS
 .Nm vitunes
-.Op Fl f Ar config-file
 .Op Fl d Ar database-file
-.Op Fl p Ar playlist-dir
+.Op Fl e Ar command Op argument ...
+.Op Fl f Ar config-file
 .Op Fl m Ar media-player
-.Op Fl e Ar command ...
+.Op Fl p Ar playlist-dir
 .Sh DESCRIPTION
 .Nm
 is a curses-based music player and playlist manager for *nix whose goals are
 a minimalistic appearance, strong vi-like bindings, and quick playlist
 creation/management.
 .Pp
-It is not intended to be a feature-rich media player, but rather
-a quick, vi-like media indexer and playlist manager that also happens to be
-able to play the media it indexes (via
+It is not intended to be a feature-rich media player, but rather a quick,
+vi-like media indexer and playlist manager that also happens to be able to
+play the media it indexes (via
 .Xr mplayer 1 ).
-.Sh GETTING STARTED
+.Pp
 .Nm
-works by maintaining a database of tagged media files.  The database
-.Sy MUST
+accepts the following command line options:
+.Bl -tag -width Fl
+.It Fl d Ar database-file
+Specifies the database containing all known media files and their meta
+information that
+.Nm
+should use.
+If you're using this option in conjunction with an e-command, this option
+.Sy must
+be specified before the e-command.
+.Pp
+The default location is
+.Pa ~/.vitunes/vitunes.db .
+.It Fl e Ar command Cm options
+Execute one of the available e-commands to manipulate the database that
+.Nm
+uses.
+See the section below titled
+.Sx E-COMMANDS
+for more information.
+.It Fl f Ar config-file
+Specifies the path of the configuration file
+.Nm
+should load.
+See the section below titled
+.Sx CONFIGURATION FILE
+for information on what the configuration may contain.
+.Pp
+The default location is
+.Pa ~/.vitunes/vitunes.conf .
+.It Fl m Ar media-player-path
+Specifies the path to the media player to use.
+Currently only
+.Xr mplayer 1
+is supported.
+.Pp
+The default location is
+.Pa /usr/local/bin/mplayer .
+.It Fl p Ar playlist-dir
+Specifies the directory containing all of the playlists
+.Nm
+will load and use.
+Any new playlists created while running
+.Nm
+will be created here.
+.Pp
+The default location is
+.Pa ~/.vitunes/playlists/ .
+.El
+.Ss Getting Started
+.Nm
+works by maintaining a database of tagged media files.
+The database
+.Sy must
 be created and populated before
 .Nm
-can be run normally.  After that, files can be added, modified, or removed
-from the database, and on the next invocation,
+can be run normally.
+.Pp
+After that, files can be added, modified, or removed from the database, and
+on the next invocation,
 .Nm
 will see the changes (additionally, the database can be re-loaded at runtime).
 .Bl -bullet
@@ -50,22 +104,21 @@ will see the changes (additionally, the database can be re-loaded at runtime).
 All database management is done using "e-commands", which are always of the
 form:
 .Dl $ vitunes -e command-name [ parameters ... ]
-This includes creating the initial database, adding, modifying, and removing
-files from the database, and tagging files.  See the E-COMMANDS section below
-for details.
 .It
 Once the database has been created,
 .Nm
 can be run normally with the following:
 .Dl $ vitunes
+.It
 All playlist management is done while
 .Nm
 is running normally.
 .El
 .Pp
-To get started using
-.Nm ,
-you MUST do the following
+See the
+.Sx E-COMMANDS
+section below for more information on database management.
+To get started quickly, simply do the following:
 .Bl -enum
 .It
 Create initial empty database with
@@ -76,278 +129,227 @@ Add files to your database with
 .It
 Then just start normally with
 .Dl $ vitunes
-.It
-After that, more files or even URL's can be added to the database using the
-various e-commands.  This can even occur while
-.Nm
-is running normally, and the new database can be re-loaded at runtime.
-Otherwise, the changes will be noticed on the next run.
 .El
-.Pp
-The default location for everything
-.Nm
-uses is:
-.Bl -column "item" "location" -offset indent
-.It Li Configuration File: Ta
-.Pa ~/.vitunes/vitunes.conf
-.It Li Database File: Ta
-.Pa ~/.vitunes/vitunes.db
-.It Li Playlist Directory: Ta
-.Pa ~/.vitunes/playlists/
-.It Li Media Player: Ta
-.Pa /usr/local/bin/mplayer
-.El
-.Pp
-Please note that all files added to the database are stored using their
-absolute pathname, as obtained from
-.Xr realpath 3 .
-If you move any of your media files around after adding them to the database,
-you will want to remove them from the database and then re-add them.
-.Sh DOCUMENTATION
-Documentation is divided into the following sections.  They are, in order:
-.Bl -tag -width 1i -compact
-.It Cm 1. COMMAND LINE OPTIONS
-.It Cm 2. E-COMMANDS
-.It Cm 3. THE DISPLAY (a brief description)
-.It Cm 4. DEFAULT KEYBINDINGS (a partial list)
-.It Cm 5. RUN-TIME COMMANDS
-.It Cm 6. KEYBINDING DETAILS
-.It Cm 7. CONFIGURATION FILE
-.El
-.Sh COMMAND LINE OPTIONS
-.Bl -tag -width Fl
-.It Fl d Ar database-file
-Specifies the database containing all known media files and their meta
-information that
-.Nm
-should use.  If you're using this option in conjunction with an e-command,
-this option
-.Sy MUST
-be specified before the e-command.
-.Pp
-The default location is
-.Pa ~/.vitunes/vitunes.db .
-.It Fl f Ar config-file
-Specifies the path of the configuration file
-.Nm
-should load.  See the section about the configuration file for information
-on what the configuration can contain.
-.Pp
-The default location is
-.Pa ~/.vitunes/vitunes.conf .
-.It Fl p Ar playlist-dir
-Specifies the directory containing all of the playlists
-.Nm
-will load and use.  Any new playlists created while running
-.Nm
-will be created here.
-.Pp
-The default location is
-.Pa ~/.vitunes/playlists/ .
-.It Fl m Ar media-player-path
-Specifies the path to the media player to use.  Currently only
-.Xr mplayer 1
-is supported.
-.Pp
-The default location is
-.Pa /usr/local/bin/mplayer .
-.It Fl e Ar command Cm options
-Execute one of the available e-commands to manipulate the database that
-.Nm
-uses.  See the section below titled E-COMMANDS for more information.
-.El
-.Sh E-COMMANDS
-Below is a brief summary of each e-command available in
-.Nm .
-Complete documentation for each e-command can be obtained by using:
-.Dl $ vitunes -e help command-name
-.Bl -tag -width Fl
-.It vitunes Ar -e init
-Create the necessary database file and playlist directory used by
-.Nm .
-This command only needs to be run once, when
-.Nm
-is first run.  If either of these already exist, they remain unchanged.
-.It vitunes Ar -e add path1 [ path2 ... ]
-This command takes any number of files/directories as parameters.  Each file
-provided is scanned for meta-information, specifically: artist, album, title,
-track number, year, comment, and play-length.
-.Xr TagLib 3
-is used for all meta-extraction, so any meta-data-format
-.Xr TagLib 3
-supports (most) is supported by
-.Nm .
-Directories are searched recursively.  Each file encountered with meta
-information is added to the database.
-.It vitunes Ar -e addurl http://some-url
-This command is used to add non-files (things like URL's for Internet radio
-stations) to the database, where the meta-information cannot be determined
-automatically..  It can also be used to update the meta-info of an existing
-URL in the database.  After executing, you are prompted to enter all of
-your own information.
-.It vitunes Ar -e update [-s]
-Load the existing database and check each file to see if its meta-information
-has been updated, or if the file has been removed.  The database is updated
-accordingly.
-.It vitunes Ar -e check [-rsd] file1 [file2 ...]
-Check an individual file to see its meta information and whether or not
-it's in the database.
-.It vitunes Ar -e rm [-f] file/URL
-Remove a file/URL from the database.
-.It vitunes Ar -e rmfile [-f] file/URL
-Alias for the "rm" e-command.
-.It vitunes Ar -e tag [options] file1 [file2 ...]
-Add/modify the meta-information tags of raw files.  There are many options to
-this e-command.  See the help page for more information:
-.Dl $ vitunes -e help tag
-.It vitunes Ar -e flush [-t time-format]
-Dump the contents of the database to stdout in an easy-to-parse format.
-.El
-.Pp
-For the complete documentation for each of the above e-commands, use
-.Dl $ vitunes -e help command-name
-.Sh THE DISPLAY
+.Ss The Display
 When run normally as just
 .Nm ,
 the default display will show 4 windows.
 .Bl -tag -width Fl
 .It player
-This window occupies the top row of the display.  It contains information about
-the currently playing song (if any) and the current play mode.
+This window occupies the top row of the display and contains information about
+the currently playing song (if any) and the current play-mode.
 .It command/status
-This window occupies the bottom row of the display.  It behaves very similar to
-the command/status window in
+This window occupies the bottom row of the display.
+It behaves very similar to the command/status window in
 .Xr vi 1 .
 .It library
-This window occupies the left-side of the screen, and by default is only 20
-characters wide.  It shows each playlist that
-.Nm
-was able to load from the playlist directory, and two additional
-pseudo-playlists which are always shown: the LIBRARY, which is a list of all
-files/URLs in the database, and FILTER, which is where the results of any
-.Ic :filter ...
-command are temporarily stored.  Note that playlists with unsaved changes
-appear bold.
+This window occupies the left-side of the screen and shows each playlist, in
+addition to the library and filter-buffer.
+The filter buffer is where the results of every
+.Pf : Ic filter Ar ...
+command are temporarily stored.
+.br
+Playlists with unsaved changes appear bold.
 .It playlist
 This window is to the right of the library window and occupies most of the
-display.  It shows the contents of whichever playlist has currently been
-selected in the library window.
+display.
+It shows the contents of whichever playlist has currently been selected in
+the library window.
 .El
-.Sh DEFAULT KEYBINDINGS
-The following is only a partial listing of the default keybindings that
-.Nm
-supports.  Only those keybindings that are different from
-.Xr vi 1
-(or specific to
-.Nm )
-appear here.  See the KEYBINDING DETAILS section, or the  website, for a
-complete listing of supported keybindings.
-.Pp
-Note that for keybindings, '^' denotes 'CONTROL + '.
-.Bl -tag -width Fl
-.It ENTER
-In the library window, this loads the currently selected playlist.
-In the playlist window, this begins playing the currently selected file.
-.It TAB
-In the library window, this switches focus to the playlist window.
-In the playlist window, this switches focus to the library window.
-.It z / ^p
-Pause playback of the currently playing file, if any.
-.It s
+.Ss Useful Keybindings
+The following is only a partial listing keybindings, but are the most
+frequently used.
+.Bl -tag -width Ds
+.It Cm Enter
+Load the selected playlist for viewing or begin playback of the selected file.
+.It Cm Tab
+Toggle focus between the library and playlist windows.
+.It Cm z
+Pause playback.
+.It Cm s
 Stop playback.
-.It f / b
-Seek forwards/backwards 10 seconds in the playback of the currently playing
-file.  If a number N is entered before hand (e.g.
-.Ic 5f
-is typed), then playback will seek N * 10 seconds forwards/backwards.
-.It F / B
-Seek forwards/backwards 1 minute in the playback of the currently playing
-file.  If a number N is entered before hand (e.g.
-.Ic 5F
-is typed), then playback will seek N minutes forwards/backwards.
-.It m
-In the playlist window, this will show/hide the full filename and meta-information
-for the currently selected file.
+.It Cm f/b
+Seek forwards/backwards 10 seconds.
+.It Cm F/B
+Seek forwards/backwards 1 minute.
+.It Cm m
+In the playlist window, show/hide information for the current file.
+.El
+See the
+.Sx KEYBINDING ACTIONS
+section for a complete listing.
+.Sh E-COMMANDS
+Below is a brief summary of each e-command available in
+.Nm .
+More detailed usage information and examples for each can be obtained by
+issuing:
+.Dl $ vitunes -e help command-name
+.Bl -tag -width Ds
+.It Nm Fl e Cm init
+Create the necessary database file and playlist directory used by
+.Nm .
+This command only needs to be run once, when
+.Nm
+is first run.
+If either of these already exist, they remain unchanged.
+.It Nm Fl e Cm add Ar path1 Op Ar path2 ...
+This command takes any number of files/directories as parameters.
+Each file is scanned for meta-information and if found, added to the
+database.
+Directories are search recursively.
+.Pp
+.Xr TagLib 3
+is used for all meta-extraction, which includes the following fields:
+album, artist, comment, play-length, title, track number, and year.
+.It Nm Fl e Cm addurl Ar url
+This command is used to add non-files (things like URL's for Internet radio
+stations) to the database, where the meta-information cannot be determined
+automatically.
+It can also be used to update the meta-info of an existing URL in the
+database.
+.Pp
+After executing, you are prompted to enter all of your own information.
+.It Nm Fl e Cm check Oo Fl rsd Oc Ar file1 Op Ar file2 ...
+Scan the files specified and display their meta-information as present in
+the files themselves or in the
+.Nm
+database.
+This is useful for checking if a file is in the database.
+.It Nm Fl e Cm flush Op Fl t Ar time-format
+Dump the contents of the database to stdout in an easy-to-parse format,
+optionally with the specified
+.Xr strftime 3
+compatible format for times.
+.It Nm Fl e Cm help Ar command
+Display detailed usage information and examples for the e-command specified
+by
+.Ar command .
+.It Nm Fl e Cm rm Oo Fl f Oc Ar file/url
+Remove a file/URL from the database.
+.It Nm Fl e Cm rmfile Oo Fl f Oc Ar file/url
+Alias for the "rm" e-command.
+.It Nm Fl e Cm tag Oo options Oc Ar file1 Op Ar file2 ...
+Add/modify the meta-information tags of raw files.
+There are many options to this e-command.
+See the help page for more information:
+.Dl $ vitunes -e help tag
+.It Nm Fl e Cm update Op Fl s
+Load the existing database and check each file to see if its meta-information
+has been updated, or if the file has been removed.
+The database is updated accordingly.
 .El
 .Sh RUN-TIME COMMANDS
-Below is an alphabetical listing of all run-time commands supported by
+Below is a listing of all run-time commands supported by
 .Nm .
 .Pp
 All commands are entered by typing ':' followed by the command name and any
 parameters (just like in
 .Xr vi 1 ).
 .Pp
-Note that abbreviations are also supported.  That is, entering any non-ambiguous
-abbreviation of a command name will also execute the command.
+Note that abbreviations are also supported.
+That is, entering any non-ambiguous abbreviation of a command name will also
+execute the command.
 .Bl -tag -width Fl
-.It :bind Cm ACTION KEYCODE
-This will bind the action specified by ACTION to the keycode specified by
-KEYCODE.  After this command is issued (at run-time or in the configuration
-file), entering the given key specified by KEYCODE will result in firing the
-specified action.
+.It Pf : Ic bind Ar action Ar keycode
+This will bind the action specified by
+.Ar action
+to the keycode specified by
+.Ar keycode .
+After this command is issued, entering the inputting the specified
+.Ar keycode
+will result in firing the specified
+.Ar action .
 .Pp
 See the section
-.Sy KEYBINDING DETAILS
-for details on specifying KEYCODES and a complete list of actions, along with
-their default keybindings,
-.It :color Cm item=fg,bg
-Change the color of the given item to fg-colored text on a bg-colored
-background.  Available items are:
+.Sx SPECIFYING KEYCODES
+for details on how to specify
+.Ar keycode ,
+and section
+.Sx KEYBINDING ACTIONS
+for a listing of all actions
+.Nm
+supports.
+.It Pf : Ic color Cm item Ns = Ns Ar fg Ns , Ns Ar bg
+Change the color of the given
+.Cm item
+to
+.Ar fg
+colored text on a
+.Ar bg
+colored background.
 .Pp
-.Bl -tag -width Fl -compact
-.It bars
+Available values for
+.Cm item
+are:
+.Bl -tag -width "playing-playlist" -compact
+.It Cm bars
 The bars dividing the various windows.
-.It player
+.It Cm player
 The player window.
-.It status
+.It Cm status
 The status window.
-.It library
+.It Cm library
 The library window.
-.It playlist
+.It Cm playlist
 The playlist window.
-.It errors
+.It Cm errors
 Error messages in the status window.
-.It messages
+.It Cm messages
 Informational messages in the status window.
-.It tildas-library
+.It Cm tildas-library
 The tildas in empty rows of the library window.
-.It tildas-playlist
+.It Cm tildas-playlist
 The tildas in empty rows of the playlist window.
-.It playing-library
+.It Cm playing-library
 Currently playing playlist in the library window.
-.It playing-playlist
+.It Cm playing-playlist
 Currently playing file in the playlist window.
-.It artist
+.It Cm artist
 The artist column in the playlist window.
-.It album
+.It Cm album
 The album column in the playlist window.
-.It title
+.It Cm title
 The title column in the playlist window.
-.It track
+.It Cm track
 The track column in the playlist window.
-.It year
+.It Cm year
 The year column in the playlist window.
-.It genre
+.It Cm genre
 The genre column in the playlist window.
-.It comment
+.It Cm comment
 The comment column in the playlist window.
-.It length
+.It Cm length
 The play-length column in the playlist window.
 .El
 .Pp
-Available colors for fg and bg are: white, black, red, green, yellow, blue,
-magenta, and cyan.
-.It :display Cm display-description
+Available colors for
+.Ar fg
+and
+.Ar bg
+are: white, black, red, green, yellow, blue, magenta, and cyan.
+.It Pf : Ic display Pq Cm reset | Cm show | Ar display-description
 The display command is used to change which columns are displayed in the
-playlist window, their order, their width, and their alignment. The format of
-the display-description is a comma separated list of:
-.Ic [-]<field-name>.<size>  .
-Valid field-names are: artist, album, title, track, year, genre, comment, and
-length.  The size field indicates the number of columns.  If the field-name
-is preceded with a '-', the field will be right-aligned.  As an example, the
-command:
+playlist window, their order, their width, and their alignment.
 .Pp
-.Ic :display title.10,artist.20,-track.4
+The format of the
+.Ar display-description
+is a comma separated list of:
+.Qq Oo Ar \- Oc Ns Ar field . Ns Ar size .
+.Pp
+Valid values for
+.Ar field
+are: album, artist, comment, genre, length, title, track, and year.
+The
+.Ar size
+field indicates the number of columns.
+If
+.Ar field
+is preceded with a
+.Ar \-
+the field will be right-aligned.
+As an example, the command:
+.Pp
+.Pf : Ic display Ar title.10,artist.20,-track.4
 .Pp
 would only show the title, artist, and track fields, in that order, where the
 title field is 10 columns wide, the artist field is 20 columns wide, and the
@@ -355,459 +357,501 @@ track field is 4 columns wide and right-aligned.
 .Pp
 The default display can be restored with:
 .Pp
-.Ic :display reset
+.Pf : Ic display Cm reset
 .Pp
 The current display description can be seen with:
 .Pp
-.Ic :display show
+.Pf : Ic display Cm show
 .Pp
-.It :filter[!] Cm token [ token2 ... ]
+.It Pf : Ic filter Ns Oo ! Oc Ar token Op Ar token2 ...
 The filter command is used to filter out all songs from the currently viewed
-playlist that do not match (or do match) the provided list of tokens.  A song
-matches the list of tokens if each token appears somewhere in the song's
-meta-information or filename.
+playlist that do not match (or do match) the provided list of tokens.
+A song matches the list of tokens if each token appears somewhere in the
+song's meta-information or filename.
 .Pp
-If ":filter" is used, all records NOT matching the list of tokens are
-removed from the current playlist.  If ":filter!" is used, all records that DO
-match the list of tokens are removed from the current playlist.
+If
+.Qq Pf : Ic filter
+is used, all records not matching the list of tokens are removed from the
+current playlist.
+If
+.Qq Pf : Ic filter!
+is used, all records that do match the list of tokens are removed from the
+current playlist.
 .Pp
 The list of tokens is simply any list of strings, each possibly preceded with
-an exclamation point.  If a token is preceded with an exclamation point, it
-will only match a song if it does NOT appear anywhere in the song's
-meta-information or filename.
+an exclamation point.
+If a token is preceded with an exclamation point, it will only match a song
+if it does not appear anywhere in the song's meta-information or filename.
 .Pp
 For example, the following:
 .Pp
-.Ic :filter nine nails
+.Pf : Ic filter Ar nine nails
 .Pp
 would match all songs that contained both "nine" and "nails", and remove all
-other songs from the current playlist.  However,
+other songs from the current playlist.
+However,
 .Pp
-.Ic :filter! nine nails
+.Pf : Ic filter! Ar nine nails
 .Pp
 would remove all songs that DO contain both "nine" and "nails."
 .Pp
 The query:
 .Pp
-.Ic :filter nine !nails
+.Pf : Ic filter Ar nine !nails
 .Pp
-would match all songs that contain "nine" and NOT "nails".  All other songs
-would be removed from the current playlist.
-.It :mode Cm [ linear | loop | random ]
-Set the current playmode to one of the three available options.  The options
-are:
+would match all songs that contain "nine" and NOT "nails".
+All other songs would be removed from the current playlist.
+.It Pf : Ic mode Pq Cm linear | Cm loop | Cm random
+Set the current playmode to one of the three available options.
+The options are:
 .Bl -tag -width Fl
-.It linear
-Songs are played in the playing playlist in order until the end is reached.
-.It loop
+.It Cm linear
+Songs in a playlist are played in the order they appear until the end is
+reached.
+.It Cm loop
 Like linear, but when the end of the playlist is reached, playback continues
-at the top of the playlist.
-.It random
-Songs are chosen at random from the playing playlist.
+at the beginning of the playlist.
+.It Cm random
+Songs are chosen at random from the playlist.
 .El
-.It :new Cm [ name ]
-Create a new, empty playlist.  If a
-.Cm name
-is provided, the new playlist will be named accordingly, unless a playlist
-with that name already exists.  If no name is provided, the default is
-"untitled".
-.It :q[!]
+.It Pf : Ic new Op Ar name
+Create a new, empty playlist.  If
+.Ar name
+is provided, the new playlist will be named accordingly unless a playlist
+with that name already exists.
+If no name is provided, the default is "untitled".
+.It Pf : Ic q Ns Oo ! Oc
 Quit
 .Nm .
-If there are playlists with unsaved changes, then you are notified of such and
-prevented from quitting.  You can forcefully quit if '!' is provided, and any
-unsaved changes to any playlists will be lost.  Note that playlists with
-unsaved changes appear bold in the library window.
-.It :reload Cm [ db | conf ]
+If there are playlists with unsaved changes, then you are notified of this and
+prevented from quitting.
+You can forcefully quit by using
+.Pf : Ic q Ns ! ,
+and any unsaved changes to any playlists will be lost.
+.Pp
+Note that playlists with unsaved changes appear bold in the library window.
+.It Pf : Ic reload Pq Cm db | Cm conf
 The reload command is used to reload either the database or configuration
 file while
 .Nm
-is running.  Handy if you update your database using an e-command while
-also running
+is running.
+Handy if you update your database using an e-command while also running
 .Nm .
-.It :set Cm property=value
-The set command is used to set various properties within vitunes. The
-following properties are available:
+.It Pf : Ic set Cm property Ns = Ns Ar value
+The set command is used to set various properties within vitunes.
+For properties that accept a value of
+.Ar bool ,
+valid values are 'true' and 'false'.
+.Pp
+The following properties are available:
 .Bl -tag -width Fl
-.It lhide=<bool>
-Valid values for
-.Cm bool
-are 'true' and 'false'.  If set to true, the library window will be hidden
-(disappear) when it does not have focus.
-.It lwidth=<number>
+.It Cm lhide Ns = Ns Ar bool
+If set to true, the library window will be hidden (disappear) when it does
+not have focus.
+.It Cm lwidth Ns = Ns Ar number
 Set the width of the library window to
-.Cm number
-columns wide.  Note that the number provided must be greater than 0 and less
-than the width of the terminal.
-.It match-fname=<bool>
-Valid values for
-.Cm bool
-are 'true' and 'false'.  When searching or filtering a playlist, normally
-the filenames are also included in the matching algorithm. This can sometimes
-be undesirable, particularly if, for example, all of your music/media reside
-in a directory named "media" and you're trying to search for a file with the
-word "media" in the title.  To disable this behavior, set match-fnames to
-false.
-.It save-sorts=<bool>
-Valid values for
-.Cm bool
-are 'true' and 'false'.  Most operations that change a playlist (such as
-paste/cut) set the 'needs-saving' flag on the playlist, such that you are
-prompted on exiting vitunes that there is a playlist with unsaved changes.
-By default, sorting a playlist does not do this.  To change this behavior,
-and be prompted to save sorts on exit, set this option to 'true'.
+.Ar number
+columns wide.
+Note that the number provided must be greater than 0 and less than the width
+of the terminal.
+.It Cm match-fname Ns = Ns Ar bool
+When searching or filtering a playlist, normally the filenames are also
+included in the matching algorithm.
+This can sometimes be undesirable, particularly if, for example, all of your
+music/media reside in a directory named "media" and you're trying to search
+for a file with the word "media" in the title.
+.Pp
+To disable this behavior, set match-fnames to false.
+.It Cm save-sorts Ns = Ns Ar bool
+Most operations that change a playlist (such as paste/cut) set
+the 'needs-saving' flag on the playlist, such that you are prompted on
+exiting vitunes that there is a playlist with unsaved changes.
+By default, sorting a playlist does not do this.
+.Pp
+To change this behavior, and be prompted to save sorts on exit, set this
+option to true.
 .El
-.It :sort Cm sort-description
-Sort the currently viewing playlist using the given sort description.
-A sort description is a comma separated list of:
-.Pa [-]<field-name> ,
-where the dash '-', if present, indicates that the field should be sorted
-descending.  As an example, the following command:
+.It Pf : Ic sort Ar sort-description
+Sort the currently viewing playlist using the provided
+.Ar sort-description ,
+which is a comma separated list of:
+.Qq Oo Ar \- Oc Ns Ar field ,
+specifying which fields to sort by and if they should be sorted
+ascending or descending.
+.Pp
+Valid values for
+.Ar field
+are: album, artist, comment, genre, length, title, track, and year.
+Each field is sorted ascending by default, unless the field is preceeded
+with the dash
+.Ar \- ,
+in which case that field is sorted descending.
+.Pp
+As an example, the following command:
 .Pp
 .Ic :sort artist,-album,title
 .Pp
 would sort all records in the current playlist by artist (ascending) first,
-then album-name descending, then title.
-.Pp
-Valid field-names are: artist, album, title, track, year, genre, comment,
-and length.
+then album-name (descending), then title (ascending).
 .Pp
 Note that while most operations on playlists set the "needs-saving" flag
 (so you are prompted when quiting
 .Nm
 that the playlist has unsaved changes), sorting a playlist does not do this.
-This is intentional.  If you wish this behavior to be changed, see the
-"save-sorts" option for the
+This is intentional.
+If you wish this behavior to be changed, see the "save-sorts" option for the
 .Ic set
 command.
-.It :w[!] Cm [name]
-Save the currently viewing playlist.  If a
-.Cm name
-is provided, then the playlist will be saved with this new name.  If, however,
-a playlist already exists with that name, then you will be prevented from saving
-with that name unless '!' is provided, in which case the existing playlist with
-that name will be deleted.
-.It :unbind Cm OPTIONS
-This command is used to remove existing keybindings.  It has three forms.  The
-first is simply:
+.It Pf : Ic unbind Pq Cm * | Cm action Ar action | Cm key Ar keycode
+This command is used to remove existing keybindings.
+It has three forms.
+The first is simply:
 .Pp
-.Ic :unbind *
+.Ic unbind Ar *
 .Pp
-which will remove all existing keybindings.  This is handy in a configuration
-file where you may want to define all custom keybindings.  Issuing this at
-runtime will leave you with an instance of
+which will remove all existing keybindings.
+This is handy in a configuration file where you may want to define all custom
+keybindings.
+Issuing this at runtime will leave you with an instance of
 .Nm
 that will not respond to any keybdings!
 .Pp
 The second form is used to unbind actions:
 .Pp
-.Ic :unbind action ACTION
+.Ic unbind action Ar action
 .Pp
-This will remove any keybindings for the action specified by ACTION.
+This will remove any keybindings for the action specified by
+.Ar action .
 .Pp
 The third form is used to unbind keys:
 .Pp
-.Ic :unbind key KEYCODE
+.Ic unbind key Ar keycode
 .Pp
-This will remove any action currently bound to the key specified by KEYCODE.
+This will remove any action currently bound to the key specified by
+.Ar keycode .
 .Pp
 See the section
-.Sy KEYBINDING DETAILS
-for details on specifying KEYCODES and a complete list of actions, along with
-their default keybindings,
+.Sx SPECIFYING KEYCODES
+for details on how to specify
+.Ar keycode ,
+and section
+.Sx KEYBINDING ACTIONS
+for a listing of all actions
+.Nm
+supports.
+.It Pf : Ic w Ns Oo ! Oc Op Ar name
+Save the currently viewing playlist.
+If a
+.Ar name
+is provided, then the playlist will be saved with this new name.
+If, however, a playlist already exists with that name, then you will be
+prevented from saving with that name unless '!' is provided, in which case
+the existing playlist with that name will be deleted.
 .El
-.Sh KEYBINDING DETAILS
-This section describes how to specify keycodes and actions used in both the
-bind and unbind commands.
+.Sh SPECIFYING KEYCODES
+This section describes how to specify keycodes used in both the
+.Pf : Ic bind
+and
+.Pf : Ic unbind
+commands.
 .Pp
 Keycodes are specified in the following fashion:
 .Pp
-.Ic [CONTROL] [ KEY | SPECIALKEY ]
+.Dl Oo Cm Control Oc Pq Ar key | Ar SpecialKey
 .Pp
 Here,
-.Cm KEY
+.Ar key
 is used to specify the actual, printable character entered which is
 case-sensitive (e.g. 'j', 'p', 'P'), and
-.Cm SPECIALKEY
-is used to specify various non-printable characters.
+.Ar SpecialKey
+is used to specify various non-printable characters (such as the Page-Up
+key).
 .Pp
-If
-.Cm CONTROL
-is specified, then the keycode only applies when the control key is pressed
-in conjunction with the
-.Cm KEY
+If the string
+.Qq Control
+is also specified, then the keycode only applies when the control key is
+pressed in conjunction with the
+.Ar key
 or
-.Cm SPECIALKEY.
+.Ar SpecialKey .
 .Pp
 Although
-.Cm KEY
+.Cm key
 is case-sensitive ('p' and 'P' are treated differently), both
-.Cm CONTROL
+.Ar SpecialKey
 and
-.Cm SPECIALKEY
+.Qq Control
 are case-insensitive.
 .Pp
-The currently supported list of non-printable characters (
-.Cm SPECIALKEY's
-) is:
+The currently supported list of non-printable characters available for
+.Ar SpecialKey
+are:
 .Pp
-.Bl -tag -width "backspace" -offset indent -compact
-.It Cm PageUp
-The page-up key.
-.It Cm PageDown
-The page-down key.
-.It Cm Up
-The up-arrow key.
-.It Cm Down
-The down-arrow key.
-.It Cm Left
-The left-arrow key.
-.It Cm Right
-The right-arrow key.
-.It Cm Backspace
-The backspace key.
-.It Cm Enter
-The enter key.
-.It Cm Space
-The space key.
-.It Cm Tab
-The tab key.
+.Bl -column -compact -offset indent "ValueX" "DescriptionX"
+.It Em Value         Ta Em Description
+.It Cm PageUp        Ta The page-up key.
+.It Cm PageDown      Ta The page-down key.
+.It Cm Up            Ta The up-arrow key.
+.It Cm Down          Ta The down-arrow key.
+.It Cm Left          Ta The left-arrow key.
+.It Cm Right         Ta The right-arrow key.
+.It Cm Backspace     Ta The backspace key.
+.It Cm Enter         Ta The enter key.
+.It Cm Space         Ta The space key.
+.It Cm Tab           Ta The tab key.
 .El
 .Pp
+Some examples of using keycodes and the
+.Pf : Ic bind
+run-time command are:
+.Bd -literal
+   bind  paste_after   p
+   bind  paste_bofore  P
+
+   bind  scroll_up_halfpage    Control u
+   bind  scroll_down_halfpage  Control d
+.Ed
+.Sh KEYBINDING ACTIONS
 The current list of available actions that keys may be bound to is the
-following.  For each action, the default keys bound to them are also listed.
-.Pp
-.Bl -tag -width "scroll_down_wholepage" -offset indent -compact
+following.
+For each action, the default keys bound to them are also listed.
+.Bl -tag -width "scroll_down_wholepage"
+.It Em Action Name
+.Em Description
 .It Cm scroll_up
 Scroll the current row in the current window up by one line.
 .br
-DEFAULT BINDINGS: k, -, UP
-.Pp
+DEFAULT BINDINGS:
+.Cm k, -, Up
 .It Cm scroll_down
 Scroll the current row in the current window down by one line.
 .br
-DEFAULT BINDINGS: j, DOWN
-.Pp
+DEFAULT BINDINGS:
+.Cm j, Down
 .It Cm scroll_up_page
 Scroll the current window up by one line.
 .br
-DEFAULT BINDINGS: Control y
-.Pp
+DEFAULT BINDINGS:
+.Cm Control y
 .It Cm scroll_down_page
 Scroll the current window down by one line.
 .br
-DEFAULT BINDINGS: Control e
-.Pp
+DEFAULT BINDINGS:
+.Cm Control e
 .It Cm scroll_up_halfpage
 Scroll the current window up one half-page.
 .br
-DEFAULT BINDINGS: Control u
-.Pp
+DEFAULT BINDINGS:
+.Cm Control u
 .It Cm scroll_down_halfpage
 Scroll the current window down one half-page.
 .br
-DEFAULT BINDINGS: Control d
-.Pp
+DEFAULT BINDINGS:
+.Cm Control d
 .It Cm scroll_up_wholepage
 Scroll the current window up one whole page.
 .br
-DEFAULT BINDINGS: Control b, PageUp
-.Pp
+DEFAULT BINDINGS:
+.Cm Control b, PageUp
 .It Cm scroll_down_wholepage
 Scroll the current window down one whole page.
 .br
-DEFAULT BINDINGS: Control f, PageDown
-.Pp
+DEFAULT BINDINGS:
+.Cm Control f, PageDown
 .It Cm scroll_left
 Scroll the current window to the left one column.
 .br
-DEFAULT BINDINGS: h, LEFT, BACKSPACE
-.Pp
+DEFAULT BINDINGS:
+.Cm h, Left, Backspace
 .It Cm scroll_right
 Scroll the current window to the right one column.
 .br
-DEFAULT BINDINGS: l, RIGHT, SPACE
-.Pp
+DEFAULT BINDINGS:
+.Cm l, Right, Space
 .It Cm scroll_leftmost
 Scroll the current window to the left as far as possible.
 .br
-DEFAULT BINDINGS: ^, 0, |
-.Pp
+DEFAULT BINDINGS:
+.Cm ^, 0, |
 .It Cm scroll_rightmost
 Scroll the current window to the right as far as possible.
 .br
-DEFAULT BINDINGS: $
-.Pp
+DEFAULT BINDINGS:
+.Cm $
 .It Cm jumpto_screen_top
 Move the current line to the first line in the current window.
 .br
-DEFAULT BINDINGS: H
-.Pp
+DEFAULT BINDINGS:
+.Cm H
 .It Cm jumpto_screen_middle
 Move the current line to the middle line in the current window.
 .br
-DEFAULT BINDINGS: M
-.Pp
+DEFAULT BINDINGS:
+.Cm M
 .It Cm jumpto_screen_bottom
 Move the current line to the bottom line in the current window.
 .br
-DEFAULT BINDINGS: L
-.Pp
+DEFAULT BINDINGS:
+.Cm L
 .It Cm jumpto_line
 Jump to either a specified line (if a global input number is present) or to
 the last line in the current window's buffer.
 .br
-DEFAULT BINDINGS: G
-.Pp
+DEFAULT BINDINGS:
+.Cm G
 .It Cm jumpto_percent
 Using the global input number N, jump to the line N% the way through the
 current window's buffer.
 .br
-DEFAULT BINDINGS: %
-.Pp
+DEFAULT BINDINGS:
+.Cm %
 .It Cm search_forward
 Begin a search for the entered string searching forward in the current window.
 The current row will be updated to the next matching row.
 .br
-DEFAULT BINDINGS: /
-.Pp
+DEFAULT BINDINGS:
+.Cm /
 .It Cm search_backward
 Begin a search for the entered string searching backwards in the current
 The current row will be updated to the next matching row.
 window.
 .br
-DEFAULT BINDINGS: ?
-.Pp
+DEFAULT BINDINGS:
+.Cm \?
 .It Cm find_next_forward
 Using the previous search-string, search in the same direction as the search
 was input for the next matching row.
 .br
-DEFAULT BINDINGS: n
-.Pp
+DEFAULT BINDINGS:
+.Cm n
 .It Cm find_next_backward
 Using the previous search-string, search in the opposite direction as the
 search was input for the next matching row.
 .br
-DEFAULT BINDINGS: N
-.Pp
+DEFAULT BINDINGS:
+.Cm N
 .It Cm cut
 Remove the following N lines from the current window, placing them in the copy
-buffer, where N is the global input number.  Note that if the library window
-is active, only one row (playlist) can be cut/deleted at a time, and that this
-action cannot be undone.
+buffer, where N is the global input number.
+Note that if the library window is active, only one row (playlist) can be
+cut/deleted at a time, and that this action cannot be undone.
 .br
-DEFAULT BINDINGS: d
-.Pp
+DEFAULT BINDINGS:
+.Cm d
 .It Cm yank
 Copy the following N lines from the current window into the copy buffer, where
-N is the global input number.  This action cannot be used in the library window.
+N is the global input number.
+This action cannot be used in the library window.
 .br
-DEFAULT BINDINGS: y
-.Pp
+DEFAULT BINDINGS:
+.Cm y
 .It Cm paste_after
 Paste the contents of the copy buffer after the current row in the playlist
-window.  This action cannot be used in the library window.
+window.
+This action cannot be used in the library window.
 .br
-DEFAULT BINDINGS: p
-.Pp
+DEFAULT BINDINGS:
+.Cm p
 .It Cm paste_before
 Paste the contents of the copy buffer before the current row in the playlist
-window.  This action cannot be used in the library window.
+window.
+This action cannot be used in the library window.
 .br
-DEFAULT BINDINGS: P
-.Pp
+DEFAULT BINDINGS:
+.Cm P
 .It Cm undo
 Undo the previous action on the currently viewed playlist.
 This action cannot be used in the library window.
 .br
-DEFAULT BINDINGS: u
-.Pp
+DEFAULT BINDINGS:
+.Cm u
 .It Cm redo
 Redo the previously undone action on the currently viewed playlist.
 This action cannot be used in the library window.
 .br
-DEFAULT BINDINGS: Control r
-.Pp
+DEFAULT BINDINGS:
+.Cm Control r
 .It Cm quit
 Exit
 .Nm .
 If there are unsaved changes in any playlists you will be prevented from
 exiting until you either save those changes or issue a ":q!" command.
 .br
-DEFAULT BINDINGS: Control c, Control /
-.Pp
+DEFAULT BINDINGS:
+.Cm Control c, Control /
 .It Cm redraw
 Clear and re-draw the entire display.
 .br
-DEFAULT BINDINGS: Control l
-.Pp
+DEFAULT BINDINGS:
+.Cm Control l
 .It Cm command_mode
 Enter command-mode, where the commands listed in the
-.Sy COMMANDS
+.Sx RUN-TIME COMMANDS
 section may be issued.
 .br
-DEFAULT BINDINGS: :
-.Pp
+DEFAULT BINDINGS:
+.Cm \:
 .It Cm shell
 Enter a command to be executed outsite of
 .Nm
-and in the current shell environment.  The output of the execution is shown
-before control and the display returns to
+and in the current shell environment.
+The output of the execution is shown before control and the display returns to
 .Nm .
 .br
-DEFAULT BINDINGS: !
-.Pp
+DEFAULT BINDINGS:
+.Cm \!
 .It Cm switch_windows
 Toggle focus between the library and playlist windows.
 .br
-DEFAULT BINDINGS: TAB
-.Pp
+DEFAULT BINDINGS:
+.Cm Tab
 .It Cm show_file_info
 Show the file information (including meta-information) for the current row/file
-in the playlist window.  This action does not work in the library window.
+in the playlist window.
+This action does not work in the library window.
 .br
-DEFAULT BINDINGS: m
-.Pp
+DEFAULT BINDINGS:
+.Cm m
 .It Cm load_playlist
 Load the playlist specified by the current row in the library window.
 .br
-DEFAULT BINDINGS: ENTER
-.Pp
+DEFAULT BINDINGS:
+.Cm Enter
 .It Cm media_play
 Begin playing the file specified by the current row in the playlist window.
 .br
-DEFAULT BINDINGS: ENTER
-.Pp
+DEFAULT BINDINGS:
+.Cm Enter
 .It Cm media_pause
 Pause playback of any playing media.
 .br
-DEFAULT BINDINGS: z
-.Pp
+DEFAULT BINDINGS:
+.Cm z
 .It Cm media_stop
 Stop all playback of any playing media.
 .br
-DEFAULT BINDINGS: s
-.Pp
+DEFAULT BINDINGS:
+.Cm s
 .It Cm seek_forward_seconds
 Seek forwards 10 seconds in any playing media.
 .br
-DEFAULT BINDINGS: f, ]
-.Pp
+DEFAULT BINDINGS:
+.Cm f, ]
 .It Cm seek_backward_seconds
 Seek backwards 10 seconds in any playing media.
 .br
-DEFAULT BINDINGS: b, [
-.Pp
+DEFAULT BINDINGS:
+.Cm b, [
 .It Cm seek_forward_minutes
 Seek forwards 1 minute in any playing media.
 .br
-DEFAULT BINDINGS: F, }
-.Pp
+DEFAULT BINDINGS:
+.Cm F, }
 .It Cm seek_backward_minutes
 Seek backwards 1 minute in any playing media.
 .br
-DEFAULT BINDINGS: B, {
-.Pp
+DEFAULT BINDINGS:
+.Cm B, {
 .El
 .Pp
 Some examples of using the above actions and keycodes to define the default
@@ -820,27 +864,24 @@ keybdings are:
    bind  scroll_down_halfpage  Control d
 .Ed
 .Sh CONFIGURATION FILE
-The default configuration file loaded by
+The configuration file loaded by
 .Nm
-is
-.Pa ~/.vitunes/vitunes.conf ,
-and can be overridden with the
-.Cm -f
-switch.  The format of this file is relatively straight-forward.  Each line
-may be one of the following:
+is relatively straight-forward.
+Each line may be one of the following:
 .Pp
 .Bl -bullet -compact
 .It
-A comment, which starts with a '#'
+A comment, which starts with a '#'.
 .It
-An empty line
+An empty line.
 .It
 One of the commands from the
-.Sy COMMANDS
+.Sx RUN-TIME COMMANDS
 section above.
 .El
 .Pp
-That's it.  As such, review the list of commands above.
+That's it.
+As such, review the list of commands above.
 .Pp
 An example configuration file that would setup some hideous DOS-like colors
 is:
@@ -862,27 +903,41 @@ is:
    set lwidth=20
    set lhide=true
 .Ed
+.Sh FILES
+.Bl -tag -width Ds -compact
+.It Pa ~/.vitunes/vitunes.conf
+Default configuration file.
+.It Pa ~/.vitunes/vitunes.db
+Default database file.
+.It Pa ~/.vitunes/playlists/
+Default playlist directory.
+.It Pa /usr/local/bin/mplayer
+Default path to the
+.Xr mplayer 1
+binary.
+.El
 .Sh SEE ALSO
 .Xr mplayer 1 ,
 .Xr realpath 3 ,
+.Xr strftime 3 ,
 .Xr vi 1 .
 .Pp
 More information about TagLib can be found on the TagLib website:
-.Pa http://developer.kde.org/~wheeler/taglib.html
+.Lk http://developer.kde.org/~wheeler/taglib.html
 .Pp
 Additionally, the
 .Nm
 website has more information, such as a complete list of supported
-.Xr vi 1
--like keybindings and up-to-date bug information.
+.Xr vi 1 Ns -like
+keybindings and up-to-date bug information.
 .Pp
-.Pa http://www.vitunes.org
+.Lk http://www.vitunes.org
 .Sh AUTHORS
 .Nm
 was written by
-.An Ryan Flannery Aq ryan.flannery@gmail.com .
+.An Ryan Flannery Aq Mt ryan.flannery@gmail.com .
 .Sh BUGS
 None known.
 .Pp
 If you happen to find any, please send a detailed description to me at
-<ryan.flannery@gmail.com>.
+.Mt ryan.flannery@gmail.com .
