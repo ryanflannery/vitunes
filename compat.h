@@ -15,25 +15,36 @@
  */
 
 /*
- * Compatibility goo for other OS's.  Specifically,
+ * Compatibility goo for other OS's.  These files are intended to add
+ * support for various FEATURES that other OS's do not support.  Kinda'
+ * like what autoconf is supposed to do, but doesn't.
  *
- *    1. Mac OS X
- *          -  Requires strtonum(3) implementation.
+ * These files consist of the following:
  *
- *    2. Linux
- *          -  Requires strtonum(3) implementation.
- *          -  Requires fparseln(3) implementation.
+ *    compat.h       This file, which contains the main feature-goo, along
+ *                   with any OS specific goo.  See below for details.
  *
- * So far, all compatibility code is from the OpenBSD projects and each
- * file has its own license.
+ *    compat.c       The counterpart to this file, which includes all the
+ *                   necessary #includes of compat/ stuff to add various
+ *                   features.
  *
- * Backed out Linux support on 7 Jan. 2011.
+ *    compat/        The directory containing all OpenBSD-specific
+ *                   features of vitunes that may be needed on other OS's.
+ *
+ *
+ * Features that are needed on other OS's:
+ *
+ *    1. strtonum(3)       This is an easy add.
+ *                         Required by: Mac OS X, Linux.
+ * 
+ *    2. fparseln(3)       This is a not-so-easy add.  Damn you, fgetln(3)!
+ *                         Required by: Linux.
  */
 
 #ifndef COMPAT_H
 #define COMPAT_H
 
-/* strtonum(3) implementation */
+/* Is strtonum(3) required? */
 #if defined(__linux) || ( defined(__APPLE__) && defined(__MACH__) )
 #  define COMPAT_NEED_STRTONUM
 #  include <stdlib.h>
