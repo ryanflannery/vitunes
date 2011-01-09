@@ -740,6 +740,9 @@ cmd_reload(int argc, char *argv[])
       medialib_destroy();
       medialib_load(db_file, playlist_dir);
 
+      /* sort entries */
+      qsort(mdb.library->files, mdb.library->nfiles, sizeof(meta_info*), mi_compare);
+
       free(db_file);
       free(playlist_dir);
 
