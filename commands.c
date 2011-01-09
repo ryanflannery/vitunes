@@ -628,7 +628,7 @@ cmd_set(int argc, char *argv[])
 
    /* determine if the player has been setup (needed for redraws below) */
    player_is_setup = (player.name  != NULL)
-                  && (*player.name != NULL);
+                  && (*player.name != '\0');
 
    /* extract property and value */
    property = argv[1];
@@ -739,6 +739,9 @@ cmd_reload(int argc, char *argv[])
       /* reload db */
       medialib_destroy();
       medialib_load(db_file, playlist_dir);
+
+      /* sort entries */
+      qsort(mdb.library->files, mdb.library->nfiles, sizeof(meta_info*), mi_compare);
 
       free(db_file);
       free(playlist_dir);

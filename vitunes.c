@@ -168,13 +168,13 @@ main(int argc, char *argv[])
    ui.library->nrows  = mdb.nplaylists;
    playing_playlist = NULL;
 
-   /* load config file and run commands in it now */
-   load_config();
-
    /* start media player child */
    player_init(player_backend);
    player_info.mode = DEFAULT_PLAYER_MODE;
    atexit(player_destroy);
+
+   /* load config file and run commands in it now */
+   load_config();
 
    /* initial painting of the display */
    paint_all();
