@@ -21,19 +21,21 @@
  * by Ryan Flannery.
  */
 
-/* TODO
- *  - create player (playbin2)
- *  - gapless playback (not done yet)
- *  - change handlers for play/pause/stop/skip/seek
- *  - change handlers for getting track information
- */
-
 #include "gstplayer.h"
 #include "../player.h"
 
 /* player data */
 static gst_player gplayer;
 
+
+/* callback handler for gapless playback */
+void
+gstplayer_handle_about_to_finish(GstElement *obj UNUSED, gpointer userdata UNUSED)
+{
+   gplayer.about_to_finish = true;
+   if (gplayer.playnext_cb)
+      gplayer.playnext_cb();
+}
 
 void
 gstplayer_init()
@@ -46,24 +48,18 @@ gstplayer_init()
    GstElement *player;
    GstBus     *bus;
    GstElement *video_sink;
-#if 0
-   gst_player *gplayer;
-   gplayer = (gst_player *) malloc(sizeof(gst_player));
-   if (gplayer == NULL)
-      errx(1, "gstplayer_init: out-of-memory");
-#endif
 
    /* init gstreamer */
    gst_init(NULL, NULL);
    /* create player */
    player = gst_element_factory_make("playbin2", "vitunes");
    if (!player)
-      errx(1, "gstplayer_init: could not create player");
+      gplayer.fatal_cb("gstplayer_init: could not create player");
    /* create fake video-sink, since we're an audio player */
    video_sink = gst_element_factory_make("fakesink", "video-sink");
    if (!video_sink) {
       gst_object_unref(GST_OBJECT(player));
-      errx(1, "gstplayer_init: could not create fakesink");
+      gplayer.fatal_cb("gstplayer_init: could not create fakesink");
    }
    /* add fake video sink to pipeline */
    g_object_set(G_OBJECT(player), "video-sink", video_sink, NULL);
@@ -72,18 +68,19 @@ gstplayer_init()
    if (!bus){
       gst_object_unref(GST_OBJECT(video_sink));
       gst_object_unref(GST_OBJECT(player));
-      errx(1, "gstplayer_init: could not create gstreamer bus");
+      gplayer.fatal_cb("gstplayer_init: could not create gstreamer bus");
    }
+   /* gapless playback */
+   g_signal_connect(G_OBJECT(player), "about-to-finish",
+                    G_CALLBACK(gstplayer_handle_about_to_finish), NULL);
    /* update gplayer struct */
    gplayer.player = player;
    gplayer.bus = bus;
+   gplayer.about_to_finish = false;
 }
 
 
 /* play via gstreamer */
-/* TODO fix this for gapless playback !
- * or better fix player_next !
- */
 void
 gstplayer_play(const char *filename)
 {
@@ -97,13 +94,16 @@ gstplayer_play(const char *filename)
    if (! gst_uri_is_valid(uri))
       uri = g_filename_to_uri(filename, NULL, NULL);
    /* set actual state to pause*/
-   gst_element_set_state(GST_ELEMENT(gplayer.player), GST_STATE_READY);
+   if (!gplayer.about_to_finish)
+      gst_element_set_state(GST_ELEMENT(gplayer.player), GST_STATE_READY);
    /* load song */
    g_object_set(G_OBJECT(gplayer.player), "uri", uri, NULL);
    /* start playback */
-   gst_element_set_state(GST_ELEMENT(gplayer.player), GST_STATE_PLAYING);
+   if (!gplayer.about_to_finish)
+      gst_element_set_state(GST_ELEMENT(gplayer.player), GST_STATE_PLAYING);
    gplayer.playing = true;
    gplayer.paused = false;
+   gplayer.about_to_finish = false;
    g_free(uri);
 }
 
@@ -140,6 +140,7 @@ gstplayer_stop()
    gst_element_set_state(GST_ELEMENT(gplayer.player), GST_STATE_READY);
    gplayer.playing = false;
    gplayer.paused = false;
+   gplayer.about_to_finish = false;
 }
 
 void
@@ -179,10 +180,6 @@ gstplayer_monitor()
    if (!gplayer.bus)
       gplayer.fatal_cb("gstplayer_pause: player not initialized\n");
 
-   /* TODO: update time */
-   gst_element_query_position(GST_ELEMENT(gplayer.player), &pos_format, &pos);
-   /* position is in nanoseconds, lets convert */
-   actual_pos = (float) (pos / GST_SECOND);
    msg = gst_bus_pop(gplayer.bus);
    if (!msg)
       return;
@@ -224,22 +221,6 @@ gstplayer_is_paused()
    if (!gplayer.player)
       return false;
    return gplayer.paused;
-}
-
-
-/* play next / prev */
-void
-gstplayer_next(gst_player *gplayer UNUSED, int skip UNUSED)
-{
-   /* nothing to see here, all done by player.c */
-   return;
-}
-
-void
-gstplayer_prev(gst_player *gplayer UNUSED, int skip UNUSED)
-{
-   /* nothing to see here, all done by player.c */
-   return;
 }
 
 float
