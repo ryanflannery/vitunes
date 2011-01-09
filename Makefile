@@ -10,7 +10,7 @@ LDEPS=`taglib-config --libs` -ltag_c
 # build info
 CC?=/usr/bin/gcc
 CFLAGS+=-c -std=c89 -Wall -Wextra -Wno-unused-value $(CDEPS) $(CDEBUG)
-LDFLAGS+=-lm -lncurses -lutil $(LDEPS)
+LDFLAGS+=-lm -lncursesw -lutil $(LDEPS)
 
 OBJS=commands.o compat.o e_commands.o \
 	  keybindings.o medialib.o meta_info.o \
