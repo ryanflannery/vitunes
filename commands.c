@@ -628,7 +628,7 @@ cmd_set(int argc, char *argv[])
 
    /* determine if the player has been setup (needed for redraws below) */
    player_is_setup = (player.name  != NULL)
-                  && (*player.name != NULL);
+                  && (*player.name != '\0');
 
    /* extract property and value */
    property = argv[1];
