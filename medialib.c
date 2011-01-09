@@ -328,7 +328,7 @@ medialib_db_flush(FILE *fout, const char *timefmt)
  * The database is then re-saved to disk.
  */
 void
-medialib_db_update(bool show_skipped)
+medialib_db_update(bool show_skipped, bool force_update)
 {
    meta_info *mi;
    struct stat sb;
@@ -377,7 +377,8 @@ medialib_db_update(bool show_skipped)
           * last extracted meta-info from it (otherwise we ignore)
           */
 
-         if (sb.st_mtime > mdb.library->files[i]->last_updated) {
+         if (force_update ||
+            (sb.st_mtime > mdb.library->files[i]->last_updated)) {
 
             mi = mi_extract(filename);
             if (mi == NULL) {
