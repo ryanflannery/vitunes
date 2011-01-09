@@ -336,7 +336,7 @@ playlist window, their order, their width, and their alignment.
 The format of
 .Ar display-description
 is a comma separated list of:
-.Qq Oo Ar \- Oc Ns Ar field . Ns Ar size .
+.Qq Oo Ar \&- Oc Ns Ar field . Ns Ar size .
 .Pp
 Valid values for
 .Ar field
@@ -347,7 +347,7 @@ field indicates the number of columns.
 If
 .Ar field
 is preceded with a
-.Ar \-
+.Ar \&-
 the field will be right-aligned.
 As an example, the command:
 .Pp
@@ -477,7 +477,7 @@ option to true.
 Sort the currently viewing playlist using the provided
 .Ar sort-description ,
 which is a comma separated list of:
-.Qq Oo Ar \- Oc Ns Ar field ,
+.Qq Oo Ar \&- Oc Ns Ar field ,
 specifying which fields to sort by and if they should be sorted
 ascending or descending.
 .Pp
@@ -486,7 +486,7 @@ Valid values for
 are: album, artist, comment, genre, length, title, track, and year.
 Each field is sorted ascending by default, unless the field is preceeded
 with the dash
-.Ar \- ,
+.Ar \&- ,
 in which case that field is sorted descending.
 .Pp
 As an example, the following command:
@@ -674,7 +674,7 @@ DEFAULT BINDINGS:
 Scroll the current window to the left as far as possible.
 .br
 DEFAULT BINDINGS:
-.Cm ^, 0, |
+.Cm ^, 0, \&|
 .It Cm scroll_rightmost
 Scroll the current window to the right as far as possible.
 .br
@@ -719,7 +719,7 @@ The current row will be updated to the next matching row.
 window.
 .br
 DEFAULT BINDINGS:
-.Cm \?
+.Cm \&?
 .It Cm find_next_forward
 Using the previous search-string, search in the same direction as the search
 was input for the next matching row.
@@ -792,7 +792,7 @@ Enter command-mode, where the commands listed in the
 section may be issued.
 .br
 DEFAULT BINDINGS:
-.Cm \:
+.Cm \&:
 .It Cm shell
 Enter a command to be executed outsite of
 .Nm
@@ -801,7 +801,7 @@ The output of the execution is shown before control and the display returns to
 .Nm .
 .br
 DEFAULT BINDINGS:
-.Cm \!
+.Cm \&!
 .It Cm switch_windows
 Toggle focus between the library and playlist windows.
 .br
@@ -838,22 +838,22 @@ DEFAULT BINDINGS:
 Seek forwards 10 seconds in any playing media.
 .br
 DEFAULT BINDINGS:
-.Cm f, ]
+.Cm f, \&]
 .It Cm seek_backward_seconds
 Seek backwards 10 seconds in any playing media.
 .br
 DEFAULT BINDINGS:
-.Cm b, [
+.Cm b, \&[
 .It Cm seek_forward_minutes
 Seek forwards 1 minute in any playing media.
 .br
 DEFAULT BINDINGS:
-.Cm F, }
+.Cm F, \&}
 .It Cm seek_backward_minutes
 Seek backwards 1 minute in any playing media.
 .br
 DEFAULT BINDINGS:
-.Cm B, {
+.Cm B, \&{
 .El
 .Pp
 Some examples of using the above actions and keycodes to define the default
