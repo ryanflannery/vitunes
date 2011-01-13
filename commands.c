@@ -747,6 +747,12 @@ user_getstr(const char *prompt, char **response)
          errx(1, "user_getstr: shamefull limit reached");
    }
 
+   /* For lack of input, bail out */
+   if (pos == 0) {
+      ret = 1;
+      goto end;
+   }
+
    /* NULL-terminate and trim off trailing whitespace */
    input[pos--] = '\0';
    for (; input[pos] == ' ' && pos >= 0; pos--)
