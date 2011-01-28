@@ -549,17 +549,18 @@ paint_setup_colors()
    colors.playing_playlist = 11;
 
    /* setup default colors */
-   init_pair(colors.bars,     COLOR_WHITE, COLOR_BLACK);
-   init_pair(colors.player,   COLOR_GREEN, COLOR_BLACK);
-   init_pair(colors.status,   COLOR_WHITE, COLOR_BLACK);
-   init_pair(colors.library,  COLOR_WHITE, COLOR_BLACK);
-   init_pair(colors.playlist, COLOR_WHITE, COLOR_BLACK);
-   init_pair(colors.errors,   COLOR_WHITE, COLOR_RED);
-   init_pair(colors.messages, COLOR_RED,   COLOR_BLACK);
-   init_pair(colors.tildas_library,   COLOR_BLUE, COLOR_BLACK);
-   init_pair(colors.tildas_playlist,  COLOR_BLUE, COLOR_BLACK);
-   init_pair(colors.playing_library,  COLOR_GREEN, COLOR_BLACK);
-   init_pair(colors.playing_playlist, COLOR_GREEN, COLOR_BLACK);
+   use_default_colors();
+   init_pair(colors.bars,     -1, -1);
+   init_pair(colors.player,   COLOR_GREEN, -1);
+   init_pair(colors.status,   -1, -1);
+   init_pair(colors.library,  -1, -1);
+   init_pair(colors.playlist, -1, -1);
+   init_pair(colors.errors,   -1, COLOR_RED);
+   init_pair(colors.messages, COLOR_RED,   -1);
+   init_pair(colors.tildas_library,   COLOR_BLUE, -1);
+   init_pair(colors.tildas_playlist,  COLOR_BLUE, -1);
+   init_pair(colors.playing_library,  COLOR_GREEN, -1);
+   init_pair(colors.playing_playlist, COLOR_GREEN, -1);
 
    /* colors for cinfo fields (columns in playlist window) */
    for (i = 0; i < MI_NUM_CINFO; i++) {
