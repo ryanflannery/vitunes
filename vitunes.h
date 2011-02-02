@@ -24,7 +24,12 @@
 #include <pwd.h>
 #include <signal.h>
 #include <unistd.h>
+#ifdef __FreeBSD__
+#include <stdio.h>
+#include <libutil.h>
+#else
 #include <util.h>
+#endif
 
 #include "debug.h"
 #include "enums.h"
