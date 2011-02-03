@@ -1573,14 +1573,22 @@ match_command_name(const char *input, const char *cmd)
 void
 execute_external_command(const char *cmd)
 {
+   int   input;
+
    def_prog_mode();
    endwin();
 
    system(cmd);
-   printf("\nPress ENTER to continue");
+   printf("\nPress ENTER or type command to continue");
    fflush(stdout);
-   while (getchar() != '\n');
-
+   raw();
+   while(!VSIG_QUIT) {
+      if ((input = getch()) && input != ERR) {
+         if (input != '\r')
+            ungetch(input);
+         break;
+      }
+   }
    reset_prog_mode();
    paint_all();
 }
