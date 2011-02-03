@@ -725,9 +725,13 @@ user_getstr(const char *prompt, char **response)
       /* handle 'backspace' / left-arrow, etc. */
       if (ch == 127    || ch == KEY_BACKSPACE || ch == KEY_LEFT
        || ch == KEY_DC || ch == KEY_SDC) {
-         if (pos == 0)
+         if (pos == 0) {
+            if (ch == KEY_BACKSPACE) {
+               ret = 1;
+               goto end;
+            }
             beep();
-         else {
+         } else {
             mvwaddch(ui.command, 0, strlen(prompt) + pos - 1, ' ');
             wmove(ui.command, 0, strlen(prompt) + pos - 1);
             wrefresh(ui.command);
