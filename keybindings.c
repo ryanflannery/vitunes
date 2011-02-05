@@ -118,7 +118,8 @@ const KeyActionHandler KeyActionHandlers[] = {
    {  seek_forward_seconds,   kba_seek,   { .direction = FORWARDS,  .scale = SECONDS, .num = 10 }},
    {  seek_backward_seconds,  kba_seek,   { .direction = BACKWARDS, .scale = SECONDS, .num = 10 }},
    {  seek_forward_minutes,   kba_seek,   { .direction = FORWARDS,  .scale = MINUTES, .num = 1 }},
-   {  seek_backward_minutes,  kba_seek,   { .direction = BACKWARDS, .scale = MINUTES, .num = 1 }}
+   {  seek_backward_minutes,  kba_seek,   { .direction = BACKWARDS, .scale = MINUTES, .num = 1 }},
+   {  toggle,                 kba_toggle,       { .scale = NUMBER, .num = 'G' }}
 };
 const size_t KeyActionHandlersSize = sizeof(KeyActionHandlers) / sizeof(KeyActionHandler);
 
@@ -190,7 +191,8 @@ const KeyBinding DefaultKeyBindings[] = {
    { 'F',               seek_forward_minutes },
    { '}',               seek_forward_minutes },
    { 'B',               seek_backward_minutes },
-   { '{',               seek_backward_minutes }
+   { '{',               seek_backward_minutes },
+   { 't',               toggle }
 };
 const size_t DefaultKeyBindingsSize = sizeof(DefaultKeyBindings) / sizeof(KeyBinding);
 
@@ -1413,6 +1415,56 @@ kba_seek(KbaArgs a)
 
    /* apply n & seek */
    player_seek(secs * n);
+}
+
+void
+kba_toggle(KbaArgs a UNUSED)
+{
+   const char *errmsg = NULL;
+   char  *cmd;
+   char **argv;
+   int    argc;
+   int    num_matches;
+   bool   found;
+   int    found_idx = 0;
+   int    i;
+
+   if (!toggle_str)
+      return;
+
+   if(toggle_idx >= toggle_siz)
+      toggle_idx = 0;
+
+   cmd = strdup(toggle_str[toggle_idx++]);
+
+   /* convert to argc/argv structure */
+   if (str2argv(cmd, &argc, &argv, &errmsg) != 0) {
+      paint_error("parse error: %s in '%s'", errmsg, cmd);
+      free(cmd);
+      return;
+   }
+
+   /* search path for appropriate command to execute */
+   found = false;
+   num_matches = 0;
+   for (i = 0; i < CommandPathSize; i++) {
+      if (match_command_name(argv[0], CommandPath[i].name)) {
+         found = true;
+         found_idx = i;
+         num_matches++;
+      }
+   }
+
+   /* execute command or indicate failure */
+   if (found && num_matches == 1)
+      (CommandPath[found_idx].func)(argc, argv);
+   else if (num_matches > 1)
+      paint_error("Ambiguous abbreviation '%s'", argv[0]);
+   else
+      paint_error("Unknown command '%s'", argv[0]);
+
+   argv_free(&argc, &argv);
+   free(cmd);
 }
 
 

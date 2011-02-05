@@ -18,6 +18,10 @@
 
 bool sorts_need_saving = false;
 
+char  **toggle_str = NULL;
+int   toggle_siz = 0,
+      toggle_idx = 0;
+
 #define swap(type, x, y) \
    { type temp = x; x = y; y = temp;}
 
@@ -39,7 +43,8 @@ const cmd CommandPath[] = {
    {  "set",      cmd_set },
    {  "sort",     cmd_sort },
    {  "unbind",   cmd_unbind },
-   {  "w",        cmd_write }
+   {  "w",        cmd_write },
+   {  "toggle",   cmd_toggle }
 };
 const int CommandPathSize = (sizeof(CommandPath) / sizeof(cmd));
 
@@ -660,6 +665,48 @@ cmd_unbind(int argc, char *argv[])
 
    paint_error("usage: unbind [* | action <ACTION> | key <KEYCODE> ]");
    return 1;
+}
+
+int
+cmd_toggle(int argc, char *argv[])
+{
+   char     s[512];
+   int      x;
+
+   if (argc < 2) {
+      paint_error("usage: %s <keycode> <action1> / <action2> / ... <actionN>", argv[0]);
+      return 1;
+   }
+
+   if(toggle_str != NULL) {
+      for (x = 0; x < toggle_siz; x++)
+         free(toggle_str[x]);
+      free(toggle_str);
+   }
+
+   toggle_str = malloc(sizeof(char *) * 16);
+   toggle_siz = 16;
+
+   toggle_idx = 0;
+   s[0] = '\0';
+
+   for(x = 1; x < argc; x++) {
+      if(!strcmp("/", argv[x])) {
+         if (toggle_idx >= toggle_siz)
+            break;
+         toggle_str[toggle_idx++] = strdup(s);
+         s[0] = '\0';
+         continue;
+      }
+
+      strlcat(s, argv[x], 512);
+      strlcat(s, " ", 512);
+   }
+
+   toggle_str[toggle_idx++] = strdup(s);
+   toggle_siz = toggle_idx;
+   toggle_idx = 0;
+   return 0;
 }
 
 

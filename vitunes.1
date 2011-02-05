@@ -549,6 +549,12 @@ is provided, then the playlist will be saved with this new name.
 If, however, a playlist already exists with that name, then you will be
 prevented from saving with that name unless '!' is provided, in which case
 the existing playlist with that name will be deleted.
+.It Pf : Ic toggle Op Ar commands
+Set the commands list to
+.Ar commands.
+The commands are seperated by a /. Triggering the toggle action executes
+the command at the current list index and increases the index. So by
+executing the commands, you cycle through the list.
 .El
 .Sh SPECIFYING KEYCODES
 This section describes how to specify keycodes used in both the
@@ -854,6 +860,11 @@ Seek backwards 1 minute in any playing media.
 .br
 DEFAULT BINDINGS:
 .Cm B, \&{
+.It Cm toggle
+Execute the next command from the toggle list.
+.br
+DEFAULT BINDINGS:
+.Cm t, \&{
 .El
 .Pp
 Some examples of using the above actions and keycodes to define the default

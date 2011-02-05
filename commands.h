@@ -36,6 +36,9 @@ typedef struct {
 extern const cmd CommandPath[];
 extern const int CommandPathSize;
 
+extern char  **toggle_str;
+extern int   toggle_siz,
+             toggle_idx;
 
 /* command-mode command handlers */
 int cmd_quit(int argc, char *argv[]);
@@ -50,6 +53,7 @@ int cmd_set(int argc, char *argv[]);
 int cmd_reload(int argc, char *argv[]);
 int cmd_bind(int argc, char *argv[]);
 int cmd_unbind(int argc, char *argv[]);
+int cmd_toggle(int argc, char *argv[]);
 
 /* functions to get input from user in the command/status window */
 int user_getstr(const char *prompt, char **response);

@@ -77,7 +77,8 @@ typedef enum {
    seek_forward_seconds,
    seek_backward_seconds,
    seek_forward_minutes,
-   seek_backward_minutes
+   seek_backward_minutes,
+   toggle
 } KeyAction;
 
 typedef int KeyCode;
@@ -140,6 +141,7 @@ void kba_play(KbaArgs a);
 void kba_pause(KbaArgs a);
 void kba_stop(KbaArgs a);
 void kba_seek(KbaArgs a);
+void kba_toggle(KbaArgs a);
 
 
 /*
