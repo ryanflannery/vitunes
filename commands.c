@@ -651,6 +651,7 @@ cmd_unbind(int argc, char *argv[])
       }
 
       kb_unbind_key(key);
+      return 0;
    }
 
    /* unbind key case, with control ("unbind key control X") */
@@ -661,6 +662,7 @@ cmd_unbind(int argc, char *argv[])
       }
 
       kb_unbind_key(key);
+      return 0;
    }
 
    paint_error("usage: unbind [* | action <ACTION> | key <KEYCODE> ]");
