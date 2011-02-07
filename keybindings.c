@@ -64,7 +64,8 @@ const KeyActionName KeyActionNames[] = {
    { seek_forward_seconds,    "seek_forward_seconds" },
    { seek_backward_seconds,   "seek_backward_seconds" },
    { seek_forward_minutes,    "seek_forward_minutes" },
-   { seek_backward_minutes,   "seek_backward_minutes" }
+   { seek_backward_minutes,   "seek_backward_minutes" },
+   { toggle,                  "toggle" }
 };
 const size_t KeyActionNamesSize = sizeof(KeyActionNames) / sizeof(KeyActionName);
 
@@ -119,7 +120,7 @@ const KeyActionHandler KeyActionHandlers[] = {
    {  seek_backward_seconds,  kba_seek,   { .direction = BACKWARDS, .scale = SECONDS, .num = 10 }},
    {  seek_forward_minutes,   kba_seek,   { .direction = FORWARDS,  .scale = MINUTES, .num = 1 }},
    {  seek_backward_minutes,  kba_seek,   { .direction = BACKWARDS, .scale = MINUTES, .num = 1 }},
-   {  toggle,                 kba_toggle,       { .scale = NUMBER, .num = 'G' }}
+   {  toggle,                 kba_toggle, { .scale = NUMBER, .num = 'G' }}
 };
 const size_t KeyActionHandlersSize = sizeof(KeyActionHandlers) / sizeof(KeyActionHandler);
 
