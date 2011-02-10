@@ -190,6 +190,9 @@ player_play()
 void
 player_play_next_song()
 {
+   if (!player_status.playing)
+      return;
+
    switch (player.mode) {
    case PLAYER_MODE_LINEAR:
       if (++player.qidx == player.queue->nfiles) {
@@ -203,6 +206,40 @@ player_play_next_song()
    case PLAYER_MODE_LOOP:
       if (++player.qidx == player.queue->nfiles)
          player.qidx = 0;
+
+      player_play();
+      break;
+
+   case PLAYER_MODE_RANDOM:
+      player.qidx = rand() % player.queue->nfiles;
+      player_play();
+      break;
+   }
+}
+
+/*
+ * Play the previous song in the queue.  This will also stop playback if the
+ * mode is linear and the beginning of the playlist is reached.
+ */
+void
+player_play_prev_song()
+{
+   if (!player_status.playing)
+      return;
+
+   switch (player.mode) {
+   case PLAYER_MODE_LINEAR:
+      if (--player.qidx < 0) {
+         player.qidx = 0;
+         player_stop();
+      } else
+         player_play();
+
+      break;
+
+   case PLAYER_MODE_LOOP:
+      if (--player.qidx < 0)
+         player.qidx = player.queue->nfiles - 1;
 
       player_play();
       break;

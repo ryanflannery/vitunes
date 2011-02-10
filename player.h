@@ -105,6 +105,7 @@ void player_send_cmd(const char *cmd);
 /* player control functions */
 void player_play();
 void player_play_next_song();
+void player_play_prev_song();
 void player_stop();
 void player_pause();
 void player_seek(int seconds);

@@ -62,6 +62,8 @@ const KeyActionName KeyActionNames[] = {
    { media_play,              "media_play" },
    { media_pause,             "media_pause" },
    { media_stop,              "media_stop" },
+   { media_next,              "media_next" },
+   { media_prev,              "media_prev" },
    { seek_forward_seconds,    "seek_forward_seconds" },
    { seek_backward_seconds,   "seek_backward_seconds" },
    { seek_forward_minutes,    "seek_forward_minutes" },
@@ -118,6 +120,8 @@ const KeyActionHandler KeyActionHandlers[] = {
    {  media_play,             kba_play,            ARG_NOT_USED },
    {  media_pause,            kba_pause,           ARG_NOT_USED },
    {  media_stop,             kba_stop,            ARG_NOT_USED },
+   {  media_next,             kba_play_next,       ARG_NOT_USED },
+   {  media_prev,             kba_play_prev,       ARG_NOT_USED },
    {  seek_forward_seconds,   kba_seek,   { .direction = FORWARDS,  .scale = SECONDS, .num = 10 }},
    {  seek_backward_seconds,  kba_seek,   { .direction = BACKWARDS, .scale = SECONDS, .num = 10 }},
    {  seek_forward_minutes,   kba_seek,   { .direction = FORWARDS,  .scale = MINUTES, .num = 1 }},
@@ -1389,6 +1393,18 @@ kba_stop(KbaArgs a UNUSED)
 {
    player_stop();
    playing_playlist = NULL;
+}
+
+void
+kba_play_next(KbaArgs a UNUSED)
+{
+   player_play_next_song();
+}
+
+void
+kba_play_prev(KbaArgs a UNUSED)
+{
+   player_play_prev_song();
 }
 
 void
