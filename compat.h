@@ -45,6 +45,7 @@
 /* FreeBSD has fparseln(3), but it must be included thusly */
 #if defined(__FreeBSD__)
 #  include <stdio.h>
+#  include <sys/types.h>
 #  include <libutil.h>
 #endif
 
