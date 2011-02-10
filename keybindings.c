@@ -1398,13 +1398,29 @@ kba_stop(KbaArgs a UNUSED)
 void
 kba_play_next(KbaArgs a UNUSED)
 {
-   player_play_next_song();
+   int n = 1;
+
+   /* is there a multiplier? */
+   if (gnum_get() > 0) {
+      n = gnum_get();
+      gnum_clear();
+   }
+
+   player_play_next_song(n);
 }
 
 void
 kba_play_prev(KbaArgs a UNUSED)
 {
-   player_play_prev_song();
+   int n = 1;
+
+   /* is there a multiplier? */
+   if (gnum_get() > 0) {
+      n = gnum_get();
+      gnum_clear();
+   }
+
+   player_play_prev_song(n);
 }
 
 void

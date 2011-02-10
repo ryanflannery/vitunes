@@ -188,14 +188,15 @@ player_play()
  * is linear and the end of the playlist is reached.
  */
 void
-player_play_next_song()
+player_play_next_song(int skip)
 {
    if (!player_status.playing)
       return;
 
    switch (player.mode) {
    case PLAYER_MODE_LINEAR:
-      if (++player.qidx == player.queue->nfiles) {
+      player.qidx += skip;
+      if (player.qidx >= player.queue->nfiles) {
          player.qidx = 0;
          player_stop();
       } else
@@ -204,8 +205,9 @@ player_play_next_song()
       break;
 
    case PLAYER_MODE_LOOP:
-      if (++player.qidx == player.queue->nfiles)
-         player.qidx = 0;
+      player.qidx += skip;
+      if (player.qidx >= player.queue->nfiles)
+         player.qidx %= player.queue->nfiles;
 
       player_play();
       break;
@@ -222,14 +224,15 @@ player_play_next_song()
  * mode is linear and the beginning of the playlist is reached.
  */
 void
-player_play_prev_song()
+player_play_prev_song(int skip)
 {
    if (!player_status.playing)
       return;
 
    switch (player.mode) {
    case PLAYER_MODE_LINEAR:
-      if (--player.qidx < 0) {
+      player.qidx -= skip;
+      if (player.qidx < 0) {
          player.qidx = 0;
          player_stop();
       } else
@@ -238,8 +241,11 @@ player_play_prev_song()
       break;
 
    case PLAYER_MODE_LOOP:
-      if (--player.qidx < 0)
-         player.qidx = player.queue->nfiles - 1;
+      skip %= player.queue->nfiles;
+      if (skip <= player.qidx)
+         player.qidx -= skip;
+      else
+         player.qidx = player.queue->nfiles - (skip + player.qidx);
 
       player_play();
       break;
@@ -333,7 +339,7 @@ player_monitor()
 
    /* case: reached end of playback for a given file */
    if (strstr(response, answer_fail) != NULL) {
-      player_play_next_song();
+      player_play_next_song(1);
       return;
    }
 
