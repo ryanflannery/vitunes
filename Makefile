@@ -21,7 +21,7 @@ OBJS=commands.o compat.o e_commands.o \
 
 # main targets
 
-.PHONY: debug clean install uninstall publish-repos man-debug
+.PHONY: debug clean install uninstall publish-repos man-debug linux
 
 vitunes: $(OBJS)
 	$(CC) -o $@ $(LDFLAGS) $(OBJS)
@@ -37,7 +37,6 @@ clean:
 	rm -f vitunes vitunes.core vitunes-debug.log
 	rm -f test_str2argv
 
-
 install: vitunes
 	/usr/bin/install -c -m 0555 vitunes $(BINDIR)
 	/usr/bin/install -c -m 0444 vitunes.1 $(MANDIR)
@@ -47,6 +46,9 @@ uninstall:
 	rm -f $(MANDIR)/vitunes.1
 
 # misc.
+
+linux:
+	make -f Makefile.linux
 
 man-debug:
 	mandoc -Wall vitunes.1 > /dev/null
