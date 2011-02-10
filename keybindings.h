@@ -63,6 +63,7 @@ typedef enum {
    undo,
    redo,
    /* misc. */
+   go,
    quit,
    redraw,
    command_mode,
@@ -130,6 +131,7 @@ void kba_undo(KbaArgs a);
 void kba_redo(KbaArgs a);
 
 void kba_command_mode(KbaArgs a);
+void kba_go(KbaArgs a);
 void kba_shell(KbaArgs a);
 void kba_quit(KbaArgs a);
 void kba_redraw(KbaArgs a); 

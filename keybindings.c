@@ -51,6 +51,7 @@ const KeyActionName KeyActionNames[] = {
    { paste_before,            "paste_before" },
    { undo,                    "undo" },
    { redo,                    "redo" },
+   { go,                      "go" },
    { quit,                    "quit" },
    { redraw,                  "redraw" },
    { command_mode,            "command_mode" },
@@ -106,6 +107,7 @@ const KeyActionHandler KeyActionHandlers[] = {
    {  paste_before,           kba_paste,        { .placement = BEFORE }},
    {  undo,                   kba_undo,            ARG_NOT_USED },
    {  redo,                   kba_redo,            ARG_NOT_USED },
+   {  go,                     kba_go,              ARG_NOT_USED },
    {  quit,                   kba_quit,            ARG_NOT_USED },
    {  redraw,                 kba_redraw,          ARG_NOT_USED },
    {  command_mode,           kba_command_mode,    ARG_NOT_USED },
@@ -174,6 +176,7 @@ const KeyBinding DefaultKeyBindings[] = {
    { 'P',               paste_before },
    { 'u',               undo },
    { kb_CONTROL('r'),   redo },
+   { 'g',               go },
    { kb_CONTROL('c'),   quit },
    { kb_CONTROL('/'),   quit },
    { kb_CONTROL('l'),   redraw },
@@ -728,6 +731,19 @@ kba_jumpto_file(KbaArgs a)
 
    if (a.num != -1)   /* XXX a damn dirty hack for now. see search_find */
       paint_status_bar();
+}
+
+void
+kba_go(KbaArgs a UNUSED)
+{
+   /* NOTE: While I intend to support most of vim's g* commands, currently
+    *       this only supports 'gg' ... simply because I use it.
+    */
+   KbaArgs args;
+
+   args.scale = NUMBER;
+   args.num   = 'g';
+   kba_jumpto_file(args);
 }
 
 void
