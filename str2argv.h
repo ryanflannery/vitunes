@@ -35,10 +35,6 @@
  * Given a string (str), it parses it taking into account escape sequence (\),
  * quoting, etc., and builds an argc/argv style set of parameters that are
  * suitable for passing to any of the cmd_* or ecmd_* functions.
- *
- * This has been tricky for me.  It no doubt has bugs.
- * str2argv.c contains a small driver program that can be used for testing.
- * The Makefile contains the necessary build target "test_str2argv"
  */
 int str2argv(char *str, int *argc, char ***argv, const char **errmsg);
 

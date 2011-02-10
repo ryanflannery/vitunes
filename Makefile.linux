@@ -35,8 +35,6 @@ debug:
 clean:
 	rm -f *.o
 	rm -f vitunes vitunes.core vitunes-debug.log
-	rm -f test_str2argv
-
 
 install: vitunes
 	/usr/bin/install -c -m 0555 vitunes $(BINDIR)

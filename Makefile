@@ -35,7 +35,6 @@ debug:
 clean:
 	rm -f *.o
 	rm -f vitunes vitunes.core vitunes-debug.log
-	rm -f test_str2argv
 
 install: vitunes
 	/usr/bin/install -c -m 0555 vitunes $(BINDIR)
@@ -60,9 +59,4 @@ publish-repos:
 	hg push $(myhg)/vitunes
 	hg push $(mybb)/vitunes
 	hg push $(mygit)/vitunes
-
-# test program for str2argv
-test_str2argv:	str2argv.h str2argv.c
-	$(CC) $(CFLAGS) -Dstr2argv_test_main=main -o test_str2argv.o str2argv.c
-	$(CC) $(LDFLAGS) -o $@ test_str2argv.o
 
