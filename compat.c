@@ -16,6 +16,18 @@
 
 #include "compat.h"
 
+#ifdef COMPAT_NEED_FPARSELN
+#  include "compat/fparseln.c"
+#endif
+
+#ifdef COMPAT_NEED_OPTRESET
+   int optreset = -1;
+#endif
+
+#ifdef COMPAT_NEED_STRLCAT
+#  include "compat/strlcat.c"
+#endif
+
 #ifdef COMPAT_NEED_STRTONUM
 #  include "compat/strtonum.c"
 #endif

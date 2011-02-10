@@ -1,3 +1,5 @@
+# Makefile for [Open|Free|Net]BSD and Mac OS X
+
 # install locations
 PREFIX?=/usr/local
 BINDIR=$(PREFIX)/bin
@@ -8,7 +10,7 @@ CDEPS=`taglib-config --cflags`
 LDEPS=`taglib-config --libs` -ltag_c
 
 # build info
-CC?=/usr/bin/gcc
+CC?=/usr/bin/cc
 CFLAGS+=-c -std=c89 -Wall -Wextra -Wno-unused-value $(CDEPS) $(CDEBUG)
 LDFLAGS+=-lm -lncursesw -lutil $(LDEPS)
 

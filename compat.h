@@ -31,23 +31,65 @@
  *    compat/        The directory containing all OpenBSD-specific
  *                   features of vitunes that may be needed on other OS's.
  *
- *
- * Features that are needed on other OS's:
- *
- *    1. strtonum(3)       This is an easy add.
- *                         Required by: Mac OS X, Linux.
- * 
- *    2. fparseln(3)       This is a not-so-easy add.  Damn you, fgetln(3)!
- *                         Required by: Linux.
  */
 
 #ifndef COMPAT_H
 #define COMPAT_H
 
-/* Is strtonum(3) required? */
-#if defined(__linux) || ( defined(__APPLE__) && defined(__MACH__) )
+/* OpenBSD has fparseln(3), but it must be included thusly */
+#if defined(__OpenBSD__)
+#  include <stdio.h>
+#  include <util.h>
+#endif
+
+/* FreeBSD has fparseln(3), but it must be included thusly */
+#if defined(__FreeBSD__)
+#  include <stdio.h>
+#  include <libutil.h>
+#endif
+
+/* Mac OS X needs strtonum(3) */
+#if defined(__APPLE__) && defined(__MACH__)
 #  define COMPAT_NEED_STRTONUM
-#  include <stdlib.h>
+#endif
+
+/* Linux needs the following.. */
+#if defined(__linux)
+#  define COMPAT_NEED_FPARSELN
+#  define COMPAT_NEED_OPTRESET
+#  define COMPAT_NEED_STRLCAT
+#  define COMPAT_NEED_STRTONUM
+
+/* still unsure/curious about these last two */
+#  ifndef u_short
+   typedef unsigned short u_short;
+#  endif
+#  ifndef PATH_MAX
+#     include <linux/limits.h>
+#  else
+#     define PATH_MAX 4096
+#  endif
+#endif
+
+
+/* Now add necessary prototypes... */
+
+#ifdef COMPAT_NEED_FPARSELN
+#  include <stdio.h>
+   char *fparseln(FILE *fp, size_t *size, size_t *lineno,
+         const char str[3], int flags);
+#endif
+
+#ifdef COMPAT_NEED_OPTRESET
+   extern int optreset;
+#endif
+
+#ifdef COMPAT_NEED_STRLCAT
+   size_t strlcat(char *dst, const char *src, size_t siz);
+   size_t strlcpy(char *dst, const char *src, size_t siz);
+#endif
+
+#ifdef COMPAT_NEED_STRTONUM
    long long strtonum(const char *, long long, long long, const char **);
 #endif
 
