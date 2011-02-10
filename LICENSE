@@ -14,5 +14,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-All files in the compat/ sub-directory are from the OpenBSD project.
-Each is under their own license.  See the files for their license.
+All files in the compat/ sub-directory are from either the NetBSD or
+OpenBSD projects, and all are under a similar license (either ISC or BSD).
+
+See each of the files for details.
