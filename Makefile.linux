@@ -11,7 +11,7 @@ LDEPS=`taglib-config --libs` -ltag_c
 
 # build info
 CC?=/usr/bin/cc
-CFLAGS+=-c -std=gnu99 -Wall -Wextra -Wno-unused-value $(CDEPS) $(CDEBUG)
+CFLAGS+=-c -std=gnu99 -D_GNU_SOURCE -Wall -Wextra -Wno-unused-value $(CDEPS) $(CDEBUG)
 LDFLAGS+=-lm -lncurses -lutil $(LDEPS)
 
 OBJS=commands.o compat.o e_commands.o \
