@@ -217,7 +217,7 @@ paint_library()
       if (index < mdb.nplaylists && mdb.playlists[index]->needs_saving)
          wattron(ui.library->cwin, A_BOLD);
 
-      if (row == ui.library->crow)
+      if (row == ui.library->crow && ui.active == ui.library)
          wattron(ui.library->cwin, A_REVERSE);
 
       if (index >= mdb.nplaylists)
@@ -245,7 +245,7 @@ paint_library()
          wattron(ui.library->cwin, COLOR_PAIR(colors.library));
       }
 
-      if (row == ui.library->crow) {
+      if (row == ui.library->crow && ui.active == ui.library) {
          wattroff(ui.library->cwin, A_REVERSE);
          wattron(ui.library->cwin, COLOR_PAIR(colors.library));
       }
@@ -293,7 +293,7 @@ paint_playlist()
       if (plist == playing_playlist && findex == player.qidx)
          wattron(ui.playlist->cwin, COLOR_PAIR(colors.playing_playlist));
 
-      if (row == ui.playlist->crow)
+      if (row == ui.playlist->crow && ui.active == ui.playlist)
          wattron(ui.playlist->cwin, A_REVERSE);
 
       if (findex >= plist->nfiles)
@@ -392,7 +392,7 @@ paint_playlist()
       if (findex >= plist->nfiles)
          wattroff(ui.playlist->cwin, COLOR_PAIR(colors.tildas_playlist));
 
-      if (row == ui.playlist->crow)
+      if (row == ui.playlist->crow && ui.active == ui.playlist)
          wattroff(ui.playlist->cwin, A_REVERSE);
 
       if (plist == playing_playlist && findex == player.qidx)

@@ -1286,18 +1286,15 @@ kba_switch_windows(KbaArgs a UNUSED)
 {
    if (ui.active == ui.library) {
       ui.active = ui.playlist;
-      if (ui.lhide) {
+      if (ui.lhide)
          ui_hide_library();
-         paint_all();
-      }
    } else {
       ui.active = ui.library;
-      if (ui.lhide) {
+      if (ui.lhide)
          ui_unhide_library();
-         paint_all();
-      }
    }
 
+   paint_all();
    paint_status_bar();
 }
 
