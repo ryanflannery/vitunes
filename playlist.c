@@ -179,6 +179,16 @@ playlist_file_replace(playlist *p, int index, meta_info *newEntry)
    p->files[index] = newEntry;
 }
 
+/* Used with bsearch to find playlist entry by filename. */
+static int cmp_fn_mi(const void *ai, const void *bi)
+{
+   const char  *a = (const char *) ai;
+   const meta_info **b2 = (const meta_info **) bi;
+   const meta_info *b = (const meta_info *) *b2;
+
+   return strcmp(a, b->filename);
+}
+
 /*
  * Loads a playlist from the provided filename.  The files within the playlist
  * are compared against the given meta-information-database to see if they
@@ -192,11 +202,10 @@ playlist_file_replace(playlist *p, int index, meta_info *newEntry)
 playlist *
 playlist_load(const char *filename, meta_info **db, int ndb)
 {
-   meta_info *mi;
+   meta_info *mi, **mit;
    FILE *fin;
    char *period;
    char  entry[PATH_MAX + 1];
-   int   idx;
 
    /* open file */
    if ((fin = fopen(filename, "r")) == NULL)
@@ -219,11 +228,8 @@ playlist_load(const char *filename, meta_info **db, int ndb)
       entry[strcspn(entry, "\n")] = '\0';
 
       /* check if file exists in the meta info. db */
-      mi = NULL;
-      for (idx = 0; idx < ndb; idx++) {
-         if (strcmp(entry, db[idx]->filename) == 0)
-            mi = db[idx];
-      }
+      mit = bsearch(entry, db, ndb, sizeof(meta_info *), cmp_fn_mi);
+      mi = *mit;
 
       if (mi != NULL)   /* file DOES exist in DB */
          playlist_files_append(p, &mi, 1, false);

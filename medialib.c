@@ -193,6 +193,17 @@ medialib_setup_files(const char *vitunes_dir, const char *db_file,
       warnx("database file '%s' already exists (OK)", db_file);
 }
 
+/* used to sort media db by filenames. */
+static int mi_cmp_fn(const void *ai, const void *bi)
+{
+   const meta_info **a2 = (const meta_info **) ai;
+   const meta_info **b2 = (const meta_info **) bi;
+   const meta_info *a = (const meta_info *) *a2;
+   const meta_info *b = (const meta_info *) *b2;
+
+   return strcmp(a->filename, b->filename);
+}
+
 /* load the library database into the global media library */
 void
 medialib_db_load(const char *db_file)
@@ -239,6 +250,9 @@ medialib_db_load(const char *db_file)
    }
 
    fclose(fin);
+
+   /* sort library by filenames */
+   qsort(mdb.library->files, mdb.library->nfiles, sizeof(meta_info*), mi_cmp_fn);
 }
 
 /* save the library database from the global media library to disk */
