@@ -147,7 +147,8 @@ The filter buffer is where the results of every
 .Pf : Ic filter Ar ...
 command are temporarily stored.
 .br
-Playlists with unsaved changes appear bold.
+Playlists with unsaved changes appear bold and have their name preceded with
+a '+'.
 .It playlist
 This window is to the right of the library window and occupies most of the
 display.
@@ -713,6 +714,16 @@ current window's buffer.
 .br
 DEFAULT BINDINGS:
 .Cm %
+.It Cm go
+Go to a specific location within the current window.  This is planned to be
+similar to
+.Xr vim 1 's
+use of the 'g' keybinding, with multiple suffixes.  For now, only 'gg' is
+supported, and this takes you to the first line in the current window's
+buffer.
+.br
+DEFAULT BINDINGS:
+.Cm g
 .It Cm search_forward
 Begin a search for the entered string searching forward in the current window.
 The current row will be updated to the next matching row.
@@ -746,6 +757,14 @@ cut/deleted at a time, and that this action cannot be undone.
 .br
 DEFAULT BINDINGS:
 .Cm d
+.It Cm visual
+Begin visual mode.  This is only available in the playlist window, and once
+begun, only keybindings that move the cursor within the current window are
+allowed.  Visual mode is exited when either a yank or delete operation has
+been performed, or when the Escape key is pressed.
+.br
+DEFAULT BINDINGS:
+.Cm v, V
 .It Cm yank
 Copy the following N lines from the current window into the copy buffer, where
 N is the global input number.
@@ -860,6 +879,16 @@ Seek backwards 1 minute in any playing media.
 .br
 DEFAULT BINDINGS:
 .Cm B, \&{
+.It Cm media_next
+Play the next song in the playlist.
+.br
+DEFAULT BINDINGS:
+.Cm \&)
+.It Cm media_prev
+Play the previous song in the playlist.
+.br
+DEFAULT BINDINGS:
+.Cm \&(
 .It Cm toggle
 Execute the next command from the toggle list.
 .br
