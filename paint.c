@@ -198,7 +198,7 @@ void
 paint_library()
 {
    char *str;
-   int   row, hoff, index;
+   int   row, hoff, index, x;
 
    /* if library window is hidden, nothing to do */
    if (ui.library->cwin == NULL) return;
@@ -209,13 +209,17 @@ paint_library()
    for (row = 0; row < ui.library->h; row++) {
 
       index = ui.library->voffset + row;
+      x = 0;
 
       /* apply attributes */
       if (index < mdb.nplaylists && mdb.playlists[index] == playing_playlist)
          wattron(ui.library->cwin, COLOR_PAIR(colors.playing_library));
 
-      if (index < mdb.nplaylists && mdb.playlists[index]->needs_saving)
+      if (index < mdb.nplaylists && mdb.playlists[index]->needs_saving) {
          wattron(ui.library->cwin, A_BOLD);
+         mvwprintw(ui.library->cwin, row, 0, "+");
+         x = 1;
+      }
 
       if (row == ui.library->crow && ui.active == ui.library)
          wattron(ui.library->cwin, A_REVERSE);
@@ -234,7 +238,7 @@ paint_library()
             hoff = strlen(str);
 
          /* draw it */
-         mvwprintw(ui.library->cwin, row, 0,
+         mvwprintw(ui.library->cwin, row, x,
             num2fmt(ui.library->w, LEFT),
             str + hoff);
       }

@@ -1052,6 +1052,7 @@ kba_cut(KbaArgs a UNUSED)
 
    /* redraw */
    paint_playlist();
+   paint_library();
    paint_message("%d fewer files.", end - start);
 }
 
