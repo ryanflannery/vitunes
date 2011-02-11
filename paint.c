@@ -221,8 +221,12 @@ paint_library()
          x = 1;
       }
 
-      if (row == ui.library->crow && ui.active == ui.library)
-         wattron(ui.library->cwin, A_REVERSE);
+      if (row == ui.library->crow) {
+         if (ui.active == ui.library)
+            wattron(ui.library->cwin, A_REVERSE);
+         else
+            wattron(ui.library->cwin, COLOR_PAIR(colors.current_inactive));
+      }
 
       if (index >= mdb.nplaylists)
          wattron(ui.library->cwin, COLOR_PAIR(colors.tildas_library));
@@ -249,8 +253,12 @@ paint_library()
          wattron(ui.library->cwin, COLOR_PAIR(colors.library));
       }
 
-      if (row == ui.library->crow && ui.active == ui.library) {
-         wattroff(ui.library->cwin, A_REVERSE);
+      if (row == ui.library->crow) {
+         if (ui.active == ui.library)
+            wattroff(ui.library->cwin, A_REVERSE);
+         else
+            wattroff(ui.library->cwin, COLOR_PAIR(colors.current_inactive));
+
          wattron(ui.library->cwin, COLOR_PAIR(colors.library));
       }
 
@@ -309,6 +317,9 @@ paint_playlist()
 
       if ((row == ui.playlist->crow && ui.active == ui.playlist) || visual)
          wattron(ui.playlist->cwin, A_REVERSE);
+
+      if (row == ui.playlist->crow && ui.active != ui.playlist)
+         wattron(ui.playlist->cwin, COLOR_PAIR(colors.current_inactive));
 
       if (findex >= plist->nfiles)
          wattron(ui.playlist->cwin, COLOR_PAIR(colors.tildas_playlist));
@@ -408,6 +419,9 @@ paint_playlist()
 
       if ((row == ui.playlist->crow && ui.active == ui.playlist) || visual)
          wattroff(ui.playlist->cwin, A_REVERSE);
+
+      if (row == ui.playlist->crow && ui.active != ui.playlist)
+         wattroff(ui.playlist->cwin, COLOR_PAIR(colors.current_inactive));
 
       if (plist == playing_playlist && findex == player.qidx)
          wattroff(ui.playlist->cwin, COLOR_PAIR(colors.playing_playlist));
@@ -561,6 +575,7 @@ paint_setup_colors()
    colors.tildas_playlist  = 9;
    colors.playing_library  = 10;
    colors.playing_playlist = 11;
+   colors.current_inactive = 12;
 
    /* setup default colors */
    use_default_colors();
@@ -575,10 +590,11 @@ paint_setup_colors()
    init_pair(colors.tildas_playlist,  COLOR_BLUE, -1);
    init_pair(colors.playing_library,  COLOR_GREEN, -1);
    init_pair(colors.playing_playlist, COLOR_GREEN, -1);
+   init_pair(colors.current_inactive, -1, -1);
 
    /* colors for cinfo fields (columns in playlist window) */
    for (i = 0; i < MI_NUM_CINFO; i++) {
-      colors.cinfos[i] = 12 + i;
+      colors.cinfos[i] = 13 + i;
       colors.cinfos_set[i] = false;
    }
 }
@@ -610,6 +626,8 @@ paint_str2item(const char *str)
       return colors.playing_library;
    else if (strcasecmp(str, "playing-playlist") == 0)
       return colors.playing_playlist;
+   else if (strcasecmp(str, "current-inactive") == 0)
+      return colors.current_inactive;
 
    /* if reached here, check cinfo's array */
    for (i = 0; i < MI_NUM_CINFO; i++) {
