@@ -56,6 +56,7 @@ typedef enum {
    find_next_forward,
    find_next_backward,
    /* copy/cut/paste & undo/redo */
+   visual,
    cut,
    yank,
    paste_after,
@@ -126,6 +127,7 @@ void kba_jumpto_file(KbaArgs a);
 void kba_search(KbaArgs a);
 void kba_search_find(KbaArgs a);
 
+void kba_visual(KbaArgs a);
 void kba_cut(KbaArgs a);
 void kba_yank(KbaArgs a);
 void kba_paste(KbaArgs a);

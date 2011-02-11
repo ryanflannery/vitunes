@@ -45,6 +45,7 @@ const KeyActionName KeyActionNames[] = {
    { search_backward,         "search_backward" },
    { find_next_forward,       "find_next_forward" },
    { find_next_backward,      "find_next_backward" },
+   { visual,                  "visual" },
    { cut,                     "cut" },
    { yank,                    "yank" },
    { paste_after,             "paste_after" },
@@ -77,56 +78,58 @@ const size_t KeyActionNamesSize = sizeof(KeyActionNames) / sizeof(KeyActionName)
 typedef struct {
    KeyAction      action;
    ActionHandler  handler;
+   bool           visual;
    KbaArgs        args;
 } KeyActionHandler;
 
 #define ARG_NOT_USED { .num = 0 }
 const KeyActionHandler KeyActionHandlers[] = {
-   {  scroll_up,              kba_scroll_row,   { .direction = UP }},
-   {  scroll_down,            kba_scroll_row,   { .direction = DOWN }},
-   {  scroll_up_page,         kba_scroll_page,  { .direction = UP,   .amount = SINGLE }},
-   {  scroll_down_page,       kba_scroll_page,  { .direction = DOWN, .amount = SINGLE }},
-   {  scroll_up_halfpage,     kba_scroll_page,  { .direction = UP,   .amount = HALF }},
-   {  scroll_down_halfpage,   kba_scroll_page,  { .direction = DOWN, .amount = HALF }},
-   {  scroll_up_wholepage,    kba_scroll_page,  { .direction = UP,   .amount = WHOLE }},
-   {  scroll_down_wholepage,  kba_scroll_page,  { .direction = DOWN, .amount = WHOLE }},
-   {  scroll_left,            kba_scroll_col,   { .direction = LEFT,  .amount = SINGLE }},
-   {  scroll_right,           kba_scroll_col,   { .direction = RIGHT, .amount = SINGLE }},
-   {  scroll_leftmost,        kba_scroll_col,   { .direction = LEFT,  .amount = WHOLE }},
-   {  scroll_rightmost,       kba_scroll_col,   { .direction = RIGHT, .amount = WHOLE }},
-   {  jumpto_screen_top,      kba_jumpto_screen,{ .placement = TOP }},
-   {  jumpto_screen_middle,   kba_jumpto_screen,{ .placement = MIDDLE }},
-   {  jumpto_screen_bottom,   kba_jumpto_screen,{ .placement = BOTTOM }},
-   {  jumpto_line,            kba_jumpto_file,  { .scale = NUMBER, .num = 'G' }},
-   {  jumpto_percent,         kba_jumpto_file,  { .scale = PERCENT }},
-   {  search_forward,         kba_search,       { .direction = FORWARDS }},
-   {  search_backward,        kba_search,       { .direction = BACKWARDS }},
-   {  find_next_forward,      kba_search_find,  { .direction = SAME }},
-   {  find_next_backward,     kba_search_find,  { .direction = OPPOSITE }},
-   {  cut,                    kba_cut,          ARG_NOT_USED },
-   {  yank,                   kba_yank,         ARG_NOT_USED },
-   {  paste_after,            kba_paste,        { .placement = AFTER }},
-   {  paste_before,           kba_paste,        { .placement = BEFORE }},
-   {  undo,                   kba_undo,            ARG_NOT_USED },
-   {  redo,                   kba_redo,            ARG_NOT_USED },
-   {  go,                     kba_go,              ARG_NOT_USED },
-   {  quit,                   kba_quit,            ARG_NOT_USED },
-   {  redraw,                 kba_redraw,          ARG_NOT_USED },
-   {  command_mode,           kba_command_mode,    ARG_NOT_USED },
-   {  shell,                  kba_shell,           ARG_NOT_USED },
-   {  switch_windows,         kba_switch_windows,  ARG_NOT_USED },
-   {  show_file_info,         kba_show_file_info,  ARG_NOT_USED },
-   {  load_playlist,          kba_load_playlist,   ARG_NOT_USED },
-   {  media_play,             kba_play,            ARG_NOT_USED },
-   {  media_pause,            kba_pause,           ARG_NOT_USED },
-   {  media_stop,             kba_stop,            ARG_NOT_USED },
-   {  media_next,             kba_play_next,       ARG_NOT_USED },
-   {  media_prev,             kba_play_prev,       ARG_NOT_USED },
-   {  seek_forward_seconds,   kba_seek,   { .direction = FORWARDS,  .scale = SECONDS, .num = 10 }},
-   {  seek_backward_seconds,  kba_seek,   { .direction = BACKWARDS, .scale = SECONDS, .num = 10 }},
-   {  seek_forward_minutes,   kba_seek,   { .direction = FORWARDS,  .scale = MINUTES, .num = 1 }},
-   {  seek_backward_minutes,  kba_seek,   { .direction = BACKWARDS, .scale = MINUTES, .num = 1 }},
-   {  toggle,                 kba_toggle, { .scale = NUMBER, .num = 'G' }}
+{ scroll_up,             kba_scroll_row,     true,  { .direction = UP }},
+{ scroll_down,           kba_scroll_row,     true,  { .direction = DOWN }},
+{ scroll_up_page,        kba_scroll_page,    true,  { .direction = UP,   .amount = SINGLE }},
+{ scroll_down_page,      kba_scroll_page,    true,  { .direction = DOWN, .amount = SINGLE }},
+{ scroll_up_halfpage,    kba_scroll_page,    true,  { .direction = UP,   .amount = HALF }},
+{ scroll_down_halfpage,  kba_scroll_page,    true,  { .direction = DOWN, .amount = HALF }},
+{ scroll_up_wholepage,   kba_scroll_page,    true,  { .direction = UP,   .amount = WHOLE }},
+{ scroll_down_wholepage, kba_scroll_page,    true,  { .direction = DOWN, .amount = WHOLE }},
+{ scroll_left,           kba_scroll_col,     true,  { .direction = LEFT,  .amount = SINGLE }},
+{ scroll_right,          kba_scroll_col,     true,  { .direction = RIGHT, .amount = SINGLE }},
+{ scroll_leftmost,       kba_scroll_col,     true,  { .direction = LEFT,  .amount = WHOLE }},
+{ scroll_rightmost,      kba_scroll_col,     true,  { .direction = RIGHT, .amount = WHOLE }},
+{ jumpto_screen_top,     kba_jumpto_screen,  true,  { .placement = TOP }},
+{ jumpto_screen_middle,  kba_jumpto_screen,  true,  { .placement = MIDDLE }},
+{ jumpto_screen_bottom,  kba_jumpto_screen,  true,  { .placement = BOTTOM }},
+{ jumpto_line,           kba_jumpto_file,    true,  { .scale = NUMBER, .num = 'G' }},
+{ jumpto_percent,        kba_jumpto_file,    true,  { .scale = PERCENT }},
+{ search_forward,        kba_search,         true,  { .direction = FORWARDS }},
+{ search_backward,       kba_search,         true,  { .direction = BACKWARDS }},
+{ find_next_forward,     kba_search_find,    true,  { .direction = SAME }},
+{ find_next_backward,    kba_search_find,    true,  { .direction = OPPOSITE }},
+{ visual,                kba_visual,         true,  ARG_NOT_USED },
+{ cut,                   kba_cut,            true,  ARG_NOT_USED },
+{ yank,                  kba_yank,           true,  ARG_NOT_USED },
+{ paste_after,           kba_paste,          false, { .placement = AFTER }},
+{ paste_before,          kba_paste,          false, { .placement = BEFORE }},
+{ undo,                  kba_undo,           false, ARG_NOT_USED },
+{ redo,                  kba_redo,           false, ARG_NOT_USED },
+{ go,                    kba_go,             true,  ARG_NOT_USED },
+{ quit,                  kba_quit,           false, ARG_NOT_USED },
+{ redraw,                kba_redraw,         false, ARG_NOT_USED },
+{ command_mode,          kba_command_mode,   false, ARG_NOT_USED },
+{ shell,                 kba_shell,          false, ARG_NOT_USED },
+{ switch_windows,        kba_switch_windows, false, ARG_NOT_USED },
+{ show_file_info,        kba_show_file_info, false, ARG_NOT_USED },
+{ load_playlist,         kba_load_playlist,  false, ARG_NOT_USED },
+{ media_play,            kba_play,           false, ARG_NOT_USED },
+{ media_pause,           kba_pause,          false, ARG_NOT_USED },
+{ media_stop,            kba_stop,           false, ARG_NOT_USED },
+{ media_next,            kba_play_next,      false, ARG_NOT_USED },
+{ media_prev,            kba_play_prev,      false, ARG_NOT_USED },
+{ seek_forward_seconds,  kba_seek,           false, { .direction = FORWARDS,  .scale = SECONDS, .num = 10 }},
+{ seek_backward_seconds, kba_seek,           false, { .direction = BACKWARDS, .scale = SECONDS, .num = 10 }},
+{ seek_forward_minutes,  kba_seek,           false, { .direction = FORWARDS,  .scale = MINUTES, .num = 1 }},
+{ seek_backward_minutes, kba_seek,           false, { .direction = BACKWARDS, .scale = MINUTES, .num = 1 }},
+{ toggle,                kba_toggle,         false, { .scale = NUMBER, .num = 'G' }}
 };
 const size_t KeyActionHandlersSize = sizeof(KeyActionHandlers) / sizeof(KeyActionHandler);
 
@@ -137,8 +140,9 @@ typedef struct {
    KeyAction   action;
 } KeyBinding;
 
-#define MY_K_TAB    9
-#define MY_K_ENTER 13
+#define MY_K_TAB     9
+#define MY_K_ENTER  13
+#define MY_K_ESCAPE 27
 #define kb_CONTROL(x)   ((x) - 'a' + 1)
 
 const KeyBinding DefaultKeyBindings[] = {
@@ -174,6 +178,8 @@ const KeyBinding DefaultKeyBindings[] = {
    { '?',               search_backward },
    { 'n',               find_next_forward },
    { 'N',               find_next_backward },
+   { 'v',               visual },
+   { 'V',               visual },
    { 'd',               cut },
    { 'y',               yank },
    { 'p',               paste_after },
@@ -390,8 +396,14 @@ kb_execute(KeyCode k)
    size_t i;
    bool   found;
 
+   /* visual mode and ESC pressed ?*/
+   if (visual_mode_start != -1 && k == MY_K_ESCAPE) {
+	   visual_mode_start = -1;
+	   return true;
+   }
+
    /* Is the key bound? */
-   found = false;
+   found  = false;
    action = -1;
    for (i = 0; i < KeyBindingsSize; i++) {
       if (KeyBindings[i].key == k) {
@@ -406,8 +418,10 @@ kb_execute(KeyCode k)
    /* Execute theaction handler. */
    for (i = 0; i < KeyActionHandlersSize; i++) {
       if (KeyActionHandlers[i].action == action) {
-         ((KeyActionHandlers[i].handler)(KeyActionHandlers[i].args));
-         return true;
+         if (visual_mode_start == -1 || KeyActionHandlers[i].visual) {
+            ((KeyActionHandlers[i].handler)(KeyActionHandlers[i].args));
+            return true;
+         }
       }
    }
 
@@ -873,6 +887,23 @@ kba_search_find(KbaArgs a)
    paint_error("Pattern not found: %s", mi_query_getraw());
 }
 
+
+void
+kba_visual(KbaArgs a UNUSED)
+{
+   if (ui.active == ui.library) {
+      paint_message("No visual mode in library window.  Sorry.");
+      return;
+   }
+
+   if (visual_mode_start == -1)
+      visual_mode_start = ui.active->voffset + ui.active->crow;
+   else
+      visual_mode_start = -1;
+
+   paint_playlist();
+}
+
 /*
  * TODO so much of the logic in cut() is similar with that of yank() above.
  * combine the two, use an Args parameter to determine if the operation is
@@ -889,37 +920,49 @@ kba_cut(KbaArgs a UNUSED)
    int   input;
    int   n;
 
-   /* determine range */
-   n = 1;
-   if (gnum_get() > 0) {
-      n = gnum_get();
-      gnum_clear();
-   }
-
-   /* get range */
-   got_target = false;
-   start = 0;
-   end = 0;
-   while ((input = getch()) && !got_target) {
-      if (input == ERR)
-         continue;
-
-      switch (input) {
-         case 'd':   /* delete next n lines */
-            start = ui.active->voffset + ui.active->crow;
-            end = start + n;
-            got_target = true;
-            break;
-
-         case 'G':   /* delete to end of current playlist */
-            start = ui.active->voffset + ui.active->crow;
-            end = ui.active->nrows;
-            got_target = true;
-            break;
-
-         default:
-            ungetch(input);
-            return;
+   if (visual_mode_start != -1) {
+      start = visual_mode_start;
+      end = ui.active->voffset + ui.active->crow;
+      visual_mode_start = -1;
+      if (start > end) {
+         int tmp = end;
+         end = start;
+         start = tmp;
+      }
+      end++;
+   } else {
+      /* determine range */
+      n = 1;
+      if (gnum_get() > 0) {
+         n = gnum_get();
+         gnum_clear();
+      }
+   
+      /* get range */
+      got_target = false;
+      start = 0;
+      end = 0;
+      while ((input = getch()) && !got_target) {
+         if (input == ERR)
+            continue;
+   
+         switch (input) {
+            case 'd':   /* delete next n lines */
+               start = ui.active->voffset + ui.active->crow;
+               end = start + n;
+               got_target = true;
+               break;
+   
+            case 'G':   /* delete to end of current playlist */
+               start = ui.active->voffset + ui.active->crow;
+               end = ui.active->nrows;
+               got_target = true;
+               break;
+   
+            default:
+               ungetch(input);
+               return;
+         }
       }
    }
 
@@ -1030,43 +1073,54 @@ kba_yank(KbaArgs a UNUSED)
       return;
    }
 
-   /* determine range */
-   n = 1;
-   if (gnum_get() > 0) {
-      n = gnum_get();
-      gnum_clear();
-   }
-
-   /* get next input from user */
-   got_target = false;
-   start = 0;
-   end = 0;
-   while ((input = getch()) && !got_target) {
-      if (input == ERR)
-         continue;
-
-      switch (input) {
-         case 'y':   /* yank next n lines */
-            start = ui.active->voffset + ui.active->crow;
-            end = start + n;
-            got_target = true;
-            break;
-
-         case 'G':   /* yank to end of current playlist */
-            start = ui.active->voffset + ui.active->crow;
-            end = ui.active->nrows;
-            got_target = true;
-            break;
-
-         /*
-          * TODO handle other directions ( j/k/H/L/M/^u/^d/ etc. )
-          * here.  this will be ... tricky.
-          * might want to re-organize other stuff?
-          */
-
-         default:
-            ungetch(input);
-            return;
+   if (visual_mode_start != -1) {
+      start = visual_mode_start;
+      end = ui.active->voffset + ui.active->crow;
+      visual_mode_start = -1;
+      if (start > end) {
+         int tmp = end;
+         end = start;
+         start = tmp;
+      }
+      end++;
+   } else {
+      /* determine range */
+      n = 1;
+      if (gnum_get() > 0) {
+         n = gnum_get();
+         gnum_clear();
+      }
+      /* get next input from user */
+      got_target = false;
+      start = 0;
+      end = 0;
+      while ((input = getch()) && !got_target) {
+         if (input == ERR)
+            continue;
+   
+         switch (input) {
+            case 'y':   /* yank next n lines */
+               start = ui.active->voffset + ui.active->crow;
+               end = start + n;
+               got_target = true;
+               break;
+   
+            case 'G':   /* yank to end of current playlist */
+               start = ui.active->voffset + ui.active->crow;
+               end = ui.active->nrows;
+               got_target = true;
+               break;
+   
+            /*
+             * TODO handle other directions ( j/k/H/L/M/^u/^d/ etc. )
+             * here.  this will be ... tricky.
+             * might want to re-organize other stuff?
+             */
+   
+            default:
+               ungetch(input);
+               return;
+         }
       }
    }
 
@@ -1079,6 +1133,7 @@ kba_yank(KbaArgs a UNUSED)
    for (n = start; n < end; n++)
       ybuffer_add(viewing_playlist->files[n]);
 
+   paint_playlist();
    /* notify user # of rows yanked */
    paint_message("Yanked %d files.", end - start);
 }

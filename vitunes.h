@@ -44,6 +44,7 @@
 /* record keeping  */
 extern playlist   *viewing_playlist;
 extern playlist   *playing_playlist;
+extern int         visual_mode_start;
 
 /* signal flags referenced elsewhere */
 extern volatile sig_atomic_t VSIG_QUIT;

@@ -271,6 +271,7 @@ paint_playlist()
 {
    playlist   *plist;
    bool        hasinfo;
+   bool        visual;
    char       *str;
    int         findex, row, col, colwidth;
    int         xoff, hoff, strhoff;
@@ -287,13 +288,22 @@ paint_playlist()
       /* get index of file to show */
       findex = row + ui.playlist->voffset;
 
+      /* determine if visual mode row */
+      visual = false;
+      if (visual_mode_start != -1 && ui.active == ui.playlist) {
+         if (visual_mode_start <= findex && findex <= ui.active->voffset + ui.active->crow)
+            visual = true;
+         if (ui.active->voffset + ui.active->crow <= findex && findex <= visual_mode_start)
+            visual = true;
+      }
+
       /* apply row attributes */
        wattron(ui.playlist->cwin, COLOR_PAIR(colors.playlist));
 
       if (plist == playing_playlist && findex == player.qidx)
          wattron(ui.playlist->cwin, COLOR_PAIR(colors.playing_playlist));
 
-      if (row == ui.playlist->crow && ui.active == ui.playlist)
+      if ((row == ui.playlist->crow && ui.active == ui.playlist) || visual)
          wattron(ui.playlist->cwin, A_REVERSE);
 
       if (findex >= plist->nfiles)
@@ -392,7 +402,7 @@ paint_playlist()
       if (findex >= plist->nfiles)
          wattroff(ui.playlist->cwin, COLOR_PAIR(colors.tildas_playlist));
 
-      if (row == ui.playlist->crow && ui.active == ui.playlist)
+      if ((row == ui.playlist->crow && ui.active == ui.playlist) || visual)
          wattroff(ui.playlist->cwin, A_REVERSE);
 
       if (plist == playing_playlist && findex == player.qidx)

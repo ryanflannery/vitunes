@@ -26,6 +26,9 @@
 playlist *viewing_playlist;
 playlist *playing_playlist;
 
+/* visual mode start position */
+int visual_mode_start = -1;
+
 /* signal flags */
 volatile sig_atomic_t VSIG_QUIT = 0;            /* 1 = quit vitunes */
 volatile sig_atomic_t VSIG_RESIZE = 0;          /* 1 = resize display */
