@@ -423,12 +423,12 @@ cmd_color(int argc, char *argv[])
       return 4;
    }
 
-   if ((i_fg = paint_str2color(fg)) < 0) {
+   if ((i_fg = paint_str2color(fg)) == -2) {
       paint_error("invalid foreground color '%s'", fg);
       return 5;
    }
 
-   if ((i_bg = paint_str2color(bg)) < 0) {
+   if ((i_bg = paint_str2color(bg)) == -2) {
       paint_error("invalid background color '%s'", bg);
       return 6;
    }

@@ -657,6 +657,8 @@ paint_str2color(const char *str)
       return COLOR_CYAN;
    else if (strcasecmp(str, "white") == 0)
       return COLOR_WHITE;
-   else
+   else if (strcasecmp(str, "default") == 0)
       return -1;
+   else
+      return -2;
 }
