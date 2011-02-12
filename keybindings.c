@@ -206,6 +206,8 @@ const KeyBinding DefaultKeyBindings[] = {
    { '}',               seek_forward_minutes },
    { 'B',               seek_backward_minutes },
    { '{',               seek_backward_minutes },
+   { '(',               media_prev },
+   { ')',               media_next },
    { 't',               toggle }
 };
 const size_t DefaultKeyBindingsSize = sizeof(DefaultKeyBindings) / sizeof(KeyBinding);
