@@ -82,7 +82,8 @@ typedef enum {
    seek_backward_seconds,
    seek_forward_minutes,
    seek_backward_minutes,
-   toggle
+   toggle_forward,
+   toggle_backward
 } KeyAction;
 
 typedef int KeyCode;

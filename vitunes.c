@@ -135,6 +135,7 @@ main(int argc, char *argv[])
    mi_sort_init();         /* global sort description */
    mi_display_init();      /* global display description */
    ybuffer_init();         /* global yank/copy buffer */
+   toggleset_init();       /* global toggleset (list of toggle-lists) */
 
    /* load media library (database and all playlists) & sort */
    medialib_load(db_file, playlist_dir);
@@ -198,6 +199,7 @@ main(int argc, char *argv[])
 
    mi_query_clear();
    ybuffer_free();
+   toggleset_free();
 
    /* do we have any odd cause for quitting? */
    if (QUIT_CAUSE != EXIT_NORMAL) {

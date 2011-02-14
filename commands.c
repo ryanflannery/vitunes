@@ -18,10 +18,6 @@
 
 bool sorts_need_saving = false;
 
-char  **toggle_str = NULL;
-int   toggle_siz = 0,
-      toggle_idx = 0;
-
 #define swap(type, x, y) \
    { type temp = x; x = y; y = temp;}
 
@@ -48,6 +44,157 @@ const cmd CommandPath[] = {
 };
 const int CommandPathSize = (sizeof(CommandPath) / sizeof(cmd));
 
+
+/****************************************************************************
+ * Toggleset related stuff
+ ***************************************************************************/
+
+toggle_list **toggleset;
+size_t        toggleset_size;
+
+void
+toggleset_init()
+{
+   const int max_size = 52;  /* since we only have registers a-z and A-Z */
+   if ((toggleset = calloc(max_size, sizeof(toggle_list*))) == NULL)
+      err(1, "%s: calloc(3) failed", __FUNCTION__);
+
+   toggleset_size = 0;
+}
+
+void
+toggleset_free()
+{
+   size_t i;
+   for (i = 0; i < toggleset_size; i++)
+      toggle_list_free(toggleset[i]);
+
+   free(toggleset);
+   toggleset_size = 0;
+}
+
+void
+toggle_list_add_command(toggle_list *t, char *cmd)
+{
+   char **new_cmds;
+   int    idx, new_size;
+
+   /* resize array */
+   if (t->size == 0) {
+      if ((t->commands = malloc(sizeof(char*))) == NULL)
+         err(1, "%s: malloc(3) failed", __FUNCTION__);
+
+      idx = 0;
+      t->size = 1;
+   } else {
+      new_size = (t->size + 1) * sizeof(char*);
+      if ((new_cmds = realloc(t->commands, new_size)) == NULL)
+         err(1, "%s: realloc(3) failed", __FUNCTION__);
+
+      idx = t->size;
+      t->commands = new_cmds;
+      t->size++;
+   }
+
+   /* add command */
+   if ((t->commands[idx] = strdup(cmd)) == NULL)
+      err(1, "%s: strdup(3) failed", __FUNCTION__);
+}
+
+toggle_list*
+toggle_list_create(int registr, int argc, char *argv[])
+{
+   toggle_list *t;
+   char *cmd = NULL;
+   int   i, j;
+
+   if ((t = malloc(sizeof(toggle_list))) == NULL)
+      err(1, "%s: malloc(3) failed", __FUNCTION__);
+
+   t->commands = NULL;
+   t->registr  = registr;
+   t->size     = 0;
+
+   /* parse the argv into the toggle list */
+   for (i = 0; i < argc; i++) {
+      if (!strcmp("/", argv[i]))
+         continue;
+
+      /* count number strings in this command and determine length */
+      for (j = i; j < argc && strcmp("/", argv[j]); j++)
+
+      /* now collapse them into a single string */
+      cmd = argv2str(j - i + 1, argv + i);
+      toggle_list_add_command(t, cmd);
+      free(cmd);
+
+      i += (j - i) - 1;
+   }
+
+   t->index = t->size - 1;
+   return t;
+}
+
+void
+toggle_list_free(toggle_list *t)
+{
+   size_t i;
+
+   for (i = 0; i < t->size; i++)
+      free(t->commands[i]);
+
+   free(t);
+}
+
+void
+toggle_add(toggle_list *t)
+{
+   if (toggle_get(t->registr) != NULL)
+      toggle_remove(t->registr);
+
+   toggleset[toggleset_size++] = t;
+}
+
+void
+toggle_remove(int registr)
+{
+   size_t i, idx;
+   bool   found;
+
+   found = false;
+   idx = 0;
+   for (i = 0; i < toggleset_size; i++) {
+      if (toggleset[i]->registr == registr) {
+         idx = i;
+         found = true;
+      }
+   }
+
+   if (!found) return;
+
+   for (i = idx; i < toggleset_size - 1; i++)
+      toggleset[i] = toggleset[i + 1];
+
+   toggleset_size--;
+}
+
+toggle_list*
+toggle_get(int registr)
+{
+   size_t i;
+
+   for (i = 0; i < toggleset_size; i++) {
+      if (toggleset[i]->registr == registr)
+         return toggleset[i];
+   }
+
+   return NULL;
+}
+
+
+/****************************************************************************
+ * Misc handy functions
+ ***************************************************************************/
 
 void
 setup_viewing_playlist(playlist *p)
@@ -83,6 +230,11 @@ str2bool(const char *s, bool *b)
 
    return -1;
 }
+
+
+/****************************************************************************
+ * Command handlers
+ ***************************************************************************/
 
 int
 cmd_quit(int argc, char *argv[])
@@ -672,43 +824,70 @@ cmd_unbind(int argc, char *argv[])
 int
 cmd_toggle(int argc, char *argv[])
 {
-   char     s[512];
-   int      x;
+   toggle_list *t;
+   char **cmd_argv;
+   int    cmd_argc;
+   int    registr;
 
-   if (argc < 2) {
-      paint_error("usage: %s <keycode> <action1> / <action2> / ... <actionN>", argv[0]);
+   if (argc < 3) {
+      paint_error("usage: %s <register> <action1> / ...", argv[0]);
       return 1;
    }
 
-   if(toggle_str != NULL) {
-      for (x = 0; x < toggle_siz; x++)
-         free(toggle_str[x]);
-      free(toggle_str);
+   if (strlen(argv[1]) != 1) {
+      paint_error("error: register name must be a single letter (in [a-zA-Z])");
+      return 1;
    }
 
-   toggle_str = malloc(sizeof(char *) * 16);
-   toggle_siz = 16;
+   registr = *(argv[1]);
 
-   toggle_idx = 0;
-   s[0] = '\0';
-
-   for(x = 1; x < argc; x++) {
-      if(!strcmp("/", argv[x])) {
-         if (toggle_idx >= toggle_siz)
-            break;
-         toggle_str[toggle_idx++] = strdup(s);
-         s[0] = '\0';
-         continue;
-      }
-
-      strlcat(s, argv[x], 512);
-      strlcat(s, " ", 512);
+   if (!( ('a' <= registr && registr <= 'z')
+   ||     ('A' <= registr && registr <= 'Z'))) {
+      paint_error("error: invalid register name.  Must be one of [a-zA-Z]");
+      return 1;
    }
 
-   toggle_str[toggle_idx++] = strdup(s);
-   toggle_siz = toggle_idx;
-   toggle_idx = 0;
+   cmd_argc = argc - 2;
+   cmd_argv = argv + 2;
+   t = toggle_list_create(registr, cmd_argc, cmd_argv);
+   toggle_add(t);
    return 0;
+}
+
+void
+cmd_execute(char *cmd)
+{
+   const char *errmsg = NULL;
+   bool   found;
+   char **argv;
+   int    argc;
+   int    found_idx = 0;
+   int    num_matches;
+   int    i;
+
+   if (str2argv(cmd, &argc, &argv, &errmsg) != 0) {
+      paint_error("parse error: %s in '%s'", errmsg, cmd);
+      return;
+   }
+
+   found = false;
+   num_matches = 0;
+   for (i = 0; i < CommandPathSize; i++) {
+      if (match_command_name(argv[0], CommandPath[i].name)) {
+         found = true;
+         found_idx = i;
+         num_matches++;
+      }
+   }
+
+   if (found && num_matches == 1)
+      (CommandPath[found_idx].func)(argc, argv);
+   else if (num_matches > 1)
+      paint_error("Ambiguous abbreviation '%s'", argv[0]);
+   else
+      paint_error("Unknown commands '%s'", argv[0]);
+
+   argv_free(&argc, &argv);
 }
 
 

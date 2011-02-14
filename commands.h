@@ -26,6 +26,9 @@
 
 #include "compat.h"
 
+/****************************************************************************
+ * Toggle-list handling stuff
+ ***************************************************************************/
 
 /* command-mode command struct */
 typedef struct {
@@ -35,10 +38,6 @@ typedef struct {
 
 extern const cmd CommandPath[];
 extern const int CommandPathSize;
-
-extern char  **toggle_str;
-extern int   toggle_siz,
-             toggle_idx;
 
 /* command-mode command handlers */
 int cmd_quit(int argc, char *argv[]);
@@ -55,10 +54,47 @@ int cmd_bind(int argc, char *argv[]);
 int cmd_unbind(int argc, char *argv[]);
 int cmd_toggle(int argc, char *argv[]);
 
-/* functions to get input from user in the command/status window */
+/* parse a string and execute it as a command */
+void cmd_execute(char *cmd);
+
+
+/****************************************************************************
+ * Toggle-list handling stuff
+ ***************************************************************************/
+
+/* struct for a single toggle list */
+typedef struct {
+   int      registr;
+   char   **commands;
+   size_t   size;
+   size_t   index;
+} toggle_list;
+
+/* the array (and size) of all toggle lists currently loaded */
+extern toggle_list **toggleset;
+extern size_t        toggleset_size;
+
+/* initialize and free the toggleset */
+void toggleset_init();
+void toggleset_free();
+
+toggle_list *toggle_list_create(int registr, int argc, char *argv[]);
+void toggle_list_add_command(toggle_list *t, char *cmd);
+void toggle_list_free(toggle_list *t);
+
+void toggle_add(toggle_list *t);
+void toggle_remove(int registr);
+toggle_list* toggle_get(int registr);
+
+
+/****************************************************************************
+ * Misc.
+ ***************************************************************************/
+
 int user_getstr(const char *prompt, char **response);
 int user_get_yesno(const char *prompt, int *response);
 
 void setup_viewing_playlist(playlist *p);
+
 
 #endif

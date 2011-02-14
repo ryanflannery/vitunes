@@ -69,7 +69,8 @@ const KeyActionName KeyActionNames[] = {
    { seek_backward_seconds,   "seek_backward_seconds" },
    { seek_forward_minutes,    "seek_forward_minutes" },
    { seek_backward_minutes,   "seek_backward_minutes" },
-   { toggle,                  "toggle" }
+   { toggle_forward,          "toggle_forward" },
+   { toggle_backward,         "toggle_backward" }
 };
 const size_t KeyActionNamesSize = sizeof(KeyActionNames) / sizeof(KeyActionName);
 
@@ -129,7 +130,8 @@ const KeyActionHandler KeyActionHandlers[] = {
 { seek_backward_seconds, kba_seek,           false, { .direction = BACKWARDS, .scale = SECONDS, .num = 10 }},
 { seek_forward_minutes,  kba_seek,           false, { .direction = FORWARDS,  .scale = MINUTES, .num = 1 }},
 { seek_backward_minutes, kba_seek,           false, { .direction = BACKWARDS, .scale = MINUTES, .num = 1 }},
-{ toggle,                kba_toggle,         false, { .scale = NUMBER, .num = 'G' }}
+{ toggle_forward,        kba_toggle,         false, { .direction = FORWARDS }},
+{ toggle_backward,       kba_toggle,         false, { .direction = BACKWARDS }}
 };
 const size_t KeyActionHandlersSize = sizeof(KeyActionHandlers) / sizeof(KeyActionHandler);
 
@@ -208,7 +210,8 @@ const KeyBinding DefaultKeyBindings[] = {
    { '{',               seek_backward_minutes },
    { '(',               media_prev },
    { ')',               media_next },
-   { 't',               toggle }
+   { 't',               toggle_forward },
+   { 'T',               toggle_backward }
 };
 const size_t DefaultKeyBindingsSize = sizeof(DefaultKeyBindings) / sizeof(KeyBinding);
 
@@ -1260,15 +1263,7 @@ kba_redo(KbaArgs a UNUSED)
 void
 kba_command_mode(KbaArgs a UNUSED)
 {
-   const char *errmsg = NULL;
    char  *cmd;
-   char **argv;
-   int    argc;
-   int    num_matches;
-   bool   found;
-   int    found_idx = 0;
-   int    i;
-
 
    /* get command from user */
    if (user_getstr(":", &cmd) != 0 || strlen(cmd) == 0) {
@@ -1284,34 +1279,9 @@ kba_command_mode(KbaArgs a UNUSED)
       return;
    }
 
-   /* convert to argc/argv structure */
-   if (str2argv(cmd, &argc, &argv, &errmsg) != 0) {
-      paint_error("parse error: %s in '%s'", errmsg, cmd);
-      free(cmd);
-      return;
-   }
-
-   /* search path for appropriate command to execute */
-   found = false;
-   num_matches = 0;
-   for (i = 0; i < CommandPathSize; i++) {
-      if (match_command_name(argv[0], CommandPath[i].name)) {
-         found = true;
-         found_idx = i;
-         num_matches++;
-      }
-   }
-
-   /* execute command or indicate failure */
-   if (found && num_matches == 1)
-      (CommandPath[found_idx].func)(argc, argv);
-   else if (num_matches > 1)
-      paint_error("Ambiguous abbreviation '%s'", argv[0]);
-   else
-      paint_error("Unknown command '%s'", argv[0]);
-
-   argv_free(&argc, &argv);
+   cmd_execute(cmd);
    free(cmd);
+   return;
 }
 
 void
@@ -1522,53 +1492,62 @@ kba_seek(KbaArgs a)
 }
 
 void
-kba_toggle(KbaArgs a UNUSED)
+kba_toggle(KbaArgs a)
 {
-   const char *errmsg = NULL;
+   toggle_list *t;
    char  *cmd;
-   char **argv;
-   int    argc;
-   int    num_matches;
-   bool   found;
-   int    found_idx = 0;
-   int    i;
+   bool   got_register;
+   int    n, input, registr;
 
-   if (!toggle_str)
-      return;
-
-   if(toggle_idx >= toggle_siz)
-      toggle_idx = 0;
-
-   cmd = strdup(toggle_str[toggle_idx++]);
-
-   /* convert to argc/argv structure */
-   if (str2argv(cmd, &argc, &argv, &errmsg) != 0) {
-      paint_error("parse error: %s in '%s'", errmsg, cmd);
-      free(cmd);
-      return;
+   /* is there a multiplier? */
+   n = 1;
+   if (gnum_get() > 0) {
+      n = gnum_get();
+      gnum_clear();
    }
 
-   /* search path for appropriate command to execute */
-   found = false;
-   num_matches = 0;
-   for (i = 0; i < CommandPathSize; i++) {
-      if (match_command_name(argv[0], CommandPath[i].name)) {
-         found = true;
-         found_idx = i;
-         num_matches++;
+   /* get the register */
+   got_register = false;
+   registr = -1;
+   while ((input = getch()) && !got_register) {
+      if (input == ERR)
+         continue;
+
+      if (('a' <= input && input <= 'z')
+      ||  ('A' <= input && input <= 'Z')) {
+         got_register = true;
+         registr = input;
       }
    }
 
-   /* execute command or indicate failure */
-   if (found && num_matches == 1)
-      (CommandPath[found_idx].func)(argc, argv);
-   else if (num_matches > 1)
-      paint_error("Ambiguous abbreviation '%s'", argv[0]);
-   else
-      paint_error("Unknown command '%s'", argv[0]);
+   /* get the command to execute */
+   if ((t = toggle_get(registr)) == NULL) {
+      paint_error("No toggle list in register %c (%i).", registr, registr);
+      return;
+   }
 
-   argv_free(&argc, &argv);
-   free(cmd);
+   /* update index */
+   n %= t->size;
+   switch (a.direction) {
+      case FORWARDS:
+         t->index += n;
+         t->index %= t->size;
+         break;
+      case BACKWARDS:
+         if (n <= (int)t->index) {
+            t->index -= n;
+            t->index %= t->size;
+         } else {
+            t->index = t->size - (n - t->index);
+         }
+         break;
+      default:
+         errx(1, "%s: invalid direction", __FUNCTION__);
+   }
+
+   /* execute */
+   cmd = t->commands[t->index];
+   cmd_execute(cmd);
 }
 
 

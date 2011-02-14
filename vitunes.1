@@ -893,11 +893,18 @@ Play the previous song in the playlist.
 .br
 DEFAULT BINDINGS:
 .Cm \&(
-.It Cm toggle
-Execute the next command from the toggle list.
+.It Cm toggle_forward
+Execute the next command from the toggle list specified by the provided
+register.
 .br
 DEFAULT BINDINGS:
 .Cm t
+.It Cm toggle_backward
+Execute the previous command from the toggle list specified by the provided
+register.
+.br
+DEFAULT BINDINGS:
+.Cm T
 .El
 .Pp
 Some examples of using the above actions and keycodes to define the default
