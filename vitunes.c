@@ -79,7 +79,7 @@ void setup_timer();
 int
 main(int argc, char *argv[])
 {
-   struct passwd *pwd;
+   char  *home;
    int    previous_command;
    int    input;
 
@@ -93,14 +93,14 @@ main(int argc, char *argv[])
     *----------------------------------------------------------------------*/
 
    /* get home dir */
-   if ((pwd = getpwuid(getuid())) == NULL)
-      errx(1, "invalid user %d", getuid());
+   if ((home = getenv("HOME")) == NULL)
+      errx(1, "$HOME not set. Can't find my config files.");
 
    /* build paths */
-   asprintf(&vitunes_dir,   VITUNES_DIR_FMT,  pwd->pw_dir);
-   asprintf(&conf_file,     CONF_FILE_FMT,    pwd->pw_dir);
-   asprintf(&db_file,       DB_FILE_FMT,      pwd->pw_dir);
-   asprintf(&playlist_dir,  PLAYLIST_DIR_FMT, pwd->pw_dir);
+   asprintf(&vitunes_dir,   VITUNES_DIR_FMT,  home);
+   asprintf(&conf_file,     CONF_FILE_FMT,    home);
+   asprintf(&db_file,       DB_FILE_FMT,      home);
+   asprintf(&playlist_dir,  PLAYLIST_DIR_FMT, home);
    if (vitunes_dir == NULL || conf_file == NULL
    ||  db_file == NULL     || playlist_dir == NULL)
       err(1, "failed to create needed file names");
