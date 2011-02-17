@@ -138,6 +138,11 @@ ui_init(int library_width)
    ui.active = ui.library;
 }
 
+bool
+ui_is_init()
+{
+   return isendwin() == TRUE;
+}
 
 void
 ui_destroy()

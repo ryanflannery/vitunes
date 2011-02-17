@@ -72,6 +72,7 @@ typedef struct
 extern uinterface ui;   /* the global ui struct */
 
 void ui_init(int library_width);
+bool ui_is_init();
 void ui_clear();
 void ui_destroy();
 void ui_resize();

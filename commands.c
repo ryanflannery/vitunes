@@ -595,8 +595,10 @@ cmd_color(int argc, char *argv[])
    }
 
    /* redraw */
-   ui_clear();
-   paint_all();
+   if (ui_is_init()) {
+      ui_clear();
+      paint_all();
+   }
 
    return 0;
 }
