@@ -495,6 +495,9 @@ cmd_sort(int argc, char *argv[])
    qsort(viewing_playlist->files, viewing_playlist->nfiles,
       sizeof(meta_info*), mi_compare);
 
+   if(!ui_is_init())
+      return 0;
+
    /* redraw */
    paint_playlist();
 
@@ -537,7 +540,9 @@ cmd_display(int argc, char *argv[])
       return 1;
    }
 
-   paint_playlist();
+   if(ui_is_init())
+      paint_playlist();
+
    return 0;
 }
 
@@ -643,8 +648,10 @@ cmd_set(int argc, char *argv[])
       /* redraw */
       ui.lwidth = new_width;
       ui_resize();
-      ui_clear();
-      paint_all();
+      if(ui_is_init()) {
+         ui_clear();
+         paint_all();
+      }
 
    } else if (strcasecmp(property, "lhide") == 0) {
       if (str2bool(value, &tf) < 0) {
