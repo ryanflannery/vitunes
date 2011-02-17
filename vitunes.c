@@ -161,6 +161,7 @@ main(int argc, char *argv[])
    /* start media player child */
    player_init(player_path, DEFAULT_PLAYER_ARGS, DEFAULT_PLAYER_MODE);
    player_child_launch();
+   atexit(player_child_kill);
 
    /* load config file and run commands in it now */
    load_config();
