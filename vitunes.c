@@ -16,7 +16,9 @@
 
 #include "vitunes.h"
 #include "config.h"     /* NOTE: must be after vitunes.h */
+#include "socket.h"
 
+#define VITUNES_RUNNING "WHOWASPHONE?"
 
 /*****************************************************************************
  * GLOBALS, EXPORTED
@@ -80,8 +82,11 @@ int
 main(int argc, char *argv[])
 {
    char  *home;
+   char   msg[64];
    int    previous_command;
    int    input;
+   int    sock;
+   fd_set fds;
 
 #ifdef DEBUG
    if ((debug_log = fopen("vitunes-debug.log", "w")) == NULL)
@@ -109,6 +114,9 @@ main(int argc, char *argv[])
 
    /* handle command-line switches & e-commands */
    handle_switches(argc, argv);
+
+   if(sock_send_msg(VITUNES_RUNNING) != -1)
+      errx(1, "Vitunes appears to be running already");
 
    /*
     * IF we've reached here, then there were no e-commands.
@@ -166,6 +174,10 @@ main(int argc, char *argv[])
    /* load config file and run commands in it now */
    load_config();
 
+   if((sock = sock_listen()) == -1) {
+      errx(1, "sock");
+   }
+
    /* initial painting of the display */
    paint_all();
 
@@ -175,18 +187,45 @@ main(int argc, char *argv[])
 
    previous_command = -1;
    while (!VSIG_QUIT) {
+      struct timeval  tv;
 
       /* handle any signal flags */
       process_signals(true);
 
-      /* handle any available input */
-      if ((input = getch()) && input != ERR) {
-         if (isdigit(input) &&  (input != '0' || gnum_get() > 0))
-            gnum_add(input - '0');
-         else if (input == '\n' && gnum_get() > 0 && previous_command >= 0)
-            kb_execute(previous_command);
-         else
-            kb_execute(input);
+      tv.tv_sec = 1;
+      tv.tv_usec = 0;
+
+      FD_ZERO(&fds);
+      FD_SET(0, &fds);
+      FD_SET(sock, &fds);
+      errno = 0;
+      if(select(sock + 1, &fds, NULL, NULL, &tv) == -1) {
+         if(errno == 0 || errno == EINTR)
+            continue;
+         break;
+      }
+
+      if(FD_ISSET(sock, &fds)) {
+         if(sock_recv_msg(sock, msg, sizeof(msg)) == -1)
+            break;
+
+         if(!strcmp(msg, VITUNES_RUNNING))
+            continue;
+
+         if(!kb_execute_by_name(msg))
+            cmd_execute(msg);
+      }
+
+      if(FD_ISSET(0, &fds)) {
+         /* handle any available input */
+         if ((input = getch()) && input != ERR) {
+            if (isdigit(input) &&  (input != '0' || gnum_get() > 0))
+               gnum_add(input - '0');
+            else if (input == '\n' && gnum_get() > 0 && previous_command >= 0)
+               kb_execute(previous_command);
+            else
+               kb_execute(input);
+         }
       }
    }
 
@@ -428,9 +467,16 @@ handle_switches(int argc, char *argv[])
 {
    int ch;
    int i;
+   int had_c_commands = 0;
 
-   while ((ch = getopt(argc, argv, "he:f:d:p:m:")) != -1) {
+   while ((ch = getopt(argc, argv, "he:f:d:p:m:c:")) != -1) {
       switch (ch) {
+         case 'c':
+            if(sock_send_msg(optarg) == -1)
+               errx(1, "Failed to send message. Vitunes not running?");
+            had_c_commands = 1;
+            break;
+
          case 'd':
             if ((db_file = strdup(optarg)) == NULL)
                err(1, "handle_switches: strdup db_file failed");
@@ -472,6 +518,9 @@ handle_switches(int argc, char *argv[])
             /* NOT REACHED */
       }
    }
+
+   if(had_c_commands)
+      exit(0);
 
    return 0;
 }

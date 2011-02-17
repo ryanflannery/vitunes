@@ -40,7 +40,8 @@ const cmd CommandPath[] = {
    {  "sort",     cmd_sort },
    {  "unbind",   cmd_unbind },
    {  "w",        cmd_write },
-   {  "toggle",   cmd_toggle }
+   {  "toggle",   cmd_toggle },
+   {  "playlist", cmd_playlist }
 };
 const int CommandPathSize = (sizeof(CommandPath) / sizeof(cmd));
 
@@ -860,6 +861,52 @@ cmd_toggle(int argc, char *argv[])
    cmd_argv = argv + 2;
    t = toggle_list_create(registr, cmd_argc, cmd_argv);
    toggle_add(t);
+   return 0;
+}
+
+int
+cmd_playlist(int argc, char *argv[])
+{
+   int x;
+   int idx = -1;
+
+   if (argc != 2) {
+      paint_error("usage: playlist <list-name>");
+      return 1;
+   }
+
+   for(x = 0; x < mdb.nplaylists; x++) {
+      if(!strncmp(argv[1], mdb.playlists[x]->name, strlen(argv[1]))) {
+         if(idx > -1) {
+            idx = -2;
+            break;
+         }
+
+         if(idx == -1)
+            idx = x;
+      }
+   }
+
+   if(idx > -1) {
+      viewing_playlist = mdb.playlists[idx];
+      ui.playlist->nrows = mdb.playlists[idx]->nfiles;
+      ui.playlist->crow = 0;
+      ui.playlist->voffset = 0;
+      ui.playlist->hoffset = 0;
+      ui.active = ui.playlist;
+      paint_all();
+      paint_message("jumped to playlist: %s", mdb.playlists[idx]->name);
+      return 0;
+   }
+
+   if(idx == -1) {
+      paint_error("no match for: %s", argv[1]);
+      return 0;
+   }
+
+   if(idx == -2)
+      paint_error("no unique match for: %s", argv[1]);
+
    return 0;
 }
 

@@ -53,6 +53,7 @@ int cmd_reload(int argc, char *argv[]);
 int cmd_bind(int argc, char *argv[]);
 int cmd_unbind(int argc, char *argv[]);
 int cmd_toggle(int argc, char *argv[]);
+int cmd_playlist(int argc, char *argv[]);
 
 /* parse a string and execute it as a command */
 void cmd_execute(char *cmd);

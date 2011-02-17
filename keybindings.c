@@ -433,6 +433,30 @@ kb_execute(KeyCode k)
    return false;
 }
 
+bool
+kb_execute_by_name(const char *name)
+{
+   KeyAction   a;
+   size_t      x;
+
+   for(x = 0; x < KeyActionNamesSize; x++) {
+      if(!strcmp(name, KeyActionNames[x].name)) {
+         a = KeyActionNames[x].action;
+         break;
+      }
+   }
+
+   if(x >= KeyActionNamesSize)
+      return false;
+
+   for(x = 0; x < KeyActionHandlersSize; x++) {
+      if(a == KeyActionHandlers[x].action) {
+         KeyActionHandlers[x].handler(KeyActionHandlers[x].args);
+         return true;
+      }
+   }
+   return false;
+}
 
 
 /*****************************************************************************

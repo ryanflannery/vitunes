@@ -97,6 +97,7 @@ void kb_unbind_action(KeyAction);
 void kb_unbind_key(KeyCode);
 void kb_unbind_all();
 bool kb_execute(KeyCode);
+bool kb_execute_by_name(const char *);
 
 bool    kb_str2action(char*, KeyAction*);
 KeyCode kb_str2keycode(char*);
