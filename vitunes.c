@@ -18,8 +18,6 @@
 #include "config.h"     /* NOTE: must be after vitunes.h */
 #include "socket.h"
 
-#define VITUNES_RUNNING "WHOWASPHONE?"
-
 /*****************************************************************************
  * GLOBALS, EXPORTED
  ****************************************************************************/
@@ -82,10 +80,9 @@ int
 main(int argc, char *argv[])
 {
    char  *home;
-   char   msg[64];
    int    previous_command;
    int    input;
-   int    sock;
+   int    sock = -1;
    fd_set fds;
 
 #ifdef DEBUG
@@ -115,8 +112,13 @@ main(int argc, char *argv[])
    /* handle command-line switches & e-commands */
    handle_switches(argc, argv);
 
-   if(sock_send_msg(VITUNES_RUNNING) != -1)
-      errx(1, "Vitunes appears to be running already");
+   if(sock_send_msg(VITUNES_RUNNING) != -1) {
+      printf("Vitunes appears to be running already. Won't open socket.");
+   } else {
+      if((sock = sock_listen()) == -1)
+         errx(1, "failed to open socket.");
+   }
+
 
    /*
     * IF we've reached here, then there were no e-commands.
@@ -174,10 +176,6 @@ main(int argc, char *argv[])
    /* load config file and run commands in it now */
    load_config();
 
-   if((sock = sock_listen()) == -1) {
-      errx(1, "sock");
-   }
-
    /* initial painting of the display */
    paint_all();
 
@@ -197,23 +195,18 @@ main(int argc, char *argv[])
 
       FD_ZERO(&fds);
       FD_SET(0, &fds);
-      FD_SET(sock, &fds);
+      if(sock > 0)
+         FD_SET(sock, &fds);
       errno = 0;
-      if(select(sock + 1, &fds, NULL, NULL, &tv) == -1) {
+      if(select((sock > 0 ? sock : 0) + 1, &fds, NULL, NULL, &tv) == -1) {
          if(errno == 0 || errno == EINTR)
             continue;
          break;
       }
 
-      if(FD_ISSET(sock, &fds)) {
-         if(sock_recv_msg(sock, msg, sizeof(msg)) == -1)
-            break;
-
-         if(!strcmp(msg, VITUNES_RUNNING))
-            continue;
-
-         if(!kb_execute_by_name(msg))
-            cmd_execute(msg);
+      if(sock > 0) {
+         if(FD_ISSET(sock, &fds))
+            sock_recv_and_exec(sock);
       }
 
       if(FD_ISSET(0, &fds)) {

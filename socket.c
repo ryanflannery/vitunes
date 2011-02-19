@@ -20,6 +20,9 @@
 #include <sys/un.h>
 #include <unistd.h>
 
+#include "socket.h"
+#include "commands.h"
+
 #define VITUNES_SOCK    "/tmp/.vitunes"
 
 
@@ -81,4 +84,19 @@ ssize_t sock_recv_msg(int sock, char *msg, size_t msg_len)
       msg[ret] = '\0';
 
    return ret;
+}
+
+
+void sock_recv_and_exec(int sock)
+{
+   char   msg[64];
+
+   if(sock_recv_msg(sock, msg, sizeof(msg)) == -1)
+      return;
+
+   if(!strcmp(msg, VITUNES_RUNNING))
+      return;
+
+   if(!kb_execute_by_name(msg))
+      cmd_execute(msg);
 }

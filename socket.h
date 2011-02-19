@@ -18,6 +18,8 @@
 
 #include <sys/types.h>
 
+#define VITUNES_RUNNING "WHOWASPHONE?"
+
 /*
  * send (null terminated) msg to vitunes. Returns 0 on success,
  * -1 on errors.
@@ -36,5 +38,10 @@ int sock_listen(void);
  * errors.
  */
 ssize_t sock_recv_msg(int sock, char *msg, size_t msg_len);
+
+/*
+ * Receive message and process it.
+ */
+void sock_recv_and_exec(int sock);
 
 #endif /* __SOCKET_H */
