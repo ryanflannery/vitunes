@@ -33,6 +33,7 @@ player_init(char *prog, char *pargs[], playmode mode)
    player_status.playing = false;
    player_status.paused = false;
    player_status.position = -1;
+   player_status.volume = -1;
 
    /* player init */
    player.program = prog;
@@ -181,6 +182,10 @@ player_play()
    player_status.playing = true;
    player_status.paused = false;
    player_status.position = 0;
+
+   /* if we have a volume, reset it */
+   if (player_status.volume > -1)
+      player_volume_set(player_status.volume);
 }
 
 /*
@@ -303,6 +308,71 @@ player_seek(int seconds)
       player_status.paused = false;
 }
 
+/* set the volume to the specified percent */
+void
+player_volume_set(float percent)
+{
+   static const char *cmd_fmt = "\npausing_keep set_property volume %f\n";
+   char *cmd;
+
+   /* mplayer doesn't retain volume levels between files? */
+   if (!player_status.playing)
+      return;
+
+   if (percent > 100) percent = 100;
+   if (percent < 0)   percent = 0;
+
+   asprintf(&cmd, cmd_fmt, percent);
+   if (cmd == NULL)
+      err(1, "player_volume_set: asprintf failed");
+
+
+   player_send_cmd(cmd);
+   free(cmd);
+
+   player_volume_query();
+}
+
+/* increase/decrease the volume by the specified percent */
+void
+player_volume_step(float percent)
+{
+   static const char *cmd_fmt = "\npausing_keep volume %f\n";
+   char *cmd;
+
+   if (!player_status.playing)
+      return;
+
+   /* this is a hack, since mplayer's volume command doesn't seem to work
+    * as documented.
+    */
+   if (player_status.volume > -1) {
+      percent += player_status.volume;
+      player_volume_set(percent);
+      return;
+   }
+
+   asprintf(&cmd, cmd_fmt, percent);
+   if (cmd == NULL)
+      err(1, "player_volume_step: asprintf failed");
+
+   player_send_cmd(cmd);
+   free(cmd);
+
+   player_volume_query();
+}
+
+void
+player_volume_query()
+{
+   static const char *cmd = "\npausing_keep get_property volume\n";
+
+   if (!player_status.playing)
+      return;
+
+   player_send_cmd(cmd);
+}
+
 /*****************************************************************************
  * Player monitor function, called repeatedly via the signal handler in the
  * vitunes main loop.
@@ -354,4 +424,14 @@ player_monitor()
    }
 
    player_send_cmd(query_cmd);
+
+   /* check for recent volume */
+   static const char *volume_good  = "ANS_volume";
+   if ((s = strstr(response, volume_good)) != NULL) {
+      while (strstr(s + 1, volume_good) != NULL)
+         s = strstr(s + 1, volume_good);
+
+      if (sscanf(s, "ANS_volume=%f", &player_status.volume) != 1)
+         errx(1, "player_monitor: player child is misbehaving.");
+   }
 }

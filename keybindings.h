@@ -78,6 +78,8 @@ typedef enum {
    media_stop,
    media_next,
    media_prev,
+   volume_increase,
+   volume_decrease,
    seek_forward_seconds,
    seek_backward_seconds,
    seek_forward_minutes,
@@ -150,6 +152,7 @@ void kba_pause(KbaArgs a);
 void kba_stop(KbaArgs a);
 void kba_play_next(KbaArgs a);
 void kba_play_prev(KbaArgs a);
+void kba_volume(KbaArgs a);
 void kba_seek(KbaArgs a);
 void kba_toggle(KbaArgs a);
 

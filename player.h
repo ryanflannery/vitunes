@@ -60,6 +60,7 @@ typedef struct {
    bool  playing;    /* playing or not (still true if paused) */
    bool  paused;     /* if paused or not */
    float position;   /* position, in seconds, into currently playing file */
+   float volume;     /* volume, in percent */
 } player_status_t;
 extern player_status_t player_status;
 
@@ -109,6 +110,9 @@ void player_play_prev_song(int skip);
 void player_stop();
 void player_pause();
 void player_seek(int seconds);
+void player_volume_set(float percent);
+void player_volume_step(float percent);
+void player_volume_query();
 
 /*
  * This should be called periodically to monitor the child media player

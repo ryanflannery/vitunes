@@ -65,6 +65,8 @@ const KeyActionName KeyActionNames[] = {
    { media_stop,              "media_stop" },
    { media_next,              "media_next" },
    { media_prev,              "media_prev" },
+   { volume_increase,         "volume_increase" },
+   { volume_decrease,         "volume_decrease" },
    { seek_forward_seconds,    "seek_forward_seconds" },
    { seek_backward_seconds,   "seek_backward_seconds" },
    { seek_forward_minutes,    "seek_forward_minutes" },
@@ -126,6 +128,8 @@ const KeyActionHandler KeyActionHandlers[] = {
 { media_stop,            kba_stop,           false, ARG_NOT_USED },
 { media_next,            kba_play_next,      false, ARG_NOT_USED },
 { media_prev,            kba_play_prev,      false, ARG_NOT_USED },
+{ volume_increase,       kba_volume,         false, { .direction = FORWARDS }},
+{ volume_decrease,       kba_volume,         false, { .direction = BACKWARDS }},
 { seek_forward_seconds,  kba_seek,           false, { .direction = FORWARDS,  .scale = SECONDS, .num = 10 }},
 { seek_backward_seconds, kba_seek,           false, { .direction = BACKWARDS, .scale = SECONDS, .num = 10 }},
 { seek_forward_minutes,  kba_seek,           false, { .direction = FORWARDS,  .scale = MINUTES, .num = 1 }},
@@ -210,6 +214,8 @@ const KeyBinding DefaultKeyBindings[] = {
    { '{',               seek_backward_minutes },
    { '(',               media_prev },
    { ')',               media_next },
+   { '<',               volume_decrease },
+   { '>',               volume_increase },
    { 't',               toggle_forward },
    { 'T',               toggle_backward }
 };
@@ -1466,6 +1472,29 @@ kba_play_prev(KbaArgs a UNUSED)
    }
 
    player_play_prev_song(n);
+}
+
+void
+kba_volume(KbaArgs a)
+{
+   float pcnt;
+
+   if (gnum_get() > 0)
+      pcnt = gnum_retrieve();
+   else
+      pcnt = 1;
+
+   switch (a.direction) {
+   case FORWARDS:
+      break;
+   case BACKWARDS:
+      pcnt *= -1;
+      break;
+   default:
+      errx(1, "kba_volume: invalid direction");
+   }
+
+   player_volume_step(pcnt);
 }
 
 void
