@@ -183,8 +183,7 @@ paint_player()
    wattron(ui.player, COLOR_PAIR(colors.player));
    mvwprintw(ui.player, 0, 0, num2fmt(w, LEFT), " "); /* this fills the bg color */
    mvwprintw(ui.player, 0, 0,
-      "(%3.1f%%) [%s] %8.8s +%2.2d:%2.2d:%2.2d (%d%%) %-49.49s",
-      player_status.volume,
+      "[%s] %8.8s +%2.2d:%2.2d:%2.2d (%d%%) %-49.49s",
       playmode,
       (player_status.paused ? "-PAUSED-" : ""),
       in_hour, in_minute, in_second,

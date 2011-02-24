@@ -288,6 +288,7 @@ process_signals(bool do_paint_message)
    static playlist *prev_queue = NULL;
    static int       prev_qidx = -1;
    static bool      prev_is_playing = false;
+   static float     prev_volume = -1;
    static time_t    last_sigchld = -1;
 
    /* handle resize event */
@@ -317,6 +318,10 @@ process_signals(bool do_paint_message)
       }
       if (player.queue == viewing_playlist && prev_qidx != player.qidx) {
          paint_playlist();
+      }
+      if (prev_volume != player_status.volume) {
+         paint_message("volume: %3.0f%%", player_status.volume);
+         prev_volume = player_status.volume;
       }
 
       prev_queue = player.queue;
