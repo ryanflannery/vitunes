@@ -340,7 +340,7 @@ kb_unbind_all()
 }
 
 bool
-kb_str2action(char *s, KeyAction *action)
+kb_str2action(const char *s, KeyAction *action)
 {
    size_t i;
 
@@ -439,14 +439,7 @@ kb_execute_by_name(const char *name)
    KeyAction   a;
    size_t      x;
 
-   for(x = 0; x < KeyActionNamesSize; x++) {
-      if(!strcmp(name, KeyActionNames[x].name)) {
-         a = KeyActionNames[x].action;
-         break;
-      }
-   }
-
-   if(x >= KeyActionNamesSize)
+   if (!kb_str2action(name, &a))
       return false;
 
    for(x = 0; x < KeyActionHandlersSize; x++) {

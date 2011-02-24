@@ -26,7 +26,8 @@
 #define VITUNES_SOCK    "/tmp/.vitunes"
 
 
-int sock_send_msg(const char *msg)
+int
+sock_send_msg(const char *msg)
 {
    int                  ret;
    struct sockaddr_un   addr;
@@ -49,7 +50,8 @@ int sock_send_msg(const char *msg)
 }
 
 
-int sock_listen(void)
+int
+sock_listen(void)
 {
    int                  ret;
    struct sockaddr_un   addr;
@@ -72,7 +74,8 @@ int sock_listen(void)
 }
 
 
-ssize_t sock_recv_msg(int sock, char *msg, size_t msg_len)
+ssize_t
+sock_recv_msg(int sock, char *msg, size_t msg_len)
 {
    struct sockaddr_un   addr;
    socklen_t            addr_len = sizeof(struct sockaddr_un);
@@ -87,7 +90,8 @@ ssize_t sock_recv_msg(int sock, char *msg, size_t msg_len)
 }
 
 
-void sock_recv_and_exec(int sock)
+void
+sock_recv_and_exec(int sock)
 {
    char   msg[64];
 

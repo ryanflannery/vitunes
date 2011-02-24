@@ -17,8 +17,8 @@ LDFLAGS+=-lm -lncursesw -lutil $(LDEPS)
 OBJS=commands.o compat.o e_commands.o \
 	  keybindings.o medialib.o meta_info.o \
 	  paint.o player.o playlist.o \
-	  str2argv.o uinterface.o vitunes.o \
-	  socket.o
+	  socket.o str2argv.o uinterface.o \
+	  vitunes.o \
 
 # main targets
 

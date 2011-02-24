@@ -34,14 +34,14 @@ const cmd CommandPath[] = {
    {  "filter",   cmd_filter },
    {  "mode",     cmd_mode },
    {  "new",      cmd_new },
+   {  "playlist", cmd_playlist },
    {  "q",        cmd_quit },
    {  "reload",   cmd_reload },
    {  "set",      cmd_set },
    {  "sort",     cmd_sort },
    {  "unbind",   cmd_unbind },
    {  "w",        cmd_write },
-   {  "toggle",   cmd_toggle },
-   {  "playlist", cmd_playlist }
+   {  "toggle",   cmd_toggle }
 };
 const int CommandPathSize = (sizeof(CommandPath) / sizeof(cmd));
 
@@ -888,11 +888,7 @@ cmd_playlist(int argc, char *argv[])
    }
 
    if(idx > -1) {
-      viewing_playlist = mdb.playlists[idx];
-      ui.playlist->nrows = mdb.playlists[idx]->nfiles;
-      ui.playlist->crow = 0;
-      ui.playlist->voffset = 0;
-      ui.playlist->hoffset = 0;
+      setup_viewing_playlist(mdb.playlists[idx]);
       ui.active = ui.playlist;
       paint_all();
       paint_message("jumped to playlist: %s", mdb.playlists[idx]->name);
