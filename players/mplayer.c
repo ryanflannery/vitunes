@@ -58,6 +58,9 @@ mplayer_start()
    int pread[2];
    int flags;
 
+   if (!exe_in_path(MPLAYER_PATH))
+      errx(1, "it appears '%s' does not exist in your $PATH", MPLAYER_PATH);
+
    if (pipe(pwrite) == -1 || pipe(pread) == -1)
       err(1, "%s: pipe() failed", __FUNCTION__);
 

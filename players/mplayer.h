@@ -30,6 +30,8 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "player_utils.h"
+
 #ifdef DEBUG
 #  include "../debug.h"
 #endif

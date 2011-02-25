@@ -16,9 +16,9 @@ LDFLAGS+=-lm -lncursesw -lutil $(LDEPS)
 
 OBJS=commands.o compat.o e_commands.o \
 	  keybindings.o medialib.o meta_info.o \
-	  mplayer.o paint.o player.o playlist.o \
-	  socket.o str2argv.o uinterface.o \
-	  vitunes.o
+	  mplayer.o paint.o player.o player_utils.o \
+	  playlist.o socket.o str2argv.o \
+	  uinterface.o vitunes.o
 
 .PATH: players
 
