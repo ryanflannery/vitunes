@@ -16,13 +16,16 @@
 
 #include "player.h"
 
+/* gloabls */
 player_backend_t player;
 player_info_t player_info;
 
-/* callbacks */
-void callback_playnext() { player_skip_song(1); }
 
-/* backends */
+/* callbacks */
+static void callback_playnext() { player_skip_song(1); }
+
+
+/* definition of backends */
 const player_backend_t PlayerBackends[] = { 
    {   
       BACKEND_MPLAYER, "mplayer", false, NULL,
@@ -96,7 +99,6 @@ player_set_queue(playlist *queue, int pos)
 void
 player_play()
 {
-   /* assert valid queue/qidx */
    if (player_info.queue == NULL)
       errx(1, "player_play: bad queue/qidx");
 
@@ -113,7 +115,6 @@ player_stop()
    player.stop();
 }
 
-/* pause/unpause playback */
 void
 player_pause()
 {
@@ -132,10 +133,7 @@ player_seek(int seconds)
    player.seek(seconds);
 }
 
-/* TODO
- * Play the next song in the queue.  This will also stop playback if the mode
- * is linear and the end of the playlist is reached.
- */
+/* TODO merge this with the player_play_prev_song into player_skip_song */
 void
 player_play_next_song(int skip)
 {
@@ -168,10 +166,7 @@ player_play_next_song(int skip)
    }
 }
 
-/* TODO
- * Play the previous song in the queue.  This will also stop playback if the
- * mode is linear and the beginning of the playlist is reached.
- */
+/* TODO (see comment for player_play_next_song) */
 void
 player_play_prev_song(int skip)
 {

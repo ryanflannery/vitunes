@@ -17,26 +17,14 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include <sys/wait.h>
-#include <sys/types.h>
-
 #include <err.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <signal.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
 
-#include "debug.h"
-#include "meta_info.h"
 #include "playlist.h"
 #include "compat.h"
+#include "debug.h"
 
+/* "static" backends (those that aren't dynamically loaded) */
 #include "players/mplayer.h"
-
 
 /*
  * Available play-modes.
@@ -50,19 +38,10 @@ typedef enum {
    MODE_RANDOM
 } playmode;
 
-/*
- * Available back-end players
- */
-typedef enum {
-   BACKEND_MPLAYER,
-   BACKEND_GSTREAMER
-} backend_id;
-
 
 /* player setup/destroy functions */
 void player_init(const char *backend);
 void player_destroy();
-void player_recv_sigchld();
 
 void player_set_queue(playlist *queue, int position);
 
@@ -76,6 +55,13 @@ void player_volume_step(float percent);
 
 /* This is called periodically to monitor the backend player */
 void player_monitor();
+
+
+/* Available back-end players */
+typedef enum {
+   BACKEND_MPLAYER,
+   BACKEND_GSTREAMER
+} backend_id;
 
 
 /* player backends */
@@ -113,15 +99,15 @@ typedef struct {
 } player_backend_t;
 extern player_backend_t player;
 
-/* record keeping about the player */
-typedef struct {
-   playmode  mode;         /* playback mode */
-   playlist *queue;        /* pointer to playlist */
-   int       qidx;         /* index into currently playing playlist */
 
-   int       rseed;        /* seed used by rand(3) */
+/* vitunes-specific record keeping about the player */
+typedef struct {
+   playmode  mode;   /* playback mode */
+   playlist *queue;  /* pointer to playlist */
+   int       qidx;   /* index into currently playing playlist */
+
+   int       rseed;  /* seed used by rand(3) */
 } player_info_t;
 extern player_info_t player_info;
-
 
 #endif
