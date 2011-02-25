@@ -56,7 +56,7 @@ sock_listen(void)
    int                  ret;
    struct sockaddr_un   addr;
    socklen_t            addr_len;
-
+   int                  coe = 1;
 
    unlink(VITUNES_SOCK);
 
@@ -69,6 +69,8 @@ sock_listen(void)
 
    if(bind(ret, (struct sockaddr *) &addr, addr_len) == -1)
       return -1;
+
+   fcntl(ret, F_SETFD, FD_CLOEXEC, &coe);
 
    return ret;
 }
