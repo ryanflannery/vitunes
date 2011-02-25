@@ -24,7 +24,14 @@ player_info_t player_info;
 /* callbacks */
 static void callback_playnext() { player_skip_song(1); }
 static void callback_notice(char *msg) { paint_message(msg); }
-static void callback_fatal(char *msg) { paint_error(msg); }
+static void callback_error(char *msg) { paint_error(msg); }
+static void callback_fatal(char *msg) {
+   ui_destroy();
+   fprintf(stderr,"The player-backend '%s' has experienced a fatal error: %s\n",
+         player.name, msg);
+   VSIG_QUIT = 1;
+   exit(1);
+}
 
 
 /* definition of backends */
@@ -45,10 +52,11 @@ const player_backend_t PlayerBackends[] = {
       mplayer_is_paused,
       mplayer_set_callback_playnext,
       mplayer_set_callback_notice,
+      mplayer_set_callback_error,
       mplayer_set_callback_fatal,
       mplayer_monitor
    },  
-   { 0, false, NULL, NULL, NULL, NULL,
+   { 0, false, NULL, NULL, NULL, NULL, NULL,
       NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL }
 };
 const size_t PlayerBackendsSize = sizeof(PlayerBackends) / sizeof(player_backend_t);
@@ -85,6 +93,7 @@ player_init(const char *backend)
 
    player.set_callback_playnext(callback_playnext);
    player.set_callback_notice(callback_notice);
+   player.set_callback_error(callback_error);
    player.set_callback_fatal(callback_fatal);
    player.start();
 }

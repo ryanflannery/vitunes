@@ -20,6 +20,7 @@
 /* callback functions */
 void (*mplayer_callback_playnext)(void) = NULL;
 void (*mplayer_callback_notice)(char *) = NULL;
+void (*mplayer_callback_error)(char *) = NULL;
 void (*mplayer_callback_fatal)(char *) = NULL;
 
 
@@ -151,10 +152,12 @@ mplayer_sigchld()
             mplayer_callback_fatal("mplayer is misbehaving");
       } else {
          mplayer_restart();
-         if (mplayer_callback_notice != NULL)
-            mplayer_callback_notice("mplayer died.  restarting it.");
+         if (mplayer_callback_error != NULL)
+            mplayer_callback_error("mplayer died.  restarting it.");
       }   
    }
+
+   last_sigchld = time(0);
 }
 
 void
@@ -298,6 +301,12 @@ void
 mplayer_set_callback_notice(void (*f)(char *))
 {
    mplayer_callback_notice = f;
+}
+
+void
+mplayer_set_callback_error(void (*f)(char *))
+{
+   mplayer_callback_error = f;
 }
 
 void
