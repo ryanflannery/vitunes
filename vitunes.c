@@ -188,7 +188,7 @@ main(int argc, char *argv[])
       struct timeval  tv;
 
       /* handle any signal flags */
-      process_signals(true);
+      process_signals();
 
       tv.tv_sec = 1;
       tv.tv_usec = 0;
