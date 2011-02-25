@@ -366,11 +366,11 @@ cmd_mode(int argc, char *argv[])
    }
 
    if (strcasecmp(argv[1], "linear") == 0)
-      player.mode = PLAYER_MODE_LINEAR;
+      player_info.mode = MODE_LINEAR;
    else if (strcasecmp(argv[1], "loop") == 0)
-      player.mode = PLAYER_MODE_LOOP;
+      player_info.mode = MODE_LOOP;
    else if (strcasecmp(argv[1], "random") == 0)
-      player.mode = PLAYER_MODE_RANDOM;
+      player_info.mode = MODE_RANDOM;
    else {
       paint_error("invalid mode \"%s\".  must be one of: linear, loop, or random", argv[1]);
       return 2;

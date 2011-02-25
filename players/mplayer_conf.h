@@ -14,43 +14,15 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#ifndef VITUNES_H
-#define VITUNES_H
+#ifndef MPLAYER_CONF_H
+#define MPLAYER_CONF_H
 
-#include <sys/time.h>
+const char *MPLAYER_PATH = "mplayer";
 
-#include <getopt.h>
-#include <locale.h>
-#include <pwd.h>
-#include <signal.h>
-#include <unistd.h>
-#include <stdio.h>
-
-#include "debug.h"
-#include "enums.h"
-#include "commands.h"
-#include "keybindings.h"
-#include "medialib.h"
-#include "player.h"
-#include "uinterface.h"
-#include "e_commands.h"
-
-#include "compat.h"
-
-/*
- * These are the various things defined in vitunes.c used elsewhere.
- */
-
-/* record keeping  */
-extern playlist   *viewing_playlist;
-extern playlist   *playing_playlist;
-extern int         visual_mode_start;
-
-/* signal flags referenced elsewhere */
-extern volatile sig_atomic_t VSIG_QUIT;
-
-/* other */
-void load_config();
-void process_signals(bool);
+char *MPLAYER_ARGS[] = { "mplayer",
+   "-slave", "-idle", "-quiet", "-msglevel",
+   "cplayer=0:ao=0:vo=0:decaudio=0:decvideo=0:demuxer=0",
+   NULL
+};
 
 #endif

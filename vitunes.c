@@ -107,8 +107,6 @@ main(int argc, char *argv[])
    ||  db_file == NULL     || playlist_dir == NULL)
       err(1, "failed to create needed file names");
 
-   player_path = DEFAULT_PLAYER_PATH;
-
    /* handle command-line switches & e-commands */
    handle_switches(argc, argv);
 
@@ -152,7 +150,6 @@ main(int argc, char *argv[])
    if (mdb.library->nfiles == 0) {
       printf("The vitunes database is currently empty.\n");
       printf("See 'vitunes -e help add' for how to add files.");
-      player_child_kill();
       return 0;
    }
    /* apply default sort to library */
@@ -169,9 +166,8 @@ main(int argc, char *argv[])
    playing_playlist = NULL;
 
    /* start media player child */
-   player_init(player_path, DEFAULT_PLAYER_ARGS, DEFAULT_PLAYER_MODE);
-   player_child_launch();
-   atexit(player_child_kill);
+   player_init("mplayer");
+   atexit(player_destroy);
 
    /* load config file and run commands in it now */
    load_config();
@@ -227,7 +223,7 @@ main(int argc, char *argv[])
     * -------------------------------------------------------------------- */
 
    ui_destroy();
-   player_child_kill();
+   player_destroy();
    medialib_destroy();
 
    mi_query_clear();
@@ -238,7 +234,7 @@ main(int argc, char *argv[])
    if (QUIT_CAUSE != EXIT_NORMAL) {
       switch (QUIT_CAUSE) {
          case BAD_PLAYER:
-            warnx("media player '%s' is not executing", player.program);
+            warnx("It appears the media player is misbehaving.  Apologies.");
             break;
       }
    }
@@ -303,38 +299,39 @@ process_signals(bool do_paint_message)
    if (VSIG_PLAYER_MONITOR) {
       player_monitor();
 
-      if (prev_is_playing || player_status.playing)
+      if (prev_is_playing || player.playing())
          paint_player();
 
       /* need to repaint anything else? */
-      if (prev_is_playing != player_status.playing) {
+      if (prev_is_playing != player.playing()) {
          paint_library();
          paint_playlist();
-      } else if (prev_queue != player.queue) {
+      } else if (prev_queue != player_info.queue) {
          paint_library();
          if (prev_queue == viewing_playlist) {
             paint_playlist();
          }
       }
-      if (player.queue == viewing_playlist && prev_qidx != player.qidx) {
+      if (player_info.queue == viewing_playlist
+      &&  prev_qidx != player_info.qidx) {
          paint_playlist();
       }
-      if (prev_volume != player_status.volume) {
-         paint_message("volume: %3.0f%%", player_status.volume);
-         prev_volume = player_status.volume;
+      if (prev_volume != player.volume()) {
+         paint_message("volume: %3.0f%%", player.volume());
+         prev_volume = player.volume();
       }
 
-      prev_queue = player.queue;
-      prev_qidx = player.qidx;
-      prev_is_playing = player_status.playing;
+      prev_queue = player_info.queue;
+      prev_qidx = player_info.qidx;
+      prev_is_playing = player.playing();
       VSIG_PLAYER_MONITOR = 0;
    }
 
    /* restart player if needed */
    if (VSIG_PLAYER_RESTART) {
       /* ignore children launched from a '!' */
+      /* TODO TODO
       if (kill(player.pid, 0) != 0) {
-         /* if too frequent, quit */
          if (time(0) - last_sigchld <= 1) {
             QUIT_CAUSE = BAD_PLAYER;
             VSIG_QUIT = 1;
@@ -344,6 +341,7 @@ process_signals(bool do_paint_message)
                paint_message("child player died. re-launched.");
          }
       }
+      */
       VSIG_PLAYER_RESTART = 0;
    }
 }

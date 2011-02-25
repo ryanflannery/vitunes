@@ -14,43 +14,41 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#ifndef VITUNES_H
-#define VITUNES_H
+#ifndef MPLAYER_H
+#define MPLAYER_H
 
-#include <sys/time.h>
+#include <sys/wait.h>
+#include <sys/types.h>
 
-#include <getopt.h>
-#include <locale.h>
-#include <pwd.h>
+#include <err.h>
+#include <errno.h>
+#include <fcntl.h>
 #include <signal.h>
-#include <unistd.h>
+#include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 
-#include "debug.h"
-#include "enums.h"
-#include "commands.h"
-#include "keybindings.h"
-#include "medialib.h"
-#include "player.h"
-#include "uinterface.h"
-#include "e_commands.h"
+#include "../debug.h"
 
-#include "compat.h"
+void mplayer_start();
+void mplayer_finish();
+void mplayer_sigchld();
 
-/*
- * These are the various things defined in vitunes.c used elsewhere.
- */
+void mplayer_play(const char *file);
+void mplayer_stop();
+void mplayer_pause();
+void mplayer_seek(int seconds);
+void mplayer_volume_step(float percent);
 
-/* record keeping  */
-extern playlist   *viewing_playlist;
-extern playlist   *playing_playlist;
-extern int         visual_mode_start;
+float mplayer_get_position();
+float mplayer_get_volume();
+bool  mplayer_is_playing();
+bool  mplayer_is_paused();
 
-/* signal flags referenced elsewhere */
-extern volatile sig_atomic_t VSIG_QUIT;
+void  mplayer_set_callback_playnext(void (*f)(void));
 
-/* other */
-void load_config();
-void process_signals(bool);
+void mplayer_monitor();
 
 #endif

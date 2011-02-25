@@ -1466,7 +1466,7 @@ kba_play_next(KbaArgs a UNUSED)
       gnum_clear();
    }
 
-   player_play_next_song(n);
+   player_skip_song(n);
 }
 
 void
@@ -1480,7 +1480,7 @@ kba_play_prev(KbaArgs a UNUSED)
       gnum_clear();
    }
 
-   player_play_prev_song(n);
+   player_skip_song(n * -1);
 }
 
 void

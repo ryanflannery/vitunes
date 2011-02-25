@@ -141,7 +141,7 @@ paint_player()
    getmaxyx(stdscr, h, w);
 
    /* if nothing's playing, a shameless plug */
-   if (!player_status.playing) {
+   if (!player.playing()) {
       werase(ui.player);
       wattron(ui.player, COLOR_PAIR(colors.player));
       mvwprintw(ui.player, 0, 0, num2fmt(w, LEFT), "vitunes...");
@@ -151,32 +151,32 @@ paint_player()
    }
 
    /* determine time into current selection */
-   in_hour   = (int)  roundf(player_status.position / 3600);
-   in_minute = ((int) roundf(player_status.position)) % 3600 / 60;
-   in_second = ((int) roundf(player_status.position)) % 60;
+   in_hour   = (int)  roundf(player.position() / 3600);
+   in_minute = ((int) roundf(player.position())) % 3600 / 60;
+   in_second = ((int) roundf(player.position())) % 60;
 
    /* determine percent time into current selection */
    percent = -1;
-   if (playing_playlist->files[player.qidx]->length > 0) {
-      whole = playing_playlist->files[player.qidx]->length;
-      percent = roundf(100.0 * player_status.position / whole);
+   if (playing_playlist->files[player_info.qidx]->length > 0) {
+      whole = playing_playlist->files[player_info.qidx]->length;
+      percent = roundf(100.0 * player.position() / whole);
    }
 
    /* get character for playmode */
-   switch (player.mode) {
-      case PLAYER_MODE_LINEAR:
+   switch (player_info.mode) {
+      case MODE_LINEAR:
          playmode = "-";
          break;
-      case PLAYER_MODE_LOOP:
+      case MODE_LOOP:
          playmode = "O";
          break;
-      case PLAYER_MODE_RANDOM:
+      case MODE_RANDOM:
          playmode = "?";
          break;
    }
 
    /* determine info about song to show */
-   finfo = player_get_field2show(playing_playlist->files[player.qidx]);
+   finfo = player_get_field2show(playing_playlist->files[player_info.qidx]);
 
    /* draw */
    werase(ui.player);
@@ -185,7 +185,7 @@ paint_player()
    mvwprintw(ui.player, 0, 0,
       "[%s] %8.8s +%2.2d:%2.2d:%2.2d (%d%%) %-49.49s",
       playmode,
-      (player_status.paused ? "-PAUSED-" : ""),
+      (player.paused() ? "-PAUSED-" : ""),
       in_hour, in_minute, in_second,
       percent,
       finfo);
@@ -312,7 +312,7 @@ paint_playlist()
       /* apply row attributes */
        wattron(ui.playlist->cwin, COLOR_PAIR(colors.playlist));
 
-      if (plist == playing_playlist && findex == player.qidx)
+      if (plist == playing_playlist && findex == player_info.qidx)
          wattron(ui.playlist->cwin, COLOR_PAIR(colors.playing_playlist));
 
       if ((row == ui.playlist->crow && ui.active == ui.playlist) || visual)
@@ -386,7 +386,7 @@ paint_playlist()
 
                /* apply column attribute (only if file is NOT playing) */
                cattr = COLOR_PAIR(colors.cinfos[mi_display.order[col]]);
-               if ((plist != playing_playlist || findex != player.qidx)
+               if ((plist != playing_playlist || findex != player_info.qidx)
                && colors.cinfos_set[mi_display.order[col]])
                   wattron(ui.playlist->cwin, cattr);
 
@@ -401,7 +401,7 @@ paint_playlist()
                   (str == NULL ? " " : str + strhoff));
 
                /* un-apply column attribute */
-               if ((plist != playing_playlist || findex != player.qidx)
+               if ((plist != playing_playlist || findex != player_info.qidx)
                && colors.cinfos_set[mi_display.order[col]]) {
                   wattroff(ui.playlist->cwin, cattr);
                   wattron(ui.playlist->cwin, COLOR_PAIR(colors.playlist));
@@ -423,7 +423,7 @@ paint_playlist()
       if (row == ui.playlist->crow && ui.active != ui.playlist)
          wattroff(ui.playlist->cwin, COLOR_PAIR(colors.current_inactive));
 
-      if (plist == playing_playlist && findex == player.qidx)
+      if (plist == playing_playlist && findex == player_info.qidx)
          wattroff(ui.playlist->cwin, COLOR_PAIR(colors.playing_playlist));
 
       wattroff(ui.playlist->cwin, COLOR_PAIR(colors.playlist));
