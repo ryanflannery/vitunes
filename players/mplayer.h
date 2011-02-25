@@ -30,8 +30,6 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "../debug.h"
-
 void mplayer_start();
 void mplayer_finish();
 void mplayer_sigchld();
