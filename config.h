@@ -27,11 +27,7 @@ const int DEFAULT_LIBRARY_WINDOW_WIDTH = 18;
 playmode DEFAULT_PLAYER_MODE = PLAYER_MODE_LOOP;
 
 /* Porters look here... */
-#ifdef __linux
-char *DEFAULT_PLAYER_PATH = "/usr/bin/mplayer";
-#else
-char *DEFAULT_PLAYER_PATH = "/usr/local/bin/mplayer";
-#endif
+char *DEFAULT_PLAYER_PATH = "mplayer";
 
 char *DEFAULT_PLAYER_ARGS[] = { "mplayer", "-slave", "-idle", "-quiet", "-msglevel", "cplayer=0:ao=0:vo=0:decaudio=0:decvideo=0:demuxer=0", NULL };
 

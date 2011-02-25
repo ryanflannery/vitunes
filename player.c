@@ -79,7 +79,7 @@ player_child_launch()
       if (dup(pwrite[0]) == -1 || dup(pread[1]) == -1)
          err(1, "player_child_launch: child dup()'s failed");
 
-      if (execv(player.program, player.pargs) == -1)
+      if (execvp(player.program, player.pargs) == -1)
          kill(getppid(), SIGCHLD);  /* send signal NOW! */
 
       /*
