@@ -51,6 +51,6 @@ extern volatile sig_atomic_t VSIG_QUIT;
 
 /* other */
 void load_config();
-void process_signals(bool);
+void process_signals();
 
 #endif

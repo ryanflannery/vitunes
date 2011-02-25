@@ -985,7 +985,7 @@ user_getstr(const char *prompt, char **response)
        * not show anywhere outside of the command window.
        */
       curs_set(0);
-      process_signals(false);
+      process_signals();
       curs_set(1);
       wmove(ui.command, 0, strlen(prompt) + pos);
       wrefresh(ui.command);

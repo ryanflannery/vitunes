@@ -24,6 +24,8 @@
 
 /* System indenpendent stuff.  Shouldn't be altered. */
 const int DEFAULT_LIBRARY_WINDOW_WIDTH = 18;
+
 playmode DEFAULT_PLAYER_MODE = MODE_LOOP;
+const char *DEFAULT_PLAYER_BACKEND = "mplayer";
 
 #endif

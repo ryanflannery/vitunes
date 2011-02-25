@@ -23,7 +23,7 @@
 .Op Fl d Ar database-file
 .Op Fl e Ar command Op argument ...
 .Op Fl f Ar config-file
-.Op Fl m Ar media-player
+.Op Fl m Ar media-backend
 .Op Fl p Ar playlist-dir
 .Sh DESCRIPTION
 .Nm
@@ -71,14 +71,27 @@ for information on what the configuration may contain.
 .Pp
 The default location is
 .Pa ~/.vitunes/vitunes.conf .
-.It Fl m Ar media-player-path
-Specifies the path to the media player to use.
-Currently only
+.It Fl m Ar media-backend
+Specify the media backend to use for playback.  The current list of supported
+media backends are:
+.Bl -tag -width "mplayer"
+.It Cm mplayer
+Uses a
+.Xr fork 2
+/
+.Xr execvp 3 'd
+instance of
 .Xr mplayer 1
-is supported.
+for all playback.  Note that the mplayer binary
+.Sy must
+be in your
+.Ev PATH
+environment variable.
+.El
 .Pp
-The default location is
-.Pa /usr/local/bin/mplayer .
+Currently only
+.Cm mplayer
+is supported.
 .It Fl p Ar playlist-dir
 Specifies the directory containing all of the playlists
 .Nm

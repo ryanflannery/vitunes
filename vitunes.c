@@ -62,7 +62,7 @@ char *vitunes_dir;
 char *conf_file;
 char *db_file;
 char *playlist_dir;
-char *player_path;
+char *player_backend;
 
 
 /*****************************************************************************
@@ -98,13 +98,15 @@ main(int argc, char *argv[])
    if ((home = getenv("HOME")) == NULL)
       errx(1, "$HOME not set. Can't find my config files.");
 
-   /* build paths */
-   asprintf(&vitunes_dir,   VITUNES_DIR_FMT,  home);
-   asprintf(&conf_file,     CONF_FILE_FMT,    home);
-   asprintf(&db_file,       DB_FILE_FMT,      home);
-   asprintf(&playlist_dir,  PLAYLIST_DIR_FMT, home);
+   /* build paths & other needed strings */
+   asprintf(&vitunes_dir,    VITUNES_DIR_FMT,  home);
+   asprintf(&conf_file,      CONF_FILE_FMT,    home);
+   asprintf(&db_file,        DB_FILE_FMT,      home);
+   asprintf(&playlist_dir,   PLAYLIST_DIR_FMT, home);
+   asprintf(&player_backend, "%s", DEFAULT_PLAYER_BACKEND);
    if (vitunes_dir == NULL || conf_file == NULL
-   ||  db_file == NULL     || playlist_dir == NULL)
+   ||  db_file == NULL     || playlist_dir == NULL
+   ||  player_backend == NULL)
       err(1, "failed to create needed file names");
 
    /* handle command-line switches & e-commands */
@@ -128,7 +130,7 @@ main(int argc, char *argv[])
     * initialize stuff
     *--------------------------------------------------------------------- */
 
-   /* setup signal handlers (XXX must be before player_child_launch) */
+   /* setup signal handlers (XXX must be before player_init) */
    signal(SIGPIPE,  SIG_IGN);          /* broken pipe with child (ignore) */
    signal(SIGCHLD,  signal_handler);   /* child died */
    signal(SIGHUP,   signal_handler);   /* quit */
@@ -152,6 +154,7 @@ main(int argc, char *argv[])
       printf("See 'vitunes -e help add' for how to add files.");
       return 0;
    }
+
    /* apply default sort to library */
    qsort(mdb.library->files, mdb.library->nfiles, sizeof(meta_info*), mi_compare);
 
@@ -165,12 +168,13 @@ main(int argc, char *argv[])
    ui.library->nrows  = mdb.nplaylists;
    playing_playlist = NULL;
 
-   /* start media player child */
-   player_init("mplayer");
-   atexit(player_destroy);
-
    /* load config file and run commands in it now */
    load_config();
+
+   /* start media player child */
+   player_init(player_backend);
+   player_info.mode = DEFAULT_PLAYER_MODE;
+   atexit(player_destroy);
 
    /* initial painting of the display */
    paint_all();
@@ -279,7 +283,7 @@ signal_handler(int sig)
 
 /* handle any signal flags */
 void
-process_signals(bool do_paint_message)
+process_signals()
 {
    static playlist *prev_queue = NULL;
    static int       prev_qidx = -1;
@@ -485,8 +489,8 @@ handle_switches(int argc, char *argv[])
             break;
 
          case 'm':
-            if ((player_path = strdup(optarg)) == NULL)
-               err(1, "handle_switches: strdup player_path failed");
+            if ((player_backend = strdup(optarg)) == NULL)
+               err(1, "handle_switches: strdup player_backend failed");
             break;
 
          case 'p':

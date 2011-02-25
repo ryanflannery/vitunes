@@ -67,7 +67,7 @@ const player_backend_t PlayerBackends[] = {
       mplayer_set_callback_fatal,
       mplayer_monitor
    },  
-   { 0, false, NULL, NULL, NULL, NULL, NULL,
+   { 0, "", false, NULL, NULL, NULL, NULL,
       NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL }
 };
 const size_t PlayerBackendsSize = sizeof(PlayerBackends) / sizeof(player_backend_t);
@@ -96,11 +96,15 @@ player_init(const char *backend)
       }
    }
 
-   if (!found)
+   if (!found) {
+      ui_destroy();
       errx(1, "backend '%s' not supported", backend);
+   }
 
-   if (player.dynamic)
+   if (player.dynamic) {
+      ui_destroy();
       errx(1, "dynamically loaded backends not yet supported");
+   }
 
    player.set_callback_playnext(callback_playnext);
    player.set_callback_notice(paint_message);
