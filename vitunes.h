@@ -31,7 +31,7 @@
 #include "commands.h"
 #include "keybindings.h"
 #include "medialib.h"
-#include "player.h"
+#include "players/player.h"
 #include "uinterface.h"
 #include "e_commands.h"
 

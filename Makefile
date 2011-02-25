@@ -20,6 +20,8 @@ OBJS=commands.o compat.o e_commands.o \
 	  socket.o str2argv.o uinterface.o \
 	  vitunes.o
 
+.PATH: players/
+
 # main targets
 
 .PHONY: debug clean install uninstall publish-repos man-debug linux

@@ -26,7 +26,7 @@
 
 #include "enums.h"
 #include "meta_info.h"
-#include "player.h"
+#include "players/player.h"
 #include "playlist.h"
 #include "uinterface.h"
 #include "vitunes.h"

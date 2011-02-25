@@ -30,11 +30,11 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "debug.h"
-#include "meta_info.h"
-#include "playlist.h"
+#include "../debug.h"
+#include "../meta_info.h"
+#include "../playlist.h"
 
-#include "compat.h"
+#include "../compat.h"
 
 
 /*
