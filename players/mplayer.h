@@ -46,6 +46,8 @@ bool  mplayer_is_playing();
 bool  mplayer_is_paused();
 
 void  mplayer_set_callback_playnext(void (*f)(void));
+void  mplayer_set_callback_notice(void (*f)(char *));
+void  mplayer_set_callback_fatal(void (*f)(char *));
 
 void mplayer_monitor();
 

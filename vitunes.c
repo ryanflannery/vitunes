@@ -32,8 +32,8 @@ int visual_mode_start = -1;
 /* signal flags */
 volatile sig_atomic_t VSIG_QUIT = 0;            /* 1 = quit vitunes */
 volatile sig_atomic_t VSIG_RESIZE = 0;          /* 1 = resize display */
+volatile sig_atomic_t VSIG_SIGCHLD = 0;         /* 1 = got sigchld */
 volatile sig_atomic_t VSIG_PLAYER_MONITOR = 0;  /* 1 = update player stats */
-volatile sig_atomic_t VSIG_PLAYER_RESTART = 0;  /* 1 = restart player */
 
 /*
  * enum used for QUIT_CAUSE values. Currently only one is used, but might add
@@ -272,7 +272,7 @@ signal_handler(int sig)
          VSIG_RESIZE = 1;
          break;
       case SIGCHLD:
-         VSIG_PLAYER_RESTART = 1;
+         VSIG_SIGCHLD = 1;
          break;
    }
 }
@@ -285,7 +285,6 @@ process_signals(bool do_paint_message)
    static int       prev_qidx = -1;
    static bool      prev_is_playing = false;
    static float     prev_volume = -1;
-   static time_t    last_sigchld = -1;
 
    /* handle resize event */
    if (VSIG_RESIZE) {
@@ -328,21 +327,9 @@ process_signals(bool do_paint_message)
    }
 
    /* restart player if needed */
-   if (VSIG_PLAYER_RESTART) {
-      /* ignore children launched from a '!' */
-      /* TODO TODO
-      if (kill(player.pid, 0) != 0) {
-         if (time(0) - last_sigchld <= 1) {
-            QUIT_CAUSE = BAD_PLAYER;
-            VSIG_QUIT = 1;
-         } else {
-            player_child_relaunch();
-            if (do_paint_message)
-               paint_message("child player died. re-launched.");
-         }
-      }
-      */
-      VSIG_PLAYER_RESTART = 0;
+   if (VSIG_SIGCHLD) {
+      if (player.sigchld != NULL) player.sigchld();
+      VSIG_SIGCHLD = 0;
    }
 }
 

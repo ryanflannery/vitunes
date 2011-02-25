@@ -19,6 +19,8 @@
 
 /* callback functions */
 void (*mplayer_callback_playnext)(void) = NULL;
+void (*mplayer_callback_notice)(char *) = NULL;
+void (*mplayer_callback_fatal)(char *) = NULL;
 
 
 /* record keeping */
@@ -35,6 +37,8 @@ static struct {
    int      pipe_write;
    const char *current_song;
 } mplayer_state;
+
+bool restarting = false;
 
 
 void mplayer_volume_set(float);
@@ -95,11 +99,14 @@ mplayer_start()
    if (fcntl(mplayer_state.pipe_read, F_SETFL, flags | O_NONBLOCK) == -1)
       err(1, "%s: fcntl() failed to set pipe non-blocking", __FUNCTION__);
 
-   mplayer_state.playing  = false;
-   mplayer_state.paused   = false;
-   mplayer_state.volume   = -1;
-   mplayer_state.position = 0;
-   mplayer_state.current_song = NULL;
+   if (!restarting) {
+      mplayer_state.playing  = false;
+      mplayer_state.paused   = false;
+      mplayer_state.volume   = -1;
+      mplayer_state.position = 0;
+      mplayer_state.current_song = NULL;
+   }
+   restarting = true;
 }
 
 void
@@ -114,18 +121,39 @@ mplayer_finish()
 }
 
 void
-mplayer_sigchld()
+mplayer_restart()
 {
    int previous_position;
    int status;
 
+   close(mplayer_state.pipe_read);
+   close(mplayer_state.pipe_write);
    wait(&status);
+
+   restarting = true;
    mplayer_start();
 
    if (mplayer_state.playing && !mplayer_state.paused) {
       previous_position = mplayer_state.position;
       mplayer_play(mplayer_state.current_song);
       mplayer_seek(previous_position);
+   }
+}
+
+void
+mplayer_sigchld()
+{
+   static time_t  last_sigchld = -1;
+
+   if (kill(mplayer_state.pid, 0) != 0) {
+      if (time(0) - last_sigchld <= 1) {
+         if (mplayer_callback_fatal != NULL)
+            mplayer_callback_fatal("mplayer is misbehaving");
+      } else {
+         mplayer_restart();
+         if (mplayer_callback_notice != NULL)
+            mplayer_callback_notice("mplayer died.  restarting it.");
+      }   
    }
 }
 
@@ -264,6 +292,18 @@ void
 mplayer_set_callback_playnext(void (*f)(void))
 {
    mplayer_callback_playnext = f;
+}
+
+void
+mplayer_set_callback_notice(void (*f)(char *))
+{
+   mplayer_callback_notice = f;
+}
+
+void
+mplayer_set_callback_fatal(void (*f)(char *))
+{
+   mplayer_callback_fatal = f;
 }
 
 

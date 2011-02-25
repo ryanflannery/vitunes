@@ -23,6 +23,8 @@ player_info_t player_info;
 
 /* callbacks */
 static void callback_playnext() { player_skip_song(1); }
+static void callback_notice(char *msg) { paint_message(msg); }
+static void callback_fatal(char *msg) { paint_error(msg); }
 
 
 /* definition of backends */
@@ -42,9 +44,11 @@ const player_backend_t PlayerBackends[] = {
       mplayer_is_playing,
       mplayer_is_paused,
       mplayer_set_callback_playnext,
+      mplayer_set_callback_notice,
+      mplayer_set_callback_fatal,
       mplayer_monitor
    },  
-   { 0, false, NULL, NULL,
+   { 0, false, NULL, NULL, NULL, NULL,
       NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL }
 };
 const size_t PlayerBackendsSize = sizeof(PlayerBackends) / sizeof(player_backend_t);
@@ -80,6 +84,8 @@ player_init(const char *backend)
       errx(1, "dynamically loaded backends not yet supported");
 
    player.set_callback_playnext(callback_playnext);
+   player.set_callback_notice(callback_notice);
+   player.set_callback_fatal(callback_fatal);
    player.start();
 }
 

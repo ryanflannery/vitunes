@@ -21,6 +21,7 @@
 
 #include "playlist.h"
 #include "compat.h"
+#include "paint.h"
 #include "debug.h"
 
 /* "static" backends (those that aren't dynamically loaded) */
@@ -93,6 +94,8 @@ typedef struct {
 
    /* callback functions */
    void (*set_callback_playnext)(void (*f)(void));
+   void (*set_callback_notice)(void (*f)(char *));
+   void (*set_callback_fatal)(void (*f)(char *));
 
    /* monitor function */
    void (*monitor)(void);
