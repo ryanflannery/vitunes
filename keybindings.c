@@ -464,6 +464,15 @@ kb_execute_by_name(const char *name)
  *
  ****************************************************************************/
 
+KbaArgs
+get_dummy_args()
+{
+   KbaArgs dummy = { .direction = -1, .scale = -1, .amount = -1,
+      .placement = -1, .num = -1 };
+
+   return dummy;
+}
+
 void
 kba_scroll_row(KbaArgs a)
 {
@@ -785,7 +794,7 @@ kba_go(KbaArgs a UNUSED)
    /* NOTE: While I intend to support most of vim's g* commands, currently
     *       this only supports 'gg' ... simply because I use it.
     */
-   KbaArgs args;
+   KbaArgs args = get_dummy_args();
 
    args.scale = NUMBER;
    args.num   = 'g';
@@ -840,6 +849,7 @@ kba_search(KbaArgs a)
    free(search_phrase);
 
    /* do the search */
+   find_args = get_dummy_args();
    find_args.direction = SAME;
    kba_search_find(find_args);
 }
@@ -905,6 +915,7 @@ kba_search_find(KbaArgs a)
             paint_message(msg);
 
          gnum_set(idx + 1);
+         foo = get_dummy_args();
          foo.scale = NUMBER;
          foo.num = 'G';
          kba_jumpto_file(foo);
@@ -1378,7 +1389,6 @@ kba_show_file_info(KbaArgs a UNUSED)
 void
 kba_load_playlist(KbaArgs a UNUSED)
 {
-   KbaArgs dummy;
    int  idx;
 
    if (ui.active == ui.library) {
@@ -1391,7 +1401,7 @@ kba_load_playlist(KbaArgs a UNUSED)
       ui.playlist->hoffset = 0;
 
       paint_playlist();
-      kba_switch_windows(dummy);
+      kba_switch_windows(get_dummy_args());
    } else {
       /* play song */
       if (ui.active->crow >= ui.active->nrows) {
@@ -1407,7 +1417,6 @@ kba_load_playlist(KbaArgs a UNUSED)
 void
 kba_play(KbaArgs a UNUSED)
 {
-   KbaArgs dummy;
    int  idx;
 
    if (ui.active == ui.library) {
@@ -1420,7 +1429,7 @@ kba_play(KbaArgs a UNUSED)
       ui.playlist->hoffset = 0;
 
       paint_playlist();
-      kba_switch_windows(dummy);
+      kba_switch_windows(get_dummy_args());
    } else {
       /* play song */
       if (ui.active->crow >= ui.active->nrows) {
