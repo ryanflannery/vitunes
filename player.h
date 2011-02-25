@@ -94,9 +94,9 @@ typedef struct {
 
    /* callback functions */
    void (*set_callback_playnext)(void (*f)(void));
-   void (*set_callback_notice)(void (*f)(char *));
-   void (*set_callback_error)(void (*f)(char *));
-   void (*set_callback_fatal)(void (*f)(char *));
+   void (*set_callback_notice)(void (*f)(char *, ...));
+   void (*set_callback_error)(void (*f)(char *, ...));
+   void (*set_callback_fatal)(void (*f)(char *, ...));
 
    /* monitor function */
    void (*monitor)(void);

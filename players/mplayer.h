@@ -30,6 +30,10 @@
 #include <string.h>
 #include <unistd.h>
 
+#ifdef DEBUG
+#  include "../debug.h"
+#endif
+
 void mplayer_start();
 void mplayer_finish();
 void mplayer_sigchld();
@@ -46,9 +50,9 @@ bool  mplayer_is_playing();
 bool  mplayer_is_paused();
 
 void  mplayer_set_callback_playnext(void (*f)(void));
-void  mplayer_set_callback_notice(void (*f)(char *));
-void  mplayer_set_callback_error(void (*f)(char *));
-void  mplayer_set_callback_fatal(void (*f)(char *));
+void  mplayer_set_callback_notice(void (*f)(char *, ...));
+void  mplayer_set_callback_error(void (*f)(char *, ...));
+void  mplayer_set_callback_fatal(void (*f)(char *, ...));
 
 void mplayer_monitor();
 

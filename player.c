@@ -23,12 +23,23 @@ player_info_t player_info;
 
 /* callbacks */
 static void callback_playnext() { player_skip_song(1); }
-static void callback_notice(char *msg) { paint_message(msg); }
-static void callback_error(char *msg) { paint_error(msg); }
-static void callback_fatal(char *msg) {
+
+static void
+callback_fatal(char *fmt, ...)
+{
+   va_list ap;
+
    ui_destroy();
-   fprintf(stderr,"The player-backend '%s' has experienced a fatal error: %s\n",
-         player.name, msg);
+
+   fprintf(stderr,"The player-backend '%s' has experienced a fatal error:\n",
+         player.name);
+
+   va_start(ap, fmt);
+   vfprintf(stderr, fmt, ap);
+   va_end(ap);
+
+   fflush(stderr);
+
    VSIG_QUIT = 1;
    exit(1);
 }
@@ -92,8 +103,8 @@ player_init(const char *backend)
       errx(1, "dynamically loaded backends not yet supported");
 
    player.set_callback_playnext(callback_playnext);
-   player.set_callback_notice(callback_notice);
-   player.set_callback_error(callback_error);
+   player.set_callback_notice(paint_message);
+   player.set_callback_error(paint_error);
    player.set_callback_fatal(callback_fatal);
    player.start();
 }

@@ -19,9 +19,9 @@
 
 /* callback functions */
 void (*mplayer_callback_playnext)(void) = NULL;
-void (*mplayer_callback_notice)(char *) = NULL;
-void (*mplayer_callback_error)(char *) = NULL;
-void (*mplayer_callback_fatal)(char *) = NULL;
+void (*mplayer_callback_notice)(char *, ...) = NULL;
+void (*mplayer_callback_error)(char *, ...) = NULL;
+void (*mplayer_callback_fatal)(char *, ...) = NULL;
 
 
 /* record keeping */
@@ -142,6 +142,16 @@ mplayer_restart()
 }
 
 void
+mplayer_sigchld_message()
+{
+   /* TODO find a way to check if mplayer is in $PATH in start() */
+   mplayer_callback_fatal("%s is crashing too often.  Possible causes are:\n\
+   1. %s is not in your $PATH\n\
+   2. The installed %s is older, and not supported by vitunes\n",
+   MPLAYER_PATH, MPLAYER_PATH, MPLAYER_PATH);
+}
+
+void
 mplayer_sigchld()
 {
    static time_t  last_sigchld = -1;
@@ -149,11 +159,11 @@ mplayer_sigchld()
    if (kill(mplayer_state.pid, 0) != 0) {
       if (time(0) - last_sigchld <= 1) {
          if (mplayer_callback_fatal != NULL)
-            mplayer_callback_fatal("mplayer is misbehaving");
+            mplayer_sigchld_message();
       } else {
          mplayer_restart();
          if (mplayer_callback_error != NULL)
-            mplayer_callback_error("mplayer died.  restarting it.");
+            mplayer_callback_error("%s died.  Restarting it.", MPLAYER_PATH);
       }   
    }
 
@@ -298,19 +308,19 @@ mplayer_set_callback_playnext(void (*f)(void))
 }
 
 void
-mplayer_set_callback_notice(void (*f)(char *))
+mplayer_set_callback_notice(void (*f)(char *, ...))
 {
    mplayer_callback_notice = f;
 }
 
 void
-mplayer_set_callback_error(void (*f)(char *))
+mplayer_set_callback_error(void (*f)(char *, ...))
 {
    mplayer_callback_error = f;
 }
 
 void
-mplayer_set_callback_fatal(void (*f)(char *))
+mplayer_set_callback_fatal(void (*f)(char *, ...))
 {
    mplayer_callback_fatal = f;
 }
