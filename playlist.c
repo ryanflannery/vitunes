@@ -346,13 +346,15 @@ retrieve_playlist_filenames(const char *dirname, char ***fnames)
    char   *glob_pattern;
    int     fcount;
    glob_t  files;
+   int     globbed;
 
    /* build the search pattern */
    if (asprintf(&glob_pattern, "%s/*.playlist", dirname) == -1)
       errx(1, "failed in building glob pattern");
 
    /* get the files */
-   if (glob(glob_pattern, 0, NULL, &files) != 0 && errno != 0)
+   globbed = glob(glob_pattern, 0, NULL, &files);
+   if (globbed != 0 && globbed != GLOB_NOMATCH && errno != 0)
       err(1, "failed to glob playlists directory");
 
    /* allocate & copy each of the filenames found into the filenames array */
