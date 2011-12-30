@@ -151,7 +151,7 @@ main(int argc, char *argv[])
    medialib_load(db_file, playlist_dir);
    if (mdb.library->nfiles == 0) {
       printf("The vitunes database is currently empty.\n");
-      printf("See 'vitunes -e help add' for how to add files.");
+      printf("See 'vitunes -e help add' for how to add files.\n");
       return 0;
    }
 
