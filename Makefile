@@ -58,8 +58,3 @@ man-debug:
 cscope.out: *.h *.c
 	cscope -bke
 
-publish-repos:
-	hg push $(myhg)/vitunes
-	hg push $(mybb)/vitunes
-	hg push $(mygit)/vitunes
-
