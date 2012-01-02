@@ -496,7 +496,7 @@ cmd_sort(int argc, char *argv[])
    qsort(viewing_playlist->files, viewing_playlist->nfiles,
       sizeof(meta_info*), mi_compare);
 
-   if(!ui_is_init())
+   if (!ui_is_init())
       return 0;
 
    /* redraw */
