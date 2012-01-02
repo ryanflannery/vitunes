@@ -526,6 +526,43 @@ This is intentional.
 If you wish this behavior to be changed, see the "save-sorts" option for the
 .Ic set
 command.
+.It Pf : Ic toggle Ar register Ar command-list
+This command will associate a list of commands specified by
+.Ar command-list
+to register
+.Ar register .
+Once set, the list of commands can be quickly toggled through using the
+.Ic toggle_forward
+and
+.Ic toggle_backward
+keybindings (which default to
+.Ic t
+and
+.Ic T ,
+respectively).
+.Pp
+Toggle-lists can be useful to quickly alternate through, for example, various
+sorting or display schemes that the user may prefer.
+.Pp
+.Ar register
+is any single lower-case letter (a - z) or uppercase letter (A - Z).
+.Ar command-list
+is any list of valid commands listed here, each separated by a backslash
+character '/'.
+.Pp
+As an example, the following would allow one to quickly toggle through various
+sorting schemes:
+.Pp
+.Ic toggle s sort artist,-year,track / sort artist,album,track / sort -year
+.Pp
+Once issued, the three individual sorts specified above can be toggled using
+the
+.Ar s
+register.  With the default keybindings this would be done using either
+.Ar ts
+(to toggle forward through the list) or
+.Ar Ts
+(to toggle backward through the list).
 .It Pf : Ic unbind Pq Cm * | Cm action Ar action | Cm key Ar keycode
 This command is used to remove existing keybindings.
 It has three forms.
@@ -571,12 +608,6 @@ is provided, then the playlist will be saved with this new name.
 If, however, a playlist already exists with that name, then you will be
 prevented from saving with that name unless '!' is provided, in which case
 the existing playlist with that name will be deleted.
-.It Pf : Ic toggle Op Ar commands
-Set the commands list to
-.Ar commands.
-The commands are seperated by a /. Triggering the toggle action executes
-the command at the current list index and increases the index. So by
-executing the commands, you cycle through the list.
 .El
 .Sh SPECIFYING KEYCODES
 This section describes how to specify keycodes used in both the
