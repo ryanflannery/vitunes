@@ -224,6 +224,7 @@ Hope this helps anyone interested in hacking on vitunes (specifically me... 6
 months from now)
 
 -Ryan Flannery  <ryan.flannery@gmail.com>  2 Jan. 2011
+                   (Checked for accuracy)  1 Jan. 2012
 
 
 References:
