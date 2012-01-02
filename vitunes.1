@@ -20,6 +20,7 @@
 .Nd A curses media indexer and player for vi-users
 .Sh SYNOPSIS
 .Nm vitunes
+.Op Fl c Ar command
 .Op Fl d Ar database-file
 .Op Fl e Ar command Op argument ...
 .Op Fl f Ar config-file
@@ -39,6 +40,25 @@ play the media it indexes (via
 .Nm
 accepts the following command line options:
 .Bl -tag -width Fl
+.It Fl c Ar command
+Execute the specified command in the currently running
+.Nm
+instance.  The commands that may be specified are both those named in the
+.Sx RUN-TIME COMMANDS
+section below and keybindings specified by their keybinding action name,
+listed in the 
+.Sx KEYBINDING ACTIONS
+section below.
+.Pp
+To execute multiple commands, use this option repeatedly as
+.Dl $ vitunes -c command1 -c command2 ...
+.Pp
+For this to work, when
+.Nm
+starts up it attempts to create a socket at
+.Pa /tmp/.vitunes
+that are used by this option to communicate with the original instance.
+If this socket cannot be created for any reason, this option will not work.
 .It Fl d Ar database-file
 Specifies the database containing all known media files and their meta
 information that
@@ -57,10 +77,6 @@ uses.
 See the section below titled
 .Sx E-COMMANDS
 for more information.
-.It Fl c Ar command
-Execute a command in the running
-.Nm
-instance.
 .It Fl f Ar config-file
 Specifies the path of the configuration file
 .Nm
@@ -1022,6 +1038,9 @@ Default configuration file.
 Default database file.
 .It Pa ~/.vitunes/playlists/
 Default playlist directory.
+.It Pa /tmp/.vitunes
+Default location for the socket created on start-up that can be used to control
+.Nm .
 .It Pa /usr/local/bin/mplayer
 Default path to the
 .Xr mplayer 1
