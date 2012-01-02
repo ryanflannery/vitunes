@@ -55,6 +55,9 @@ linux:
 man-debug:
 	mandoc -Wall vitunes.1 > /dev/null
 
+vitunes.html: vitunes.1
+	man2web vitunes > vitunes.html
+
 cscope.out: *.h *.c
 	cscope -bke
 
