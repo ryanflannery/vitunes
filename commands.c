@@ -619,11 +619,16 @@ cmd_set(int argc, char *argv[])
    char *value;
    bool  tf;
    int   max_w, max_h, new_width;   /* lwidth */
+   bool  player_is_setup;
 
    if (argc != 2) {
       paint_error("usage: %s <property>=<value>", argv[0]);
       return 1;
    }
+
+   /* determine if the player has been setup (needed for redraws below) */
+   player_is_setup = (player.name  != NULL)
+                  && (*player.name != NULL);
 
    /* extract property and value */
    property = argv[1];
@@ -648,10 +653,10 @@ cmd_set(int argc, char *argv[])
          return 3;
       }
 
-      /* redraw */
+      /* resize & redraw (if we're past setup & curses is running) */
       ui.lwidth = new_width;
       ui_resize();
-      if(ui_is_init()) {
+      if(player_is_setup && ui_is_init()) {
          ui_clear();
          paint_all();
       }
@@ -665,11 +670,11 @@ cmd_set(int argc, char *argv[])
       ui.lhide = tf;
       if (ui.lhide) {
          if (ui.active == ui.playlist) ui_hide_library();
-         paint_all();
+         if (player_is_setup && ui_is_init()) paint_all();
          paint_message("library window hidden");
       } else {
          if (ui.library->cwin == NULL) ui_unhide_library();
-         paint_all();
+         if (player_is_setup && ui_is_init()) paint_all();
          paint_message("library window un-hidden");
       }
 
@@ -742,9 +747,10 @@ cmd_reload(int argc, char *argv[])
       ui.library->crow = 0;
       paint_all();
 
-   } else if (strcasecmp(argv[1], "conf") == 0)
+   } else if (strcasecmp(argv[1], "conf") == 0) {
       load_config();
-   else {
+      paint_message("configuration reloaded");
+   } else {
       paint_error("usage: %s [ db | conf ]", argv[0]);
       return 2;
    }
