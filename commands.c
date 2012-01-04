@@ -530,7 +530,9 @@ cmd_display(int argc, char *argv[])
    /* reset display to default? */
    if (strcasecmp(argv[1], "reset") == 0) {
       mi_display_reset();
-      paint_playlist();
+      if (ui_is_init())
+         paint_playlist();
+
       return 0;
    }
 
