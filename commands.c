@@ -669,9 +669,13 @@ cmd_set(int argc, char *argv[])
       }
       ui.lhide = tf;
       if (ui.lhide) {
-         if (ui.active == ui.playlist) ui_hide_library();
-         if (player_is_setup && ui_is_init()) paint_all();
-         paint_message("library window hidden");
+         if (ui.active == ui.playlist)
+            ui_hide_library();
+         if (player_is_setup && ui_is_init()) {
+            ui_clear();
+            paint_all();
+            paint_message("library window hidden");
+         }
       } else {
          if (ui.library->cwin == NULL) ui_unhide_library();
          if (player_is_setup && ui_is_init()) paint_all();
