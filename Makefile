@@ -61,3 +61,17 @@ vitunes.html: vitunes.1
 cscope.out: *.h *.c
 	cscope -bke
 
+
+# static analysis checks
+
+# clang/llvm c static analyzer 
+test-scan-build:
+	make clean
+	scan-build -o tmp.scan-build make 1> /dev/null 2> /dev/null
+
+# TODO - tweak options to cppcheck.
+# 	1. correct handling of #defines to use (has to do with include dirs)
+# 	2. fix output to go to tmp.cppcheck subdir, preferabbly just text
+cppcheck:
+	make clean
+	cppcheck .
