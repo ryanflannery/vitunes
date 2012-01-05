@@ -680,13 +680,24 @@ paint_str2item(const char *str)
 int
 paint_str2color(const char *str)
 {
-   int color_number;
-
    if (strncasecmp(str, "color", 5) == 0) {
-      color_number = (int) strtok(str, "color");
-      return atoi(color_number);
-   }
-   else if (strcasecmp(str, "black") == 0)
+      const char *errstr;
+      char *color;
+      char *numberstr;
+      int   number;
+
+      if ((color = strdup(str)) == NULL)
+         err(1, "%s: strdup of '%s' failed.", __FUNCTION__, str);
+
+      numberstr = strtok(color, "color");
+      number = (int)strtonum(numberstr, -1, 255, &errstr);
+      if (errstr != NULL)
+         return -2;
+
+      free(color);
+      return number;
+
+   } else if (strcasecmp(str, "black") == 0)
       return COLOR_BLACK;
    else if (strcasecmp(str, "red") == 0)
       return COLOR_RED;
