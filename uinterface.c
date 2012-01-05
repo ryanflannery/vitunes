@@ -141,7 +141,7 @@ ui_init(int library_width)
 bool
 ui_is_init()
 {
-   return isendwin() == TRUE;
+   return (ui.active != NULL) && !isendwin();
 }
 
 void
