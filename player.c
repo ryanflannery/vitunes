@@ -66,7 +66,27 @@ const player_backend_t PlayerBackends[] = {
       mplayer_set_callback_error,
       mplayer_set_callback_fatal,
       mplayer_monitor
-   },  
+   }, 
+   {
+      BACKEND_GSTREAMER, "gst", false, NULL,
+      gstplayer_init,
+      gstplayer_cleanup,
+      NULL,
+      gstplayer_play,
+      gstplayer_stop,
+      gstplayer_pause,
+      gstplayer_seek,
+      gstplayer_volume_step,
+      gstplayer_get_position,
+      gstplayer_get_volume,
+      gstplayer_is_playing,
+      gstplayer_is_paused,
+      gstplayer_set_callback_playnext,
+      gstplayer_set_callback_notice,
+      gstplayer_set_callback_error,
+      gstplayer_set_callback_fatal,
+      gstplayer_monitor,
+   },
    { 0, "", false, NULL, NULL, NULL, NULL,
       NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL }
 };
