@@ -59,6 +59,9 @@ typedef struct {
    /* current row in inactive window */
    int   current_inactive;
 
+   /* current row in active window */
+   int   current_active;
+
    /* individual fields in the playlist window */
    int   cinfos[MI_NUM_CINFO];
    bool  cinfos_set[MI_NUM_CINFO];
