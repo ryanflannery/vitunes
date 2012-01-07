@@ -40,8 +40,8 @@ clean:
 	rm -f vitunes vitunes.core vitunes-debug.log
 
 install: vitunes
-	/usr/bin/install -c -m 0555 vitunes $(BINDIR)
-	/usr/bin/install -c -m 0444 vitunes.1 $(MANDIR)
+	`which install` -c -m 0555 vitunes $(BINDIR)
+	`which install` -c -m 0444 vitunes.1 $(MANDIR)
 
 uninstall:
 	rm -f $(BINDIR)/vitunes
