@@ -17,6 +17,7 @@ CFLAGS+=-c -std=c89 -Wall -Wextra -Wno-unused-value $(CDEPS) $(CDEBUG) $(GSTCDEP
 LDFLAGS+=-lm -lncursesw -lutil $(LDEPS) $(GSTLDEPS)
 
 OBJS=commands.o compat.o e_commands.o \
+	  gstplayer.o \
 	  keybindings.o medialib.o meta_info.o \
 	  mplayer.o paint.o player.o player_utils.o \
 	  playlist.o socket.o str2argv.o \
