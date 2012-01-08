@@ -26,6 +26,7 @@
 
 /* "static" backends (those that aren't dynamically loaded) */
 #include "players/mplayer.h"
+#include "players/gstplayer.h"
 
 /*
  * Available play-modes.
