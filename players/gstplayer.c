@@ -1,0 +1,313 @@
+/*
+ * Copyright (c) 2011 Daniel Walter <sahne@0x90.at>
+ *
+ * Permission to use, copy, modify, and distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+ * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ */
+
+/* 
+ * gstplayer.c
+ *
+ * This gstreamer based player is part of vitunes, a great player written
+ * by Ryan Flannery.
+ */
+
+/* TODO
+ *  - create player (playbin2)
+ *  - gapless playback (not done yet)
+ *  - change handlers for play/pause/stop/skip/seek
+ *  - change handlers for getting track information
+ */
+
+#include "gstplayer.h"
+#include "../player.h"
+
+/* player data */
+static gst_player gplayer;
+
+
+void
+gstplayer_init()
+{
+   /* TODO
+    * - init gstreamer
+    * - create playbin2
+    * - 
+    */
+   GstElement *player;
+   GstBus     *bus;
+   GstElement *video_sink;
+#if 0
+   gst_player *gplayer;
+   gplayer = (gst_player *) malloc(sizeof(gst_player));
+   if (gplayer == NULL)
+      errx(1, "gstplayer_init: out-of-memory");
+#endif
+
+   /* init gstreamer */
+   gst_init(NULL, NULL);
+   /* create player */
+   player = gst_element_factory_make("playbin2", "vitunes");
+   if (!player)
+      errx(1, "gstplayer_init: could not create player");
+   /* create fake video-sink, since we're an audio player */
+   video_sink = gst_element_factory_make("fakesink", "video-sink");
+   if (!video_sink) {
+      gst_object_unref(GST_OBJECT(player));
+      errx(1, "gstplayer_init: could not create fakesink");
+   }
+   /* add fake video sink to pipeline */
+   g_object_set(G_OBJECT(player), "video-sink", video_sink, NULL);
+   /* get bus */
+   bus = gst_pipeline_get_bus(GST_PIPELINE(player));
+   if (!bus){
+      gst_object_unref(GST_OBJECT(video_sink));
+      gst_object_unref(GST_OBJECT(player));
+      errx(1, "gstplayer_init: could not create gstreamer bus");
+   }
+   /* update gplayer struct */
+   gplayer.player = player;
+   gplayer.bus = bus;
+   gplayer.playnext_cb = NULL;
+   gplayer.notice_cb = NULL;
+   gplayer.error_cb = NULL;
+   gplayer.fatal_cb = NULL;
+}
+
+
+/* play via gstreamer */
+/* TODO fix this for gapless playback !
+ * or better fix player_next !
+ */
+void
+gstplayer_play(const char *filename)
+{
+   gchar *uri;
+   if (!filename)
+      return;
+   if (!gplayer.player)
+      return;
+
+   uri = (gchar *)filename;
+   if (! gst_uri_is_valid(uri))
+      uri = g_filename_to_uri(filename, NULL, NULL);
+   /* set actual state to pause*/
+   gst_element_set_state(GST_ELEMENT(gplayer.player), GST_STATE_READY);
+   /* load song */
+   g_object_set(G_OBJECT(gplayer.player), "uri", uri, NULL);
+   /* start playback */
+   gst_element_set_state(GST_ELEMENT(gplayer.player), GST_STATE_PLAYING);
+   gplayer.playing = true;
+   gplayer.paused = false;
+   g_free(uri);
+}
+
+/* pause / unpause playback */
+void
+gstplayer_pause()
+{
+   /* assertions */
+   if (!gplayer.player)
+      errx(1, "gstplayer_pause: player not initialized");
+
+   if (! gplayer.paused) {
+           /* set paused state in player */
+           gst_element_set_state(GST_ELEMENT(gplayer.player),
+                                 GST_STATE_PAUSED);
+   } else { 
+           /* set play state in player */
+           gst_element_set_state(GST_ELEMENT(gplayer.player),
+                                 GST_STATE_PLAYING);
+   }
+
+   /* update state */
+   gplayer.paused = !gplayer.paused;
+}
+
+/* stop playback */
+void
+gstplayer_stop()
+{
+   if (!gplayer.player)
+      errx(1, "gstplayer_stop: player not initialized");
+
+   /* set pipeline into ready state (== STOP)*/
+   gst_element_set_state(GST_ELEMENT(gplayer.player), GST_STATE_READY);
+}
+
+void
+gstplayer_cleanup()
+{
+   if (! gplayer.player)
+      return;
+   /* stop playbin before destroying */
+   gst_element_set_state(GST_ELEMENT(gplayer.player), GST_STATE_NULL);
+   /* clean up */
+   gst_object_unref(G_OBJECT(gplayer.player));
+}
+
+void
+gstplayer_seek(int seconds)
+{
+   GstFormat seek_format = GST_FORMAT_TIME;
+   GstSeekFlags seek_flags = GST_SEEK_FLAG_FLUSH;
+   gint64 seek;
+   if (seconds == 0)
+      return;
+   gst_element_query_position(GST_ELEMENT(gplayer.player), &seek_format, &seek);
+   seek += (seconds * GST_SECOND);
+   gst_element_seek_simple(GST_ELEMENT(gplayer.player), seek_format,
+                           seek_flags, seek);
+   return;
+}
+
+
+void
+gstplayer_monitor()
+{
+   GstMessage *msg;
+   gint64 pos;
+   GstFormat pos_format = GST_FORMAT_TIME;
+   float actual_pos;
+   if (!gplayer.bus)
+      errx(1, "gstplayer_monitor: player not initialized");
+
+   /* TODO: update time */
+   gst_element_query_position(GST_ELEMENT(gplayer.player), &pos_format, &pos);
+   /* position is in nanoseconds, lets convert */
+   actual_pos = (float) (pos / GST_SECOND);
+   msg = gst_bus_pop(gplayer.bus);
+   if (!msg)
+      return;
+
+   /* handle messages */
+   switch(GST_MESSAGE_TYPE(msg)) {
+   case GST_MESSAGE_EOS: {
+      /* end of stream, start next */
+      gst_element_set_state(GST_ELEMENT(gplayer.player), GST_STATE_READY);
+      if (gplayer.playnext_cb != NULL)
+         gplayer.playnext_cb();
+      break;
+   }
+   case GST_MESSAGE_ERROR: {
+      GError *error;
+      gst_message_parse_error(msg, &error, NULL);
+      paint_error("player_monitor: %s", error->message);
+      g_error_free(error);
+      break;
+   }
+   default:
+      break;
+   }
+
+   return;
+}
+
+bool
+gstplayer_is_playing()
+{
+   if (!gplayer.player)
+      return false;
+   if (gplayer.paused)
+      return false;
+   return gplayer.playing;
+}
+
+bool
+gstplayer_is_paused()
+{
+   if (!gplayer.player)
+      return false;
+   return gplayer.paused;
+}
+
+
+/* play next / prev */
+void
+gstplayer_next(gst_player *gplayer UNUSED, int skip UNUSED)
+{
+   /* nothing to see here, all done by player.c */
+   return;
+}
+
+void
+gstplayer_prev(gst_player *gplayer UNUSED, int skip UNUSED)
+{
+   /* nothing to see here, all done by player.c */
+   return;
+}
+
+float
+gstplayer_get_volume(void)
+{
+   gdouble vol;
+   g_object_get(G_OBJECT(gplayer.player), "volume", &vol, NULL);
+   vol *= 100;
+   return (float)vol;
+}
+
+void
+gstplayer_volume_step(float vol)
+{
+   gdouble current;
+   g_object_get(G_OBJECT(gplayer.player), "volume", &current, NULL);
+   current += (vol / 100);
+   if (current > 1.0)
+      current = 1.0;
+   if (current < 0.0)
+      current = 0;
+   g_object_set(G_OBJECT(gplayer.player), "volume", current, NULL);
+   return;
+}
+
+float
+gstplayer_get_position(void)
+{
+   GstMessage *msg;
+   gint64 pos;
+   GstFormat pos_format = GST_FORMAT_TIME;
+   float actual_pos;
+   if (!gplayer.bus)
+      errx(1, "gstplayer_monitor: player not initialized");
+
+   /* update time */
+   gst_element_query_position(GST_ELEMENT(gplayer.player), &pos_format, &pos);
+   /* position is in nanoseconds, lets convert */
+   actual_pos = (float) (pos / GST_SECOND);
+   msg = gst_bus_pop(gplayer.bus);
+   if (!msg)
+      return actual_pos;
+   return actual_pos;
+}
+
+void
+gstplayer_set_callback_playnext(void (*f)(void))
+{
+   gplayer.playnext_cb = f;
+}
+void
+gstplayer_set_callback_notice(void (*f)(char *, ...))
+{
+   gplayer.notice_cb = f;
+}
+void
+gstplayer_set_callback_error(void (*f)(char *, ...))
+{
+   gplayer.error_cb = f;
+}
+void 
+gstplayer_set_callback_fatal(void (*f)(char *, ...))
+{
+   gplayer.fatal_cb = f;
+}
+
+/* vim: set ts=3:expandtab */

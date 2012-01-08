@@ -8,13 +8,16 @@ MANDIR=$(PREFIX)/man/man1
 # non-base dependency build info
 CDEPS=`taglib-config --cflags`
 LDEPS=`taglib-config --libs` -ltag_c
+GSTCDEPS=`pkg-config --cflags gstreamer-0.10`
+GSTLDEPS=`pkg-config --libs gstreamer-0.10`
 
 # build info
 CC?=/usr/bin/cc
-CFLAGS+=-c -std=c89 -Wall -Wextra -Wno-unused-value $(CDEPS) $(CDEBUG)
-LDFLAGS+=-lm -lncursesw -lutil $(LDEPS)
+CFLAGS+=-c -std=c89 -Wall -Wextra -Wno-unused-value $(CDEPS) $(CDEBUG) $(GSTCDEPS)
+LDFLAGS+=-lm -lncursesw -lutil $(LDEPS) $(GSTLDEPS)
 
 OBJS=commands.o compat.o e_commands.o \
+	  gstplayer.o \
 	  keybindings.o medialib.o meta_info.o \
 	  mplayer.o paint.o player.o player_utils.o \
 	  playlist.o socket.o str2argv.o \
