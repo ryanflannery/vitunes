@@ -38,7 +38,7 @@ static gst_player gplayer;
 void
 gstplayer_init()
 {
-   /* TODO
+   /* 
     * - init gstreamer
     * - create playbin2
     * - 
@@ -77,10 +77,6 @@ gstplayer_init()
    /* update gplayer struct */
    gplayer.player = player;
    gplayer.bus = bus;
-   gplayer.playnext_cb = NULL;
-   gplayer.notice_cb = NULL;
-   gplayer.error_cb = NULL;
-   gplayer.fatal_cb = NULL;
 }
 
 
@@ -117,7 +113,7 @@ gstplayer_pause()
 {
    /* assertions */
    if (!gplayer.player)
-      errx(1, "gstplayer_pause: player not initialized");
+      gplayer.fatal_cb("gstplayer_pause: player not initialized\n");
 
    if (! gplayer.paused) {
            /* set paused state in player */
@@ -138,10 +134,12 @@ void
 gstplayer_stop()
 {
    if (!gplayer.player)
-      errx(1, "gstplayer_stop: player not initialized");
+      gplayer.fatal_cb("gstplayer_pause: player not initialized\n");
 
    /* set pipeline into ready state (== STOP)*/
    gst_element_set_state(GST_ELEMENT(gplayer.player), GST_STATE_READY);
+   gplayer.playing = false;
+   gplayer.paused = false;
 }
 
 void
@@ -179,7 +177,7 @@ gstplayer_monitor()
    GstFormat pos_format = GST_FORMAT_TIME;
    float actual_pos;
    if (!gplayer.bus)
-      errx(1, "gstplayer_monitor: player not initialized");
+      gplayer.fatal_cb("gstplayer_pause: player not initialized\n");
 
    /* TODO: update time */
    gst_element_query_position(GST_ELEMENT(gplayer.player), &pos_format, &pos);
@@ -201,7 +199,7 @@ gstplayer_monitor()
    case GST_MESSAGE_ERROR: {
       GError *error;
       gst_message_parse_error(msg, &error, NULL);
-      paint_error("player_monitor: %s", error->message);
+      gplayer.error_cb("player_monitor: %s", error->message);
       g_error_free(error);
       break;
    }
@@ -216,8 +214,6 @@ bool
 gstplayer_is_playing()
 {
    if (!gplayer.player)
-      return false;
-   if (gplayer.paused)
       return false;
    return gplayer.playing;
 }
@@ -277,7 +273,7 @@ gstplayer_get_position(void)
    GstFormat pos_format = GST_FORMAT_TIME;
    float actual_pos;
    if (!gplayer.bus)
-      errx(1, "gstplayer_monitor: player not initialized");
+      gplayer.fatal_cb("gstplayer_monitor: player not initialized");
 
    /* update time */
    gst_element_query_position(GST_ELEMENT(gplayer.player), &pos_format, &pos);
