@@ -138,6 +138,8 @@ gstplayer_stop()
 
    /* set pipeline into ready state (== STOP)*/
    gst_element_set_state(GST_ELEMENT(gplayer.player), GST_STATE_READY);
+   gplayer.playing = false;
+   gplayer.paused = false;
 }
 
 void
@@ -212,8 +214,6 @@ bool
 gstplayer_is_playing()
 {
    if (!gplayer.player)
-      return false;
-   if (gplayer.paused)
       return false;
    return gplayer.playing;
 }
