@@ -682,7 +682,13 @@ paint_str2item(const char *str)
 int
 paint_str2color(const char *str)
 {
-   if (strcasecmp(str, "black") == 0)
+   int color_number;
+
+   if (strncasecmp(str, "color", 5) == 0) {
+      color_number = (int) strtok(str, "color");
+      return atoi(color_number);
+   }
+   else if (strcasecmp(str, "black") == 0)
       return COLOR_BLACK;
    else if (strcasecmp(str, "red") == 0)
       return COLOR_RED;
@@ -700,6 +706,6 @@ paint_str2color(const char *str)
       return COLOR_WHITE;
    else if (strcasecmp(str, "default") == 0)
       return -1;
-   else
+   else 
       return -2;
 }
