@@ -32,6 +32,7 @@ typedef struct {
    float        volume;
    bool         playing;
    bool         paused; 
+   bool         about_to_finish;
    /* callback functions */
    void	(*playnext_cb)(void);
    void (*notice_cb)(char *, ...);
