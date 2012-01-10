@@ -667,6 +667,8 @@ paint_str2item(const char *str)
       return colors.playing_playlist;
    else if (strcasecmp(str, "current-inactive") == 0)
       return colors.current_inactive;
+   else if (strcasecmp(str, "current-active") == 0)
+      return colors.current_active;
 
    /* if reached here, check cinfo's array */
    for (i = 0; i < MI_NUM_CINFO; i++) {
