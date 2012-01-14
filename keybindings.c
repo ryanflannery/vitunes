@@ -826,8 +826,7 @@ kba_search(KbaArgs a)
 
    /* get search phrase from user */
    if (user_getstr(prompt, &search_phrase) != 0) {
-      wclear(ui.command);
-      wrefresh(ui.command);
+      paint_status_bar();
       return;
    }
 
@@ -1301,8 +1300,7 @@ kba_command_mode(KbaArgs a UNUSED)
 
    /* get command from user */
    if (user_getstr(":", &cmd) != 0 || strlen(cmd) == 0) {
-      werase(ui.command);
-      wrefresh(ui.command);
+      paint_status_bar();
       return;
    }
 
@@ -1325,8 +1323,7 @@ kba_shell(KbaArgs a UNUSED)
 
    /* get command from user */
    if (user_getstr("!", &cmd) != 0) {
-      werase(ui.command);
-      wrefresh(ui.command);
+      paint_status_bar();
       return;
    }
 
