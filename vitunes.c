@@ -158,6 +158,11 @@ main(int argc, char *argv[])
    /* apply default sort to library */
    qsort(mdb.library->files, mdb.library->nfiles, sizeof(meta_info*), mi_compare);
 
+   /* start media player child */
+   player_init(player_backend);
+   player_info.mode = DEFAULT_PLAYER_MODE;
+   atexit(player_destroy);
+
    /* setup user interface and default colors */
    kb_init();
    ui_init(DEFAULT_LIBRARY_WINDOW_WIDTH);
@@ -167,11 +172,6 @@ main(int argc, char *argv[])
    setup_viewing_playlist(mdb.library);
    ui.library->nrows  = mdb.nplaylists;
    playing_playlist = NULL;
-
-   /* start media player child */
-   player_init(player_backend);
-   player_info.mode = DEFAULT_PLAYER_MODE;
-   atexit(player_destroy);
 
    /* load config file and run commands in it now */
    load_config();
