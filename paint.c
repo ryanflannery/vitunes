@@ -16,7 +16,7 @@
 
 #include "paint.h"
 
-/* globalx */
+/* globals */
 _colors colors;
 bool showing_file_info = false;
 

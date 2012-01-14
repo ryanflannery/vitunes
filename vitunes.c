@@ -465,6 +465,7 @@ handle_switches(int argc, char *argv[])
             break;
 
          case 'd':
+            free(db_file);
             if ((db_file = strdup(optarg)) == NULL)
                err(1, "handle_switches: strdup db_file failed");
             break;
@@ -484,16 +485,19 @@ handle_switches(int argc, char *argv[])
             break;
 
          case 'f':
+            free(conf_file);
             if ((conf_file = strdup(optarg)) == NULL)
                err(1, "handle_switches: strdup conf_file failed");
             break;
 
          case 'm':
+            free(player_backend);
             if ((player_backend = strdup(optarg)) == NULL)
                err(1, "handle_switches: strdup player_backend failed");
             break;
 
          case 'p':
+            free(playlist_dir);
             if ((playlist_dir = strdup(optarg)) == NULL)
                err(1, "handle_switches: strdup playlist_dir failed");
             break;
