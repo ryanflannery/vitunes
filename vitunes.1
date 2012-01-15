@@ -112,11 +112,15 @@ for all playback.  Note that the mplayer binary
 be in your
 .Ev PATH
 environment variable.
+.It Cm gst
+Uses the
+.Cm gstreamer
+multimedia library for media playback.  Note that the media formats supported
+by this backend depend on what gstreamer plugins are installed.
 .El
 .Pp
-Currently only
-.Cm mplayer
-is supported.
+The default backend is
+.Cm mplayer .
 .It Fl p Ar playlist-dir
 Specifies the directory containing all of the playlists
 .Nm
