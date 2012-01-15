@@ -174,9 +174,6 @@ void
 gstplayer_monitor()
 {
    GstMessage *msg;
-   gint64 pos;
-   GstFormat pos_format = GST_FORMAT_TIME;
-   float actual_pos;
    if (!gplayer.bus)
       gplayer.fatal_cb("gstplayer_pause: player not initialized\n");
 
