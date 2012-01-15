@@ -16,7 +16,7 @@
 
 #include "player.h"
 
-/* gloabls */
+/* globals */
 player_backend_t player;
 player_info_t player_info;
 

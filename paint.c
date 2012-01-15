@@ -16,7 +16,7 @@
 
 #include "paint.h"
 
-/* globalx */
+/* globals */
 _colors colors;
 bool showing_file_info = false;
 
@@ -682,7 +682,24 @@ paint_str2item(const char *str)
 int
 paint_str2color(const char *str)
 {
-   if (strcasecmp(str, "black") == 0)
+   if (strncasecmp(str, "color", 5) == 0) {
+      const char *errstr;
+      char *color;
+      char *numberstr;
+      int   number;
+
+      if ((color = strdup(str)) == NULL)
+         err(1, "%s: strdup of '%s' failed.", __FUNCTION__, str);
+
+      numberstr = strtok(color, "color");
+      number = (int)strtonum(numberstr, -1, 255, &errstr);
+      if (errstr != NULL)
+         return -2;
+
+      free(color);
+      return number;
+
+   } else if (strcasecmp(str, "black") == 0)
       return COLOR_BLACK;
    else if (strcasecmp(str, "red") == 0)
       return COLOR_RED;
@@ -700,6 +717,6 @@ paint_str2color(const char *str)
       return COLOR_WHITE;
    else if (strcasecmp(str, "default") == 0)
       return -1;
-   else
+   else 
       return -2;
 }
