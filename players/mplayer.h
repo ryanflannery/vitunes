@@ -21,6 +21,7 @@
 #include <sys/types.h>
 
 #include <err.h>
+#include <time.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <signal.h>
