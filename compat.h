@@ -40,6 +40,7 @@
 #if defined(__OpenBSD__)
 #  include <stdio.h>
 #  include <util.h>
+#  include <libgen.h>
 #endif
 
 /* FreeBSD has fparseln(3), but it must be included thusly */
@@ -56,6 +57,7 @@
 
 /* Linux needs the following.. */
 #if defined(__linux)
+#  define _GNU_SOURCE
 #  define COMPAT_NEED_FPARSELN
 #  define COMPAT_NEED_OPTRESET
 #  define COMPAT_NEED_STRLCAT

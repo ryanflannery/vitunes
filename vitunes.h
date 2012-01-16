@@ -17,6 +17,8 @@
 #ifndef VITUNES_H
 #define VITUNES_H
 
+#include "compat.h"
+
 #include <sys/time.h>
 
 #include <getopt.h>
@@ -34,8 +36,6 @@
 #include "player.h"
 #include "uinterface.h"
 #include "e_commands.h"
-
-#include "compat.h"
 
 /*
  * These are the various things defined in vitunes.c used elsewhere.

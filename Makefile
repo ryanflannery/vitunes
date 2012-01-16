@@ -23,7 +23,9 @@ OBJS=commands.o compat.o e_commands.o \
 	  playlist.o socket.o str2argv.o \
 	  uinterface.o vitunes.o
 
-.PATH: players
+# subdirectories with code (.PATH for BSD make, VPATH for GNU make)
+.PATH:  players
+VPATH = players
 
 # main targets
 
@@ -43,8 +45,8 @@ clean:
 	rm -f vitunes vitunes.core vitunes-debug.log
 
 install: vitunes
-	/usr/bin/install -c -m 0555 vitunes $(BINDIR)
-	/usr/bin/install -c -m 0444 vitunes.1 $(MANDIR)
+	install -c -m 0555 vitunes $(BINDIR)
+	install -c -m 0444 vitunes.1 $(MANDIR)
 
 uninstall:
 	rm -f $(BINDIR)/vitunes

@@ -17,6 +17,8 @@
 #ifndef PLAYER_UTILS_H
 #define PLAYER_UTILS_H
 
+#include "../compat.h"
+
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>

@@ -25,6 +25,8 @@
 #ifndef MEDIALIB_H
 #define MEDIALIB_H
 
+#include "compat.h"
+
 #include <sys/errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -37,8 +39,6 @@
 #include "debug.h"
 #include "meta_info.h"
 #include "playlist.h"
-
-#include "compat.h"
 
 #define MEDIALIB_PLAYLISTS_CHUNK_SIZE  100
 
