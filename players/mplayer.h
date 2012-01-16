@@ -17,6 +17,8 @@
 #ifndef MPLAYER_H
 #define MPLAYER_H
 
+#include "../compat.h"
+
 #include <sys/wait.h>
 #include <sys/types.h>
 

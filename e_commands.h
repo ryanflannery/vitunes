@@ -17,6 +17,8 @@
 #ifndef E_COMMANDS_H
 #define E_COMMANDS_H
 
+#include "compat.h"
+
 #include <stdbool.h>
 #include <getopt.h>
 #include <string.h>
@@ -27,8 +29,6 @@
 #include "meta_info.h"
 #include "medialib.h"
 #include "playlist.h"
-
-#include "compat.h"
 
 /* from vitunes.c */
 extern char *vitunes_dir;

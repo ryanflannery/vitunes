@@ -56,6 +56,7 @@
 
 /* Linux needs the following.. */
 #if defined(__linux)
+#  define _GNU_SOURCE
 #  define COMPAT_NEED_FPARSELN
 #  define COMPAT_NEED_OPTRESET
 #  define COMPAT_NEED_STRLCAT

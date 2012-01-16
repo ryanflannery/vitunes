@@ -17,6 +17,8 @@
 #ifndef META_INFO_H
 #define META_INFO_H
 
+#include "compat.h"
+
 #include <ctype.h>
 #include <limits.h>
 #include <err.h>
@@ -34,8 +36,6 @@
 
 #include "debug.h"
 #include "enums.h"
-
-#include "compat.h"
 
 /* the character-info fields.  used for all meta-info that's shown */
 #define MI_NUM_CINFO     8

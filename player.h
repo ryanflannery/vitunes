@@ -17,10 +17,11 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include "compat.h"
+
 #include <err.h>
 
 #include "playlist.h"
-#include "compat.h"
 #include "paint.h"
 #include "debug.h"
 

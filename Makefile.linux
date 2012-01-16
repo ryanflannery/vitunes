@@ -1,6 +1,5 @@
 # Linux specific Makefile bits.
 
-CFLAGS+=-D_GNU_SOURCE
 VPATH=players
 INSTALL?=/bin/install
 

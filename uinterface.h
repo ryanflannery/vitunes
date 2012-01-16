@@ -17,6 +17,8 @@
 #ifndef UINTERFACE_H
 #define UINTERFACE_H
 
+#include "compat.h"
+
 #include <sys/ioctl.h>
 
 #include <ctype.h>
@@ -32,8 +34,6 @@
 
 #include "debug.h"
 #include "enums.h"
-
-#include "compat.h"
 
 /* struct & methods for a scrollable window */
 typedef struct
