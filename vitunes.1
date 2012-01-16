@@ -375,9 +375,9 @@ Available colors for
 .Ar fg
 and
 .Ar bg
-are: white, black, red, green, yellow, blue, magenta, cyan, and default.
+are: white, black, red, green, yellow, blue, magenta, cyan, default and color[n].
 The color default is whatever the terminal uses as the default foreground
-or background color.
+or background color. N is integer in range -1...255.
 .It Pf : Ic display Pq Cm reset | Cm show | Ar display-description
 The display command is used to change which columns are displayed in the
 playlist window, their order, their width, and their alignment.
@@ -413,7 +413,6 @@ The default display can be restored with:
 The current display description can be seen with:
 .Pp
 .Pf : Ic display Cm show
-.Pp
 .It Pf : Ic filter Ns Oo ! Oc Ar token Op Ar token2 ...
 The filter command is used to filter out all songs from the currently viewed
 playlist that do not match (or do match) the provided list of tokens.

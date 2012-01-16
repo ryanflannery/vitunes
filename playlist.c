@@ -229,11 +229,11 @@ playlist_load(const char *filename, meta_info **db, int ndb)
 
       /* check if file exists in the meta info. db */
       mit = bsearch(entry, db, ndb, sizeof(meta_info *), cmp_fn_mi);
-      mi = *mit;
 
-      if (mi != NULL)   /* file DOES exist in DB */
+      if (mit != NULL) {   /* file DOES exist in DB */
+          mi = *mit;
          playlist_files_append(p, &mi, 1, false);
-      else {            /* file does NOT exist in DB */
+      } else {            /* file does NOT exist in DB */
          /* create empty meta-info object with just the file name */
          mi = mi_new();
          mi->filename = strdup(entry);
@@ -344,9 +344,13 @@ int
 retrieve_playlist_filenames(const char *dirname, char ***fnames)
 {
    char   *glob_pattern;
-   int     fcount;
    glob_t  files;
    int     globbed;
+#  if defined(__linux)
+   size_t  fcount;
+#  else
+   int     fcount;
+#  endif
 
    /* build the search pattern */
    if (asprintf(&glob_pattern, "%s/*.playlist", dirname) == -1)
@@ -436,6 +440,7 @@ playlist_history_free(playlist *p)
 {
    p->hist_present = 0;
    playlist_history_free_future(p);
+   free(p->history);
 }
 
 void

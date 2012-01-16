@@ -17,6 +17,8 @@
 #ifndef PAINT_H
 #define PAINT_H
 
+#include "compat.h"
+
 #include <curses.h>
 #include <math.h>
 #include <string.h>
@@ -30,8 +32,6 @@
 #include "playlist.h"
 #include "uinterface.h"
 #include "vitunes.h"
-
-#include "compat.h"
 
 /* colors used by paint - each of these will be a number for a COLOR_PAIR */
 typedef struct {

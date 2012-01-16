@@ -158,6 +158,11 @@ main(int argc, char *argv[])
    /* apply default sort to library */
    qsort(mdb.library->files, mdb.library->nfiles, sizeof(meta_info*), mi_compare);
 
+   /* start media player child */
+   player_init(player_backend);
+   player_info.mode = DEFAULT_PLAYER_MODE;
+   atexit(player_destroy);
+
    /* setup user interface and default colors */
    kb_init();
    ui_init(DEFAULT_LIBRARY_WINDOW_WIDTH);
@@ -170,11 +175,6 @@ main(int argc, char *argv[])
 
    /* load config file and run commands in it now */
    load_config();
-
-   /* start media player child */
-   player_init(player_backend);
-   player_info.mode = DEFAULT_PLAYER_MODE;
-   atexit(player_destroy);
 
    /* initial painting of the display */
    paint_all();
@@ -465,6 +465,7 @@ handle_switches(int argc, char *argv[])
             break;
 
          case 'd':
+            free(db_file);
             if ((db_file = strdup(optarg)) == NULL)
                err(1, "handle_switches: strdup db_file failed");
             break;
@@ -484,16 +485,19 @@ handle_switches(int argc, char *argv[])
             break;
 
          case 'f':
+            free(conf_file);
             if ((conf_file = strdup(optarg)) == NULL)
                err(1, "handle_switches: strdup conf_file failed");
             break;
 
          case 'm':
+            free(player_backend);
             if ((player_backend = strdup(optarg)) == NULL)
                err(1, "handle_switches: strdup player_backend failed");
             break;
 
          case 'p':
+            free(playlist_dir);
             if ((playlist_dir = strdup(optarg)) == NULL)
                err(1, "handle_switches: strdup playlist_dir failed");
             break;

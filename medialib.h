@@ -25,6 +25,8 @@
 #ifndef MEDIALIB_H
 #define MEDIALIB_H
 
+#include "compat.h"
+
 #include <sys/errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -37,8 +39,6 @@
 #include "debug.h"
 #include "meta_info.h"
 #include "playlist.h"
-
-#include "compat.h"
 
 #define MEDIALIB_PLAYLISTS_CHUNK_SIZE  100
 
@@ -90,7 +90,7 @@ void medialib_db_load(const char *db_file);
 void medialib_db_save(const char *db_file);
 
 /* update/add files to the database */
-void medialib_db_update(bool show_skipped);
+void medialib_db_update(bool show_skipped, bool force_update);
 void medialib_db_scan_dirs(char *dirlist[]);
 
 /* debug routine for dumping db contents to stdout */

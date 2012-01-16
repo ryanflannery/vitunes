@@ -46,19 +46,35 @@ ecmd_init(int argc, char *argv[])
 int
 ecmd_update(int argc, char *argv[])
 {
+   char ch;
+   bool force_update = false;
    bool show_skipped = false;
 
-   if (argc == 2 && strcmp(argv[1], "-s") == 0)
-      show_skipped = true;
-
-   if (argc != 1 && !show_skipped)
-      errx(1, "usage: -e %s [-s]", argv[0]);
+   /* parse options */
+   optreset = 1;
+   optind = 0;
+   while ((ch = getopt(argc, argv, "fs")) != -1) {
+      switch (ch) {
+         case 'f':
+            force_update = true;
+            break;
+         case 's':
+            show_skipped = true;
+            break;
+         case 'h':
+         case '?':
+         default:
+            errx(1, "usage: -e %s [-fs]", argv[0]);
+      }
+   }
+   if (optind < argc)
+      errx(1, "usage: -e %s [-fs]", argv[0]);
 
    printf("Loading existing database...\n");
    medialib_load(db_file, playlist_dir);
 
    printf("Updating existing database...\n");
-   medialib_db_update(show_skipped);
+   medialib_db_update(show_skipped, force_update);
 
    medialib_destroy();
    return 0;
@@ -644,7 +660,7 @@ ecmd_help_update(void)
 {
    printf("\
 VITUNES COMMAND:\n\tupdate - update vitunes database\n\n\
-SYNOPSIS:\n\tupdate [-s]\n\n\
+SYNOPSIS:\n\tupdate [-fs]\n\n\
 DESCRIPTION:\n\
    The update command loads the existing meta information database used\n\
    by vitunes and for each media file listed in the database, the file is\n\
@@ -656,6 +672,8 @@ DESCRIPTION:\n\
    Note that if there are errors while checking the file, the error will be\n\
    reported but the file, and its meta information, will remain in the\n\
    vitunes database.\n\n\
+      -f       Force the update of meta information even if the modification\n\
+               time of the file is unchanged.\n\n\
       -s       When present, files that are skipped because they have not\n\
                been modified will also be reported to stdout.  Normally,\n\
                only files that are updated are reported.\n\n\

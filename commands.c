@@ -618,7 +618,7 @@ cmd_set(int argc, char *argv[])
    char *property;
    char *value;
    bool  tf;
-   int   max_w, max_h, new_width;   /* lwidth */
+   int   max_w, new_width;
    bool  player_is_setup;
 
    if (argc != 2) {
@@ -628,7 +628,7 @@ cmd_set(int argc, char *argv[])
 
    /* determine if the player has been setup (needed for redraws below) */
    player_is_setup = (player.name  != NULL)
-                  && (*player.name != NULL);
+                  && (*player.name != '\0');
 
    /* extract property and value */
    property = argv[1];
@@ -643,7 +643,7 @@ cmd_set(int argc, char *argv[])
 
    if (strcasecmp(property, "lwidth") == 0) {
       /* get max width and height */
-      getmaxyx(stdscr, max_h, max_w);
+      max_w = getmaxx(stdscr);
 
       /* validate and convert width user provided */
       new_width = (int)strtonum(value, 1, max_w, &err);
@@ -739,6 +739,9 @@ cmd_reload(int argc, char *argv[])
       /* reload db */
       medialib_destroy();
       medialib_load(db_file, playlist_dir);
+
+      /* sort entries */
+      qsort(mdb.library->files, mdb.library->nfiles, sizeof(meta_info*), mi_compare);
 
       free(db_file);
       free(playlist_dir);
