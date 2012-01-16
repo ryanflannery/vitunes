@@ -618,7 +618,7 @@ cmd_set(int argc, char *argv[])
    char *property;
    char *value;
    bool  tf;
-   int   max_w, max_h, new_width;   /* lwidth */
+   int   max_w, new_width;
    bool  player_is_setup;
 
    if (argc != 2) {
@@ -643,7 +643,7 @@ cmd_set(int argc, char *argv[])
 
    if (strcasecmp(property, "lwidth") == 0) {
       /* get max width and height */
-      getmaxyx(stdscr, max_h, max_w);
+      max_w = getmaxx(stdscr);
 
       /* validate and convert width user provided */
       new_width = (int)strtonum(value, 1, max_w, &err);
