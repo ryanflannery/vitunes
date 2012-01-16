@@ -86,9 +86,9 @@ paint_status_bar()
    static char scratchpad[500];
    char       *focusName;
    int         percent;
-   int         w, h;
+   int         w;
 
-   getmaxyx(stdscr, h, w);
+   w = getmaxx(stdscr);
 
    /*
     * XXX NOTE: to right-align the text we snprintf to the scratchpad above and
@@ -136,9 +136,9 @@ paint_player()
    static int   in_minute;
    static int   in_second;
    static int   percent, whole;
-   int w, h;
+   int w;
 
-   getmaxyx(stdscr, h, w);
+   w = getmaxx(stdscr);
 
    /* if nothing's playing, a shameless plug */
    if (!player.playing()) {
@@ -493,9 +493,9 @@ paint_playlist_file_info(const meta_info *m)
    struct tm *ltime;
    char stime[255];
    int row, nrows, i;
-   int h, w;
+   int w;
 
-   getmaxyx(ui.playlist->cwin, h, w);
+   w = getmaxx(ui.playlist->cwin);
    werase(ui.playlist->cwin);
    wattron(ui.playlist->cwin, COLOR_PAIR(colors.playlist));
 
