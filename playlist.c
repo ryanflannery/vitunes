@@ -344,9 +344,13 @@ int
 retrieve_playlist_filenames(const char *dirname, char ***fnames)
 {
    char   *glob_pattern;
-   int     fcount;
    glob_t  files;
    int     globbed;
+#  if defined(__linux)
+   size_t  fcount;
+#  else
+   int     fcount;
+#  endif
 
    /* build the search pattern */
    if (asprintf(&glob_pattern, "%s/*.playlist", dirname) == -1)
