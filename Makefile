@@ -21,7 +21,9 @@ OBJS=commands.o compat.o e_commands.o \
 	  playlist.o socket.o str2argv.o \
 	  uinterface.o vitunes.o
 
-.PATH: players
+# subdirectories with code (.PATH for BSD make, VPATH for GNU make)
+.PATH:  players
+VPATH = players
 
 # main targets
 

@@ -1,6 +1,5 @@
 # Linux specific Makefile bits.
 
-VPATH=players
 INSTALL?=/bin/install
 
 include Makefile
