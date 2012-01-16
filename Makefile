@@ -13,7 +13,6 @@ LDEPS=`taglib-config --libs` -ltag_c
 CC?=/usr/bin/cc
 CFLAGS+=-c -std=c89 -Wall -Wextra -Wno-unused-value $(CDEPS) $(CDEBUG)
 LDFLAGS+=-lm -lncursesw -lutil $(LDEPS)
-INSTALL?=/usr/bin/install
 
 OBJS=commands.o compat.o e_commands.o \
 	  keybindings.o medialib.o meta_info.o \
@@ -43,8 +42,8 @@ clean:
 	rm -f vitunes vitunes.core vitunes-debug.log
 
 install: vitunes
-	$(INSTALL) -c -m 0555 vitunes $(BINDIR)
-	$(INSTALL) -c -m 0444 vitunes.1 $(MANDIR)
+	install -c -m 0555 vitunes $(BINDIR)
+	install -c -m 0444 vitunes.1 $(MANDIR)
 
 uninstall:
 	rm -f $(BINDIR)/vitunes

@@ -1,5 +1,0 @@
-# Linux specific Makefile bits.
-
-INSTALL?=/bin/install
-
-include Makefile
