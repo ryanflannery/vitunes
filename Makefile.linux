@@ -1,4 +1,7 @@
-include Makefile
+# Linux specific Makefile bits.
 
 CFLAGS+=-D_GNU_SOURCE
-VPATH = players
+VPATH=players
+INSTALL?=/bin/install
+
+include Makefile
