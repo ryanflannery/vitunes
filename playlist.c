@@ -436,6 +436,7 @@ playlist_history_free(playlist *p)
 {
    p->hist_present = 0;
    playlist_history_free_future(p);
+   free(p->history);
 }
 
 void
