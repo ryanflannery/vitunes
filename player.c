@@ -67,6 +67,7 @@ const player_backend_t PlayerBackends[] = {
       mplayer_set_callback_fatal,
       mplayer_monitor
    }, 
+#  if defined(ENABLE_GSTREAMER)
    {
       BACKEND_GSTREAMER, "gst", false, NULL,
       gstplayer_init,
@@ -87,6 +88,7 @@ const player_backend_t PlayerBackends[] = {
       gstplayer_set_callback_fatal,
       gstplayer_monitor,
    },
+#  endif
    { 0, "", false, NULL, NULL, NULL, NULL,
       NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL }
 };
