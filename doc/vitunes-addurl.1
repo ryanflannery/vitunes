@@ -1,0 +1,105 @@
+.\" Copyright (c) 2012 Ryan Flannery <ryan.flannery@gmail.com>
+.\"
+.\" Permission to use, copy, modify, and distribute this software for any
+.\" purpose with or without fee is hereby granted, provided that the above
+.\" copyright notice and this permission notice appear in all copies.
+.\"
+.\" THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+.\" WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+.\" MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+.\" ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+.\" WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+.\" ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+.\" OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+.\"
+.Dd $Mdocdate$
+.Dt VITUNES-ADDURL 1
+.Os
+.Sh NAME
+.Nm vitunes-addurl
+.Nd add a URL (or other non-file playable item) to the vitunes database
+.Sh SYNOPSIS
+.Nm vitunes -e addurl Ar URL
+.Sh DESCRIPTION
+To add non-standard files to the
+.Xr vitunes 1
+database (things like URL's for Internet radio streams), one can use the
+.Nm
+command. It takes a single parameter: the URL/filename to be added to the
+database.
+.Pp
+Since meta-information can't be extracted automatically for most URL's,
+.Nm
+will prompt you to manually enter all such information (artist, album,
+title, track, year, and genre). You may leave any/all of the fields
+blank.
+.Pp
+Note that anything
+.Xr mplayer 1
+or
+.Xr gstreamer 3
+can play may be added.  To test if a URL is playable by
+.Xr mplayer 1 ,
+simply try the following, and if it plays, it may be added:
+.Dl $ mplayer URL
+.Pp
+Although regular files could also be added using this command, the
+.Xr vitunes-add 1
+command is preferred, as it attempts to extract meta information
+automatically.
+.Pp
+Note that files added to the database using the addurl command are NOT
+checked for updates during a
+.Xr vitunes-update 1
+command.
+.Pp
+The addurl command can also be used to change the meta-information of an
+existing URL within the database.
+.Sh EXAMPLES
+An example of adding an Internet radio stream would look something like
+the following:
+.Bd -literal
+   $ vitunes -e addurl \"http://198.234.121.118:80\"
+   Artist: WVXU Online Radio<ENTER>
+    Album: Cincinnati Public Radio<ENTER>
+    Title: NPR<ENTER>
+    Track: <ENTER>
+     Year: <ENTER>
+    Genre: Radio<ENTER>
+   Length: INF<ENTER>
+.Ed
+.Sh NOTES
+When the
+.Xr vitunes 1
+database has to be re-built (because of say, an upgrade where the
+database format has changed, or you simply deleted your database),
+re-adding URL's can be tedious.  To ease this, consider using a shell
+script such as the 'add_urls.sh' script found on the
+.Xr vitunes 1
+website for storing & adding all of your URL's.  The script simply
+executes the
+.Nm
+command with all meta-information provided.
+.Pp
+As an example, the above could be automated using the following simple
+shell script:
+.Bd -literal
+      #!/bin/sh
+      echo "WVXU Online Radio Cincinnati Public Radio\\n
+      NPR\\n
+      \\n
+      \\n
+      Radio\\n
+      INF\\n" | vitunes -e addurl "http://198.234.121.118:80"
+.Ed
+.Sh SEE ALSO
+.Xr vitunes 1 ,
+.Xr vitunes-init 1 ,
+.Xr vitunes-add 1 .
+.Pp
+For an overview of how
+.Nm vitunes
+works, see the
+.Sx GETTING STARTED
+section in
+.Xr vitunes 1 .

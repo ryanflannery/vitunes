@@ -1,0 +1,59 @@
+.\" Copyright (c) 2012 Ryan Flannery <ryan.flannery@gmail.com>
+.\"
+.\" Permission to use, copy, modify, and distribute this software for any
+.\" purpose with or without fee is hereby granted, provided that the above
+.\" copyright notice and this permission notice appear in all copies.
+.\"
+.\" THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+.\" WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+.\" MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+.\" ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+.\" WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+.\" ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+.\" OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+.\"
+.Dd $Mdocdate$
+.Dt VITUNES-RM 1
+.Os
+.Sh NAME
+.Nm vitunes-rm
+.Nd remove files/URLs from the vitunes database
+.Sh SYNOPSIS
+.Nm vitunes -e rm
+.Op Fl f
+.Ar file1 Op file2 ...
+.Sh DESCRIPTION
+To remove a single file/URL from the
+.Xr vitunes 1
+database, the
+.Nm
+command may be used.  It takes a single parameter: the filename/URL of
+the file to remove.
+.Pp
+Normally, you will be prompted if you are sure you want to remove the
+file as a safety measure.  This prompt can be avoided using the
+.Op Fl f
+flag, to force the removal.
+.Pp
+Note that to remove files, the full, absolute path to the file must be
+provided, as obtained from
+.Xr realpath 3 .
+.Sh EXAMPLES
+To remove a single file from the
+.Xr vitunes 1
+database, use:
+.Dl $ vitunes -e rm /path/to/file.mp3
+.Pp
+To remove a URL, such as that for an Internet radio stream, use:
+.Dl $ vitunes -e rm -f "http://198.234.121.118/listen.pls"
+.Sh SEE ALSO
+.Xr vitunes 1 ,
+.Xr vitunes-add 1 ,
+.Xr realpath 3 .
+.Pp
+For an overview of how
+.Nm vitunes
+works, see the
+.Sx GETTING STARTED
+section in
+.Xr vitunes 1 .
