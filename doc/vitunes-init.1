@@ -1,0 +1,73 @@
+.\" Copyright (c) 2012 Ryan Flannery <ryan.flannery@gmail.com>
+.\"
+.\" Permission to use, copy, modify, and distribute this software for any
+.\" purpose with or without fee is hereby granted, provided that the above
+.\" copyright notice and this permission notice appear in all copies.
+.\"
+.\" THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+.\" WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+.\" MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+.\" ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+.\" WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+.\" ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+.\" OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+.\"
+.Dd $Mdocdate$
+.Dt VITUNES-INIT 1
+.Os
+.Sh NAME
+.Nm vitunes-init
+.Nd initialize the vitunes media database
+.Sh SYNOPSIS
+.Nm vitunes -e init
+.Sh DESCRIPTION
+The init command is used to setup the initial files and directories
+used by
+.Xr vitunes 1 ,
+and must be run once.  Running it additional times will have no affect.
+.Pp
+The files created by
+.Nm vitunes-init
+include:
+.Pp
+.Bl -tag -width Ds -compact
+.It Pa ~/.vitunes/
+The root directory where, by default, the
+.Nm
+database and playlists are stored.
+.It Pa ~/.vitunes/vitunes.db
+The library database containing the meta information of all media files
+that
+.Nm
+is aware of.
+.It Pa ~/.vitunes/playlists/
+The directory where every playlist (each a separate file) is stored.
+.El
+.Pp
+The database created is initially empty, and files must be added before
+.Nm
+can be run normally.  See
+.Xr vitunes-add 1
+for instructions on doing this.
+.Pp
+This command takes no parameters.
+.Pp
+It is not strictly necessary to run this command to start using
+.Xr vitunes 1 ,
+as you could use an existing installation, or create the needed files
+and directories yourself.  It is provided for convenience.
+.Sh EXAMPLES
+As the
+.Nm
+command takes no arguments, it's only usage is the following:
+.Dl $ vitunes -e init
+.Sh SEE ALSO
+.Xr vitunes 1 ,
+.Xr vitunes-add 1 .
+.Pp
+For an overview of how
+.Nm vitunes
+works, see the
+.Sx GETTING STARTED
+section in
+.Xr vitunes 1 .

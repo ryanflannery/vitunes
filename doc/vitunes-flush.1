@@ -1,0 +1,67 @@
+.\" Copyright (c) 2012 Ryan Flannery <ryan.flannery@gmail.com>
+.\"
+.\" Permission to use, copy, modify, and distribute this software for any
+.\" purpose with or without fee is hereby granted, provided that the above
+.\" copyright notice and this permission notice appear in all copies.
+.\"
+.\" THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+.\" WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+.\" MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+.\" ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+.\" WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+.\" ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+.\" OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+.\"
+.Dd $Mdocdate$
+.Dt VITUNES-FLUSH 1
+.Os
+.Sh NAME
+.Nm vitunes-flush
+.Nd output the contents of the vitunes database to stdout
+.Sh SYNOPSIS
+.Nm vitunes -e flush
+.Op Fl t Ar time-format
+.Sh DESCRIPTION
+The
+.Nm
+command simply outputs the meta-information for all files in the
+.Xr vitunes 1
+database to
+.Xr stdout 4 ,
+in a fairly easy to read (but very easy to parse/grep through) format.
+.Pp
+The format used for representing the times a file was added and last
+modified can be set using the
+.Fl t Ar time-format
+parameter, where
+.Ar time-format
+is any string acceptable by
+.Xr strftime 3 .
+.Pp
+The output format is a simple comma-separated-value (CSV) one, where
+most fields (any that can contain spaces/commas) are within double
+quotes.  The first line contains the field names, and those fields that
+are quoted are also quoted in this header row.
+.Sh EXAMPLES
+To perform a simple dump of the datebase, use:
+.Dl $ vitunes -e flush
+.Pp
+To see which files were last updated this month:
+.Dl $ vitunes -e flush -t "%M %Y" | grep "January 2010"
+.Sh REFERENCES
+For some quick
+.Xr sed 1
+one-liners on how to parse CSV data like the output of this command, you
+can visit the following website:
+.Lk http://sed.sourceforge.net/sedfaq4.html
+.Sh SEE ALSO
+.Xr vitunes 1 ,
+.Xr vitunes-add 1 ,
+.Xr vitunes-update 1 .
+.Pp
+For an overview of how
+.Nm vitunes
+works, see the
+.Sx GETTING STARTED
+section in
+.Xr vitunes 1 .

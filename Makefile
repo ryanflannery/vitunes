@@ -50,17 +50,25 @@ clean:
 	rm -f vitunes vitunes.core vitunes-debug.log
 
 install: vitunes
-	install -c -m 0555 vitunes   $(BINDIR)
-	install -c -m 0444 vitunes.1 $(MANDIR)
+	install -c -m 0555 vitunes $(BINDIR)
+	install -c -m 0444 doc/vitunes*.1 $(MANDIR)
 
 uninstall:
 	rm -f $(BINDIR)/vitunes
-	rm -f $(MANDIR)/vitunes.1
+	rm -f $(MANDIR)/vitunes*.1
 
 # misc. targets
 
 man-debug:
-	mandoc -Wall vitunes.1 > /dev/null
+	-mandoc -Wall doc/vitunes.1 > /dev/null
+	-mandoc -Wall doc/vitunes-add.1 > /dev/null
+	-mandoc -Wall doc/vitunes-addurl.1 > /dev/null
+	-mandoc -Wall doc/vitunes-check.1 > /dev/null
+	-mandoc -Wall doc/vitunes-flush.1 > /dev/null
+	-mandoc -Wall doc/vitunes-init.1 > /dev/null
+	-mandoc -Wall doc/vitunes-rm.1 > /dev/null
+	-mandoc -Wall doc/vitunes-tag.1 > /dev/null
+	-mandoc -Wall doc/vitunes-update.1 > /dev/null
 
 vitunes.html: vitunes.1
 	man2web vitunes > vitunes.html
