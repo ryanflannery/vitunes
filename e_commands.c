@@ -566,21 +566,15 @@ The complete manual for each can be obtained by doing:\n\
 The list of available commands are:\n\n\
    Command     Description\n\
    -------     ------------------------------------------------------------\n\
-   init        Create the initial files used by vitunes.\n\
-   update      Load the existing database and check all files contained\n\
-               within to see they have been removed or modified.  The\n\
-               library is updated accordingly.\n\
-   add         Scan the list of provided files/directories for files to add\n\
-               to the database used by vitunes.\n\
-   addurl      Add a URL to the database, where you provide your own meta\n\
-               information.\n\
-   check       Check files to see what meta-information vitunes can extract,\n\
-               sanitize, and whether or not it's in the database.\n\
-   rm          Remove a file/URL from the database.\n\
-   rmfile      Alias for \"rm\".\n\n\
-   tag         Add/modify meta-information tags of raw files.\n\
-   flush       Load the existing database and dump it's information in an\n\
-               easy-to-parse format to stdout.\n\
+   init        Create the initial database used by vitunes.\n\
+   update      Scan all files in the database and update their records.\n\
+   add         Add files to the vitunes database.\n\
+   addurl      Add non-files/URLs to the vitunes database.\n\
+   check       Scan files for meta-info and if they are in the database.\n\
+   rm          Remove files/URLs from the database.\n\
+   rmfile      Alias for \"rm\".\n\
+   tag         Add or modify meta-information tags in raw files.\n\
+   flush       Output the records of all files in the database.\n\
    help        This command.\n\
 ");
       return 0;
