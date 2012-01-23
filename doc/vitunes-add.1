@@ -1,0 +1,76 @@
+.\" Copyright (c) 2012 Ryan Flannery <ryan.flannery@gmail.com>
+.\"
+.\" Permission to use, copy, modify, and distribute this software for any
+.\" purpose with or without fee is hereby granted, provided that the above
+.\" copyright notice and this permission notice appear in all copies.
+.\"
+.\" THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+.\" WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+.\" MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+.\" ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+.\" WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+.\" ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+.\" OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+.\"
+.Dd $Mdocdate$
+.Dt VITUNES-ADD 1
+.Os
+.Sh NAME
+.Nm vitunes-add
+.Nd add files to the vitunes database
+.Sh SYNOPSIS
+.Nm vitunes -e add Ar /path/to/music Op Ar /path/to/more/music ...
+.Sh DESCRIPTION
+The add command is used to add files to the database used by
+.Nm vitunes .
+For every file/directory provided as a parameter,
+.Nm
+will scan that file or directory (recursively) searching for media files
+that contain any meta information.  Any such files found are added to
+the database that was created after running
+.Xr vitunes-init 1 .
+.Pp
+If any files scanned are already in the database they will be re-scanned
+and any changes will be updated.  Files that are scanned are not moved,
+copied, or modifieid in any way.
+.Pp
+The information
+.Nm
+stores for each file includes:
+.Bl -column "Really long string" "Really long string" -offset indent
+.It Li "Filename" Ta "Track Number"
+.It Li "Artist Name" Ta "Year"
+.It Li "Album Name" Ta "Genre"
+.It Li "Song or Video title" Ta "Play Length in seconds"
+.El
+.Pp
+The filename stored is the absolute pathname obtained from
+.Xr realpath 3
+and serves as the key-field within the database.
+.Pp
+All meta data is extracted using
+.Xr TagLib 3 .
+.Pp
+If any file encountered has no meta information, it is not added to the
+database.
+.Sh EXAMPLES
+To add a single file to the database:
+.Dl $ vitunes -e add  /path/to/music.mp3
+.Pp
+To search directories recursively and add all files contained:
+.Dl $ vitunes -e add  ~/music  /usr/local/share/music
+.Sh SEE ALSO
+.Xr vitunes 1 ,
+.Xr vitunes-init 1 ,
+.Xr realpath 3 ,
+.Xr TagLib 3 .
+.Pp
+More information about TagLib can be found on the TagLib website:
+.Lk http://developer.kde.org/~wheeler/taglib.html
+.Pp
+For an overview of how
+.Nm vitunes
+works, see the
+.Sx GETTING STARTED
+section in
+.Xr vitunes 1 .

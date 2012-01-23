@@ -346,7 +346,7 @@ retrieve_playlist_filenames(const char *dirname, char ***fnames)
    char   *glob_pattern;
    glob_t  files;
    int     globbed;
-#  if defined(__linux)
+#  if defined(__linux) || defined(__FreeBSD__)
    size_t  fcount;
 #  else
    int     fcount;

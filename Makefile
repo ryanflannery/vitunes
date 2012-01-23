@@ -43,19 +43,16 @@ clean:
 
 install: vitunes
 	install -c -m 0555 vitunes $(BINDIR)
-	install -c -m 0444 vitunes.1 $(MANDIR)
+	install -c -m 0444 doc/vitunes*.1 $(MANDIR)
 
 uninstall:
 	rm -f $(BINDIR)/vitunes
-	rm -f $(MANDIR)/vitunes.1
+	rm -f $(MANDIR)/vitunes*.1
 
 # misc.
 
-linux:
-	make -f Makefile.linux
-
 man-debug:
-	mandoc -Wall vitunes.1 > /dev/null
+	mandoc -Tlint doc/vitunes*.1
 
 vitunes.html: vitunes.1
 	man2web vitunes > vitunes.html

@@ -48,6 +48,7 @@
 #  include <stdio.h>
 #  include <sys/types.h>
 #  include <libutil.h>
+#  include <libgen.h>
 #endif
 
 /* Mac OS X needs strtonum(3) */
