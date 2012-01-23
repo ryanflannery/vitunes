@@ -52,15 +52,7 @@ uninstall:
 # misc.
 
 man-debug:
-	-mandoc -Wall doc/vitunes.1 > /dev/null
-	-mandoc -Wall doc/vitunes-add.1 > /dev/null
-	-mandoc -Wall doc/vitunes-addurl.1 > /dev/null
-	-mandoc -Wall doc/vitunes-check.1 > /dev/null
-	-mandoc -Wall doc/vitunes-flush.1 > /dev/null
-	-mandoc -Wall doc/vitunes-init.1 > /dev/null
-	-mandoc -Wall doc/vitunes-rm.1 > /dev/null
-	-mandoc -Wall doc/vitunes-tag.1 > /dev/null
-	-mandoc -Wall doc/vitunes-update.1 > /dev/null
+	mandoc -Tlint doc/vitunes*.1
 
 vitunes.html: vitunes.1
 	man2web vitunes > vitunes.html
