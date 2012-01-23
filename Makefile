@@ -81,7 +81,7 @@ report.mandoc:
 report.cppcheck:
 	@figlet "cppcheck"
 	make clean
-	cppcheck --enable=all -D_GNU_SOURCE . 1> /dev/null 2> $@
+	cppcheck -i compat --enable=all -D_GNU_SOURCE . 1> /dev/null 2> $@
 	@cat $@
 
 .PHONY: report.scan-build
