@@ -80,7 +80,6 @@ report.mandoc:
 .PHONY: report.cppcheck
 report.cppcheck:
 	@figlet "cppcheck"
-	-mandoc -Tlint doc/vitunes*.1 2> $@
 	make clean
 	cppcheck --enable=all -D_GNU_SOURCE . 1> /dev/null 2> $@
 	@cat $@
