@@ -32,7 +32,7 @@ OBJS=commands.o compat.o e_commands.o \
 VPATH = players
 
 
-.PHONY: debug clean install uninstall man-debug
+.PHONY: debug clean clean-all install uninstall
 
 # main build targets
 
@@ -49,6 +49,9 @@ clean:
 	rm -f *.o
 	rm -f vitunes vitunes.core vitunes-debug.log
 
+clean-all: clean
+	rm -rf report.*
+
 install: vitunes
 	install -c -m 0555 vitunes $(BINDIR)
 	install -c -m 0444 doc/vitunes*.1 $(MANDIR)
@@ -59,12 +62,39 @@ uninstall:
 
 # misc. targets
 
-man-debug:
-	mandoc -Tlint doc/vitunes*.1
-
+# this should be moved to my vitunes.org repo...
 vitunes.html: vitunes.1
 	man2web vitunes > vitunes.html
 
 cscope.out: *.h *.c
 	cscope -bke
+
+### static analysis checks
+
+.PHONY: report.mandoc
+report.mandoc:
+	@figlet "mandoc -Tlint"
+	-mandoc -Tlint doc/vitunes*.1 2> $@
+	cat $@
+
+.PHONY: report.cppcheck
+report.cppcheck:
+	@figlet "cppcheck"
+	-mandoc -Tlint doc/vitunes*.1 2> $@
+	make clean
+	cppcheck --enable=all -D_GNU_SOURCE . 1> /dev/null 2> $@
+	@cat $@
+
+.PHONY: report.scan-build
+report.scan-build:
+	@figlet "clang analyzer"
+	make clean
+	scan-build -o report.scan-build make
+
+### wrapper for static checks above
+.PHONY: reports
+reports: report.mandoc report.cppcheck report.scan-build
+	@figlet "Static Checks Complete"
+	cat report.mandoc
+	cat report.cppcheck
 
