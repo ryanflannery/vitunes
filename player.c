@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2011 Ryan Flannery <ryan.flannery@gmail.com>
+ * Copyright (c) 2010, 2011, 2012 Ryan Flannery <ryan.flannery@gmail.com>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -66,7 +66,29 @@ const player_backend_t PlayerBackends[] = {
       mplayer_set_callback_error,
       mplayer_set_callback_fatal,
       mplayer_monitor
-   },  
+   }, 
+#  if defined(ENABLE_GSTREAMER)
+   {
+      BACKEND_GSTREAMER, "gst", false, NULL,
+      gstplayer_init,
+      gstplayer_cleanup,
+      NULL,
+      gstplayer_play,
+      gstplayer_stop,
+      gstplayer_pause,
+      gstplayer_seek,
+      gstplayer_volume_step,
+      gstplayer_get_position,
+      gstplayer_get_volume,
+      gstplayer_is_playing,
+      gstplayer_is_paused,
+      gstplayer_set_callback_playnext,
+      gstplayer_set_callback_notice,
+      gstplayer_set_callback_error,
+      gstplayer_set_callback_fatal,
+      gstplayer_monitor,
+   },
+#  endif
    { 0, "", false, NULL, NULL, NULL, NULL,
       NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL }
 };
@@ -96,10 +118,8 @@ player_init(const char *backend)
       }
    }
 
-   if (!found) {
-      ui_destroy();
-      errx(1, "backend '%s' not supported", backend);
-   }
+   if (!found)
+      errx(1, "media backend '%s' is unknown", backend);
 
    if (player.dynamic) {
       ui_destroy();
