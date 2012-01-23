@@ -373,7 +373,7 @@ mplayer_monitor()
       while (strstr(s + 1, answer_good) != NULL)
          s = strstr(s + 1, answer_good);
 
-      if (sscanf(s, "ANS_time_pos=%f", &mplayer_state.position) != 1)
+      if (sscanf(s, "ANS_time_pos=%20f", &mplayer_state.position) != 1)
          errx(1, "player_monitor: player child is misbehaving.");
    }
 
@@ -385,7 +385,7 @@ mplayer_monitor()
       while (strstr(s + 1, volume_good) != NULL)
          s = strstr(s + 1, volume_good);
 
-      if (sscanf(s, "ANS_volume=%f", &mplayer_state.volume) != 1)
+      if (sscanf(s, "ANS_volume=%20f", &mplayer_state.volume) != 1)
          errx(1, "player_monitor: player child is misbehaving.");
    }
 }
