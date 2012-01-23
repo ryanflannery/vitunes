@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2011 Ryan Flannery <ryan.flannery@gmail.com>
+ * Copyright (c) 2010, 2011, 2012 Ryan Flannery <ryan.flannery@gmail.com>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -78,7 +78,7 @@ void
 toggle_list_add_command(toggle_list *t, char *cmd)
 {
    char **new_cmds;
-   int    idx, new_size;
+   int    idx;
 
    /* resize array */
    if (t->size == 0) {
@@ -88,7 +88,7 @@ toggle_list_add_command(toggle_list *t, char *cmd)
       idx = 0;
       t->size = 1;
    } else {
-      new_size = (t->size + 1) * sizeof(char*);
+      int new_size = (t->size + 1) * sizeof(char*);
       if ((new_cmds = realloc(t->commands, new_size)) == NULL)
          err(1, "%s: realloc(3) failed", __FUNCTION__);
 
@@ -241,7 +241,6 @@ int
 cmd_quit(int argc, char *argv[])
 {
    bool forced;
-   int  i;
 
    if (argc != 1) {
       paint_error("usage: q[!]");
@@ -253,6 +252,7 @@ cmd_quit(int argc, char *argv[])
 
    /* check if there are any unsaved changes if not forced */
    if (!forced) {
+      int i;
       for (i = 0; i < mdb.nplaylists; i++) {
          if (mdb.playlists[i]->needs_saving) {
             paint_error("there are playlists with unsaved changes.  use \"q!\" to force.");
@@ -271,8 +271,6 @@ cmd_write(int argc, char *argv[])
    playlist *dup;
    char     *filename;
    bool      forced;
-   bool      will_clobber;
-   int       i, clobber_index;
 
    if (argc > 2) {
       paint_error("usage: w[!] [name]");
@@ -304,6 +302,8 @@ cmd_write(int argc, char *argv[])
          viewing_playlist->filename, viewing_playlist->nfiles);
 
    } else { /* "save as" */
+      int   i, clobber_index;
+      bool  will_clobber;
 
       /* build filename for playlist */
       asprintf(&filename, "%s/%s.playlist", mdb.playlist_dir, argv[1]);
@@ -386,7 +386,6 @@ cmd_new(int argc, char *argv[])
    playlist *p;
    char     *name;
    char     *filename;
-   int       i;
 
    if (argc > 2) {
       paint_error("usage: new [name]");
@@ -400,6 +399,7 @@ cmd_new(int argc, char *argv[])
    /* was a name specified? */
    if (argc == 2) {
       /* check for existing playlist with name */
+      int i;
       for (i = 0; i < mdb.nplaylists; i++) {
          if (strcmp(mdb.playlists[i]->name, argv[1]) == 0) {
             paint_error("playlist \"%s\" already exists.", argv[1]);
@@ -618,7 +618,6 @@ cmd_set(int argc, char *argv[])
    char *property;
    char *value;
    bool  tf;
-   int   max_w, new_width;
    bool  player_is_setup;
 
    if (argc != 2) {
@@ -643,6 +642,7 @@ cmd_set(int argc, char *argv[])
 
    if (strcasecmp(property, "lwidth") == 0) {
       /* get max width and height */
+      int max_w, new_width;
       max_w = getmaxx(stdscr);
 
       /* validate and convert width user provided */

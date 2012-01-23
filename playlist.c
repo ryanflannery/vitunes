@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2011 Ryan Flannery <ryan.flannery@gmail.com>
+ * Copyright (c) 2010, 2011, 2012 Ryan Flannery <ryan.flannery@gmail.com>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -446,11 +446,10 @@ playlist_history_free(playlist *p)
 void
 playlist_history_push(playlist *p, playlist_changeset *c)
 {
-   int i;
-
    if (p->hist_present < history_size - 1)
       playlist_history_free_future(p);
    else {
+      int i;
       for (i = 0; i < history_size - 1; i++)
          p->history[i] = p->history[i + 1];
 

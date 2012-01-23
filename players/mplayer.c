@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2011 Ryan Flannery <ryan.flannery@gmail.com>
+ * Copyright (c) 2010, 2011, 2012 Ryan Flannery <ryan.flannery@gmail.com>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -127,7 +127,6 @@ mplayer_finish()
 void
 mplayer_restart()
 {
-   int previous_position;
    int status;
 
    close(mplayer_state.pipe_read);
@@ -138,7 +137,7 @@ mplayer_restart()
    mplayer_start();
 
    if (mplayer_state.playing && !mplayer_state.paused) {
-      previous_position = mplayer_state.position;
+      int previous_position = mplayer_state.position;
       mplayer_play(mplayer_state.current_song);
       mplayer_seek(previous_position);
    }
@@ -376,7 +375,6 @@ mplayer_monitor()
 
       if (sscanf(s, "ANS_time_pos=%f", &mplayer_state.position) != 1)
          errx(1, "player_monitor: player child is misbehaving.");
-
    }
 
    mplayer_send_cmd(query_cmd);

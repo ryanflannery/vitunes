@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2011 Ryan Flannery <ryan.flannery@gmail.com>
+ * Copyright (c) 2010, 2011, 2012 Ryan Flannery <ryan.flannery@gmail.com>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -1182,7 +1182,6 @@ kba_paste(KbaArgs a)
 {
    playlist *p;
    int start = 0;
-   int i;
 
    if (_yank_buffer.nfiles == 0) {
       paint_error("nothing to paste");
@@ -1191,7 +1190,7 @@ kba_paste(KbaArgs a)
 
    /* determine the playlist we're pasting into */
    if (ui.active == ui.library) {
-      i = ui.active->voffset + ui.active->crow;
+      int i = ui.active->voffset + ui.active->crow;
       p = mdb.playlists[i];
    } else {
       p = viewing_playlist;
@@ -1364,8 +1363,6 @@ kba_switch_windows(KbaArgs a UNUSED)
 void
 kba_show_file_info(KbaArgs a UNUSED)
 {
-   int idx;
-
    if (ui.active == ui.library)
       return;
 
@@ -1378,7 +1375,7 @@ kba_show_file_info(KbaArgs a UNUSED)
       paint_playlist();
    else {
       /* get file index and show */
-      idx = ui.active->voffset + ui.active->crow;
+      int idx = ui.active->voffset + ui.active->crow;
       paint_playlist_file_info(viewing_playlist->files[idx]);
    }
 }
@@ -1386,11 +1383,9 @@ kba_show_file_info(KbaArgs a UNUSED)
 void
 kba_load_playlist(KbaArgs a UNUSED)
 {
-   int  idx;
-
    if (ui.active == ui.library) {
       /* load playlist & switch focus */
-      idx = ui.library->voffset + ui.library->crow;
+      int idx = ui.library->voffset + ui.library->crow;
       viewing_playlist = mdb.playlists[idx];
       ui.playlist->nrows = mdb.playlists[idx]->nfiles;
       ui.playlist->crow  = 0;
@@ -1414,11 +1409,9 @@ kba_load_playlist(KbaArgs a UNUSED)
 void
 kba_play(KbaArgs a UNUSED)
 {
-   int  idx;
-
    if (ui.active == ui.library) {
       /* load playlist & switch focus */
-      idx = ui.library->voffset + ui.library->crow;
+      int idx = ui.library->voffset + ui.library->crow;
       viewing_playlist = mdb.playlists[idx];
       ui.playlist->nrows = mdb.playlists[idx]->nfiles;
       ui.playlist->crow  = 0;
@@ -1689,12 +1682,11 @@ void
 ybuffer_add(meta_info *f)
 {
    meta_info **new_buff;
-   int   new_capacity;
 
    /* do we need to realloc()? */
    if (_yank_buffer.nfiles == _yank_buffer.capacity) {
       _yank_buffer.capacity += YANK_BUFFER_CHUNK_SIZE;
-      new_capacity = _yank_buffer.capacity * sizeof(meta_info*);
+      int new_capacity = _yank_buffer.capacity * sizeof(meta_info*);
       if ((new_buff = realloc(_yank_buffer.files, new_capacity)) == NULL)
          err(1, "ybuffer_add: realloc(3) failed [%i]", new_capacity);
 

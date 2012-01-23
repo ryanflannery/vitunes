@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2011 Ryan Flannery <ryan.flannery@gmail.com>
+ * Copyright (c) 2010, 2011, 2012 Ryan Flannery <ryan.flannery@gmail.com>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -693,8 +693,10 @@ paint_str2color(const char *str)
 
       numberstr = strtok(color, "color");
       number = (int)strtonum(numberstr, -1, 255, &errstr);
-      if (errstr != NULL)
+      if (errstr != NULL) {
+         free(color);
          return -2;
+      }
 
       free(color);
       return number;

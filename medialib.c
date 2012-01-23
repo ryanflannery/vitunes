@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2011 Ryan Flannery <ryan.flannery@gmail.com>
+ * Copyright (c) 2010, 2011, 2012 Ryan Flannery <ryan.flannery@gmail.com>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -107,12 +107,11 @@ void
 medialib_playlist_add(playlist *p)
 {
    playlist **new_playlists;
-   int        size;
 
    /* check to see if we need to resize the array */
    if (mdb.nplaylists == mdb.playlists_capacity) {
       mdb.playlists_capacity += MEDIALIB_PLAYLISTS_CHUNK_SIZE;
-      size = mdb.playlists_capacity * sizeof(playlist*);
+      int size = mdb.playlists_capacity * sizeof(playlist*);
       if ((new_playlists = realloc(mdb.playlists, size)) == NULL)
          err(1, "medialib_playlist_add: realloc failed");
 
