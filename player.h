@@ -27,6 +27,9 @@
 
 /* "static" backends (those that aren't dynamically loaded) */
 #include "players/mplayer.h"
+#if defined(ENABLE_GSTREAMER)
+#  include "players/gstplayer.h"
+#endif
 
 /*
  * Available play-modes.

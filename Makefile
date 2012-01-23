@@ -1,32 +1,40 @@
-# Makefile for [Open|Free|Net]BSD and Mac OS X
+include config.mk
 
-# install locations
-PREFIX?=/usr/local
-BINDIR=$(PREFIX)/bin
-MANDIR=$(PREFIX)/man/man1
+# install locations (these are normally overriden by config.mk & configure.sh)
+PREFIX ?= /usr/local
+BINDIR ?= $(PREFIX)/bin
+MANDIR ?= $(PREFIX)/man/man1
 
-# non-base dependency build info
-CDEPS=`taglib-config --cflags`
-LDEPS=`taglib-config --libs` -ltag_c
+# non-base dependencies (TagLib)
+TAGLIB_CFLAGS  ?= `taglib-config --cflags`
+TAGLIB_LDFLAGS ?= `taglib-config --libs` -ltag_c
 
-# build info
-CC?=/usr/bin/cc
-CFLAGS+=-c -std=c89 -Wall -Wextra -Wno-unused-value $(CDEPS) $(CDEBUG)
-LDFLAGS+=-lm -lncursesw -lutil $(LDEPS)
+# combine all dependencies (from taglib & config.mk)
+CFLAGS_DEPS  = $(TAGLIB_CFLAGS)  $(GSTREAMER_CFLAGS)
+LDFLAGS_DEPS = $(TAGLIB_LDFLAGS) $(GSTREAMER_LDFLAGS)
+OBJ_DEPS     = $(GSTREAMER_OBJS)
 
+# build variables
+CC		  ?= /usr/bin/cc
+CFLAGS  += -c -std=c89 -Wall -Wextra -Wno-unused-value $(CDEBUG) $(CFLAGS_DEPS)
+LDFLAGS += -lm -lncursesw -lutil $(LDFLAGS_DEPS)
+
+# object files
 OBJS=commands.o compat.o e_commands.o \
 	  keybindings.o medialib.o meta_info.o \
 	  mplayer.o paint.o player.o player_utils.o \
 	  playlist.o socket.o str2argv.o \
-	  uinterface.o vitunes.o
+	  uinterface.o vitunes.o \
+	  $(OBJ_DEPS)
 
 # subdirectories with code (.PATH for BSD make, VPATH for GNU make)
 .PATH:  players
 VPATH = players
 
-# main targets
 
-.PHONY: debug clean install uninstall publish-repos man-debug linux
+.PHONY: debug clean install uninstall man-debug
+
+# main build targets
 
 vitunes: $(OBJS)
 	$(CC) -o $@ $(LDFLAGS) $(OBJS)
@@ -49,7 +57,7 @@ uninstall:
 	rm -f $(BINDIR)/vitunes
 	rm -f $(MANDIR)/vitunes*.1
 
-# misc.
+# misc. targets
 
 man-debug:
 	mandoc -Tlint doc/vitunes*.1
