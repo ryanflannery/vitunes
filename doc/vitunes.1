@@ -74,7 +74,7 @@ Specifies the database containing all known media files and their meta
 information that
 .Nm
 should use.
-If you're using this option in conjunction with an e-command, this option
+If this option is used in conjunction with an e-command, the option
 .Sy must
 be specified before the e-command.
 .Pp
@@ -111,7 +111,7 @@ instance of
 for all playback.
 Note that the mplayer binary
 .Sy must
-be in your
+be in the
 .Ev PATH
 environment variable.
 .El
@@ -168,7 +168,7 @@ To get started quickly, simply do the following:
 Create initial empty database with
 .Dl $ vitunes -e init
 .It
-Add files to your database with
+Add files to the database with
 .Dl $ vitunes -e add ~/music/  /path/to/more/music/
 .It
 Then just start normally with
@@ -252,7 +252,7 @@ automatically.
 It can also be used to update the meta-info of an existing URL in the
 database.
 .Pp
-After executing, you are prompted to enter all of your own information.
+After executing, all meta-information needs to be inputted manually.
 .It Nm Fl e Cm check Oo Fl rsd Oc Ar file1 Op Ar file2 ...
 Scan the files specified and display their meta-information as present in
 the files themselves or in the
@@ -480,9 +480,10 @@ in the playlist window.
 .It Pf : Ic q Ns Oo ! Oc
 Quit
 .Nm .
-If there are playlists with unsaved changes, then you are notified of this and
-prevented from quitting.
-You can forcefully quit by using
+If there are playlists with unsaved changes, then
+.Nm
+raises a notification and denies any attempts of quitting.
+To forcefully quit, use
 .Pf : Ic q Ns ! ,
 and any unsaved changes to any playlists will be lost.
 .Pp
@@ -492,7 +493,7 @@ The reload command is used to reload either the database or configuration
 file while
 .Nm
 is running.
-Handy if you update your database using an e-command while also running
+Handy if the database is updated using an e-command while also running
 .Nm .
 .It Pf : Ic set Cm property Ns = Ns Ar value
 The set command is used to set various properties within vitunes.
@@ -514,14 +515,14 @@ of the terminal.
 .It Cm match-fname Ns = Ns Ar bool
 When searching or filtering a playlist, normally the filenames are also
 included in the matching algorithm.
-This can sometimes be undesirable, particularly if, for example, all of your
-music/media reside in a directory named "media" and you're trying to search
-for a file with the word "media" in the title.
+This can sometimes be undesirable, particularly if, for example, all of the
+music/media reside in a directory named "media" and trying to search for a
+file with the word "media" in the title.
 .Pp
 To disable this behavior, set match-fnames to false.
 .It Cm save-sorts Ns = Ns Ar bool
 Most operations that change a playlist (such as paste/cut) set
-the 'needs-saving' flag on the playlist, such that you are prompted on
+the 'needs-saving' flag on the playlist, such that a prompt is shown on
 exiting vitunes that there is a playlist with unsaved changes.
 By default, sorting a playlist does not do this.
 .Pp
@@ -552,11 +553,13 @@ would sort all records in the current playlist by artist (ascending) first,
 then album-name (descending), then title (ascending).
 .Pp
 Note that while most operations on playlists set the "needs-saving" flag
-(so you are prompted when quiting
+(so a prompt is shown when quiting
 .Nm
 that the playlist has unsaved changes), sorting a playlist does not do this.
 This is intentional.
-If you wish this behavior to be changed, see the "save-sorts" option for the
+To invert this behaviour, see the
+.Ic save-sorts
+option for the
 .Ic set
 command.
 .It Pf : Ic toggle Ar register Ar command-list
@@ -605,9 +608,9 @@ The first is simply:
 .Ic unbind Ar *
 .Pp
 which will remove all existing keybindings.
-This is handy in a configuration file where you may want to define all custom
-keybindings.
-Issuing this at runtime will leave you with an instance of
+This is handy in a configuration file where defining all custom keybindings
+is desired.
+Issuing this at runtime will leave an instance of
 .Nm
 that will not respond to any keybdings!
 .Pp
@@ -639,9 +642,9 @@ Save the currently viewing playlist.
 If a
 .Ar name
 is provided, then the playlist will be saved with this new name.
-If, however, a playlist already exists with that name, then you will be
-prevented from saving with that name unless '!' is provided, in which case
-the existing playlist with that name will be deleted.
+If, however, a playlist already exists with that name, then saving is denied
+unless '!' is provided, in which case the existing playlist with that name will
+be deleted.
 .El
 .Sh SPECIFYING KEYCODES
 This section describes how to specify keycodes used in both the
@@ -805,8 +808,8 @@ Go to a specific location within the current window.
 This is planned to be similar to
 .Xr vim 1 's
 use of the 'g' keybinding, with multiple suffixes.
-For now, only 'gg' is supported, and this takes you to the first line in the
-current window's buffer.
+For now, only 'gg' is supported, and this moves the cursor to the first line in
+the current window's buffer.
 .br
 DEFAULT BINDINGS:
 .Cm g
@@ -888,8 +891,10 @@ DEFAULT BINDINGS:
 .It Cm quit
 Exit
 .Nm .
-If there are unsaved changes in any playlists you will be prevented from
-exiting until you either save those changes or issue a ":q!" command.
+If there are unsaved changes in any playlists,
+.Nm
+prevents any attempts of exiting until those changes are saved or ":q!" is
+issued.
 .br
 DEFAULT BINDINGS:
 .Cm Control c, Control /
@@ -1087,5 +1092,6 @@ was written by
 .Sh BUGS
 None known.
 .Pp
-If you happen to find any, please send a detailed description to me at
-.Mt ryan.flannery@gmail.com .
+Send a detailed description to
+.Mt ryan.flannery@gmail.com
+if any bug is found.
