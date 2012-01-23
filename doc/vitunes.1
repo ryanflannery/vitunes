@@ -43,7 +43,8 @@ accepts the following command line options:
 .It Fl c Ar command
 Execute the specified command in the currently running
 .Nm
-instance, and exit.  This is useful for controlling
+instance, and exit.
+This is useful for controlling
 .Nm
 from other windows or scripts.
 .Pp
@@ -97,8 +98,8 @@ for information on what the configuration may contain.
 The default location is
 .Pa ~/.vitunes/vitunes.conf .
 .It Fl m Ar media-backend
-Specify the media backend to use for playback.  The current list of supported
-media backends are:
+Specify the media backend to use for playback.
+The current list of supported media backends are:
 .Bl -tag -width "mplayer"
 .It Cm mplayer
 Uses a
@@ -107,7 +108,8 @@ Uses a
 .Xr execvp 3 'd
 instance of
 .Xr mplayer 1
-for all playback.  Note that the mplayer binary
+for all playback.
+Note that the mplayer binary
 .Sy must
 be in your
 .Ev PATH
@@ -465,7 +467,8 @@ at the beginning of the playlist.
 Songs are chosen at random from the playlist.
 .El
 .It Pf : Ic new Op Ar name
-Create a new, empty playlist.  If
+Create a new, empty playlist.
+If
 .Ar name
 is provided, the new playlist will be named accordingly unless a playlist
 with that name already exists.
@@ -588,7 +591,8 @@ sorting schemes:
 Once issued, the three individual sorts specified above can be toggled using
 the
 .Ar s
-register.  With the default keybindings this would be done using either
+register.
+With the default keybindings this would be done using either
 .Ar ts
 (to toggle forward through the list) or
 .Ar Ts
@@ -797,12 +801,12 @@ current window's buffer.
 DEFAULT BINDINGS:
 .Cm %
 .It Cm go
-Go to a specific location within the current window.  This is planned to be
-similar to
+Go to a specific location within the current window.
+This is planned to be similar to
 .Xr vim 1 's
-use of the 'g' keybinding, with multiple suffixes.  For now, only 'gg' is
-supported, and this takes you to the first line in the current window's
-buffer.
+use of the 'g' keybinding, with multiple suffixes.
+For now, only 'gg' is supported, and this takes you to the first line in the
+current window's buffer.
 .br
 DEFAULT BINDINGS:
 .Cm g
@@ -840,10 +844,11 @@ cut/deleted at a time, and that this action cannot be undone.
 DEFAULT BINDINGS:
 .Cm d
 .It Cm visual
-Begin visual mode.  This is only available in the playlist window, and once
-begun, only keybindings that move the cursor within the current window are
-allowed.  Visual mode is exited when either a yank or delete operation has
-been performed, or when the Escape key is pressed.
+Begin visual mode.
+This is only available in the playlist window, and once begun, only keybindings
+that move the cursor within the current window are allowed.
+Visual mode is exited when either a yank or delete operation has been performed,
+or when the Escape key is pressed.
 .br
 DEFAULT BINDINGS:
 .Cm v, V
