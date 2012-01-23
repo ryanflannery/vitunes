@@ -26,7 +26,7 @@ VPATH = players
 
 # main targets
 
-.PHONY: debug clean install uninstall publish-repos man-debug linux
+.PHONY: debug clean clean-all install uninstall
 
 vitunes: $(OBJS)
 	$(CC) -o $@ $(LDFLAGS) $(OBJS)
@@ -41,6 +41,9 @@ clean:
 	rm -f *.o
 	rm -f vitunes vitunes.core vitunes-debug.log
 
+clean-all: clean
+	rm -rf report.*
+
 install: vitunes
 	install -c -m 0555 vitunes $(BINDIR)
 	install -c -m 0444 doc/vitunes*.1 $(MANDIR)
@@ -51,26 +54,39 @@ uninstall:
 
 # misc.
 
-man-debug:
-	mandoc -Tlint doc/vitunes*.1
-
+# this should be moved to my vitunes.org repo...
 vitunes.html: vitunes.1
 	man2web vitunes > vitunes.html
 
 cscope.out: *.h *.c
 	cscope -bke
 
+### static analysis checks
 
-# static analysis checks
+.PHONY: report.mandoc
+report.mandoc:
+	@figlet "mandoc -Tlint"
+	-mandoc -Tlint doc/vitunes*.1 2> $@
+	cat $@
 
-# clang/llvm c static analyzer 
-test-scan-build:
+.PHONY: report.cppcheck
+report.cppcheck:
+	@figlet "cppcheck"
+	-mandoc -Tlint doc/vitunes*.1 2> $@
 	make clean
-	scan-build -o tmp.scan-build make 1> /dev/null 2> /dev/null
+	cppcheck --enable=all -D_GNU_SOURCE . 1> /dev/null 2> $@
+	@cat $@
 
-# TODO - tweak options to cppcheck.
-# 	1. correct handling of #defines to use (has to do with include dirs)
-# 	2. fix output to go to tmp.cppcheck subdir, preferabbly just text
-cppcheck:
+.PHONY: report.scan-build
+report.scan-build:
+	@figlet "clang analyzer"
 	make clean
-	cppcheck .
+	scan-build -o report.scan-build make
+
+### wrapper for static checks above
+.PHONY: reports
+reports: report.mandoc report.cppcheck report.scan-build
+	@figlet "Static Checks Complete"
+	cat report.mandoc
+	cat report.cppcheck
+
