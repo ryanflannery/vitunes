@@ -13,8 +13,8 @@
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
-#ifndef __SOCKET_H
-#define __SOCKET_H
+#ifndef SOCKET_H
+#define SOCKET_H
 
 #include <sys/types.h>
 
@@ -44,4 +44,4 @@ ssize_t sock_recv_msg(int sock, char *msg, size_t msg_len);
  */
 void sock_recv_and_exec(int sock);
 
-#endif /* __SOCKET_H */
+#endif /* SOCKET_H */
