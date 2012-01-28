@@ -87,7 +87,7 @@ See the section below titled
 .Sx E-COMMANDS
 for more information.
 .It Fl f Ar config-file
-Specifies and alternative
+Specifies an alternative
 .Ar config-file
 .Nm
 should load.
@@ -1011,6 +1011,10 @@ set lhide=true
 .Bl -tag -width Ds -compact
 .It Pa ~/.vitunes/vitunes.conf
 Default configuration file.
+.It Pa ~/.vitunes/vitunes.db
+Default database file.
+.It Pa ~/.vitunes/playlists/
+Default playlist directory
 .It Pa /tmp/.vitunes
 Default location for the socket created on start-up that can be used to control
 .Nm .
