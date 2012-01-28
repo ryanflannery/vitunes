@@ -17,14 +17,16 @@
 .Os
 .Sh NAME
 .Nm vitunes-flush
-.Nd output the contents of the vitunes database to stdout
+.Nd output the contents of the database to stdout
 .Sh SYNOPSIS
 .Nm vitunes -e flush
+.Bk -words
 .Op Fl t Ar time-format
+.Ek
 .Sh DESCRIPTION
 The
-.Nm
-command simply outputs the meta-information for all files in the
+.Ic flush
+e-command simply outputs the meta-information for all files in the
 .Xr vitunes 1
 database to
 .Xr stdout 4 ,
@@ -40,28 +42,27 @@ is any string acceptable by
 .Pp
 The output format is a simple comma-separated-value (CSV) one, where
 most fields (any that can contain spaces/commas) are within double
-quotes.  The first line contains the field names, and those fields that
-are quoted are also quoted in this header row.
+quotes.
+The first line contains the field names, and those fields that are quoted are
+also quoted in this header row.
 .Sh EXAMPLES
 To perform a simple dump of the datebase, use:
+.Pp
 .Dl $ vitunes -e flush
 .Pp
 To see which files were last updated this month:
-.Dl $ vitunes -e flush -t "%M %Y" | grep "January 2010"
+.Pp
+.Dl $ vitunes -e flush -t \&"%M %Y" | grep \&"January 2010"
 .Sh REFERENCES
 For some quick
 .Xr sed 1
-one-liners on how to parse CSV data like the output of this command, you
-can visit the following website:
+one-liners on how to parse CSV data like the output of this e-command, visit
+the following website:
+.Pp
 .Lk http://sed.sourceforge.net/sedfaq4.html
 .Sh SEE ALSO
 .Xr vitunes 1 ,
 .Xr vitunes-add 1 ,
-.Xr vitunes-update 1 .
-.Pp
-For an overview of how
-.Nm vitunes
-works, see the
-.Sx GETTING STARTED
-section in
-.Xr vitunes 1 .
+.Xr vitunes-update 1
+.Sh AUTHORS
+.An Ryan Flannery Aq Mt ryan.flannery@gmail.com .

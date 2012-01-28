@@ -20,40 +20,43 @@
 .Nd check files for meta-information and if they are in the database
 .Sh SYNOPSIS
 .Nm vitunes -e check
+.Bk -words
 .Op Fl drs
-.Ar file1 Op file2 ...
+.Ar path
+.Op ...
+.Ek
 .Sh DESCRIPTION
 The
-.Nm
-command will scan each file provided to see to see if any media
+.Ic check
+e-command will scan each file provided to see if any media
 meta-information is present in the file, how
 .Xr vitunes-add 1
-will sanitize that met-information (see below), or what information
+will sanitize that meta-information (see below), or what information
 .Xr vitunes 1
 currently has in the database for the file.
 .Pp
 The options are as follows:
 .Bl -tag -width Fl
-.It Fl d Ar file1 Op file2 ...
+.It Fl d
 Load the
 .Xr vitunes 1
-database and check to see if each file exists within it.  If so, show
-the information contained in the database.
-.It Fl r Ar file1 Op file2 ...
+database and check to see if each file exists within it.
+If so, show the information contained in the database.
+.It Fl r
 Show the raw information extracted directly from each file.
-.It Fl s Ar file1 Op file2 ...
-Show the sanitized information after extracting it from each file.  See
-the section
+.It Fl s
+Show the sanitized information after extracting it from each file.
+See the section
 .Sx SANITATION
 below for details on what this is.
 .El
 .Pp
 If multiple files are provided, each will be checked in order.
 .Sh SANITATION
-Some media files have non-printable characters in their meta information
+Some media files have non-printable characters in their meta-information
 for one reason or another (often, it's a faulty ripper/tagging
-application).  Sometimes these non-printable characters can be control
-sequences used by
+application).
+Sometimes these non-printable characters can be control sequences used by
 .Xr ncurses 3
 and thus cause problems with the display of
 .Xr vitunes 1 .
@@ -62,15 +65,12 @@ To prevent any such problems,
 .Xr vitunes-add 1
 sanitizes such data by replacing any problematic characters with '?'.
 .Sh EXAMPLES
+To show raw information from a file:
+.Pp
 .Dl $ vitunes -e check -r /path/to/file.mp3
 .Sh SEE ALSO
 .Xr vitunes 1 ,
 .Xr vitunes-add 1 ,
-.Xr ncurses 3 .
-.Pp
-For an overview of how
-.Nm vitunes
-works, see the
-.Sx GETTING STARTED
-section in
-.Xr vitunes 1 .
+.Xr ncurses 3
+.Sh AUTHORS
+.An Ryan Flannery Aq Mt ryan.flannery@gmail.com .

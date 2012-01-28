@@ -17,29 +17,32 @@
 .Os
 .Sh NAME
 .Nm vitunes-update
-.Nd update all files in the vitunes database
+.Nd update all files in the database
 .Sh SYNOPSIS
 .Nm vitunes -e update
+.Bk -words
 .Op Fl fs
+.Ek
 .Sh DESCRIPTION
 The
-.Nm
-command loads the existing
+.Ic update
+e-command loads the existing
 .Xr vitunes 1
 database and for each file listed, the file is checked to see if it has
 been removed or modified since it was added to the database or last
-updated.  If the file has been removed, it will be removed from the
-database.  If the file has been modified, it's meta information will be
-extracted again and the database will be updated.
+updated.
+If the file has been removed, it will be removed from the database.
+If the file has been modified, it's meta-information will be extracted again
+and the database will be updated.
 .Pp
 Note that if there are errors while checking any file, the error will be
-reported but such files, and their meta information, will remain in the
+reported but such files, and their meta-information, will remain in the
 database.
 .Pp
 The options are as follows:
 .Bl -tag -width Fl
 .It Fl f
-Force the update of meta information of all files, even if their
+Force the update of meta-information of all files, even if their
 modification times haven't changed.
 .It Fl s
 When present, files that are skipped because they have not been modified
@@ -47,25 +50,25 @@ will also be reported to
 .Xr stdout 4 .
 Normally, only files that are updated are reported.
 .El
-Anytime you remove/modify media files already in the
+Anytime media files are removed/modified which are already in the
 .Xr vitunes 1
-database, you should run this command.
+database, the
+.Ic update
+e-command should be used.
 .Sh NOTES
 Any files/URLs added to the database using the
-.Xr vitunes-addurl 1
-e-command will not be checked/updated in any way, for obvious reasons.
+.Ic addurl
+e-command will
+.Sy not
+be checked/updated in any way, for obvious reasons.
 .Sh EXAMPLES
 To scan all files in the
 .Xr vitunes 1
 database for updates, simply use:
+.Pp
 .Dl $ vitunes -e update
 .Sh SEE ALSO
 .Xr vitunes 1 ,
-.Xr vitunes-add 1 .
-.Pp
-For an overview of how
-.Nm vitunes
-works, see the
-.Sx GETTING STARTED
-section in
-.Xr vitunes 1 .
+.Xr vitunes-add 1
+.Sh AUTHORS
+.An Ryan Flannery Aq Mt ryan.flannery@gmail.com .

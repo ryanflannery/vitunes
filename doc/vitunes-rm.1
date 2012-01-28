@@ -17,21 +17,25 @@
 .Os
 .Sh NAME
 .Nm vitunes-rm
-.Nd remove files/URLs from the vitunes database
+.Nd remove a file or a URL from the database
 .Sh SYNOPSIS
 .Nm vitunes -e rm
+.Bk -words
 .Op Fl f
-.Ar file1 Op file2 ...
+.Ar URL | path
+.Ek
 .Sh DESCRIPTION
-To remove a single file/URL from the
+To remove a single file
+or
+.Ar URL
+from the
 .Xr vitunes 1
 database, the
-.Nm
-command may be used.  It takes a single parameter: the filename/URL of
-the file to remove.
+.Ic rm
+e-command may be used.
 .Pp
-Normally, you will be prompted if you are sure you want to remove the
-file as a safety measure.  This prompt can be avoided using the
+Normally, a prompt is shown as a safety measure.
+This prompt can be avoided using the
 .Op Fl f
 flag, to force the removal.
 .Pp
@@ -42,18 +46,15 @@ provided, as obtained from
 To remove a single file from the
 .Xr vitunes 1
 database, use:
+.Pp
 .Dl $ vitunes -e rm /path/to/file.mp3
 .Pp
 To remove a URL, such as that for an Internet radio stream, use:
-.Dl $ vitunes -e rm -f "http://198.234.121.118/listen.pls"
+.Pp
+.Dl $ vitunes -e rm -f \&"http://198.234.121.118/listen.pls"
 .Sh SEE ALSO
 .Xr vitunes 1 ,
 .Xr vitunes-add 1 ,
-.Xr realpath 3 .
-.Pp
-For an overview of how
-.Nm vitunes
-works, see the
-.Sx GETTING STARTED
-section in
-.Xr vitunes 1 .
+.Xr realpath 3
+.Sh AUTHORS
+.An Ryan Flannery Aq Mt ryan.flannery@gmail.com .

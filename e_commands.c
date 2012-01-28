@@ -17,16 +17,16 @@
 #include "e_commands.h"
 
 const struct ecmd ECMD_PATH[] = { 
-   { "init",      ecmd_init,     ecmd_help_init},
-   { "add",       ecmd_add,      ecmd_help_add },
-   { "addurl",    ecmd_addurl,   ecmd_help_addurl },
-   { "check",     ecmd_check,    ecmd_help_check },
-   { "rmfile",    ecmd_rmfile,   ecmd_help_rmfile },
-   { "rm",        ecmd_rmfile,   ecmd_help_rmfile },
-   { "update",    ecmd_update,   ecmd_help_update },
-   { "flush",     ecmd_flush,    ecmd_help_flush },
-   { "tag",       ecmd_tag,      ecmd_help_tag },
-   { "help",      ecmd_help,     NULL }
+   { "init",      ecmd_init },
+   { "add",       ecmd_add },
+   { "addurl",    ecmd_addurl },
+   { "check",     ecmd_check },
+   { "rmfile",    ecmd_rmfile },
+   { "rm",        ecmd_rmfile },
+   { "update",    ecmd_update },
+   { "flush",     ecmd_flush },
+   { "tag",       ecmd_tag },
+   { "help",      ecmd_help }
 };
 const int ECMD_PATH_SIZE = (sizeof(ECMD_PATH) / sizeof(struct ecmd));
 
@@ -498,61 +498,12 @@ ecmd_tag(int argc, char *argv[])
    return 0;
 }
 
-void
-ecmd_help_init(void)
-{
-   system("man vitunes-init");
-}
-
-void
-ecmd_help_add(void)
-{
-   system("man vitunes-add");
-}
-
-void
-ecmd_help_addurl(void)
-{
-   system("man vitunes-addurl");
-}
-
-void
-ecmd_help_check(void)
-{
-   system("man vitunes-check");
-}
-
-void
-ecmd_help_rmfile(void)
-{
-   system("man vitunes-rm");
-}
-
-void
-ecmd_help_update(void)
-{
-   system("man vitunes-update");
-}
-
-void
-ecmd_help_flush(void)
-{
-   system("man vitunes-flush");
-}
-
-void
-ecmd_help_tag(void)
-{
-   system("man vitunes-tag");
-}
-
 int
 ecmd_help(int argc, char *argv[])
 {
-   bool found;
-   int  i;
+   char *man_args[3];
 
-   if (argc > 2)
+   if (argc != 2)
       errx(1, "usage: -e %s [command]", argv[0]);
 
    /* no help requested for a specific command, give a list of all e-cmds */
@@ -581,21 +532,19 @@ The list of available commands are:\n\n\
    }
 
    /* if reach here, help fora specific command was requested */
-   found = false;
-   for (i = 0; i < ECMD_PATH_SIZE && !found; i++) {
-      if (strcmp(argv[1], "help") == 0) {
-         printf("You're a damn fool if you need help with help.\n");
-         found = true;
-      }
-      else if (strcmp(argv[1], ECMD_PATH[i].name) == 0) {
-         (ECMD_PATH[i].help)();
-         found = true;
-      }
+   if (strcmp(argv[1], "help") == 0) {
+      printf("You're a damn fool if you need help with help.\n");
+      return 0;
    }
 
-   if (!found)
-      printf("Unknown command \"%s\".  See \"vitunes -e help\" for list.\n", argv[1]);
+   man_args[0] = "man";
+   if (asprintf(&man_args[1], "vitunes-%s", argv[1]) == -1)
+      err(1, "ecmd_help: asprintf failed");
+   man_args[2] = NULL;
 
+   execvp("man", man_args);
+   err(1, "ecmd_help: execvp failed");
+
+   /* just to shut up gcc */
    return 0;
 }
-
