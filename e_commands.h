@@ -60,7 +60,6 @@ void ecmd_help_tag(void);
 struct ecmd {
    char *name;
    int   (*func)(int argc, char *argv[]);
-   void  (*help)(void);
 };
 
 extern const struct ecmd ECMD_PATH[];

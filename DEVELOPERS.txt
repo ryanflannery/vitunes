@@ -209,7 +209,7 @@ CODE STRUCTURE: THE MODULES
 
 
    e_commands        All code for each of the e-commands (vitunes -e CMD ...)
-                     is here.  Used excluviely in vitunes.c.
+                     is here.  Used exclusively in vitunes.c.
 
 
    vitunes           The "main" program.  In normal mode, does setup of media-

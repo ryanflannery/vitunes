@@ -20,6 +20,7 @@
 .Nd set the meta-information tags in media files
 .Sh SYNOPSIS
 .Nm vitunes -e tag
+.Bk -words
 .Op Fl A Ar album
 .Op Fl -album=string
 .Op Fl a Ar artist
@@ -34,24 +35,20 @@
 .Op Fl -year=number
 .Op Fl c Ar comment
 .Op Fl -comment=string
-.Ar file1 Op file2 ...
+.Ar path
+.Op ...
+.Ek
 .Sh DESCRIPTION
 The
-.Nm
-command is provided to add or change the meta-information tags of media
-files.  The meta-information fields that can be set are: artist, album,
-title, genre, track, year, and comment.
+.Ic tag
+e-command is provided to add or change the meta-information tags of media
+files.
+The meta-information fields that can be set are: artist, album, title,
+genre, track, year, and comment.
 .Pp
-Note that this command only changes the meta-information in the raw files
-themselves and not their values as stored in the
-.Xr vitunes 1
-database.  To update the database after tagging, use the
-.Xr vitunes-update 1
-e-command.
-.Pp
-The tag command takes a series of field/value specifiers and any number
-of files.  For each file specified, the specified fields will be set to
-the provided value.
+For each
+.Ar path
+specified, the given fields will be set to the provided value.
 .Pp
 The options are as follows:
 .Pp
@@ -70,45 +67,39 @@ Sets the genre field to the provided string.
 Sets the title field to the provided string.
 .It Fl T Ar track
 .It Fl --track=number
-Sets the track field to the provided number.  Note that the number must
-be between 0 and INT_MAX.
+Sets the track field to the provided number.
+Note that the number must be between 0 and INT_MAX.
 .It Fl y Ar year
 .It Fl -year=number
-Sets the year field to the provided number.  Note that the number must
-be between 0 and INT_MAX.
+Sets the year field to the provided number.
+Note that the number must be between 0 and INT_MAX.
 .It Fl c Ar comment
 .It Fl -comment=string
 Sets the comment field to the provided string.
 .El
-.Pp
-At least one of the above options must be provided and at least one file
-must be specified.
-.Sh NOTE
-Just to reiterate a comment above, this command only changes the meta-
-information in the raw files themselves and not the values in the
+.Sh NOTES
+This e-command only changes the meta-information in the raw files themselves
+and not the values in the
 .Xr vitunes 1
-database.  To update the vitunes database after tagging, use the
-.Xr vitunes-update 1
+database.
+To update the vitunes database after tagging, use the
+.Ic add
 or
-.Xr vitunes-add
+.Ic update
 e-commands.
 .Sh EXAMPLES
 CD rippers frequently pull information from CDDB (or other databases)
 where, for example, a "The" is missing from an artist/album name when it
-is, in fact, appropriate.  Below is an example of correcting this and
-then updating the
+is, in fact, appropriate.
+Below is an example of correcting this and then updating the
 .Xr vitunes 1
 database:
-.Dl $ vitunes -e tag --artist=\"The White Stripes\" /path/to/De_Stijl/*
+.Pp
+.Dl $ vitunes -e tag --artist=\&"The White Stripes" /path/to/De_Stijl/*
 .Dl $ vitunes -e update
 .Sh SEE ALSO
 .Xr vitunes 1 ,
 .Xr vitunes-add 1 ,
-.Xr vitunes-update 1 .
-.Pp
-For an overview of how
-.Nm vitunes
-works, see the
-.Sx GETTING STARTED
-section in
-.Xr vitunes 1 .
+.Xr vitunes-update 1
+.Sh AUTHORS
+.An Ryan Flannery Aq Mt ryan.flannery@gmail.com .

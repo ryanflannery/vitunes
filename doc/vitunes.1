@@ -20,12 +20,14 @@
 .Nd A curses media indexer and player for vi-users
 .Sh SYNOPSIS
 .Nm vitunes
+.Bk -words
 .Op Fl c Ar command
 .Op Fl d Ar database-file
 .Op Fl e Ar command Op argument ...
 .Op Fl f Ar config-file
 .Op Fl m Ar media-backend
 .Op Fl p Ar playlist-dir
+.Ek
 .Sh DESCRIPTION
 .Nm
 is a curses-based music player and playlist manager for *nix whose goals are
@@ -41,27 +43,23 @@ play the media it indexes (via
 accepts the following command line options:
 .Bl -tag -width Fl
 .It Fl c Ar command
-Execute the specified command in the currently running
+Execute the specified
+.Ar commands
+in the currently running
 .Nm
 instance, and exit.
 This is useful for controlling
 .Nm
 from other windows or scripts.
 .Pp
-The commands that may be specified are both those named in the
+The
+.Ar commands
+that may be specified are both those named in the
 .Sx RUN-TIME COMMANDS
 section below and keybindings specified by their keybinding action name,
 listed in the
 .Sx KEYBINDING ACTIONS
 section below.
-.Pp
-To execute multiple commands, use this option repeatedly as
-.Dl $ vitunes -c command1 -c command2 ...
-.Pp
-For example, to have the currently running
-.Nm
-load and play a playlist, one could issue:
-.Dl $ vitunes -c So playlist SomePlaylist Sc -c media_play
 .Pp
 Note that for this to work, when
 .Nm
@@ -70,8 +68,9 @@ starts up it attempts to create a socket at
 that are used by this option to communicate with the original instance.
 If this socket cannot be created for any reason, this option will not work.
 .It Fl d Ar database-file
-Specifies the database containing all known media files and their meta
-information that
+Specifies the
+.Ar database-file
+containing all known media files and their meta-information that
 .Nm
 should use.
 If this option is used in conjunction with an e-command, the option
@@ -80,7 +79,7 @@ be specified before the e-command.
 .Pp
 The default location is
 .Pa ~/.vitunes/vitunes.db .
-.It Fl e Ar command Cm options
+.It Fl e Ar command Ar options
 Execute one of the available e-commands to manipulate the database that
 .Nm
 uses.
@@ -88,7 +87,8 @@ See the section below titled
 .Sx E-COMMANDS
 for more information.
 .It Fl f Ar config-file
-Specifies the path of the configuration file
+Specifies and alternative
+.Ar config-file
 .Nm
 should load.
 See the section below titled
@@ -98,7 +98,9 @@ for information on what the configuration may contain.
 The default location is
 .Pa ~/.vitunes/vitunes.conf .
 .It Fl m Ar media-backend
-Specify the media backend to use for playback.
+Specify the
+.Ar media-backend
+to use for playback.
 The current list of supported media backends are:
 .Bl -tag -width "mplayer"
 .It Cm mplayer
@@ -117,14 +119,17 @@ environment variable.
 .It Cm gst
 Uses the
 .Cm gstreamer
-multimedia library for media playback.  Note that the media formats supported
-by this backend depend on what gstreamer plugins are installed.
+multimedia library for media playback.
+Note that the media formats supported by this backend depend on what gstreamer
+plugins are installed.
 .El
 .Pp
 The default backend is
 .Cm mplayer .
 .It Fl p Ar playlist-dir
-Specifies the directory containing all of the playlists
+Specifies an alternative
+.Ar playlist-dir
+containing all of the playlists
 .Nm
 will load and use.
 Any new playlists created while running
@@ -134,7 +139,7 @@ will be created here.
 The default location is
 .Pa ~/.vitunes/playlists/ .
 .El
-.Ss Getting Started
+.Sh GETTING STARTED
 .Nm
 works by maintaining a database of tagged media files.
 The database
@@ -227,65 +232,9 @@ See the
 .Sx KEYBINDING ACTIONS
 section for a complete listing.
 .Sh E-COMMANDS
-Below is a brief summary of each e-command available in
-.Nm .
-More detailed usage information and examples for each can be obtained by
-issuing:
+More detailed usage information and examples for each e-command can be
+obtained by issuing:
 .Dl $ vitunes -e help command-name
-.Bl -tag -width Ds
-.It Nm Fl e Cm init
-Create the necessary database file and playlist directory used by
-.Nm .
-This command only needs to be run once, when
-.Nm
-is first run.
-If either of these already exist, they remain unchanged.
-.It Nm Fl e Cm add Ar path1 Op Ar path2 ...
-This command takes any number of files/directories as parameters.
-Each file is scanned for meta-information and if found, added to the
-database.
-Directories are search recursively.
-.Pp
-.Xr TagLib 3
-is used for all meta-extraction, which includes the following fields:
-album, artist, comment, play-length, title, track number, and year.
-.It Nm Fl e Cm addurl Ar url
-This command is used to add non-files (things like URL's for Internet radio
-stations) to the database, where the meta-information cannot be determined
-automatically.
-It can also be used to update the meta-info of an existing URL in the
-database.
-.Pp
-After executing, all meta-information needs to be inputted manually.
-.It Nm Fl e Cm check Oo Fl rsd Oc Ar file1 Op Ar file2 ...
-Scan the files specified and display their meta-information as present in
-the files themselves or in the
-.Nm
-database.
-This is useful for checking if a file is in the database.
-.It Nm Fl e Cm flush Op Fl t Ar time-format
-Dump the contents of the database to stdout in an easy-to-parse format,
-optionally with the specified
-.Xr strftime 3
-compatible format for times.
-.It Nm Fl e Cm help Ar command
-Display detailed usage information and examples for the e-command specified
-by
-.Ar command .
-.It Nm Fl e Cm rm Oo Fl f Oc Ar file/url
-Remove a file/URL from the database.
-.It Nm Fl e Cm rmfile Oo Fl f Oc Ar file/url
-Alias for the "rm" e-command.
-.It Nm Fl e Cm tag Oo options Oc Ar file1 Op Ar file2 ...
-Add/modify the meta-information tags of raw files.
-There are many options to this e-command.
-See the help page for more information:
-.Dl $ vitunes -e help tag
-.It Nm Fl e Cm update Op Fl s
-Load the existing database and check each file to see if its meta-information
-has been updated, or if the file has been removed.
-The database is updated accordingly.
-.El
 .Sh RUN-TIME COMMANDS
 Below is a listing of all run-time commands supported by
 .Nm .
@@ -706,12 +655,12 @@ are:
 Some examples of using keycodes and the
 .Pf : Ic bind
 run-time command are:
-.Bd -literal
-   bind  paste_after   p
-   bind  paste_before  P
+.Bd -literal -offset indent
+bind  paste_after   p
+bind  paste_before  P
 
-   bind  scroll_up_halfpage    Control u
-   bind  scroll_down_halfpage  Control d
+bind  scroll_up_halfpage    Control u
+bind  scroll_down_halfpage  Control d
 .Ed
 .Sh KEYBINDING ACTIONS
 The current list of available actions that keys may be bound to is the
@@ -1011,12 +960,12 @@ DEFAULT BINDINGS:
 .Pp
 Some examples of using the above actions and keycodes to define the default
 keybdings are:
-.Bd -literal
-   bind  paste_after   p
-   bind  paste_before  P
+.Bd -literal -offset indent
+bind  paste_after   p
+bind  paste_before  P
 
-   bind  scroll_up_halfpage    Control u
-   bind  scroll_down_halfpage  Control d
+bind  scroll_up_halfpage    Control u
+bind  scroll_down_halfpage  Control d
 .Ed
 .Sh CONFIGURATION FILE
 The configuration file loaded by
@@ -1040,32 +989,28 @@ As such, review the list of commands above.
 .Pp
 An example configuration file that would setup some hideous DOS-like colors
 is:
-.Bd -literal
-   # setup colors
-   color bars=white,blue
-   color player=yellow,blue
-   color library=green,blue
-   color playlist=white,blue
-   color status=red,blue
+.Bd -literal -offset indent
+# setup colors
+color bars=white,blue
+color player=yellow,blue
+color library=green,blue
+color playlist=white,blue
+color status=red,blue
 
-   # format for playlist window
-   display artist.20,album.20,title.20,track.4,year.4
+# format for playlist window
+display artist.20,album.20,title.20,track.4,year.4
 
-   # show most recent work of an artist first in library window
-   sort artist,-year
+# show most recent work of an artist first in library window
+sort artist,-year
 
-   # make library window 20 columns wide and hide when not active
-   set lwidth=20
-   set lhide=true
+# make library window 20 columns wide and hide when not active
+set lwidth=20
+set lhide=true
 .Ed
 .Sh FILES
 .Bl -tag -width Ds -compact
 .It Pa ~/.vitunes/vitunes.conf
 Default configuration file.
-.It Pa ~/.vitunes/vitunes.db
-Default database file.
-.It Pa ~/.vitunes/playlists/
-Default playlist directory.
 .It Pa /tmp/.vitunes
 Default location for the socket created on start-up that can be used to control
 .Nm .
@@ -1074,14 +1019,24 @@ Default path to the
 .Xr mplayer 1
 binary.
 .El
+.Sh EXAMPLES
+To have the currently running
+.Nm
+load and play a playlist:
+.Pp
+.Dl $ vitunes -c So playlist SomePlaylist Sc -c media_play
 .Sh SEE ALSO
 .Xr mplayer 1 ,
-.Xr realpath 3 ,
 .Xr strftime 3 ,
-.Xr vi 1 .
-.Pp
-More information about TagLib can be found on the TagLib website:
-.Lk http://developer.kde.org/~wheeler/taglib.html
+.Xr vi 1 ,
+.Xr vitunes-add 1 ,
+.Xr vitunes-addurl 1 ,
+.Xr vitunes-check 1 ,
+.Xr vitunes-flush 1 ,
+.Xr vitunes-init 1 ,
+.Xr vitunes-rm 1 ,
+.Xr vitunes-tag 1 ,
+.Xr vitunes-update 1
 .Pp
 The
 .Nm
