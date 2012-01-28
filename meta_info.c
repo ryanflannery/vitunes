@@ -225,15 +225,13 @@ mi_extract(const char *filename)
 
    /* track number */
    if (taglib_tag_track(tag) > 0) {
-      asprintf(&(mi->cinfo[MI_CINFO_TRACK]), "%3i", taglib_tag_track(tag));
-      if (mi->cinfo[MI_CINFO_TRACK] == NULL)
+      if (asprintf(&(mi->cinfo[MI_CINFO_TRACK]), "%3i", taglib_tag_track(tag)) == -1)
          err(1, "mi_extract: asprintf failed for CINFO_TRACK");
    }
 
    /* year */
    if (taglib_tag_year(tag) > 0) {
-      asprintf(&(mi->cinfo[MI_CINFO_YEAR]), "%i", taglib_tag_year(tag));
-      if (mi->cinfo[MI_CINFO_YEAR] == NULL)
+      if (asprintf(&(mi->cinfo[MI_CINFO_YEAR]), "%i", taglib_tag_year(tag)) == -1)
          err(1, "mi_extract: asprintf failed for CINFO_YEAR");
    }
 

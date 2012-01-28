@@ -306,9 +306,8 @@ cmd_write(int argc, char *argv[])
       bool  will_clobber;
 
       /* build filename for playlist */
-      asprintf(&filename, "%s/%s.playlist", mdb.playlist_dir, argv[1]);
-      if (filename == NULL)
-         err(1, "cmd_write: asprintf(3) failed");
+      if (asprintf(&filename, "%s/%s.playlist", mdb.playlist_dir, argv[1]) == -1)
+         err(1, "cmd_write: asprintf failed");
 
       /* check to see if playlist with that name already exists */
       will_clobber = false;
@@ -408,9 +407,8 @@ cmd_new(int argc, char *argv[])
       }
 
       name = argv[1];
-      asprintf(&filename, "%s/%s.playlist", mdb.playlist_dir, name);
-      if (filename == NULL)
-         err(1, "cmd_new: asprintf(3) failed");
+      if (asprintf(&filename, "%s/%s.playlist", mdb.playlist_dir, name) == -1)
+         err(1, "cmd_new: asprintf failed");
    }
 
    /* create & setup playlist */

@@ -1028,9 +1028,8 @@ kba_cut(KbaArgs a UNUSED)
          return;
       }
 
-      asprintf(&warning, "Are you sure you want to delete '%s'?", p->name);
-      if (warning == NULL)
-         err(1, "cut: asprintf(3) failed");
+      if (asprintf(&warning, "Are you sure you want to delete '%s'?", p->name) == -1)
+         err(1, "cut: asprintf failed");
 
       /* make sure user wants this */
       if (user_get_yesno(warning, &response) != 0) {

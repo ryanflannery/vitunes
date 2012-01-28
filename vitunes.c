@@ -99,15 +99,16 @@ main(int argc, char *argv[])
       errx(1, "$HOME not set. Can't find my config files.");
 
    /* build paths & other needed strings */
-   asprintf(&vitunes_dir,    VITUNES_DIR_FMT,  home);
-   asprintf(&conf_file,      CONF_FILE_FMT,    home);
-   asprintf(&db_file,        DB_FILE_FMT,      home);
-   asprintf(&playlist_dir,   PLAYLIST_DIR_FMT, home);
-   asprintf(&player_backend, "%s", DEFAULT_PLAYER_BACKEND);
-   if (vitunes_dir == NULL || conf_file == NULL
-   ||  db_file == NULL     || playlist_dir == NULL
-   ||  player_backend == NULL)
-      err(1, "failed to create needed file names");
+   if (asprintf(&vitunes_dir, VITUNES_DIR_FMT, home) == -1)
+      err(1, "main: asprintf failed");
+   if (asprintf(&conf_file, CONF_FILE_FMT, home) == -1)
+      err(1, "main: asprintf failed");
+   if (asprintf(&db_file, DB_FILE_FMT, home) == -1)
+      err(1, "main: asprintf failed");
+   if (asprintf(&playlist_dir, PLAYLIST_DIR_FMT, home) == -1)
+      err(1, "main: asprintf failed");
+   if (asprintf(&player_backend, "%s", DEFAULT_PLAYER_BACKEND) == -1)
+      err(1, "main: asprintf failed");
 
    /* handle command-line switches & e-commands */
    handle_switches(argc, argv);
