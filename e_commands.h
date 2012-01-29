@@ -46,16 +46,6 @@ int ecmd_tag(int argc, char *argv[]);
 int ecmd_update(int argc, char *argv[]);
 int ecmd_help(int argc, char *argv[]);
 
-/* help functions */
-void ecmd_help_init(void);
-void ecmd_help_add(void);
-void ecmd_help_addurl(void);
-void ecmd_help_check(void);
-void ecmd_help_rmfile(void);
-void ecmd_help_update(void);
-void ecmd_help_flush(void);
-void ecmd_help_tag(void);
-
 /* e-command struct and set of commands */
 struct ecmd {
    char *name;
