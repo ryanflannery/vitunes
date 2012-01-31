@@ -284,7 +284,7 @@ cmd_write(int argc, char *argv[])
       /* can't save library or filter results */
       if (viewing_playlist == mdb.library
       ||  viewing_playlist == mdb.filter_results) {
-         paint_error("use \"w name\" when saving psuedo-playlists like library/filter");
+         paint_error("use \"w name\" when saving pseudo-playlists like library/filter");
          return 2;
       }
 

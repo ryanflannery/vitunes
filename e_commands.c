@@ -84,7 +84,7 @@ int
 ecmd_add(int argc, char *argv[])
 {
    if (argc == 1)
-      errx(1, "usage: -e %s /path/to/filesORdirs [ ... ] ", argv[0]);
+      errx(1, "usage: -e %s path [...]", argv[0]);
 
    printf("Loading existing database...\n");
    medialib_load(db_file, playlist_dir);
@@ -106,7 +106,7 @@ ecmd_addurl(int argc, char *argv[])
    int          field, i;
 
    if (argc != 2)
-      errx(1, "usage: -e %s filename|URL", argv[0]);
+      errx(1, "usage: -e %s URL|path", argv[0]);
 
    /* start new record, set filename */
    m = mi_new();
@@ -182,7 +182,7 @@ ecmd_check(int argc, char *argv[])
    int    f, i;
 
    if (argc < 3)
-      errx(1, "usage: -e %s [-rsd] file1 [ file2 ... ]", argv[0]);
+      errx(1, "usage: -e %s [-drs] path [...]", argv[0]);
 
    /* parse options to see which version to show */
    show_raw = false;
@@ -204,7 +204,7 @@ ecmd_check(int argc, char *argv[])
          case 'h':
          case '?':
          default:
-            errx(1, "usage: -e %s [-rsd] file1 [ file2 ... ]", argv[0]);
+            errx(1, "usage: -e %s [-drs] path [...]", argv[0]);
       }
    }
    files = argv + optind;
@@ -292,13 +292,13 @@ ecmd_rmfile(int argc, char *argv[])
    int   i;
 
    if (argc < 2 || argc > 3)
-      errx(1, "usage: -e %s [-f] filename|URL", argv[0]);
+      errx(1, "usage: -e %s [-f] URL|path", argv[0]);
 
    /* get filename and if this remove is forced */
    forced = false;
    if (argc == 3) {
       if (strcmp(argv[1], "-f") != 0)
-         errx(1, "usage: -e %s [-f] filename|URL", argv[0]);
+         errx(1, "usage: -e %s [-f] URL|path", argv[0]);
       else
          forced = true;
 

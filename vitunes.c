@@ -439,7 +439,7 @@ load_config()
             conf_file, linenum, argv[0]);
       } else {
          endwin();
-         errx(1, "%s line %zd: unknown command'%s'",
+         errx(1, "%s line %zd: unknown command '%s'",
             conf_file, linenum, argv[0]);
       }
 
