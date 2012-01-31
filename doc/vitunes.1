@@ -1011,10 +1011,19 @@ set lhide=true
 .Bl -tag -width Ds -compact
 .It Pa ~/.vitunes/vitunes.conf
 Default configuration file.
+This can be overridden with the
+.Op Fl f Ar config-file
+flag.
 .It Pa ~/.vitunes/vitunes.db
 Default database file.
+This can be overridden with the
+.Op Fl d Ar database-file
+flag.
 .It Pa ~/.vitunes/playlists/
 Default playlist directory
+This can be overridden with the
+.Op Fl p Ar playlist-dir
+flag.
 .It Pa /tmp/.vitunes
 Default location for the socket created on start-up that can be used to control
 .Nm .
