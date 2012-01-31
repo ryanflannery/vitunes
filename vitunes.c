@@ -79,11 +79,12 @@ void setup_timer();
 int
 main(int argc, char *argv[])
 {
-   char  *home;
-   int    previous_command;
-   int    input;
-   int    sock = -1;
-   fd_set fds;
+   char          *home;
+   int            previous_command;
+   int            input;
+   int            sock = -1;
+   fd_set         fds;
+   struct passwd *pw;
 
 #ifdef DEBUG
    if ((debug_log = fopen("vitunes-debug.log", "w")) == NULL)
@@ -95,8 +96,11 @@ main(int argc, char *argv[])
     *----------------------------------------------------------------------*/
 
    /* get home dir */
-   if ((home = getenv("HOME")) == NULL)
-      errx(1, "$HOME not set. Can't find my config files.");
+   if ((home = getenv("HOME")) == NULL || *home == '\0') {
+      if ((pw = getpwuid(getuid())) == NULL)
+         errx(1, "Couldn't determine home directory. Can't find my config files.");
+      home = pw->pw_dir;
+   }
 
    /* build paths & other needed strings */
    if (asprintf(&vitunes_dir, VITUNES_DIR_FMT, home) == -1)
