@@ -30,8 +30,7 @@ exe_in_path(const char *e)
    while ((part = strsep(&path, ":")) != NULL && !found) {
       if (strlen(part) == 0) continue;
 
-      asprintf(&test, "%s/%s", part, e); 
-      if (test == NULL)
+      if (asprintf(&test, "%s/%s", part, e) == -1)
          err(1, "%s: failed to build path", __FUNCTION__);
 
       if (access(test, X_OK) == 0)

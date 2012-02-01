@@ -351,6 +351,8 @@ cmd_write(int argc, char *argv[])
       paint_library();
       paint_message("\"%s\" %d songs written",
          filename, viewing_playlist->nfiles);
+
+      free(filename);
    }
 
    return 0;

@@ -178,8 +178,7 @@ mplayer_play(const char *file)
    static const char *cmd_fmt = "\nloadfile \"%s\" 0\nget_property time_pos\n";
    char *cmd;
 
-   asprintf(&cmd, cmd_fmt, file);
-   if (cmd == NULL)
+   if (asprintf(&cmd, cmd_fmt, file) == -1)
       err(1, "%s: asprintf failed", __FUNCTION__);
 
    mplayer_send_cmd(cmd);
@@ -223,8 +222,7 @@ mplayer_seek(int seconds)
    if (!mplayer_state.playing)
       return;
 
-   asprintf(&cmd, cmd_fmt, seconds);
-   if (cmd == NULL)
+   if (asprintf(&cmd, cmd_fmt, seconds) == -1)
       err(1, "%s: asprintf failed", __FUNCTION__);
 
    mplayer_send_cmd(cmd);
@@ -252,8 +250,7 @@ mplayer_volume_step(float percent)
       return;
    }
 
-   asprintf(&cmd, cmd_fmt, percent);
-   if (cmd == NULL)
+   if (asprintf(&cmd, cmd_fmt, percent) == -1)
       err(1, "%s: asprintf failed", __FUNCTION__);
 
    mplayer_send_cmd(cmd);
@@ -274,8 +271,7 @@ mplayer_volume_set(float percent)
    if (percent > 100) percent = 100;
    if (percent < 0)   percent = 0;
 
-   asprintf(&cmd, cmd_fmt, percent);
-   if (cmd == NULL)
+   if (asprintf(&cmd, cmd_fmt, percent) == -1)
       err(1, "%s: asprintf failed", __FUNCTION__);
 
 
