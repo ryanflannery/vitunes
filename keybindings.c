@@ -1034,10 +1034,12 @@ kba_cut(KbaArgs a UNUSED)
       /* make sure user wants this */
       if (user_get_yesno(warning, &response) != 0) {
          paint_message("delete of '%s' cancelled", p->name);
+         free(warning);
          return;
       }
       if (response != 1) {
          paint_message("playlist '%s' not deleted", p->name);
+         free(warning);
          return;
       }
 
