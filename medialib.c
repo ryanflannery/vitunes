@@ -47,7 +47,7 @@ medialib_load(const char *db_file, const char *playlist_dir)
    mdb.filter_results->name = strdup("--FILTER--");
 
    if (mdb.library->name == NULL || mdb.filter_results->name == NULL)
-      err(1, "failed to strdup psuedo-names in medialib_load");
+      err(1, "failed to strdup pseudo-names in medialib_load");
 
    /* load the actual database */
    medialib_db_load(db_file);
