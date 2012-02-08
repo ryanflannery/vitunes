@@ -47,7 +47,7 @@ medialib_load(const char *db_file, const char *playlist_dir)
    mdb.filter_results->name = strdup("--FILTER--");
 
    if (mdb.library->name == NULL || mdb.filter_results->name == NULL)
-      err(1, "failed to strdup psuedo-names in medialib_load");
+      err(1, "failed to strdup pseudo-names in medialib_load");
 
    /* load the actual database */
    medialib_db_load(db_file);
@@ -287,6 +287,7 @@ medialib_db_flush(FILE *fout, const char *timefmt)
    struct tm *ltime;
    char stime[255];
    int f, i;
+   size_t len;
 
    /* header row */
    fprintf(fout, "filename, ");
@@ -309,7 +310,8 @@ medialib_db_flush(FILE *fout, const char *timefmt)
 
       /* convert last-updated time to string */
       ltime = localtime(&(mi->last_updated));
-      strftime(stime, sizeof(stime), timefmt, ltime);
+      len = strftime(stime, sizeof(stime), timefmt, ltime);
+      stime[len] = '\0';
 
       fprintf(fout, "%i, %s, \"%s\"\n",
          mi->length, (mi->is_url ? "true" : "false"), stime);

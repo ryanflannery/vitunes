@@ -691,7 +691,10 @@ paint_str2color(const char *str)
       if ((color = strdup(str)) == NULL)
          err(1, "%s: strdup of '%s' failed.", __FUNCTION__, str);
 
-      numberstr = strtok(color, "color");
+      if ((numberstr = strtok(color, "color")) == NULL) {
+         free(color);
+         return -2;
+      }
       number = (int)strtonum(numberstr, -1, 255, &errstr);
       if (errstr != NULL) {
          free(color);
