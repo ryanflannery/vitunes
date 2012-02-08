@@ -52,7 +52,7 @@ typedef struct {
    char     *db_file;      /* file containing the database */
    char     *playlist_dir; /* directory where playlists are stored */
 
-   /* psuedo-playlists */
+   /* pseudo-playlists */
    playlist *library;         /* playlist representing the database */
    playlist *filter_results;  /* playlist representing results of a filter */
       /*

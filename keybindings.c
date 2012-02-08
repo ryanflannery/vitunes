@@ -1199,7 +1199,7 @@ kba_paste(KbaArgs a)
 
    /* can't alter library */
    if (p == mdb.library) {
-      paint_error("Cannot alter %s psuedo-playlist", mdb.library->name);
+      paint_error("Cannot alter %s pseudo-playlist", mdb.library->name);
       return;
    }
 
