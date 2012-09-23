@@ -151,8 +151,6 @@ medialib_setup_files(const char *vitunes_dir, const char *db_file,
    const char *playlist_dir)
 {
    struct stat sb;
-   FILE *f;
-   int   version[3] = {DB_VERSION_MAJOR, DB_VERSION_MINOR, DB_VERSION_OTHER};
 
    /* create vitunes directory */
    if (mkdir(vitunes_dir, S_IRWXU) == -1) {
@@ -175,6 +173,9 @@ medialib_setup_files(const char *vitunes_dir, const char *db_file,
    /* create database file */
    if (stat(db_file, &sb) < 0) {
       if (errno == ENOENT) { 
+
+         int   version[3] = {DB_VERSION_MAJOR, DB_VERSION_MINOR, DB_VERSION_OTHER};
+         FILE *f;
 
          /* open for writing */
          if ((f = fopen(db_file, "w")) == NULL)
