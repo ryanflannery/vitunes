@@ -112,7 +112,6 @@ playlist_dup(const playlist *original, const char *filename,
 void
 playlist_files_add(playlist *p, meta_info **f, int start, int size, bool record)
 {
-   playlist_changeset *changes;
    int i;
 
    if (start < 0 || start > p->nfiles)
@@ -133,7 +132,8 @@ playlist_files_add(playlist *p, meta_info **f, int start, int size, bool record)
 
    /* update the history for this playlist */
    if (record) {
-      changes = changeset_create(CHANGE_ADD, size, f, start);
+      playlist_changeset *changes = changeset_create(CHANGE_ADD, size,
+            f, start);
       playlist_history_push(p, changes);
       p->needs_saving = true;
    }
