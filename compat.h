@@ -51,9 +51,16 @@
 #  include <libgen.h>
 #endif
 
+/* Mac OS X has fparseln(3), but it must be included thusly */
+#if defined(__MACH__)
+#  include <stdio.h>
+#  include <util.h>
+#endif
+
 /* Mac OS X needs strtonum(3) */
 #if defined(__APPLE__) && defined(__MACH__)
 #  define COMPAT_NEED_STRTONUM
+#  include <libgen.h>
 #endif
 
 /* Linux needs the following.. */

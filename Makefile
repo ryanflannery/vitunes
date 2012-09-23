@@ -1,23 +1,23 @@
 include config.mk
 
-# install locations (these are normally overriden by config.mk & configure.sh)
-PREFIX ?= /usr/local
-BINDIR ?= $(PREFIX)/bin
-MANDIR ?= $(PREFIX)/man/man1
+# install locations -- OVERRIDEN by config.mk
+PREFIX?=/usr/local
+BINDIR?=$(PREFIX)/bin
+MANDIR?=$(PREFIX)/man/man1
 
-# non-base dependencies (TagLib)
-TAGLIB_CFLAGS  ?= `taglib-config --cflags`
-TAGLIB_LDFLAGS ?= `taglib-config --libs` -ltag_c
+# non-base dependencies (TagLib) -- OVERRIDEN by config.mk
+TAGLIB_CFLAGS  ?=`taglib-config --cflags`
+TAGLIB_LDFLAGS ?=`taglib-config --libs` -ltag_c
 
 # combine all dependencies (from taglib & config.mk)
-CFLAGS_DEPS  = $(TAGLIB_CFLAGS)  $(GSTREAMER_CFLAGS)
-LDFLAGS_DEPS = $(TAGLIB_LDFLAGS) $(GSTREAMER_LDFLAGS)
-OBJ_DEPS     = $(GSTREAMER_OBJS)
+CDEPS=$(TAGLIB_CFLAGS)  $(GSTREAMER_CFLAGS)
+LDEPS=$(TAGLIB_LDFLAGS) $(GSTREAMER_LDFLAGS)
+ODEPS=$(GSTREAMER_OBJS)
 
 # build variables
 CC		  ?= /usr/bin/cc
-CFLAGS  += -c -std=c89 -Wall -Wextra -Wno-unused-value $(CDEBUG) $(CFLAGS_DEPS)
-LDFLAGS += -lm -lncursesw -lutil $(LDFLAGS_DEPS)
+CFLAGS  += -c -std=c89 -Wall -Wextra -Wno-unused-value $(CDEBUG) $(CDEPS)
+LDFLAGS += -lm -lncurses -lutil $(LDEPS)
 
 # object files
 OBJS=commands.o compat.o e_commands.o \
@@ -25,7 +25,7 @@ OBJS=commands.o compat.o e_commands.o \
 	  mplayer.o paint.o player.o player_utils.o \
 	  playlist.o socket.o str2argv.o \
 	  uinterface.o vitunes.o \
-	  $(OBJ_DEPS)
+	  $(ODEPS)
 
 # subdirectories with code (.PATH for BSD make, VPATH for GNU make)
 .PATH:  players
