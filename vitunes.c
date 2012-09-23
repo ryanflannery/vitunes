@@ -290,9 +290,13 @@ signal_handler(int sig)
 void
 process_signals()
 {
+   /* cppcheck-suppress variableScope */
    static playlist *prev_queue = NULL;
+   /* cppcheck-suppress variableScope */
    static int       prev_qidx = -1;
+   /* cppcheck-suppress variableScope */
    static bool      prev_is_playing = false;
+   /* cppcheck-suppress variableScope */
    static float     prev_volume = -1;
 
    /* handle resize event */
