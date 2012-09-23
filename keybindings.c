@@ -832,8 +832,8 @@ kba_search(KbaArgs a)
 
    /* set the global query description and the search direction */
    if (str2argv(search_phrase, &argc, &argv, &errmsg) != 0) {
-      free(search_phrase);
       paint_error("parse error: %s in '%s'", errmsg, search_phrase);
+      free(search_phrase);
       return;
    }
 
