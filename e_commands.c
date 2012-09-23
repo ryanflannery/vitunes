@@ -453,8 +453,8 @@ ecmd_tag(int argc, char *argv[])
    if (set_album) printf("%10.10s => '%s'\n", "album", album);
    if (set_title) printf("%10.10s => '%s'\n", "title", title);
    if (set_genre) printf("%10.10s => '%s'\n", "genre", genre);
-   if (set_track) printf("%10.10s => %i\n", "track", track);
-   if (set_year) printf("%10.10s => %i\n", "year", year);
+   if (set_track) printf("%10.10s => %u\n", "track", track);
+   if (set_year) printf("%10.10s => %u\n", "year", year);
    if (set_comment) printf("%10.10s => '%s'\n", "comment", comment);
 
    if (!set_artist && !set_album && !set_title && !set_genre
