@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2011 Ryan Flannery <ryan.flannery@gmail.com>
+ * Copyright (c) 2010, 2011, 2012 Ryan Flannery <ryan.flannery@gmail.com>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -214,6 +214,8 @@ str2argv(char *str, int *argc, char ***argv, const char **errmsg)
       return 1;
    }
 
+   (*argv)[*argc] = NULL;/*XXX*/
+
    return 0;
 }
 
@@ -224,6 +226,10 @@ argv2str(int argc, char *argv[])
    int   len;
    int   off;
    int   i;
+
+   /* handle empty case */
+   if (0 >= argc)
+      return NULL;
 
    /* determine length of resulting string */
    len = 0;
@@ -249,4 +255,3 @@ argv2str(int argc, char *argv[])
 
    return result;
 }
-
