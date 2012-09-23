@@ -5,10 +5,6 @@ PREFIX?=/usr/local
 BINDIR?=$(PREFIX)/bin
 MANDIR?=$(PREFIX)/man/man1
 
-# non-base dependencies (TagLib) -- OVERRIDEN by config.mk
-TAGLIB_CFLAGS  ?=`taglib-config --cflags`
-TAGLIB_LDFLAGS ?=`taglib-config --libs` -ltag_c
-
 # combine all dependencies (from taglib & config.mk)
 CDEPS=$(TAGLIB_CFLAGS)  $(GSTREAMER_CFLAGS)
 LDEPS=$(TAGLIB_LDFLAGS) $(GSTREAMER_LDFLAGS)
@@ -53,6 +49,7 @@ clean-all: clean
 	rm -rf report.*
 
 install: vitunes
+	mkdir -p $(MANDIR)
 	install -c -m 0555 vitunes $(BINDIR)
 	install -c -m 0444 doc/vitunes*.1 $(MANDIR)
 
@@ -81,7 +78,7 @@ report.mandoc:
 report.cppcheck:
 	@figlet "cppcheck"
 	make clean
-	cppcheck -i compat --enable=all -D_GNU_SOURCE . 1> /dev/null 2> $@
+	cppcheck --std=c89 -i compat --enable=all -D_GNU_SOURCE . 1> /dev/null 2> $@
 	@cat $@
 
 .PHONY: report.scan-build
