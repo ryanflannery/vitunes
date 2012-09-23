@@ -35,7 +35,6 @@ player_get_field2show(const meta_info *mi)
 {
    static time_t last_updated = 0;
    static int    index        = 0;
-   static int    offset;
    static int    fields[] = { MI_CINFO_ARTIST, MI_CINFO_ALBUM,
                               MI_CINFO_TITLE };
 
@@ -49,7 +48,7 @@ player_get_field2show(const meta_info *mi)
       return mi->cinfo[ fields[index] ];
    else {
       /* draw the filename if field info not there, but trim it down */
-      offset = 0;
+      int offset = 0;
       if (strlen(mi->filename) > 49)
          offset += strlen(mi->filename) - 49;
 
