@@ -122,7 +122,7 @@ toggle_list_create(int registr, int argc, char *argv[])
          continue;
 
       /* count number strings in this command and determine length */
-      for (j = i; j < argc && strcmp("/", argv[j]); j++)
+      for (j = i; j < argc && strcmp("/", argv[j]); j++);
 
       /* now collapse them into a single string */
       cmd = argv2str(j - i + 1, argv + i);
@@ -268,7 +268,6 @@ cmd_quit(int argc, char *argv[])
 int
 cmd_write(int argc, char *argv[])
 {
-   playlist *dup;
    char     *filename;
    bool      forced;
 
@@ -329,7 +328,7 @@ cmd_write(int argc, char *argv[])
       /* if reached here, we're going to do the save-as... */
 
       /* duplicate playlist */
-      dup = playlist_dup(viewing_playlist, filename, argv[1]);
+      playlist *dup = playlist_dup(viewing_playlist, filename, argv[1]);
       if (will_clobber)
          medialib_playlist_remove(clobber_index);
       else
@@ -717,9 +716,6 @@ cmd_set(int argc, char *argv[])
 int
 cmd_reload(int argc, char *argv[])
 {
-   char *db_file;
-   char *playlist_dir;
-
    if (argc != 2) {
       paint_error("usage: %s [ db | conf ]", argv[0]);
       return 1;
@@ -728,8 +724,8 @@ cmd_reload(int argc, char *argv[])
    /* reload database or config file */
    if (strcasecmp(argv[1], "db") == 0) {
 
-      db_file = strdup(mdb.db_file);
-      playlist_dir = strdup(mdb.playlist_dir);
+      char *db_file = strdup(mdb.db_file);
+      char *playlist_dir = strdup(mdb.playlist_dir);
       if (db_file == NULL || playlist_dir == NULL)
          err(1, "cmd_reload: strdup(3) failed");
 
