@@ -68,24 +68,21 @@ cscope.out: *.h *.c
 
 ### static analysis checks
 
-.PHONY: report.mandoc
-report.mandoc:
+report.mandoc: doc/*.1
 	@figlet "mandoc -Tlint"
 	-mandoc -Tlint doc/vitunes*.1 2> $@
 	cat $@
 
-.PHONY: report.cppcheck
-report.cppcheck:
+report.cppcheck: *.h *.c
 	@figlet "cppcheck"
-	make clean
-	cppcheck --std=c89 -i compat --enable=all -D_GNU_SOURCE . 1> /dev/null 2> $@
+	cppcheck --std=c89 --enable=all --inline-suppr  -i compat . 2> $@
 	@cat $@
 
-.PHONY: report.scan-build
-report.scan-build:
+report.scan-build: *.h *.c
 	@figlet "clang analyzer"
 	make clean
-	scan-build -o report.scan-build make
+	mkdir -p $@
+	scan-build -o $@ make
 
 ### wrapper for static checks above
 .PHONY: reports
