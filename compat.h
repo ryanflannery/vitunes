@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2011 Ryan Flannery <ryan.flannery@gmail.com>
+ * Copyright (c) 2010, 2011, 2012 Ryan Flannery <ryan.flannery@gmail.com>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -59,8 +59,10 @@
 
 /* Mac OS X needs strtonum(3) */
 #if defined(__APPLE__) && defined(__MACH__)
+#  include <inttypes.h>
+#  include <stdlib.h>
 #  define COMPAT_NEED_STRTONUM
-#  include <libgen.h>
+#  define COMPAT_NEED_STRTOLL
 #endif
 
 /* Linux needs the following.. */
@@ -98,6 +100,10 @@
 #ifdef COMPAT_NEED_STRLCAT
    size_t strlcat(char *dst, const char *src, size_t siz);
    size_t strlcpy(char *dst, const char *src, size_t siz);
+#endif
+
+#ifdef COMPAT_NEED_STRTOLL
+   long long strtoll(const char *str, char **endptr, int base);
 #endif
 
 #ifdef COMPAT_NEED_STRTONUM
