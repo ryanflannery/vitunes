@@ -173,6 +173,7 @@ toggle_remove(int registr)
 
    if (!found) return;
 
+   toggle_list_free(toggleset[idx]);
    for (i = idx; i < toggleset_size - 1; i++)
       toggleset[i] = toggleset[i + 1];
 
