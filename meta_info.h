@@ -20,9 +20,9 @@
 #include "compat.h"
 
 #include <ctype.h>
-#include <limits.h>
 #include <err.h>
 #include <errno.h>
+#include <limits.h>
 #include <stdbool.h> 
 #include <stdint.h>
 #include <stdio.h>

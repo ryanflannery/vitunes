@@ -19,12 +19,12 @@
 
 #include "../compat.h"
 
+#include <err.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-#include <stdio.h>
-#include <err.h>
 
 bool exe_in_path(const char *e);
 

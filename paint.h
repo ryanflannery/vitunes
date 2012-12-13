@@ -21,9 +21,9 @@
 
 #include <curses.h>
 #include <math.h>
-#include <string.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <string.h>
 #include <time.h>
 
 #include "enums.h"

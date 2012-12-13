@@ -21,9 +21,9 @@
 
 #include <err.h>
 
-#include "playlist.h"
-#include "paint.h"
 #include "debug.h"
+#include "paint.h"
+#include "playlist.h"
 
 /* "static" backends (those that aren't dynamically loaded) */
 #include "players/mplayer.h"

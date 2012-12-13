@@ -19,12 +19,12 @@
 
 #include "compat.h"
 
+#include "debug.h"
 #include "enums.h"
+#include "keybindings.h"
 #include "paint.h"
 #include "str2argv.h"
 #include "vitunes.h"
-#include "debug.h"
-#include "keybindings.h"
 
 /****************************************************************************
  * Toggle-list handling stuff
