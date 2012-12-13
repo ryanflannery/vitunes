@@ -75,7 +75,7 @@ extern medialib mdb;
 
 /* load/free the global media library */
 void medialib_load(const char *db_file, const char *playlist_dir);
-void medialib_destroy();
+void medialib_destroy(void);
 
 /* add/remove playlists to/from the global media library */
 void medialib_playlist_add(playlist *p);

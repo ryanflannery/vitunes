@@ -107,7 +107,7 @@ int retrieve_playlist_filenames(const char *dirname, char ***files);
 playlist_changeset *changeset_create(short t, size_t s, meta_info **f, int l);
 void changeset_free(playlist_changeset *c);
 
-playlist_changeset **playlist_history_new();
+playlist_changeset **playlist_history_new(void);
 void playlist_history_free(playlist *p);
 
 void playlist_history_push(playlist *p, playlist_changeset *c);

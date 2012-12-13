@@ -64,7 +64,7 @@ extern int         visual_mode_start;
 extern volatile sig_atomic_t VSIG_QUIT;
 
 /* other */
-void load_config();
-void process_signals();
+void load_config(void);
+void process_signals(void);
 
 #endif

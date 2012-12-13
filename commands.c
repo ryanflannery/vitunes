@@ -54,7 +54,7 @@ toggle_list **toggleset;
 size_t        toggleset_size;
 
 void
-toggleset_init()
+toggleset_init(void)
 {
    const int max_size = 52;  /* since we only have registers a-z and A-Z */
    if ((toggleset = calloc(max_size, sizeof(toggle_list*))) == NULL)
@@ -64,7 +64,7 @@ toggleset_init()
 }
 
 void
-toggleset_free()
+toggleset_free(void)
 {
    size_t i;
    for (i = 0; i < toggleset_size; i++)

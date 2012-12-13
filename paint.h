@@ -70,12 +70,12 @@ typedef struct {
 extern _colors colors;
 
 /* routines for painting each window */
-void paint_status_bar();
-void paint_player();
-void paint_library();
-void paint_playlist();
-void paint_borders();
-void paint_all();
+void paint_status_bar(void);
+void paint_player(void);
+void paint_library(void);
+void paint_playlist(void);
+void paint_borders(void);
+void paint_all(void);
 
 extern bool showing_file_info;
 void paint_playlist_file_info(const meta_info *m);
@@ -85,7 +85,7 @@ void paint_error(char *fmt, ...);
 void paint_message(char *fmt, ...);
 
 /* for setting up and working with the colors */
-void paint_setup_colors();
+void paint_setup_colors(void);
 int  paint_str2item(const char *str);
 int  paint_str2color(const char *str);
 

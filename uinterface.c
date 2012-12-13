@@ -139,13 +139,13 @@ ui_init(int library_width)
 }
 
 bool
-ui_is_init()
+ui_is_init(void)
 {
    return (ui.active != NULL) && !isendwin();
 }
 
 void
-ui_destroy()
+ui_destroy(void)
 {
    /* destroy each window (this also free()'s the mem for each window) */
    delwin(ui.player);
@@ -166,7 +166,7 @@ ui_destroy()
 }
 
 void
-ui_resize()
+ui_resize(void)
 {
    struct winsize ws;
 
@@ -205,7 +205,7 @@ ui_resize()
 }
 
 void
-ui_hide_library()
+ui_hide_library(void)
 {
    int w, h;
 
@@ -222,7 +222,7 @@ ui_hide_library()
 }
 
 void
-ui_unhide_library()
+ui_unhide_library(void)
 {
    int w, h;
 
@@ -241,7 +241,7 @@ ui_unhide_library()
 }
 
 void
-ui_clear()
+ui_clear(void)
 {
    wclear(ui.player);
    wclear(ui.command);

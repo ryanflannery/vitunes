@@ -44,26 +44,26 @@ typedef struct {
    GstBus      *bus;
 } gst_player;
 
-void  gstplayer_init();
-void  gstplayer_cleanup();
+void  gstplayer_init(void);
+void  gstplayer_cleanup(void);
 
-void  gstplayer_stop();
+void  gstplayer_stop(void);
 void  gstplayer_play(const char *);
-void  gstplayer_pause();
+void  gstplayer_pause(void);
 
 void  gstplayer_seek(int);
 void  gstplayer_volume_step(float);
 
-float gstplayer_get_position();
-float gstplayer_get_volume();
-bool  gstplayer_is_playing();
-bool  gstplayer_is_paused();
+float gstplayer_get_position(void);
+float gstplayer_get_volume(void);
+bool  gstplayer_is_playing(void);
+bool  gstplayer_is_paused(void);
 
 void  gstplayer_set_callback_playnext(void (*f)(void));
 void  gstplayer_set_callback_notice(void (*f)(char *, ...));
 void  gstplayer_set_callback_error(void (*f)(char *, ...));
 void  gstplayer_set_callback_fatal(void (*f)(char *, ...));
 
-void  gstplayer_monitor();
+void  gstplayer_monitor(void);
 
 #endif /* VITUNES_GSTPLAYER_H */

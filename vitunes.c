@@ -76,7 +76,7 @@ char *progname;
 int  handle_switches(int argc, char *argv[]);
 void usage(void);
 void signal_handler(int);
-void setup_timer();
+void setup_timer(void);
 
 
 int
@@ -297,7 +297,7 @@ signal_handler(int sig)
 
 /* handle any signal flags */
 void
-process_signals()
+process_signals(void)
 {
    /* cppcheck-suppress variableScope */
    static playlist *prev_queue = NULL;
@@ -357,7 +357,7 @@ process_signals()
 
 /* setup timer signal handler above */
 void
-setup_timer()
+setup_timer(void)
 {
    struct sigaction sig_act;
    struct itimerval timer;
@@ -387,7 +387,7 @@ setup_timer()
  * XXX note that this requires mdb, ui, and player to all be loaded/setup
  */
 void
-load_config()
+load_config(void)
 {
    const char *errmsg = NULL;
    size_t  length, linenum;

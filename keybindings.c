@@ -253,7 +253,7 @@ size_t KeyBindingsSize;
 size_t KeyBindingsCapacity;
 
 void
-kb_increase_capacity()
+kb_increase_capacity(void)
 {
    KeyBinding  *new_buffer;
    size_t       nbytes;
@@ -275,7 +275,7 @@ kb_increase_capacity()
  ****************************************************************************/
 
 void
-kb_init()
+kb_init(void)
 {
    size_t i;
 
@@ -290,7 +290,7 @@ kb_init()
 }
 
 void
-kb_free()
+kb_free(void)
 {
    free(KeyBindings);
    KeyBindingsSize = 0;
@@ -340,7 +340,7 @@ kb_unbind_key(KeyCode key)
 }
 
 void
-kb_unbind_all()
+kb_unbind_all(void)
 {
    KeyBindingsSize = 0;
 }
@@ -465,7 +465,7 @@ kb_execute_by_name(const char *name)
  ****************************************************************************/
 
 KbaArgs
-get_dummy_args()
+get_dummy_args(void)
 {
    KbaArgs dummy = { .direction = -1, .scale = -1, .amount = -1,
       .placement = -1, .num = -1 };
@@ -1605,10 +1605,10 @@ kba_toggle(KbaArgs a)
 
 int _global_input_num = 0;
 
-void gnum_clear()
+void gnum_clear(void)
 { _global_input_num = 0; }
 
-int  gnum_get()
+int  gnum_get(void)
 { return _global_input_num; }
 
 void gnum_set(int x)
@@ -1620,7 +1620,7 @@ void gnum_add(int x)
 }
 
 int
-gnum_retrieve()
+gnum_retrieve(void)
 {
    int n = 1;
    if (gnum_get() > 0) {
@@ -1639,7 +1639,7 @@ gnum_retrieve()
 
 Direction _global_search_dir = FORWARDS;
 
-Direction search_dir_get()
+Direction search_dir_get(void)
 { return _global_search_dir; }
 
 void search_dir_set(Direction dir)
@@ -1655,7 +1655,7 @@ void search_dir_set(Direction dir)
 yank_buffer _yank_buffer;
 
 void
-ybuffer_init()
+ybuffer_init(void)
 {
    _yank_buffer.files = calloc(YANK_BUFFER_CHUNK_SIZE, sizeof(meta_info*));
    if (_yank_buffer.files == NULL)
@@ -1666,13 +1666,13 @@ ybuffer_init()
 }
 
 void
-ybuffer_clear()
+ybuffer_clear(void)
 {
    _yank_buffer.nfiles = 0;
 }
 
 void
-ybuffer_free()
+ybuffer_free(void)
 {
    free(_yank_buffer.files);
    _yank_buffer.capacity = 0;
@@ -1706,7 +1706,7 @@ ybuffer_add(meta_info *f)
  ****************************************************************************/
 
 void
-redraw_active()
+redraw_active(void)
 {
    if (ui.active == ui.library)
       paint_library();
