@@ -11,7 +11,7 @@ LDEPS=$(TAGLIB_LIBS) $(GSTREAMER_LIBS)
 ODEPS=$(GSTREAMER_OBJS)
 
 # build variables
-CC		  ?= /usr/bin/cc
+CC      ?= /usr/bin/cc
 CFLAGS  += -c -std=c89 -Wall -Wextra -Wno-unused-value $(CDEBUG) $(CDEPS)
 LIBS    += -lm -lncurses -lutil $(LDEPS)
 
