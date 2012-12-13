@@ -448,8 +448,8 @@ kb_execute_by_name(const char *name)
    if (!kb_str2action(name, &a))
       return false;
 
-   for(x = 0; x < KeyActionHandlersSize; x++) {
-      if(a == KeyActionHandlers[x].action) {
+   for (x = 0; x < KeyActionHandlersSize; x++) {
+      if (a == KeyActionHandlers[x].action) {
          KeyActionHandlers[x].handler(KeyActionHandlers[x].args);
          return true;
       }
@@ -1762,7 +1762,7 @@ execute_external_command(const char *cmd)
    printf("\nPress ENTER or type command to continue");
    fflush(stdout);
    raw();
-   while(!VSIG_QUIT) {
+   while (!VSIG_QUIT) {
       if ((input = getch()) && input != ERR) {
          if (input != '\r')
             ungetch(input);

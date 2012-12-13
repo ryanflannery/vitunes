@@ -35,14 +35,14 @@ sock_send_msg(const char *msg)
    socklen_t            addr_len;
 
 
-   if((ret = socket(AF_UNIX, SOCK_DGRAM, 0)) == -1)
+   if ((ret = socket(AF_UNIX, SOCK_DGRAM, 0)) == -1)
       return -1;
 
    addr.sun_family = AF_UNIX;
    strcpy(addr.sun_path, VITUNES_SOCK);
    addr_len = sizeof(addr.sun_family) + strlen(VITUNES_SOCK) + 1;
 
-   if(sendto(ret, msg, strlen(msg), 0, (struct sockaddr *) &addr, addr_len) == -1) {
+   if (sendto(ret, msg, strlen(msg), 0, (struct sockaddr *) &addr, addr_len) == -1) {
       close(ret);
       return -1;
    }
@@ -61,14 +61,14 @@ sock_listen(void)
 
    unlink(VITUNES_SOCK);
 
-   if((ret = socket(AF_UNIX, SOCK_DGRAM, 0)) == -1)
+   if ((ret = socket(AF_UNIX, SOCK_DGRAM, 0)) == -1)
       return -1;
 
    addr.sun_family = AF_UNIX;
    strcpy(addr.sun_path, VITUNES_SOCK);
    addr_len = sizeof(addr.sun_family) + strlen(VITUNES_SOCK) + 1;
 
-   if(bind(ret, (struct sockaddr *) &addr, addr_len) == -1)
+   if (bind(ret, (struct sockaddr *) &addr, addr_len) == -1)
       return -1;
 
    fcntl(ret, F_SETFD, FD_CLOEXEC, &coe);
@@ -86,7 +86,7 @@ sock_recv_msg(int sock, char *msg, size_t msg_len)
 
    ret = recvfrom(sock, msg, msg_len, 0, (struct sockaddr *) &addr, &addr_len);
 
-   if(ret > -1)
+   if (ret > -1)
       msg[ret] = '\0';
 
    return ret;
@@ -98,12 +98,12 @@ sock_recv_and_exec(int sock)
 {
    char   msg[64];
 
-   if(sock_recv_msg(sock, msg, sizeof(msg)) == -1)
+   if (sock_recv_msg(sock, msg, sizeof(msg)) == -1)
       return;
 
-   if(!strcmp(msg, VITUNES_RUNNING))
+   if (!strcmp(msg, VITUNES_RUNNING))
       return;
 
-   if(!kb_execute_by_name(msg))
+   if (!kb_execute_by_name(msg))
       cmd_execute(msg);
 }

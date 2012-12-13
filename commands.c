@@ -542,7 +542,7 @@ cmd_display(int argc, char *argv[])
       return 1;
    }
 
-   if(ui_is_init())
+   if (ui_is_init())
       paint_playlist();
 
    return 0;
@@ -655,7 +655,7 @@ cmd_set(int argc, char *argv[])
       /* resize & redraw (if we're past setup & curses is running) */
       ui.lwidth = new_width;
       ui_resize();
-      if(player_is_setup && ui_is_init()) {
+      if (player_is_setup && ui_is_init()) {
          ui_clear();
          paint_all();
       }
@@ -886,19 +886,19 @@ cmd_playlist(int argc, char *argv[])
       return 1;
    }
 
-   for(x = 0; x < mdb.nplaylists; x++) {
-      if(!strncmp(argv[1], mdb.playlists[x]->name, strlen(argv[1]))) {
-         if(idx > -1) {
+   for (x = 0; x < mdb.nplaylists; x++) {
+      if (!strncmp(argv[1], mdb.playlists[x]->name, strlen(argv[1]))) {
+         if (idx > -1) {
             idx = -2;
             break;
          }
 
-         if(idx == -1)
+         if (idx == -1)
             idx = x;
       }
    }
 
-   if(idx > -1) {
+   if (idx > -1) {
       setup_viewing_playlist(mdb.playlists[idx]);
       ui.active = ui.playlist;
       paint_all();
@@ -906,12 +906,12 @@ cmd_playlist(int argc, char *argv[])
       return 0;
    }
 
-   if(idx == -1) {
+   if (idx == -1) {
       paint_error("no match for: %s", argv[1]);
       return 0;
    }
 
-   if(idx == -2)
+   if (idx == -2)
       paint_error("no unique match for: %s", argv[1]);
 
    return 0;
