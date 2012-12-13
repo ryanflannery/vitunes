@@ -125,7 +125,7 @@ toggle_list_create(int registr, int argc, char *argv[])
       for (j = i; j < argc && strcmp("/", argv[j]); j++);
 
       /* now collapse them into a single string */
-      cmd = argv2str(j - i + 1, argv + i);
+      cmd = argv2str(j - i, argv + i);
       toggle_list_add_command(t, cmd);
       free(cmd);
 
