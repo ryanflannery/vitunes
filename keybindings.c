@@ -1304,6 +1304,9 @@ kba_command_mode(KbaArgs a UNUSED)
       return;
    }
 
+   /* add entered command to the history */
+   cmd_mode_hist_add(cmd);
+
    /* check for '!' used for executing external commands */
    if (cmd[0] == '!') {
       execute_external_command(cmd + 1);

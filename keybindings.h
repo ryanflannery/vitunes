@@ -19,6 +19,7 @@
 
 #include "compat.h"
 
+#include "commands.h"
 #include "debug.h"
 #include "enums.h"
 #include "paint.h"
