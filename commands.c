@@ -1132,10 +1132,8 @@ user_getstr(const char *prompt, char **response)
       input[pos] = '\0';
 
    /* trim the fat */
-   if ((*response = calloc(strlen(input) + 1, sizeof(char))) == NULL)
-      err(1, "user_getstr: calloc(3) failed for result");
-
-   snprintf(*response, strlen(input) + 1, "%s", input);
+   if ((*response = strdup(input)) == NULL)
+      err(1, "%s: strdup(3) failed for result", __FUNCTION__);
 
 end:
    free(input);
