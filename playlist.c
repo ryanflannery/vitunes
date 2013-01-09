@@ -203,18 +203,21 @@ playlist *
 playlist_load(const char *filename, meta_info **db, int ndb)
 {
    meta_info *mi, **mit;
-   FILE *fin;
-   char *period;
-   char  entry[PATH_MAX + 1];
+   FILE      *fin;
+   char      *name, *period;
+   char       entry[PATH_MAX + 1];
 
    /* open file */
    if ((fin = fopen(filename, "r")) == NULL)
       err(1, "playlist_load: failed to open playlist '%s'", filename);
 
+   if ((name = basename(filename)) == NULL)
+      err(1, "%s: basename(3) failed", __FUNCTION__);
+
    /* create playlist and setup */
    playlist *p = playlist_new();
    p->filename = strdup(filename);
-   p->name     = strdup(basename(p->filename));
+   p->name     = strdup(name);
    if (p->filename == NULL || p->name == NULL)
       err(1, "playlist_load: failed to allocate info for playlist '%s'", filename);
 
