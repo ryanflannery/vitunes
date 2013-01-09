@@ -413,11 +413,8 @@ cmd_new(int argc, char *argv[])
    }
 
    /* create & setup playlist */
-   p = playlist_new();
+   p = playlist_new(filename, name);
    p->needs_saving = true;
-   p->filename = filename;
-   if ((p->name = strdup(name)) == NULL)
-      err(1, "cmd_new: strdup(3) failed");
 
    /* add playlist to media library and update ui */
    medialib_playlist_add(p);
@@ -429,6 +426,7 @@ cmd_new(int argc, char *argv[])
    paint_library();
    paint_message("playlist \"%s\" added", name);
 
+   free(filename);
    return 0;
 }
 

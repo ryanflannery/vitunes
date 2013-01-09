@@ -37,7 +37,7 @@ playlist_increase_capacity(playlist *p)
  * structure must be free(2)'d using playlist_free().
  */
 playlist *
-playlist_new(void)
+playlist_new(const char *filename, const char *name)
 {
    playlist *p;
    
@@ -54,6 +54,15 @@ playlist_new(void)
    p->history  = playlist_history_new();
    p->hist_present = -1;
    p->needs_saving = false;
+
+   if (filename != NULL) {
+      if ((p->filename = strdup(filename)) == NULL)
+         err(1, "%s: strdup(3) failed", __FUNCTION__);
+   }
+   if (name != NULL) {
+      if ((p->name = strdup(name)) == NULL)
+         err(1, "%s: strdup(3) failed", __FUNCTION__);
+   }
 
    return p;
 }
@@ -81,18 +90,9 @@ playlist_dup(const playlist *original, const char *filename,
    int i;
 
    /* create new playlist and copy simple members */
-   newplist           = playlist_new();
+   newplist           = playlist_new(filename, name);
    newplist->nfiles   = original->nfiles;
    newplist->capacity = original->nfiles;
-
-   if (name != NULL) {
-      if ((newplist->name = strdup(name)) == NULL)
-         err(1, "playlist_dup: strdup name failed");
-   }
-   if (filename != NULL) {
-      if ((newplist->filename = strdup(filename)) == NULL)
-         err(1, "playlist_dup: strdup filename failed");
-   }
 
    /* copy all of the files */
    newplist->files = calloc(original->nfiles, sizeof(meta_info*));
@@ -215,11 +215,7 @@ playlist_load(const char *filename, meta_info **db, int ndb)
       err(1, "%s: basename(3) failed", __FUNCTION__);
 
    /* create playlist and setup */
-   playlist *p = playlist_new();
-   p->filename = strdup(filename);
-   p->name     = strdup(name);
-   if (p->filename == NULL || p->name == NULL)
-      err(1, "playlist_load: failed to allocate info for playlist '%s'", filename);
+   playlist *p = playlist_new(filename, name);
 
    /* hack to remove '.playlist' from name */
    period  = strrchr(p->name, '.');
@@ -312,7 +308,7 @@ playlist_filter(const playlist *p, bool m)
    if (!mi_query_isset())
       return NULL;
    
-   results = playlist_new();
+   results = playlist_new(NULL, NULL);
    for (i = 0; i < p->nfiles; i++) {
       if (mi_match(p->files[i])) {
          if (m)  playlist_files_append(results, &(p->files[i]), 1, false);

@@ -81,7 +81,7 @@ typedef struct {
  */
 
 /* create/destroy/duplicate playlist structs */
-playlist *playlist_new(void);
+playlist *playlist_new(const char *filename, const char *name);
 void playlist_free(playlist *p);
 playlist *playlist_dup(const playlist *original, const char *filename,
                        const char* name);
