@@ -993,10 +993,9 @@ cmd_execute(char *cmd)
 int
 user_getstr(const char *prompt, char **response)
 {
-   const int MAX_INPUT_SIZE = 1000; /* TODO remove this limit */
-   char     *input, *ptr;
-   int       pos, ch, ret;
-   size_t    hist_index = cmd_mode_hist_size;
+   char   *input, *new_input, *ptr;
+   int     ch, ret;
+   size_t  len, pos, hist_index = cmd_mode_hist_size;
 
    /* display the prompt */
    werase(ui.command);
@@ -1007,15 +1006,9 @@ user_getstr(const char *prompt, char **response)
    wmove(ui.command, 0, strlen(prompt));
    wrefresh(ui.command);
 
-   /* allocate input space and clear */
-   if ((input = calloc(MAX_INPUT_SIZE, sizeof(char))) == NULL)
-      err(1, "user_getstr: calloc(3) failed for input string");
-
-   bzero(input, MAX_INPUT_SIZE);
-
    /* start getting input */
-   ret = 0;
-   pos = 0;
+   input = NULL;
+   len = ret = pos = 0;
    while ((ch = getch()) && !VSIG_QUIT) {
 
       /*
@@ -1074,8 +1067,10 @@ user_getstr(const char *prompt, char **response)
          ptr = cmd_mode_hist[hist_index];
 
          /* copy it to the input buffer */
-         strlcpy(input, ptr, MAX_INPUT_SIZE);
-         pos = strlen(input);
+         free(input);
+         if ((input = strdup(ptr)) == NULL)
+            err(1, "%s: strdup(3) failed", __FUNCTION__);
+         len = pos = strlen(input);
 
          mvwaddstr(ui.command, 0, strlen(prompt), ptr);
          break;
@@ -1099,21 +1094,27 @@ user_getstr(const char *prompt, char **response)
          ptr = cmd_mode_hist[hist_index];
 
          /* copy it to the input buffer */
-         strlcpy(input, ptr, MAX_INPUT_SIZE);
-         pos = strlen(input);
+         free(input);
+         if ((input = strdup(ptr)) == NULL)
+            err(1, "%s: strdup(3) failed", __FUNCTION__);
+         len = pos = strlen(input);
 
          mvwaddstr(ui.command, 0, strlen(prompt), ptr);
          break;
       default:
          /* got regular input.  add to buffer. */
+         if (pos >= len) {
+            if (len == SIZE_MAX)
+               err(1, "%s: overflow", __FUNCTION__);
+            if ((new_input = realloc(input, len + 2)) == NULL)
+               err(1, "%s: realloc(3) failed", __FUNCTION__);
+            input = new_input;
+            len++;
+         }
+
          input[pos] = ch;
          mvwaddch(ui.command, 0, strlen(prompt) + pos, ch);
          pos++;
-
-         /* see todo above - realloc input buffer here if position reaches max */
-         if (pos >= MAX_INPUT_SIZE)
-            errx(1, "user_getstr: shamefull limit reached");
-
          break;
       }
 
@@ -1128,7 +1129,7 @@ user_getstr(const char *prompt, char **response)
 
    /* NULL-terminate and trim off trailing whitespace */
    input[pos--] = '\0';
-   for (; input[pos] == ' ' && pos >= 0; pos--)
+   for (; input[pos] == ' '; pos--)
       input[pos] = '\0';
 
    /* trim the fat */
