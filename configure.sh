@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [[ "$#" != "0" ]];
+if [ "$#" != "0" ];
 then
    echo "usage: $0\n"
    echo "Running this script does the following:"
@@ -68,10 +68,10 @@ echo
 HaveTaglib=0
 
 # Prefer taglib-config, try that first
-if [[ 0 -eq ${HaveTaglib} ]];
+if [ 0 -eq ${HaveTaglib} ];
 then
    result=`which taglib-config > /dev/null 2>&1`
-   if [[ 0 -eq $? ]];
+   if [ 0 -eq $? ];
    then
       echo "FOUND (via taglib-config)"
       HaveTaglib=1
@@ -84,13 +84,13 @@ TAGLIB_LDFLAGS=\`taglib-config --libs\` -ltag_c
 fi
 
 # Try pkg-config
-if [[ 0 -eq ${HaveTaglib} ]];
+if [ 0 -eq ${HaveTaglib} ];
 then
    result=`which pkg-config > /dev/null 2>&1`
-   if [[ 0 -eq $? ]];
+   if [ 0 -eq $? ];
    then
       result=`pkg-config --exists taglib`
-      if [[ "$?" == "0" ]];
+      if [ "$?" -eq "0" ];
       then
          echo "FOUND (via pkg-config)"
          HaveTaglib=1
@@ -104,7 +104,7 @@ TAGLIB_LDFLAGS=\`pkg-config taglib --libs\` -ltag_c
 fi
 
 # No taglib.  Alert but continue.
-if [[ 0 -eq ${HaveTaglib} ]];
+if [ 0 -eq ${HaveTaglib} ];
 then
    echo "NOT FOUND!"
    echo "   ERROR: TagLib must be installed to build vitunes."
@@ -124,7 +124,7 @@ HaveMediaBackend=0
 
 # Check for mplayer
 result=`which mplayer > /dev/null 2>&1`
-if [[ 0 -eq $? ]];
+if [ 0 -eq $? ];
 then
    HaveMediaBackend=1
    echo "   Found mplayer"
@@ -133,7 +133,7 @@ fi
 # Check for gstreamer
 gstreamer=gstreamer-0.10
 result=`pkg-config --exists ${gstreamer} > /dev/null 2>&1`
-if [[ 0 -eq $? ]];
+if [ 0 -eq $? ];
 then
    HaveMediaBackend=1
    echo "   Found gstreamer"
@@ -146,7 +146,7 @@ GSTREAMER_OBJS    = gstplayer.o
 fi
 
 # None found.  Alert but continue.
-if [[ 0 -eq ${HaveMediaBackend} ]];
+if [ 0 -eq ${HaveMediaBackend} ];
 then
    echo "   ERROR: No media backound found."
    echo "   In order for vitunes to play music, either mplayer or gstreamer"
@@ -165,7 +165,7 @@ echo
 echo "BUILDING config.mk..."
 
 # backup any existing config
-if [[ -f config.mk ]];
+if [ -f config.mk ];
 then
    backup=config.mk.bak
    echo "   Backing up existing config.mk to ${backup}"
@@ -205,4 +205,3 @@ echo "locations listed above, then you should now be able to install vitunes"
 echo "with:"
 echo "   $ make install"
 echo "G'luck!"
-
