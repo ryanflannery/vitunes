@@ -1322,13 +1322,19 @@ kba_command_mode(KbaArgs a UNUSED)
 void
 kba_shell(KbaArgs a UNUSED)
 {
-   char  *cmd;
+   char  *cmd, *newcmd;
 
    /* get command from user */
    if (user_getstr("!", &cmd) != 0) {
       paint_status_bar();
       return;
    }
+
+   /* prepend the exclamation point before adding it to the history */
+   if (asprintf(&newcmd, "!%s", cmd) == -1)
+      err(1, "%s: asprintf failed", __FUNCTION__);
+   cmd_mode_hist_add(newcmd);
+   free(newcmd);
 
    execute_external_command(cmd);
    free(cmd);
