@@ -46,6 +46,7 @@ sock_send_msg(const char *msg)
       return -1;
    }
 
+   close(ret);
    return 0;
 }
 
