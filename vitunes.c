@@ -130,7 +130,7 @@ main(int argc, char *argv[])
       printf("Vitunes appears to be running already. Won't open socket.");
    } else {
       if((sock = sock_listen()) == -1)
-         errx(1, "failed to open socket.");
+         err(1, "failed to open socket");
    }
 
 
@@ -476,8 +476,9 @@ handle_switches(int argc, char *argv[])
       switch (ch) {
          case 'c':
             if(sock_send_msg(optarg) == -1)
-               errx(1, "Failed to send message. Vitunes not running?");
-            exit(0);
+               err(1, "Failed to send message. Vitunes not running?");
+            had_c_commands = 1;
+            break;
 
          case 'd':
             free(db_file);
