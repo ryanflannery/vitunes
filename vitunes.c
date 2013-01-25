@@ -126,9 +126,9 @@ main(int argc, char *argv[])
    /* handle command-line switches & e-commands */
    handle_switches(argc, argv);
 
-   if(sock_send_msg(VITUNES_RUNNING) != -1) {
-      printf("Vitunes appears to be running already. Won't open socket.");
-   } else {
+   if(sock_send_msg(VITUNES_RUNNING) != -1)
+      warnx("Vitunes appears to be running already. Won't open socket.");
+   else {
       if((sock = sock_listen()) == -1)
          err(1, "failed to open socket");
    }
