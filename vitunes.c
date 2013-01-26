@@ -472,7 +472,7 @@ handle_switches(int argc, char *argv[])
 {
    int ch;
 
-   while ((ch = getopt(argc, argv, "he:f:d:p:m:c:")) != -1) {
+   while ((ch = getopt(argc, argv, "hc:d:e:f:m:p:")) != -1) {
       switch (ch) {
          case 'c':
             if(sock_send_msg(optarg) == -1)
