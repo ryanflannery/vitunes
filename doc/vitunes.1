@@ -21,9 +21,10 @@
 .Sh SYNOPSIS
 .Nm vitunes
 .Bk -words
-.Op Fl c Ar command
+.Op Fl h
+.Op Fl c Ar command Op ...
 .Op Fl d Ar database-file
-.Op Fl e Ar command Op argument ...
+.Op Fl e Ar e-command Op flags
 .Op Fl f Ar config-file
 .Op Fl m Ar media-backend
 .Op Fl p Ar playlist-dir
@@ -42,9 +43,9 @@ play the media it indexes (via
 .Nm
 accepts the following command line options:
 .Bl -tag -width Fl
-.It Fl c Ar command
+.It Fl c Ar command Op ...
 Execute the specified
-.Ar commands
+.Ar command
 in the currently running
 .Nm
 instance, and exit.
@@ -79,7 +80,7 @@ be specified before the e-command.
 .Pp
 The default location is
 .Pa ~/.vitunes/vitunes.db .
-.It Fl e Ar command Ar options
+.It Fl e Ar e-command Op flags
 Execute one of the available e-commands to manipulate the database that
 .Nm
 uses.

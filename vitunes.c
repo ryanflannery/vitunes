@@ -264,10 +264,10 @@ main(int argc, char *argv[])
 void
 usage(void)
 {
-   fprintf(stderr,"\
-usage: %s [-f config-file] [-d database-file] [-p playlist-dir] [-m player-path] [-e COMMAND ...]\n\
-See \"%s -e help\" for information about what e-commands are available.\n\
-",
+   fprintf(stderr, "\
+usage: %s [-h] [-c command [...]] [-d database-file] [-e e-command [flags]]\n\
+\t[-f config-file] [-m media-backend] [-p playlist-dir]\n\
+See \"%s -e help\" for information about what e-commands are available.\n",
    progname, progname);
    exit(1);
 }
