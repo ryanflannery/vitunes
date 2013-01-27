@@ -28,6 +28,7 @@
 .Op Fl f Ar config-file
 .Op Fl m Ar media-backend
 .Op Fl p Ar playlist-dir
+.Op Fl s Ar socket-file
 .Ek
 .Sh DESCRIPTION
 .Nm
@@ -64,9 +65,8 @@ section below.
 .Pp
 Note that for this to work, when
 .Nm
-starts up it attempts to create a socket at
-.Pa /tmp/.vitunes
-that are used by this option to communicate with the original instance.
+starts up it attempts to create a socket that is used by this option to
+communicate with the original instance.
 If this socket cannot be created for any reason, this option will not work.
 .It Fl d Ar database-file
 Specifies the
@@ -139,6 +139,12 @@ will be created here.
 .Pp
 The default location is
 .Pa ~/.vitunes/playlists/ .
+.It Fl s Ar socket-file
+Specifies an alternative
+.Ar socket-file .
+.Pp
+The default location is
+.Pa ~/.vitunes/vitunes.sock .
 .El
 .Sh GETTING STARTED
 .Nm
@@ -1025,7 +1031,7 @@ Default playlist directory
 This can be overridden with the
 .Op Fl p Ar playlist-dir
 flag.
-.It Pa /tmp/.vitunes
+.It Pa ~/.vitunes/vitunes.sock
 Default location for the socket created on start-up that can be used to control
 .Nm .
 .It Pa /usr/local/bin/mplayer

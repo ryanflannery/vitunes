@@ -23,23 +23,20 @@
 #include "socket.h"
 #include "commands.h"
 
-#define VITUNES_SOCK    "/tmp/.vitunes"
-
 
 int
-sock_send_msg(const char *msg)
+sock_send_msg(const char *path, const char *msg)
 {
    int                  ret;
    struct sockaddr_un   addr;
    socklen_t            addr_len;
 
-
    if((ret = socket(AF_UNIX, SOCK_DGRAM, 0)) == -1)
       return -1;
 
    addr.sun_family = AF_UNIX;
-   strcpy(addr.sun_path, VITUNES_SOCK);
-   addr_len = sizeof(addr.sun_family) + strlen(VITUNES_SOCK) + 1;
+   strcpy(addr.sun_path, path);
+   addr_len = sizeof(addr.sun_family) + strlen(path) + 1;
 
    if(sendto(ret, msg, strlen(msg), 0, (struct sockaddr *) &addr, addr_len) == -1) {
       close(ret);
@@ -52,21 +49,21 @@ sock_send_msg(const char *msg)
 
 
 int
-sock_listen(void)
+sock_listen(const char *path)
 {
    int                  ret;
    struct sockaddr_un   addr;
    socklen_t            addr_len;
    int                  coe = 1;
 
-   unlink(VITUNES_SOCK);
+   unlink(path);
 
    if((ret = socket(AF_UNIX, SOCK_DGRAM, 0)) == -1)
       return -1;
 
    addr.sun_family = AF_UNIX;
-   strcpy(addr.sun_path, VITUNES_SOCK);
-   addr_len = sizeof(addr.sun_family) + strlen(VITUNES_SOCK) + 1;
+   strcpy(addr.sun_path, path);
+   addr_len = sizeof(addr.sun_family) + strlen(path) + 1;
 
    if(bind(ret, (struct sockaddr *) &addr, addr_len) == -1)
       return -1;

@@ -21,16 +21,16 @@
 #define VITUNES_RUNNING "WHOWASPHONE?"
 
 /*
- * send (null terminated) msg to vitunes. Returns 0 on success,
+ * send (null terminated) msg to vitunes through path. Returns 0 on success,
  * -1 on errors.
  */
-int sock_send_msg(const char *msg);
+int sock_send_msg(const char *path, const char *msg);
 
 /*
- * open vitunes socket for listening. Returns a socket on success,
- * -1 on errors.
+ * open vitunes socket (provided by path) for listening. Returns a socket
+ * on success, -1 on errors.
  */
-int sock_listen(void);
+int sock_listen(const char *path);
 
 /*
  * Receive message from sock into msg. A maximum number of msg_len
