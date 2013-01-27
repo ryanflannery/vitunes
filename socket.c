@@ -13,6 +13,8 @@
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
+
+#include <errno.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/types.h>
@@ -34,7 +36,10 @@ sock_send_msg(const char *path, const char *msg)
       return -1;
 
    addr.sun_family = AF_UNIX;
-   strcpy(addr.sun_path, path);
+   if (strlcpy(addr.sun_path, path, sizeof addr.sun_path) >= sizeof addr.sun_path) {
+      errno = ENAMETOOLONG;
+      return -1;
+   }
 
    if (sendto(ret, msg, strlen(msg), 0, (struct sockaddr *) &addr, sizeof addr) == -1) {
       close(ret);
@@ -59,7 +64,10 @@ sock_listen(const char *path)
       return -1;
 
    addr.sun_family = AF_UNIX;
-   strcpy(addr.sun_path, path);
+   if (strlcpy(addr.sun_path, path, sizeof addr.sun_path) >= sizeof addr.sun_path) {
+      errno = ENAMETOOLONG;
+      return -1;
+   }
 
    if (bind(ret, (struct sockaddr *) &addr, sizeof addr) == -1)
       return -1;
