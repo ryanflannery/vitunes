@@ -38,7 +38,7 @@ TAGLIB_LIBS    = `pkg-config taglib --libs` -ltag_c
 #######################################################################
 
 #GSTREAMER_CFLAGS  = `pkg-config gstreamer-0.10 --cflags` -DENABLE_GSTREAMER
-#GSTREAMER_LIBS    = `pkg-config gstreamer-0.10 --libs`   -ltag_c
+#GSTREAMER_LIBS    = `pkg-config gstreamer-0.10 --libs`
 #GSTREAMER_OBJS    = gstplayer.o
 
 
