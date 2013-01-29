@@ -67,39 +67,20 @@ echo
 /bin/echo -n "CHECKING BUILD DEPENDENCY: TagLib... "
 HaveTaglib=0
 
-# Prefer taglib-config, try that first
-if [[ 0 -eq ${HaveTaglib} ]];
+# Check for taglib
+result=`which pkg-config > /dev/null 2>&1`
+if [[ 0 -eq $? ]];
 then
-   result=`which taglib-config > /dev/null 2>&1`
-   if [[ 0 -eq $? ]];
+   result=`pkg-config --exists taglib`
+   if [[ "$?" == "0" ]];
    then
-      echo "FOUND (via taglib-config)"
+      echo "FOUND"
       HaveTaglib=1
       TAGLIB_BLOCK="
-# taglib library detected by taglib-config
-TAGLIB_CFLAGS=\`taglib-config --cflags\`
-TAGLIB_LDFLAGS=\`taglib-config --libs\` -ltag_c
-"
-   fi
-fi
-
-# Try pkg-config
-if [[ 0 -eq ${HaveTaglib} ]];
-then
-   result=`which pkg-config > /dev/null 2>&1`
-   if [[ 0 -eq $? ]];
-   then
-      result=`pkg-config --exists taglib`
-      if [[ "$?" == "0" ]];
-      then
-         echo "FOUND (via pkg-config)"
-         HaveTaglib=1
-         TAGLIB_BLOCK="
 # taglib library detected by pkg-config
 TAGLIB_CFLAGS=\`pkg-config taglib --cflags\`
 TAGLIB_LDFLAGS=\`pkg-config taglib --libs\` -ltag_c
 "
-      fi
    fi
 fi
 
