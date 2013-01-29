@@ -7,13 +7,13 @@ MANDIR?=$(PREFIX)/man/man1
 
 # combine all dependencies (from taglib & config.mk)
 CDEPS=$(TAGLIB_CFLAGS)  $(GSTREAMER_CFLAGS)
-LDEPS=$(TAGLIB_LDFLAGS) $(GSTREAMER_LDFLAGS)
+LDEPS=$(TAGLIB_LIBS) $(GSTREAMER_LIBS)
 ODEPS=$(GSTREAMER_OBJS)
 
 # build variables
 CC		  ?= /usr/bin/cc
 CFLAGS  += -c -std=c89 -Wall -Wextra -Wno-unused-value $(CDEBUG) $(CDEPS)
-LDFLAGS += -lm -lncurses -lutil $(LDEPS)
+LIBS    += -lm -lncurses -lutil $(LDEPS)
 
 # object files
 OBJS=commands.o compat.o e_commands.o \
@@ -33,7 +33,7 @@ VPATH = players
 # main build targets
 
 vitunes: $(OBJS)
-	$(CC) -o $@ $(LDFLAGS) $(OBJS)
+	$(CC) -o $@ $(LDFLAGS) $(OBJS) $(LIBS)
 
 .c.o:
 	$(CC) $(CFLAGS) $<

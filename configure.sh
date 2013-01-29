@@ -79,7 +79,7 @@ then
       TAGLIB_BLOCK="
 # taglib library detected by pkg-config
 TAGLIB_CFLAGS=\`pkg-config taglib --cflags\`
-TAGLIB_LDFLAGS=\`pkg-config taglib --libs\` -ltag_c
+TAGLIB_LIBS=\`pkg-config taglib --libs\` -ltag_c
 "
    fi
 fi
@@ -121,7 +121,7 @@ then
    GSTREAMER_BLOCK="
 # gstreamer library (${gstreamer}) detected by pkg-config
 GSTREAMER_CFLAGS  =\`pkg-config ${gstreamer} --cflags\` -DENABLE_GSTREAMER
-GSTREAMER_LDFLAGS =\`pkg-config ${gstreamer} --libs\`
+GSTREAMER_LIBS    =\`pkg-config ${gstreamer} --libs\`
 GSTREAMER_OBJS    = gstplayer.o
 "
 fi
