@@ -16,21 +16,7 @@
 
 #include "e_commands.h"
 
-const struct ecmd ECMD_PATH[] = { 
-   { "init",      ecmd_init },
-   { "add",       ecmd_add },
-   { "addurl",    ecmd_addurl },
-   { "check",     ecmd_check },
-   { "rmfile",    ecmd_rmfile },
-   { "rm",        ecmd_rmfile },
-   { "update",    ecmd_update },
-   { "flush",     ecmd_flush },
-   { "tag",       ecmd_tag },
-   { "help",      ecmd_help }
-};
-const int ECMD_PATH_SIZE = (sizeof(ECMD_PATH) / sizeof(struct ecmd));
-
-int
+static int
 ecmd_init(int argc, char *argv[])
 {
    if (argc != 1)
@@ -43,7 +29,7 @@ ecmd_init(int argc, char *argv[])
    return 0;
 }
 
-int
+static int
 ecmd_update(int argc, char *argv[])
 {
    char ch;
@@ -80,7 +66,7 @@ ecmd_update(int argc, char *argv[])
    return 0;
 }
 
-int
+static int
 ecmd_add(int argc, char *argv[])
 {
    if (argc == 1)
@@ -96,7 +82,7 @@ ecmd_add(int argc, char *argv[])
    return 0;
 }
 
-int
+static int
 ecmd_addurl(int argc, char *argv[])
 {
    meta_info   *m;
@@ -169,7 +155,7 @@ ecmd_addurl(int argc, char *argv[])
    return 0;
 }
 
-int
+static int
 ecmd_check(int argc, char *argv[])
 {
    meta_info *mi;
@@ -281,7 +267,7 @@ ecmd_check(int argc, char *argv[])
    return 0;
 }
 
-int
+static int
 ecmd_rmfile(int argc, char *argv[])
 {
    char *filename;
@@ -338,7 +324,7 @@ ecmd_rmfile(int argc, char *argv[])
    return 0;
 }
 
-int
+static int
 ecmd_flush(int argc, char *argv[])
 {
    char ch;
@@ -365,7 +351,7 @@ ecmd_flush(int argc, char *argv[])
    return 0;
 }
 
-int
+static int
 ecmd_tag(int argc, char *argv[])
 {
    TagLib_File *tag_file;
@@ -498,7 +484,7 @@ ecmd_tag(int argc, char *argv[])
    return 0;
 }
 
-int
+static int
 ecmd_help(int argc, char *argv[])
 {
    char *man_args[3];
@@ -547,4 +533,36 @@ The list of available commands are:\n\n\
 
    /* just to shut up gcc */
    return 0;
+}
+
+int
+ecmd_execute(int argc, char **argv, const char *ecmd)
+{
+   /* set of e-commands */
+   static const struct {
+      char *name;
+      int   (*func)(int argc, char *argv[]);
+   } ecmd_path[] = { 
+      { "init",      ecmd_init },
+      { "add",       ecmd_add },
+      { "addurl",    ecmd_addurl },
+      { "check",     ecmd_check },
+      { "rmfile",    ecmd_rmfile },
+      { "rm",        ecmd_rmfile },
+      { "update",    ecmd_update },
+      { "flush",     ecmd_flush },
+      { "tag",       ecmd_tag },
+      { "help",      ecmd_help }
+   };
+   static const int ecmd_path_size = sizeof ecmd_path / sizeof ecmd_path[0];
+   int              i;
+
+   for (i = 0; i < ecmd_path_size; i++) {
+      if (strcmp(ecmd, ecmd_path[i].name) == 0) {
+         ecmd_path[i].func(argc, argv);
+         return 0;
+      }
+   }
+
+   return -1;
 }
