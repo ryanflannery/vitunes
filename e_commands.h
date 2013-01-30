@@ -35,27 +35,7 @@ extern char *vitunes_dir;
 extern char *playlist_dir;
 extern char *db_file;
 
-/* "main" functions for each command */
-int ecmd_init(int argc, char *argv[]);
-int ecmd_add(int argc, char *argv[]);
-int ecmd_addurl(int argc, char *argv[]);
-int ecmd_flush(int argc, char *argv[]);
-int ecmd_check(int argc, char *argv[]);
-int ecmd_rmfile(int argc, char *argv[]);
-int ecmd_tag(int argc, char *argv[]);
-int ecmd_update(int argc, char *argv[]);
-int ecmd_help(int argc, char *argv[]);
-
 /* find and execute the given e-command */
 int ecmd_execute(int argc, char *argv[], const char *ecmd);
-
-/* e-command struct and set of commands */
-struct ecmd {
-   char *name;
-   int   (*func)(int argc, char *argv[]);
-};
-
-extern const struct ecmd ECMD_PATH[];
-extern const int ECMD_PATH_SIZE;
 
 #endif
