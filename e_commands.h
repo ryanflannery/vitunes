@@ -46,6 +46,9 @@ int ecmd_tag(int argc, char *argv[]);
 int ecmd_update(int argc, char *argv[]);
 int ecmd_help(int argc, char *argv[]);
 
+/* find and execute the given e-command */
+int ecmd_execute(int argc, char *argv[], const char *ecmd);
+
 /* e-command struct and set of commands */
 struct ecmd {
    char *name;

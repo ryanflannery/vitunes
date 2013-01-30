@@ -548,3 +548,18 @@ The list of available commands are:\n\n\
    /* just to shut up gcc */
    return 0;
 }
+
+int
+ecmd_execute(int argc, char **argv, const char *ecmd)
+{
+   int i;
+
+   for (i = 0; i < ECMD_PATH_SIZE; i++) {
+      if (strcmp(ecmd, ECMD_PATH[i].name) == 0) {
+         ECMD_PATH[i].func(argc, argv);
+         return 0;
+      }
+   }
+
+   return -1;
+}
