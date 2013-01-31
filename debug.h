@@ -47,11 +47,4 @@ extern FILE *debug_log;
 #endif
 
 
-/* for unused arguments */
-#if defined(__GNUC__) || defined(__clang__)
-#  define UNUSED  __attribute__((__unused__))
-#else
-#  define UNUSED
-#endif
-
 #endif

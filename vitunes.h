@@ -37,6 +37,13 @@
 #include "uinterface.h"
 #include "e_commands.h"
 
+/* for unused arguments */
+#if defined(__GNUC__) || defined(__clang__)
+#  define UNUSED  __attribute__((__unused__))
+#else
+#  define UNUSED
+#endif
+
 /*
  * These are the various things defined in vitunes.c used elsewhere.
  */
