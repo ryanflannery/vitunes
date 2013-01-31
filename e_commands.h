@@ -29,11 +29,7 @@
 #include "meta_info.h"
 #include "medialib.h"
 #include "playlist.h"
-
-/* from vitunes.c */
-extern char *vitunes_dir;
-extern char *playlist_dir;
-extern char *db_file;
+#include "vitunes.h"
 
 /* "main" functions for each command */
 int ecmd_init(int argc, char *argv[]);

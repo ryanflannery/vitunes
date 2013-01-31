@@ -41,6 +41,11 @@
  * These are the various things defined in vitunes.c used elsewhere.
  */
 
+/* configurable paths */
+extern char *vitunes_dir;
+extern char *playlist_dir;
+extern char *db_file;
+
 /* record keeping  */
 extern playlist   *viewing_playlist;
 extern playlist   *playing_playlist;
