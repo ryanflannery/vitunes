@@ -28,11 +28,10 @@ ecmd_check(int argc, char *argv[])
    meta_info *mi;
    bool   show_raw, show_sanitized, show_database;
    bool   found;
-   char   ch;
    char   realfile[PATH_MAX];
    char **files;
    int    nfiles;
-   int    f, i;
+   int    ch, f, i;
 
    if (argc < 3)
       errx(1, "usage: -e %s [-drs] path [...]", argv[0]);

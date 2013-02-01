@@ -24,7 +24,7 @@
 int
 ecmd_update(int argc, char *argv[])
 {
-   char ch;
+   int  ch;
    bool force_update = false;
    bool show_skipped = false;
 

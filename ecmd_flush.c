@@ -24,7 +24,7 @@
 int
 ecmd_flush(int argc, char *argv[])
 {
-   char ch;
+   int   ch;
    char *time_format = "%Y %m %d %H:%M:%S";
 
    optreset = 1;

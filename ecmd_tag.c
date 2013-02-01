@@ -37,9 +37,8 @@ ecmd_tag(int argc, char *argv[])
         *comment = NULL;
    const char *errstr = NULL;
    unsigned int track = 0, year = 0;
-   char   ch;
    char **files;
-   int nfiles, f;
+   int ch, nfiles, f;
 
    static struct option longopts[] = {
       { "artist",  required_argument, NULL, 'a' },
