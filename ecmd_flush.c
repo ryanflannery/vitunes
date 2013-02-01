@@ -14,18 +14,36 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include "e_commands.h"
+#include <err.h>
+#include <string.h>
+#include <unistd.h>
 
-const struct ecmd ECMD_PATH[] = { 
-   { "init",      ecmd_init },
-   { "add",       ecmd_add },
-   { "addurl",    ecmd_addurl },
-   { "check",     ecmd_check },
-   { "rmfile",    ecmd_rmfile },
-   { "rm",        ecmd_rmfile },
-   { "update",    ecmd_update },
-   { "flush",     ecmd_flush },
-   { "tag",       ecmd_tag },
-   { "help",      ecmd_help }
-};
-const int ECMD_PATH_SIZE = (sizeof(ECMD_PATH) / sizeof(struct ecmd));
+#include "medialib.h"
+#include "vitunes.h"
+
+int
+ecmd_flush(int argc, char *argv[])
+{
+   char ch;
+   char *time_format = "%Y %m %d %H:%M:%S";
+
+   optreset = 1;
+   optind = 0;
+   while ((ch = getopt(argc, argv, "t:")) != -1) {
+      switch (ch) {
+         case 't':
+            if ((time_format = strdup(optarg)) == NULL)
+               err(1, "%s: strdup of time_format failed", argv[0]);
+            break;
+         case '?':
+         case 'h':
+         default:
+            errx(1, "usage: %s [-t format]", argv[0]);
+      }
+   }
+   
+   medialib_load(db_file, playlist_dir);
+   medialib_db_flush(stdout, time_format);
+   medialib_destroy();
+   return 0;
+}

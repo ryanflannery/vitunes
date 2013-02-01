@@ -17,6 +17,9 @@ LDFLAGS += -lm -lncurses -lutil $(LDEPS)
 
 # object files
 OBJS=commands.o compat.o e_commands.o \
+	  ecmd_add.o ecmd_addurl.o ecmd_check.o \
+	  ecmd_flush.o ecmd_help.o ecmd_init.o \
+	  ecmd_rmfile.o ecmd_tag.o ecmd_update.o \
 	  keybindings.o medialib.o meta_info.o \
 	  mplayer.o paint.o player.o player_utils.o \
 	  playlist.o socket.o str2argv.o \

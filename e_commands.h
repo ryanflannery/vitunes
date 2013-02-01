@@ -17,19 +17,7 @@
 #ifndef E_COMMANDS_H
 #define E_COMMANDS_H
 
-#include "compat.h"
-
-#include <stdbool.h>
-#include <getopt.h>
-#include <string.h>
-#include <unistd.h>
 #include <stdio.h>
-#include <err.h>
-
-#include "meta_info.h"
-#include "medialib.h"
-#include "playlist.h"
-#include "vitunes.h"
 
 /* "main" functions for each command */
 int ecmd_init(int argc, char *argv[]);

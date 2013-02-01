@@ -14,18 +14,21 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include "e_commands.h"
+#include <err.h>
+#include <stdio.h>
 
-const struct ecmd ECMD_PATH[] = { 
-   { "init",      ecmd_init },
-   { "add",       ecmd_add },
-   { "addurl",    ecmd_addurl },
-   { "check",     ecmd_check },
-   { "rmfile",    ecmd_rmfile },
-   { "rm",        ecmd_rmfile },
-   { "update",    ecmd_update },
-   { "flush",     ecmd_flush },
-   { "tag",       ecmd_tag },
-   { "help",      ecmd_help }
-};
-const int ECMD_PATH_SIZE = (sizeof(ECMD_PATH) / sizeof(struct ecmd));
+#include "medialib.h"
+#include "vitunes.h"
+
+int
+ecmd_init(int argc, char *argv[])
+{
+   if (argc != 1)
+      errx(1, "usage: -e %s", argv[0]);
+
+   printf("Creating all necessary files and directories for vitunes...\n");
+   medialib_setup_files(vitunes_dir, db_file, playlist_dir);
+
+   printf("\nNow use 'vitunes -e add dir1 dir2 ...' to add files to vitunes.\n");
+   return 0;
+}

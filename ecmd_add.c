@@ -14,18 +14,24 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include "e_commands.h"
+#include <err.h>
+#include <stdio.h>
 
-const struct ecmd ECMD_PATH[] = { 
-   { "init",      ecmd_init },
-   { "add",       ecmd_add },
-   { "addurl",    ecmd_addurl },
-   { "check",     ecmd_check },
-   { "rmfile",    ecmd_rmfile },
-   { "rm",        ecmd_rmfile },
-   { "update",    ecmd_update },
-   { "flush",     ecmd_flush },
-   { "tag",       ecmd_tag },
-   { "help",      ecmd_help }
-};
-const int ECMD_PATH_SIZE = (sizeof(ECMD_PATH) / sizeof(struct ecmd));
+#include "medialib.h"
+#include "vitunes.h"
+
+int
+ecmd_add(int argc, char *argv[])
+{
+   if (argc == 1)
+      errx(1, "usage: -e %s path [...]", argv[0]);
+
+   printf("Loading existing database...\n");
+   medialib_load(db_file, playlist_dir);
+
+   printf("Scanning directories for files to add to database...\n");
+   medialib_db_scan_dirs(argv + 1);
+
+   medialib_destroy();
+   return 0;
+}
