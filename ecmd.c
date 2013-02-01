@@ -14,7 +14,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include "e_commands.h"
+#include "ecmd.h"
 
 const struct ecmd ECMD_PATH[] = { 
    { "init",      ecmd_init },

@@ -16,7 +16,7 @@ CFLAGS  += -c -std=c89 -Wall -Wextra -Wno-unused-value $(CDEBUG) $(CDEPS)
 LDFLAGS += -lm -lncurses -lutil $(LDEPS)
 
 # object files
-OBJS=commands.o compat.o e_commands.o \
+OBJS=commands.o compat.o ecmd.o \
 	  ecmd_add.o ecmd_addurl.o ecmd_check.o \
 	  ecmd_flush.o ecmd_help.o ecmd_init.o \
 	  ecmd_rmfile.o ecmd_tag.o ecmd_update.o \

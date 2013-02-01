@@ -14,8 +14,8 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#ifndef E_COMMANDS_H
-#define E_COMMANDS_H
+#ifndef ECMD_H
+#define ECMD_H
 
 #include <stdio.h>
 

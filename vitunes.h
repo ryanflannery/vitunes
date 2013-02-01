@@ -35,7 +35,7 @@
 #include "medialib.h"
 #include "player.h"
 #include "uinterface.h"
-#include "e_commands.h"
+#include "ecmd.h"
 
 /* for unused arguments */
 #if defined(__GNUC__) || defined(__clang__)
