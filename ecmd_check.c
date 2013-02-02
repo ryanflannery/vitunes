@@ -41,8 +41,6 @@ ecmd_check_exec(int argc, char **argv)
    show_raw = false;
    show_sanitized = false;
    show_database = false;
-   optreset = 1;
-   optind = 0;
    while ((ch = getopt(argc, argv, "rsd")) != -1) {
       switch (ch) {
          case 'r':

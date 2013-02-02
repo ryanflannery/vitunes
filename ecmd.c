@@ -47,6 +47,11 @@ ecmd_exec(const char *ecmd, int argc, char **argv)
       return -1;
    }
 
+   /* reset getopt(3) variables */
+   optind = 0;
+   optreset = 1;
+
+   /* finally execute it */
    ecmdtab[i]->exec(argc, argv);
    return 0;
 }

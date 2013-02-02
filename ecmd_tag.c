@@ -53,8 +53,6 @@ ecmd_tag_exec(int argc, char **argv)
    };
 
    /* parse options and get list of files */
-   optreset = 1;
-   optind = 0;
    while ((ch = getopt_long_only(argc, argv, "a:A:t:g:T:y:c:", longopts, NULL)) != -1) {
       switch (ch) {
          case 'a':

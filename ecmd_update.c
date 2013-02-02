@@ -30,8 +30,6 @@ ecmd_update_exec(int argc, char **argv)
    bool show_skipped = false;
 
    /* parse options */
-   optreset = 1;
-   optind = 0;
    while ((ch = getopt(argc, argv, "fs")) != -1) {
       switch (ch) {
          case 'f':

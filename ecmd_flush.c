@@ -28,8 +28,6 @@ ecmd_flush_exec(int argc, char **argv)
    int   ch;
    char *time_format = "%Y %m %d %H:%M:%S";
 
-   optreset = 1;
-   optind = 0;
    while ((ch = getopt(argc, argv, "t:")) != -1) {
       switch (ch) {
          case 't':
