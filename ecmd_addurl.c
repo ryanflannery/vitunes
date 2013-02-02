@@ -25,16 +25,20 @@
 #include "vitunes.h"
 
 static void
-ecmd_addurl_exec(int argc, char **argv)
+ecmd_addurl_parse(int argc, char **argv)
+{
+   if (argc != 2)
+      errx(1, "usage: -e %s URL|path", argv[0]);
+}
+
+static void
+ecmd_addurl_exec(UNUSED int argc, char **argv)
 {
    meta_info   *m;
    bool         found;
    int          found_idx;
    char         input[255];
    int          field, i;
-
-   if (argc != 2)
-      errx(1, "usage: -e %s URL|path", argv[0]);
 
    /* start new record, set filename */
    m = mi_new();
@@ -98,5 +102,6 @@ ecmd_addurl_exec(int argc, char **argv)
 const struct ecmd ecmd_addurl = {
    "addurl", NULL,
    "URL|path",
+   ecmd_addurl_parse,
    ecmd_addurl_exec
 };

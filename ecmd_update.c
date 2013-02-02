@@ -22,14 +22,14 @@
 #include "medialib.h"
 #include "vitunes.h"
 
-static void
-ecmd_update_exec(int argc, char **argv)
-{
-   int  ch;
-   bool force_update = false;
-   bool show_skipped = false;
+static bool force_update;
+static bool show_skipped;
 
-   /* parse options */
+static void
+ecmd_update_parse(int argc, char **argv)
+{
+   int ch;
+
    while ((ch = getopt(argc, argv, "fs")) != -1) {
       switch (ch) {
          case 'f':
@@ -46,7 +46,11 @@ ecmd_update_exec(int argc, char **argv)
    }
    if (optind < argc)
       errx(1, "usage: -e %s [-fs]", argv[0]);
+}
 
+static void
+ecmd_update_exec(UNUSED int argc, UNUSED char **argv)
+{
    printf("Loading existing database...\n");
    medialib_load(db_file, playlist_dir);
 
@@ -59,5 +63,6 @@ ecmd_update_exec(int argc, char **argv)
 const struct ecmd ecmd_update = {
    "update", NULL,
    "[-fs]",
+   ecmd_update_parse,
    ecmd_update_exec
 };

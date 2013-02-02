@@ -22,11 +22,15 @@
 #include "vitunes.h"
 
 static void
-ecmd_init_exec(int argc, char **argv)
+ecmd_init_parse(int argc, char **argv)
 {
    if (argc != 1)
       errx(1, "usage: -e %s", argv[0]);
+}
 
+static void
+ecmd_init_exec(UNUSED int argc, UNUSED char **argv)
+{
    printf("Creating all necessary files and directories for vitunes...\n");
    medialib_setup_files(vitunes_dir, db_file, playlist_dir);
 
@@ -36,5 +40,6 @@ ecmd_init_exec(int argc, char **argv)
 const struct ecmd ecmd_init = {
    "init", NULL,
    NULL,
+   ecmd_init_parse,
    ecmd_init_exec
 };

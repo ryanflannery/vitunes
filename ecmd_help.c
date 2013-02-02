@@ -20,9 +20,19 @@
 #include <unistd.h>
 
 #include "ecmd.h"
+#include "vitunes.h"
 
 static void
-ecmd_help_exec(int argc, char **argv)
+ecmd_help_parse(int argc, char **argv)
+{
+   if (argc == 1)
+      return;
+   if (argc != 2)
+      errx(1, "usage: -e %s [command]", argv[0]);
+}
+
+static void
+ecmd_help_exec(UNUSED int argc, char **argv)
 {
    char *man_args[3];
 
@@ -51,9 +61,6 @@ The list of available commands are:\n\n\
       return;
    }
 
-   if (argc != 2)
-      errx(1, "usage: -e %s [command]", argv[0]);
-
    /* if reach here, help fora specific command was requested */
    if (strcmp(argv[1], "help") == 0) {
       printf("You're a damn fool if you need help with help.\n");
@@ -72,5 +79,6 @@ The list of available commands are:\n\n\
 const struct ecmd ecmd_help = {
    "help", NULL,
    "[command]",
+   ecmd_help_parse,
    ecmd_help_exec
 };

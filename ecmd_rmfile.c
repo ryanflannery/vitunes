@@ -23,31 +23,34 @@
 #include "playlist.h"
 #include "vitunes.h"
 
+static bool forced;
+
 static void
-ecmd_rmfile_exec(int argc, char **argv)
+ecmd_rmfile_parse(int argc, char **argv)
+{
+   if (argc < 2 || argc > 3)
+      errx(1, "usage: -e %s [-f] URL|path", argv[0]);
+
+   if (argc == 3) {
+      if (strcmp(argv[1], "-f") != 0)
+         errx(1, "usage: -e %s [-f] URL|path", argv[0]);
+      forced = true;
+   }
+}
+
+static void
+ecmd_rmfile_exec(UNUSED int argc, char **argv)
 {
    char *filename;
    char  input[255];
-   bool  forced;
    bool  found;
    int   found_idx;
    int   i;
 
-   if (argc < 2 || argc > 3)
-      errx(1, "usage: -e %s [-f] URL|path", argv[0]);
-
-   /* get filename and if this remove is forced */
-   forced = false;
-   if (argc == 3) {
-      if (strcmp(argv[1], "-f") != 0)
-         errx(1, "usage: -e %s [-f] URL|path", argv[0]);
-      else
-         forced = true;
-
+   if (argc == 3)
       filename = argv[2];
-   } else
+   else
       filename = argv[1];
-
 
    /* load database and search for record */
    medialib_load(db_file, playlist_dir);
@@ -82,5 +85,6 @@ ecmd_rmfile_exec(int argc, char **argv)
 const struct ecmd ecmd_rmfile = {
    "rmfile", "rm",
    "[-f] URL|path",
+   ecmd_rmfile_parse,
    ecmd_rmfile_exec
 };

@@ -23,24 +23,18 @@
 #include "medialib.h"
 #include "vitunes.h"
 
+static bool show_raw;
+static bool show_sanitized;
+static bool show_database;
+
 static void
-ecmd_check_exec(int argc, char **argv)
+ecmd_check_parse(int argc, char **argv)
 {
-   meta_info *mi;
-   bool   show_raw, show_sanitized, show_database;
-   bool   found;
-   char   realfile[PATH_MAX];
-   char **files;
-   int    nfiles;
-   int    ch, f, i;
+   int ch;
 
    if (argc < 3)
       errx(1, "usage: -e %s [-drs] path [...]", argv[0]);
 
-   /* parse options to see which version to show */
-   show_raw = false;
-   show_sanitized = false;
-   show_database = false;
    while ((ch = getopt(argc, argv, "rsd")) != -1) {
       switch (ch) {
          case 'r':
@@ -58,14 +52,24 @@ ecmd_check_exec(int argc, char **argv)
             errx(1, "usage: -e %s [-drs] path [...]", argv[0]);
       }
    }
-   files = argv + optind;
-   nfiles = argc - optind;
-
    if (!show_raw && !show_sanitized && !show_database)
       errx(1, "%s: must specify at least one of -r, -s, or -d", argv[0]);
-
-   if (nfiles == 0)
+   if (argc == 1)
       errx(1, "%s: must provide at least one file to check.", argv[0]);
+}
+
+static void
+ecmd_check_exec(int argc, char **argv)
+{
+   meta_info *mi;
+   bool   found;
+   char   realfile[PATH_MAX];
+   char **files;
+   int    nfiles;
+   int    f, i;
+
+   files = argv + optind;
+   nfiles = argc - optind;
 
    /* scan through files... */
    for (f = 0; f < nfiles; f++) {
@@ -133,5 +137,6 @@ ecmd_check_exec(int argc, char **argv)
 const struct ecmd ecmd_check = {
    "check", NULL,
    "[-drs] path [...]",
+   ecmd_check_parse,
    ecmd_check_exec
 };

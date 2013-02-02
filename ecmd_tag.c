@@ -22,26 +22,27 @@
 #include "ecmd.h"
 #include "meta_info.h"
 
-static void
-ecmd_tag_exec(int argc, char **argv)
-{
-   TagLib_File *tag_file;
-   TagLib_Tag  *tag;
-   bool  set_artist  = false;
-   bool  set_album   = false;
-   bool  set_title   = false;
-   bool  set_genre   = false;
-   bool  set_track   = false;
-   bool  set_year    = false;
-   bool  set_comment = false;
-   char *artist = NULL, *album = NULL, *title = NULL, *genre = NULL,
-        *comment = NULL;
-   const char *errstr = NULL;
-   unsigned int track = 0, year = 0;
-   char **files;
-   int ch, nfiles, f;
+static bool          set_artist;
+static bool          set_album;
+static bool          set_title;
+static bool          set_genre;
+static bool          set_track;
+static bool          set_year;
+static bool          set_comment;
+static char         *artist;
+static char         *album;
+static char         *title;
+static char         *genre;
+static char         *comment;
+static unsigned int  track;
+static unsigned int  year;
 
-   /* parse options and get list of files */
+static void
+ecmd_tag_parse(int argc, char **argv)
+{
+   const char *errstr;
+   int         ch;
+
    while ((ch = getopt(argc, argv, "a:A:t:g:T:y:c:")) != -1) {
       switch (ch) {
          case 'a':
@@ -87,6 +88,22 @@ ecmd_tag_exec(int argc, char **argv)
             errx(1, "usage: see 'vitunes -e help tag'");
       }
    }
+
+   if (!set_artist && !set_album && !set_title && !set_genre
+   &&  !set_track && !set_year && !set_comment)
+      errx(1, "%s: nothing to set!  See 'vitunes -e help tag'", argv[0]);
+   if (argc == 1)
+      errx(1, "%s: must provide at least one file to tag.", argv[0]);
+}
+
+static void
+ecmd_tag_exec(int argc, char **argv)
+{
+   TagLib_File *tag_file;
+   TagLib_Tag  *tag;
+   char **files;
+   int nfiles, f;
+
    files  = argv + optind;
    nfiles = argc - optind;
 
@@ -99,13 +116,6 @@ ecmd_tag_exec(int argc, char **argv)
    if (set_track) printf("%10.10s => %u\n", "track", track);
    if (set_year) printf("%10.10s => %u\n", "year", year);
    if (set_comment) printf("%10.10s => '%s'\n", "comment", comment);
-
-   if (!set_artist && !set_album && !set_title && !set_genre
-   &&  !set_track && !set_year && !set_comment)
-      errx(1, "%s: nothing to set!  See 'vitunes -e help tag'", argv[0]);
-
-   if (nfiles == 0)
-      errx(1, "%s: must provide at least one file to tag.", argv[0]);
 
    /* tag files ... */
    taglib_set_strings_unicode(false);
@@ -143,5 +153,6 @@ const struct ecmd ecmd_tag = {
    "tag", NULL,
    "[-A album] [-T track] [-a artist] [-c comment] [-g genre] [-t title]\n\
    \t[-y year] path [...]",
+   ecmd_tag_parse,
    ecmd_tag_exec
 };

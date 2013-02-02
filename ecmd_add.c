@@ -22,11 +22,15 @@
 #include "vitunes.h"
 
 static void
-ecmd_add_exec(int argc, char **argv)
+ecmd_add_parse(int argc, char **argv)
 {
    if (argc == 1)
       errx(1, "usage: -e %s path [...]", argv[0]);
+}
 
+static void
+ecmd_add_exec(UNUSED int argc, char **argv)
+{
    printf("Loading existing database...\n");
    medialib_load(db_file, playlist_dir);
 
@@ -39,5 +43,6 @@ ecmd_add_exec(int argc, char **argv)
 const struct ecmd ecmd_add = {
    "add", NULL,
    "path [...]",
+   ecmd_add_parse,
    ecmd_add_exec
 };

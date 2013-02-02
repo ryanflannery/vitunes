@@ -16,6 +16,16 @@
 
 #include "ecmd.h"
 
+static void
+ecmd_parse(const struct ecmd *ecmd, int argc, char **argv)
+{
+   /* reset getopt(3) variables */
+   optind = 0;
+   optreset = 1;
+
+   ecmd->parse(argc, argv);
+}
+
 int
 ecmd_exec(const char *ecmd, int argc, char **argv)
 {
@@ -47,9 +57,8 @@ ecmd_exec(const char *ecmd, int argc, char **argv)
       return -1;
    }
 
-   /* reset getopt(3) variables */
-   optind = 0;
-   optreset = 1;
+   /* parse e-command arguments */
+   ecmd_parse(ecmdtab[i], argc, argv);
 
    /* finally execute it */
    ecmdtab[i]->exec(argc, argv);

@@ -22,11 +22,12 @@
 #include "medialib.h"
 #include "vitunes.h"
 
+static char *time_format = "%Y %m %d %H:%M:%S";
+
 static void
-ecmd_flush_exec(int argc, char **argv)
+ecmd_flush_parse(int argc, char **argv)
 {
-   int   ch;
-   char *time_format = "%Y %m %d %H:%M:%S";
+   int ch;
 
    while ((ch = getopt(argc, argv, "t:")) != -1) {
       switch (ch) {
@@ -40,7 +41,11 @@ ecmd_flush_exec(int argc, char **argv)
             errx(1, "usage: %s [-t format]", argv[0]);
       }
    }
-   
+}
+
+static void
+ecmd_flush_exec(UNUSED int argc, UNUSED char **argv)
+{
    medialib_load(db_file, playlist_dir);
    medialib_db_flush(stdout, time_format);
    medialib_destroy();
@@ -49,5 +54,6 @@ ecmd_flush_exec(int argc, char **argv)
 const struct ecmd ecmd_flush = {
    "flush", NULL,
    "[-t format]",
+   ecmd_flush_parse,
    ecmd_flush_exec
 };
