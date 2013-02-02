@@ -37,6 +37,6 @@ ecmd_add_exec(int argc, char **argv)
 }
 
 const struct ecmd ecmd_add = {
-   "add",
+   "add", NULL,
    ecmd_add_exec
 };

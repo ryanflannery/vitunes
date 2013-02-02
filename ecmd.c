@@ -27,7 +27,6 @@ ecmd_exec(const char *ecmd, int argc, char **argv)
       &ecmd_flush,
       &ecmd_help,
       &ecmd_init,
-      &ecmd_rm,
       &ecmd_rmfile,
       &ecmd_tag,
       &ecmd_update,
@@ -35,12 +34,17 @@ ecmd_exec(const char *ecmd, int argc, char **argv)
    static const int ecmdtab_size = sizeof ecmdtab / sizeof ecmdtab[0];
    int              i;
 
+   /* search for e-command (first by name and then by alias) */
    for (i = 0; i < ecmdtab_size; i++) {
-      if (strcmp(ecmd, ecmdtab[i]->name) == 0) {
-         ecmdtab[i]->exec(argc, argv);
-         return 0;
-      }
+      if (strcmp(ecmd, ecmdtab[i]->name) == 0)
+         break;
+      if (ecmdtab[i]->alias != NULL && strcmp(ecmd, ecmdtab[i]->alias) == 0)
+         break;
    }
+   /* not found; bail out */
+   if (i == ecmdtab_size)
+      return -1;
 
-   return -1;
+   ecmdtab[i]->exec(argc, argv);
+   return 0;
 }

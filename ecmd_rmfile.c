@@ -80,11 +80,6 @@ ecmd_rmfile_exec(int argc, char **argv)
 }
 
 const struct ecmd ecmd_rmfile = {
-   "rmfile",
-   ecmd_rmfile_exec
-};
-
-const struct ecmd ecmd_rm = {
-   "rm",
+   "rmfile", "rm",
    ecmd_rmfile_exec
 };

@@ -153,6 +153,6 @@ ecmd_tag_exec(int argc, char **argv)
 }
 
 const struct ecmd ecmd_tag = {
-   "tag",
+   "tag", NULL,
    ecmd_tag_exec
 };

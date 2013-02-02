@@ -59,6 +59,6 @@ ecmd_update_exec(int argc, char **argv)
 }
 
 const struct ecmd ecmd_update = {
-   "update",
+   "update", NULL,
    ecmd_update_exec
 };

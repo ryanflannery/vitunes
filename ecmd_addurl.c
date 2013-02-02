@@ -96,6 +96,6 @@ ecmd_addurl_exec(int argc, char **argv)
 }
 
 const struct ecmd ecmd_addurl = {
-   "addurl",
+   "addurl", NULL,
    ecmd_addurl_exec
 };

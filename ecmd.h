@@ -22,6 +22,7 @@
 
 struct ecmd {
    const char  *name;
+   const char  *alias;      /* may be NULL */
    void       (*exec)(int argc, char **argv);
 };
 
@@ -31,7 +32,6 @@ extern const struct ecmd ecmd_check;
 extern const struct ecmd ecmd_flush;
 extern const struct ecmd ecmd_help;
 extern const struct ecmd ecmd_init;
-extern const struct ecmd ecmd_rm;
 extern const struct ecmd ecmd_rmfile;
 extern const struct ecmd ecmd_tag;
 extern const struct ecmd ecmd_update;

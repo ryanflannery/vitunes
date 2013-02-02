@@ -133,6 +133,6 @@ ecmd_check_exec(int argc, char **argv)
 }
 
 const struct ecmd ecmd_check = {
-   "check",
+   "check", NULL,
    ecmd_check_exec
 };
