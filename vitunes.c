@@ -463,15 +463,13 @@ handle_switches(int argc, char *argv[])
 {
    int ch;
    int i;
-   int had_c_commands = 0;
 
    while ((ch = getopt(argc, argv, "he:f:d:p:m:c:")) != -1) {
       switch (ch) {
          case 'c':
             if(sock_send_msg(optarg) == -1)
                errx(1, "Failed to send message. Vitunes not running?");
-            had_c_commands = 1;
-            break;
+            exit(0);
 
          case 'd':
             free(db_file);
@@ -518,9 +516,6 @@ handle_switches(int argc, char *argv[])
             /* NOT REACHED */
       }
    }
-
-   if(had_c_commands)
-      exit(0);
 
    return 0;
 }
