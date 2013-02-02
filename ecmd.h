@@ -18,6 +18,7 @@
 #define ECMD_H
 
 #include <stdio.h>
+#include <string.h>
 
 /* "main" functions for each command */
 void ecmd_init(int argc, char *argv[]);
@@ -29,6 +30,8 @@ void ecmd_rmfile(int argc, char *argv[]);
 void ecmd_tag(int argc, char *argv[]);
 void ecmd_update(int argc, char *argv[]);
 void ecmd_help(int argc, char *argv[]);
+
+int ecmd_exec(const char *ecmd, int argc, char **argv);
 
 /* e-command struct and set of commands */
 struct ecmd {

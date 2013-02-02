@@ -29,3 +29,18 @@ const struct ecmd ECMD_PATH[] = {
    { "help",      ecmd_help }
 };
 const int ECMD_PATH_SIZE = (sizeof(ECMD_PATH) / sizeof(struct ecmd));
+
+int
+ecmd_exec(const char *ecmd, int argc, char **argv)
+{
+   int i;
+
+   for (i = 0; i < ECMD_PATH_SIZE; i++) {
+      if (strcmp(ecmd, ECMD_PATH[i]) == 0) {
+         ECMD_PATH[i].func(argc, argv);
+         return 0;
+      }
+   }
+
+   return -1;
+}

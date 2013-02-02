@@ -462,7 +462,6 @@ int
 handle_switches(int argc, char *argv[])
 {
    int ch;
-   int i;
 
    while ((ch = getopt(argc, argv, "he:f:d:p:m:c:")) != -1) {
       switch (ch) {
@@ -482,12 +481,8 @@ handle_switches(int argc, char *argv[])
             argc -= optind - 1;
             argv += optind - 1;
 
-            for (i = 0; i < ECMD_PATH_SIZE; i++) {
-               if (strcmp(optarg, ECMD_PATH[i].name) == 0) {
-                  ECMD_PATH[i].func(argc, argv);
-                  exit(0);
-               }
-            }
+            if (ecmd_exec(optarg, argc, argv) == 0)
+               exit(0);
 
             errx(1, "Unknown e-command '%s'.  See 'vitunes -e help' for list.",
                optarg);
