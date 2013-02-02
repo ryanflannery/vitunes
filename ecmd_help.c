@@ -26,9 +26,6 @@ ecmd_help_exec(int argc, char **argv)
 {
    char *man_args[3];
 
-   if (argc != 2)
-      errx(1, "usage: -e %s [command]", argv[0]);
-
    /* no help requested for a specific command, give a list of all e-cmds */
    if (argc == 1) {
       printf("\
@@ -53,6 +50,9 @@ The list of available commands are:\n\n\
 ");
       return;
    }
+
+   if (argc != 2)
+      errx(1, "usage: -e %s [command]", argv[0]);
 
    /* if reach here, help fora specific command was requested */
    if (strcmp(argv[1], "help") == 0) {
