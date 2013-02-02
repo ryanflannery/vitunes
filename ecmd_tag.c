@@ -15,9 +15,9 @@
  */
 
 #include <err.h>
-#include <getopt.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "ecmd.h"
 #include "meta_info.h"
@@ -41,19 +41,8 @@ ecmd_tag_exec(int argc, char **argv)
    char **files;
    int ch, nfiles, f;
 
-   static struct option longopts[] = {
-      { "artist",  required_argument, NULL, 'a' },
-      { "album",   required_argument, NULL, 'A' },
-      { "title",   required_argument, NULL, 't' },
-      { "genre",   required_argument, NULL, 'g' },
-      { "track",   required_argument, NULL, 'T' },
-      { "year",    required_argument, NULL, 'y' },
-      { "comment", required_argument, NULL, 'c' },
-      { NULL,     0,                 NULL,  0  }
-   };
-
    /* parse options and get list of files */
-   while ((ch = getopt_long_only(argc, argv, "a:A:t:g:T:y:c:", longopts, NULL)) != -1) {
+   while ((ch = getopt(argc, argv, "a:A:t:g:T:y:c:")) != -1) {
       switch (ch) {
          case 'a':
             set_artist = true;
@@ -153,8 +142,6 @@ ecmd_tag_exec(int argc, char **argv)
 const struct ecmd ecmd_tag = {
    "tag", NULL,
    "[-A album] [-T track] [-a artist] [-c comment] [-g genre] [-t title]\n\
-   \t[-y year] [--album=string] [--artist=string] [--comment=string]\n\
-   \t[--genre=string] [--title=string] [--track=number] [--year=number]\n\
-   \tpath [...]",
+   \t[-y year] path [...]",
    ecmd_tag_exec
 };
