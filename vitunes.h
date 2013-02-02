@@ -27,6 +27,7 @@
 #include <signal.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "debug.h"
 #include "enums.h"
@@ -52,6 +53,8 @@
 extern char *vitunes_dir;
 extern char *playlist_dir;
 extern char *db_file;
+
+extern char *progname;
 
 /* record keeping  */
 extern playlist   *viewing_playlist;
