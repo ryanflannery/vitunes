@@ -18,11 +18,12 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "ecmd.h"
 #include "medialib.h"
 #include "vitunes.h"
 
-void
-ecmd_flush(int argc, char *argv[])
+static void
+ecmd_flush_func(int argc, char *argv[])
 {
    int   ch;
    char *time_format = "%Y %m %d %H:%M:%S";
@@ -46,3 +47,8 @@ ecmd_flush(int argc, char *argv[])
    medialib_db_flush(stdout, time_format);
    medialib_destroy();
 }
+
+const struct ecmd ecmd_flush = {
+   "flush",
+   ecmd_flush_func
+};

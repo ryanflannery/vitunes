@@ -19,11 +19,12 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "ecmd.h"
 #include "medialib.h"
 #include "vitunes.h"
 
-void
-ecmd_check(int argc, char *argv[])
+static void
+ecmd_check_func(int argc, char *argv[])
 {
    meta_info *mi;
    bool   show_raw, show_sanitized, show_database;
@@ -130,3 +131,8 @@ ecmd_check(int argc, char *argv[])
 
    }
 }
+
+const struct ecmd ecmd_check = {
+   "check",
+   ecmd_check_func
+};

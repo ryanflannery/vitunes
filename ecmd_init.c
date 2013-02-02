@@ -17,11 +17,12 @@
 #include <err.h>
 #include <stdio.h>
 
+#include "ecmd.h"
 #include "medialib.h"
 #include "vitunes.h"
 
-void
-ecmd_init(int argc, char *argv[])
+static void
+ecmd_init_func(int argc, char *argv[])
 {
    if (argc != 1)
       errx(1, "usage: -e %s", argv[0]);
@@ -31,3 +32,8 @@ ecmd_init(int argc, char *argv[])
 
    printf("\nNow use 'vitunes -e add dir1 dir2 ...' to add files to vitunes.\n");
 }
+
+const struct ecmd ecmd_init = {
+   "init",
+   ecmd_init_func
+};

@@ -17,11 +17,12 @@
 #include <err.h>
 #include <stdio.h>
 
+#include "ecmd.h"
 #include "medialib.h"
 #include "vitunes.h"
 
-void
-ecmd_add(int argc, char *argv[])
+static void
+ecmd_add_func(int argc, char *argv[])
 {
    if (argc == 1)
       errx(1, "usage: -e %s path [...]", argv[0]);
@@ -34,3 +35,8 @@ ecmd_add(int argc, char *argv[])
 
    medialib_destroy();
 }
+
+const struct ecmd ecmd_add = {
+   "add",
+   ecmd_add_func
+};

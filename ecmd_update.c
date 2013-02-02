@@ -18,11 +18,12 @@
 #include <stdio.h>
 #include <unistd.h>
 
+#include "ecmd.h"
 #include "medialib.h"
 #include "vitunes.h"
 
-void
-ecmd_update(int argc, char *argv[])
+static void
+ecmd_update_func(int argc, char *argv[])
 {
    int  ch;
    bool force_update = false;
@@ -56,3 +57,8 @@ ecmd_update(int argc, char *argv[])
 
    medialib_destroy();
 }
+
+const struct ecmd ecmd_update = {
+   "update",
+   ecmd_update_func
+};

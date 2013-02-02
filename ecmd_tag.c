@@ -19,10 +19,11 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "ecmd.h"
 #include "meta_info.h"
 
-void
-ecmd_tag(int argc, char *argv[])
+static void
+ecmd_tag_func(int argc, char *argv[])
 {
    TagLib_File *tag_file;
    TagLib_Tag  *tag;
@@ -150,3 +151,8 @@ ecmd_tag(int argc, char *argv[])
       taglib_file_free(tag_file);
    }
 }
+
+const struct ecmd ecmd_tag = {
+   "tag",
+   ecmd_tag_func
+};

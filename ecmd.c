@@ -19,28 +19,25 @@
 int
 ecmd_exec(const char *ecmd, int argc, char **argv)
 {
-   /* e-command struct and set of commands */
-   static const struct {
-      const char  *name;
-      void       (*func)(int argc, char **argv);
-   } ecmdtab[] = { 
-      { "init",      ecmd_init },
-      { "add",       ecmd_add },
-      { "addurl",    ecmd_addurl },
-      { "check",     ecmd_check },
-      { "rmfile",    ecmd_rmfile },
-      { "rm",        ecmd_rmfile },
-      { "update",    ecmd_update },
-      { "flush",     ecmd_flush },
-      { "tag",       ecmd_tag },
-      { "help",      ecmd_help }
+   /* set of e-commands */
+   static const struct ecmd *ecmdtab[] = {
+      &ecmd_add,
+      &ecmd_addurl,
+      &ecmd_check,
+      &ecmd_flush,
+      &ecmd_help,
+      &ecmd_init,
+      &ecmd_rm,
+      &ecmd_rmfile,
+      &ecmd_tag,
+      &ecmd_update,
    };
    static const int ecmdtab_size = sizeof ecmdtab / sizeof ecmdtab[0];
    int              i;
 
    for (i = 0; i < ecmdtab_size; i++) {
-      if (strcmp(ecmd, ecmdtab[i].name) == 0) {
-         ecmdtab[i].func(argc, argv);
+      if (strcmp(ecmd, ecmdtab[i]->name) == 0) {
+         ecmdtab[i]->func(argc, argv);
          return 0;
       }
    }

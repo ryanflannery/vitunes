@@ -19,8 +19,10 @@
 #include <string.h>
 #include <unistd.h>
 
-void
-ecmd_help(int argc, char *argv[])
+#include "ecmd.h"
+
+static void
+ecmd_help_func(int argc, char *argv[])
 {
    char *man_args[3];
 
@@ -66,3 +68,8 @@ The list of available commands are:\n\n\
    execvp("man", man_args);
    err(1, "ecmd_help: execvp failed");
 }
+
+const struct ecmd ecmd_help = {
+   "help",
+   ecmd_help_func
+};

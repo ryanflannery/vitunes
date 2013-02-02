@@ -18,12 +18,13 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include "ecmd.h"
 #include "medialib.h"
 #include "playlist.h"
 #include "vitunes.h"
 
-void
-ecmd_rmfile(int argc, char *argv[])
+static void
+ecmd_rmfile_func(int argc, char *argv[])
 {
    char *filename;
    char  input[255];
@@ -77,3 +78,13 @@ ecmd_rmfile(int argc, char *argv[])
    medialib_db_save(db_file);
    medialib_destroy();
 }
+
+const struct ecmd ecmd_rmfile = {
+   "rmfile",
+   ecmd_rmfile_func
+};
+
+const struct ecmd ecmd_rm = {
+   "rm",
+   ecmd_rmfile_func
+};

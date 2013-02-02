@@ -20,16 +20,21 @@
 #include <stdio.h>
 #include <string.h>
 
-/* "main" functions for each command */
-void ecmd_init(int argc, char *argv[]);
-void ecmd_add(int argc, char *argv[]);
-void ecmd_addurl(int argc, char *argv[]);
-void ecmd_flush(int argc, char *argv[]);
-void ecmd_check(int argc, char *argv[]);
-void ecmd_rmfile(int argc, char *argv[]);
-void ecmd_tag(int argc, char *argv[]);
-void ecmd_update(int argc, char *argv[]);
-void ecmd_help(int argc, char *argv[]);
+struct ecmd {
+   const char  *name;
+   void       (*func)(int argc, char **argv);
+};
+
+extern const struct ecmd ecmd_add;
+extern const struct ecmd ecmd_addurl;
+extern const struct ecmd ecmd_check;
+extern const struct ecmd ecmd_flush;
+extern const struct ecmd ecmd_help;
+extern const struct ecmd ecmd_init;
+extern const struct ecmd ecmd_rm;
+extern const struct ecmd ecmd_rmfile;
+extern const struct ecmd ecmd_tag;
+extern const struct ecmd ecmd_update;
 
 int ecmd_exec(const char *ecmd, int argc, char **argv);
 

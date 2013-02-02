@@ -18,13 +18,14 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "ecmd.h"
 #include "medialib.h"
 #include "meta_info.h"
 #include "playlist.h"
 #include "vitunes.h"
 
-void
-ecmd_addurl(int argc, char *argv[])
+static void
+ecmd_addurl_func(int argc, char *argv[])
 {
    meta_info   *m;
    bool         found;
@@ -93,3 +94,8 @@ ecmd_addurl(int argc, char *argv[])
    medialib_db_save(db_file);
    medialib_destroy();
 }
+
+const struct ecmd ecmd_addurl = {
+   "addurl",
+   ecmd_addurl_func
+};
