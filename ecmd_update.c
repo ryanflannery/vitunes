@@ -21,7 +21,7 @@
 #include "medialib.h"
 #include "vitunes.h"
 
-int
+void
 ecmd_update(int argc, char *argv[])
 {
    int  ch;
@@ -55,5 +55,4 @@ ecmd_update(int argc, char *argv[])
    medialib_db_update(show_skipped, force_update);
 
    medialib_destroy();
-   return 0;
 }

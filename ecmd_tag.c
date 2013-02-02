@@ -21,7 +21,7 @@
 
 #include "meta_info.h"
 
-int
+void
 ecmd_tag(int argc, char *argv[])
 {
    TagLib_File *tag_file;
@@ -149,6 +149,4 @@ ecmd_tag(int argc, char *argv[])
       taglib_tag_free_strings();
       taglib_file_free(tag_file);
    }
-
-   return 0;
 }

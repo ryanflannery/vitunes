@@ -23,7 +23,7 @@
 #include "playlist.h"
 #include "vitunes.h"
 
-int
+void
 ecmd_addurl(int argc, char *argv[])
 {
    meta_info   *m;
@@ -48,7 +48,7 @@ ecmd_addurl(int argc, char *argv[])
       if (fgets(input, sizeof(input), stdin) == NULL) {
          warnx("Operation canceled. Database unchanged.");
          mi_free(m);
-         return 0;
+         return;
       }
 
       if (input[strlen(input) - 1] == '\n')
@@ -80,7 +80,7 @@ ecmd_addurl(int argc, char *argv[])
          warnx("Operation Canceled.  Database unchanged.");
          mi_free(m);
          medialib_destroy();
-         return 0;
+         return;
       }
 
       mi_sanitize(m);
@@ -92,6 +92,4 @@ ecmd_addurl(int argc, char *argv[])
 
    medialib_db_save(db_file);
    medialib_destroy();
-
-   return 0;
 }

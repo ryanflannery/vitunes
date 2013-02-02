@@ -483,8 +483,10 @@ handle_switches(int argc, char *argv[])
             argv += optind - 1;
 
             for (i = 0; i < ECMD_PATH_SIZE; i++) {
-               if (strcmp(optarg, ECMD_PATH[i].name) == 0)
-                  exit((ECMD_PATH[i].func)(argc, argv));
+               if (strcmp(optarg, ECMD_PATH[i].name) == 0) {
+                  ECMD_PATH[i].func(argc, argv);
+                  exit(0);
+               }
             }
 
             errx(1, "Unknown e-command '%s'.  See 'vitunes -e help' for list.",

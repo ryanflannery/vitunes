@@ -19,7 +19,7 @@
 #include <string.h>
 #include <unistd.h>
 
-int
+void
 ecmd_help(int argc, char *argv[])
 {
    char *man_args[3];
@@ -49,13 +49,13 @@ The list of available commands are:\n\n\
    flush       Output the records of all files in the database.\n\
    help        This command.\n\
 ");
-      return 0;
+      return;
    }
 
    /* if reach here, help fora specific command was requested */
    if (strcmp(argv[1], "help") == 0) {
       printf("You're a damn fool if you need help with help.\n");
-      return 0;
+      return;
    }
 
    man_args[0] = "man";
@@ -65,7 +65,4 @@ The list of available commands are:\n\n\
 
    execvp("man", man_args);
    err(1, "ecmd_help: execvp failed");
-
-   /* just to shut up gcc */
-   return 0;
 }

@@ -22,7 +22,7 @@
 #include "playlist.h"
 #include "vitunes.h"
 
-int
+void
 ecmd_rmfile(int argc, char *argv[])
 {
    char *filename;
@@ -76,5 +76,4 @@ ecmd_rmfile(int argc, char *argv[])
    playlist_files_remove(mdb.library, found_idx, 1, false);
    medialib_db_save(db_file);
    medialib_destroy();
-   return 0;
 }

@@ -20,7 +20,7 @@
 #include "medialib.h"
 #include "vitunes.h"
 
-int
+void
 ecmd_add(int argc, char *argv[])
 {
    if (argc == 1)
@@ -33,5 +33,4 @@ ecmd_add(int argc, char *argv[])
    medialib_db_scan_dirs(argv + 1);
 
    medialib_destroy();
-   return 0;
 }

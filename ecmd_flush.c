@@ -21,7 +21,7 @@
 #include "medialib.h"
 #include "vitunes.h"
 
-int
+void
 ecmd_flush(int argc, char *argv[])
 {
    int   ch;
@@ -45,5 +45,4 @@ ecmd_flush(int argc, char *argv[])
    medialib_load(db_file, playlist_dir);
    medialib_db_flush(stdout, time_format);
    medialib_destroy();
-   return 0;
 }

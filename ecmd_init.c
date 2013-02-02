@@ -20,7 +20,7 @@
 #include "medialib.h"
 #include "vitunes.h"
 
-int
+void
 ecmd_init(int argc, char *argv[])
 {
    if (argc != 1)
@@ -30,5 +30,4 @@ ecmd_init(int argc, char *argv[])
    medialib_setup_files(vitunes_dir, db_file, playlist_dir);
 
    printf("\nNow use 'vitunes -e add dir1 dir2 ...' to add files to vitunes.\n");
-   return 0;
 }

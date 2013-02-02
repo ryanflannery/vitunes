@@ -22,7 +22,7 @@
 #include "medialib.h"
 #include "vitunes.h"
 
-int
+void
 ecmd_check(int argc, char *argv[])
 {
    meta_info *mi;
@@ -129,6 +129,4 @@ ecmd_check(int argc, char *argv[])
       }
 
    }
-
-   return 0;
 }
