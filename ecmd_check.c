@@ -24,7 +24,7 @@
 #include "vitunes.h"
 
 static void
-ecmd_check_func(int argc, char *argv[])
+ecmd_check_exec(int argc, char **argv)
 {
    meta_info *mi;
    bool   show_raw, show_sanitized, show_database;
@@ -134,5 +134,5 @@ ecmd_check_func(int argc, char *argv[])
 
 const struct ecmd ecmd_check = {
    "check",
-   ecmd_check_func
+   ecmd_check_exec
 };

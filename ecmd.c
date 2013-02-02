@@ -37,7 +37,7 @@ ecmd_exec(const char *ecmd, int argc, char **argv)
 
    for (i = 0; i < ecmdtab_size; i++) {
       if (strcmp(ecmd, ecmdtab[i]->name) == 0) {
-         ecmdtab[i]->func(argc, argv);
+         ecmdtab[i]->exec(argc, argv);
          return 0;
       }
    }

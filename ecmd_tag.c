@@ -23,7 +23,7 @@
 #include "meta_info.h"
 
 static void
-ecmd_tag_func(int argc, char *argv[])
+ecmd_tag_exec(int argc, char **argv)
 {
    TagLib_File *tag_file;
    TagLib_Tag  *tag;
@@ -154,5 +154,5 @@ ecmd_tag_func(int argc, char *argv[])
 
 const struct ecmd ecmd_tag = {
    "tag",
-   ecmd_tag_func
+   ecmd_tag_exec
 };

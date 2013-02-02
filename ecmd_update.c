@@ -23,7 +23,7 @@
 #include "vitunes.h"
 
 static void
-ecmd_update_func(int argc, char *argv[])
+ecmd_update_exec(int argc, char **argv)
 {
    int  ch;
    bool force_update = false;
@@ -60,5 +60,5 @@ ecmd_update_func(int argc, char *argv[])
 
 const struct ecmd ecmd_update = {
    "update",
-   ecmd_update_func
+   ecmd_update_exec
 };

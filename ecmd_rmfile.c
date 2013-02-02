@@ -24,7 +24,7 @@
 #include "vitunes.h"
 
 static void
-ecmd_rmfile_func(int argc, char *argv[])
+ecmd_rmfile_exec(int argc, char **argv)
 {
    char *filename;
    char  input[255];
@@ -81,10 +81,10 @@ ecmd_rmfile_func(int argc, char *argv[])
 
 const struct ecmd ecmd_rmfile = {
    "rmfile",
-   ecmd_rmfile_func
+   ecmd_rmfile_exec
 };
 
 const struct ecmd ecmd_rm = {
    "rm",
-   ecmd_rmfile_func
+   ecmd_rmfile_exec
 };

@@ -22,7 +22,7 @@
 #include "ecmd.h"
 
 static void
-ecmd_help_func(int argc, char *argv[])
+ecmd_help_exec(int argc, char **argv)
 {
    char *man_args[3];
 
@@ -71,5 +71,5 @@ The list of available commands are:\n\n\
 
 const struct ecmd ecmd_help = {
    "help",
-   ecmd_help_func
+   ecmd_help_exec
 };

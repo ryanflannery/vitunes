@@ -23,7 +23,7 @@
 #include "vitunes.h"
 
 static void
-ecmd_flush_func(int argc, char *argv[])
+ecmd_flush_exec(int argc, char **argv)
 {
    int   ch;
    char *time_format = "%Y %m %d %H:%M:%S";
@@ -50,5 +50,5 @@ ecmd_flush_func(int argc, char *argv[])
 
 const struct ecmd ecmd_flush = {
    "flush",
-   ecmd_flush_func
+   ecmd_flush_exec
 };

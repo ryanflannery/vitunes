@@ -25,7 +25,7 @@
 #include "vitunes.h"
 
 static void
-ecmd_addurl_func(int argc, char *argv[])
+ecmd_addurl_exec(int argc, char **argv)
 {
    meta_info   *m;
    bool         found;
@@ -97,5 +97,5 @@ ecmd_addurl_func(int argc, char *argv[])
 
 const struct ecmd ecmd_addurl = {
    "addurl",
-   ecmd_addurl_func
+   ecmd_addurl_exec
 };

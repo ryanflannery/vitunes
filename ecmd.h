@@ -22,7 +22,7 @@
 
 struct ecmd {
    const char  *name;
-   void       (*func)(int argc, char **argv);
+   void       (*exec)(int argc, char **argv);
 };
 
 extern const struct ecmd ecmd_add;

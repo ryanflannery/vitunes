@@ -22,7 +22,7 @@
 #include "vitunes.h"
 
 static void
-ecmd_init_func(int argc, char *argv[])
+ecmd_init_exec(int argc, char **argv)
 {
    if (argc != 1)
       errx(1, "usage: -e %s", argv[0]);
@@ -35,5 +35,5 @@ ecmd_init_func(int argc, char *argv[])
 
 const struct ecmd ecmd_init = {
    "init",
-   ecmd_init_func
+   ecmd_init_exec
 };

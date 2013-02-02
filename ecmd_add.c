@@ -22,7 +22,7 @@
 #include "vitunes.h"
 
 static void
-ecmd_add_func(int argc, char *argv[])
+ecmd_add_exec(int argc, char **argv)
 {
    if (argc == 1)
       errx(1, "usage: -e %s path [...]", argv[0]);
@@ -38,5 +38,5 @@ ecmd_add_func(int argc, char *argv[])
 
 const struct ecmd ecmd_add = {
    "add",
-   ecmd_add_func
+   ecmd_add_exec
 };
