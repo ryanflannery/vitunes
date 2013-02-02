@@ -38,5 +38,6 @@ ecmd_add_exec(int argc, char **argv)
 
 const struct ecmd ecmd_add = {
    "add", NULL,
+   "path [...]",
    ecmd_add_exec
 };

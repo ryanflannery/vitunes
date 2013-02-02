@@ -97,5 +97,6 @@ ecmd_addurl_exec(int argc, char **argv)
 
 const struct ecmd ecmd_addurl = {
    "addurl", NULL,
+   "URL|path",
    ecmd_addurl_exec
 };

@@ -154,5 +154,9 @@ ecmd_tag_exec(int argc, char **argv)
 
 const struct ecmd ecmd_tag = {
    "tag", NULL,
+   "[-A album] [-T track] [-a artist] [-c comment] [-g genre] [-t title]\n\
+   \t[-y year] [--album=string] [--artist=string] [--comment=string]\n\
+   \t[--genre=string] [--title=string] [--track=number] [--year=number]\n\
+   \tpath [...]",
    ecmd_tag_exec
 };
