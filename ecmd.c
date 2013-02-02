@@ -42,8 +42,10 @@ ecmd_exec(const char *ecmd, int argc, char **argv)
          break;
    }
    /* not found; bail out */
-   if (i == ecmdtab_size)
+   if (i == ecmdtab_size) {
+      warnx("Unknown e-command '%s'.  See 'vitunes -e help' for list.", ecmd);
       return -1;
+   }
 
    ecmdtab[i]->exec(argc, argv);
    return 0;

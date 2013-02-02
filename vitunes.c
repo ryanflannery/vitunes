@@ -481,12 +481,7 @@ handle_switches(int argc, char *argv[])
             argc -= optind - 1;
             argv += optind - 1;
 
-            if (ecmd_exec(optarg, argc, argv) == 0)
-               exit(0);
-
-            errx(1, "Unknown e-command '%s'.  See 'vitunes -e help' for list.",
-               optarg);
-            break;
+            exit(ecmd_exec(optarg, argc, argv));
 
          case 'f':
             free(conf_file);

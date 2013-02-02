@@ -17,6 +17,7 @@
 #ifndef ECMD_H
 #define ECMD_H
 
+#include <err.h>
 #include <stdio.h>
 #include <string.h>
 
