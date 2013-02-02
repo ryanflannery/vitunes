@@ -32,7 +32,7 @@ void ecmd_help(int argc, char *argv[]);
 
 /* e-command struct and set of commands */
 struct ecmd {
-   char *name;
+   const char *name;
    void (*func)(int argc, char *argv[]);
 };
 
