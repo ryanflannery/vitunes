@@ -33,13 +33,4 @@ void ecmd_help(int argc, char *argv[]);
 
 int ecmd_exec(const char *ecmd, int argc, char **argv);
 
-/* e-command struct and set of commands */
-struct ecmd {
-   const char *name;
-   void (*func)(int argc, char *argv[]);
-};
-
-extern const struct ecmd ECMD_PATH[];
-extern const int ECMD_PATH_SIZE;
-
 #endif
