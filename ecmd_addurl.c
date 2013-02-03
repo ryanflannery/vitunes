@@ -37,7 +37,7 @@ ecmd_addurl_exec(UNUSED int argc, char **argv)
    m = mi_new();
    m->is_url = true;
    if ((m->filename = strdup(argv[0])) == NULL)
-      err(1, "%s: strdup failed (filename)", argv[0]);
+      err(1, "%s: strdup failed (filename)", __FUNCTION__);
 
    /* get fields from user */
    for (field = 0; field < MI_NUM_CINFO; field++) {
@@ -53,7 +53,7 @@ ecmd_addurl_exec(UNUSED int argc, char **argv)
          input[strlen(input) - 1] = '\0';
 
       if ((m->cinfo[field] = strdup(input)) == NULL)
-         err(1, "%s: strdup failed (field)", argv[0]);
+         err(1, "%s: strdup failed (field)", __FUNCTION__);
    }
 
    /* load existing database and see if file/URL already exists */

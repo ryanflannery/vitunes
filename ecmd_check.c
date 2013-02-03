@@ -94,7 +94,7 @@ ecmd_check_exec(int argc, char **argv)
 
          /* get absolute filename */
          if (realpath(argv[f], realfile) == NULL) {
-            warn("%s: realpath failed for %s: skipping", argv[0], argv[f]);
+            warn("realpath failed for %s: skipping", argv[f]);
             continue;
          }
 

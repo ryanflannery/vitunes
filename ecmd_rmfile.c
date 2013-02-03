@@ -76,7 +76,7 @@ ecmd_rmfile_exec(UNUSED int argc, char **argv)
       printf("Are you sure you want to delete '%s'? [y/n] ", argv[0]);
       if (fgets(input, sizeof(input), stdin) == NULL
       || (strcasecmp(input, "yes\n") != 0 && strcasecmp(input, "y\n") != 0))
-         errx(1, "%s: operation canceled.  Database unchanged.", argv[0]);
+         errx(1, "Operation canceled.  Database unchanged.");
    }
 
    playlist_files_remove(mdb.library, found_idx, 1, false);
