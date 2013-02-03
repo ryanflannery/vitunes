@@ -143,7 +143,7 @@ ecmd_check_exec(int argc, char **argv)
 
 const struct ecmd ecmd_check = {
    "check", NULL,
-   "[-drs] path [...]",
+   "-d | -r | -s path [...]",
    1, -1,
    ecmd_check_parse,
    ecmd_check_exec
