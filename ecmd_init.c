@@ -21,14 +21,6 @@
 #include "medialib.h"
 #include "vitunes.h"
 
-static int
-ecmd_init_parse(int argc, UNUSED char **argv)
-{
-   if (argc != 1)
-      return -1;
-   return 0;
-}
-
 static void
 ecmd_init_exec(UNUSED int argc, UNUSED char **argv)
 {
@@ -41,6 +33,7 @@ ecmd_init_exec(UNUSED int argc, UNUSED char **argv)
 const struct ecmd ecmd_init = {
    "init", NULL,
    NULL,
-   ecmd_init_parse,
+   1, 1,
+   NULL,
    ecmd_init_exec
 };

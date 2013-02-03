@@ -22,16 +22,6 @@
 #include "ecmd.h"
 #include "vitunes.h"
 
-static int
-ecmd_help_parse(int argc, UNUSED char **argv)
-{
-   if (argc == 1)
-      return 0;
-   if (argc != 2)
-      return -1;
-   return 0;
-}
-
 static void
 ecmd_help_exec(UNUSED int argc, char **argv)
 {
@@ -80,6 +70,7 @@ The list of available commands are:\n\n\
 const struct ecmd ecmd_help = {
    "help", NULL,
    "[command]",
-   ecmd_help_parse,
+   1, 2,
+   NULL,
    ecmd_help_exec
 };

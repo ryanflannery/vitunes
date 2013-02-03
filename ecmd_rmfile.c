@@ -31,9 +31,6 @@ ecmd_rmfile_parse(int argc, char **argv)
 {
    int ch;
 
-   if (argc < 2 || argc > 3)
-      return -1;
-
    while ((ch = getopt(argc, argv, "f")) != -1) {
       switch (ch) {
          case 'f':
@@ -96,6 +93,7 @@ ecmd_rmfile_exec(UNUSED int argc, char **argv)
 const struct ecmd ecmd_rmfile = {
    "rmfile", "rm",
    "[-f] URL|path",
+   2, 2,
    ecmd_rmfile_parse,
    ecmd_rmfile_exec
 };

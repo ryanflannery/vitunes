@@ -32,9 +32,6 @@ ecmd_check_parse(int argc, char **argv)
 {
    int ch;
 
-   if (argc < 3)
-      return -1;
-
    while ((ch = getopt(argc, argv, "rsd")) != -1) {
       switch (ch) {
          case 'r':
@@ -52,10 +49,6 @@ ecmd_check_parse(int argc, char **argv)
             return -1;
       }
    }
-   if (!show_raw && !show_sanitized && !show_database)
-      return -1;
-   if (argc == 1)
-      return -1;
 
    return 0;
 }
@@ -139,6 +132,7 @@ ecmd_check_exec(int argc, char **argv)
 const struct ecmd ecmd_check = {
    "check", NULL,
    "[-drs] path [...]",
+   2, -1,
    ecmd_check_parse,
    ecmd_check_exec
 };

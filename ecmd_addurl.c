@@ -24,14 +24,6 @@
 #include "playlist.h"
 #include "vitunes.h"
 
-static int
-ecmd_addurl_parse(int argc, UNUSED char **argv)
-{
-   if (argc != 2)
-      return -1;
-   return 0;
-}
-
 static void
 ecmd_addurl_exec(UNUSED int argc, char **argv)
 {
@@ -103,6 +95,7 @@ ecmd_addurl_exec(UNUSED int argc, char **argv)
 const struct ecmd ecmd_addurl = {
    "addurl", NULL,
    "URL|path",
-   ecmd_addurl_parse,
+   2, 2,
+   NULL,
    ecmd_addurl_exec
 };

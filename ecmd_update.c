@@ -44,8 +44,6 @@ ecmd_update_parse(int argc, char **argv)
             return -1;
       }
    }
-   if (optind < argc)
-      return -1;
 
    return 0;
 }
@@ -65,6 +63,7 @@ ecmd_update_exec(UNUSED int argc, UNUSED char **argv)
 const struct ecmd ecmd_update = {
    "update", NULL,
    "[-fs]",
+   1, 1,
    ecmd_update_parse,
    ecmd_update_exec
 };

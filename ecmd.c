@@ -23,7 +23,17 @@ ecmd_parse(const struct ecmd *ecmd, int argc, char **argv)
    optind = 0;
    optreset = 1;
 
-   return ecmd->parse(argc, argv);
+   /* parse error */
+   if (ecmd->parse != NULL && ecmd->parse(argc, argv) == -1)
+      return -1;
+ 
+   /* invalid number of arguments */
+   if (argc < ecmd->args_lower)
+      return -1;
+   if (ecmd->args_upper >= 0 && argc > ecmd->args_upper)
+      return -1;
+
+   return 0;
 }
 
 int

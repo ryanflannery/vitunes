@@ -21,14 +21,6 @@
 #include "medialib.h"
 #include "vitunes.h"
 
-static int
-ecmd_add_parse(int argc, UNUSED char **argv)
-{
-   if (argc == 1)
-      return -1;
-   return 0;
-}
-
 static void
 ecmd_add_exec(UNUSED int argc, char **argv)
 {
@@ -44,6 +36,7 @@ ecmd_add_exec(UNUSED int argc, char **argv)
 const struct ecmd ecmd_add = {
    "add", NULL,
    "path [...]",
-   ecmd_add_parse,
+   2, -1,
+   NULL,
    ecmd_add_exec
 };
