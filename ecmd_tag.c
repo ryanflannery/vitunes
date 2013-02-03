@@ -36,37 +36,37 @@ ecmd_tag_parse(int argc, char **argv)
    const char *errstr;
    int         ch;
 
-   while ((ch = getopt(argc, argv, "a:A:t:g:T:y:c:")) != -1) {
+   while ((ch = getopt(argc, argv, "A:T:a:c:g:t:y:")) != -1) {
       switch (ch) {
-         case 'a':
-            if ((artist = strdup(optarg)) == NULL)
-               err(1, "%s: strdup ARTIST failed", argv[0]);
-            break;
          case 'A':
             if ((album = strdup(optarg)) == NULL)
                err(1, "%s: strdup ALBUM failed", argv[0]);
             break;
-         case 't':
-            if ((title = strdup(optarg)) == NULL)
-               err(1, "%s: strdup TITLE failed", argv[0]);
+          case 'T':
+            track = (unsigned int) strtonum(optarg, 0, INT_MAX, &errstr);
+            if (errstr != NULL)
+               errx(1, "invalid track '%s': %s", optarg, errstr);
+            break;
+         case 'a':
+            if ((artist = strdup(optarg)) == NULL)
+               err(1, "%s: strdup ARTIST failed", argv[0]);
+            break;
+         case 'c':
+            if ((comment = strdup(optarg)) == NULL)
+               err(1, "%s: strdup COMMENT failed", argv[0]);
             break;
          case 'g':
             if ((genre = strdup(optarg)) == NULL)
                err(1, "%s: strdup GENRE failed", argv[0]);
             break;
-         case 'T':
-            track = (unsigned int) strtonum(optarg, 0, INT_MAX, &errstr);
-            if (errstr != NULL)
-               errx(1, "invalid track '%s': %s", optarg, errstr);
+         case 't':
+            if ((title = strdup(optarg)) == NULL)
+               err(1, "%s: strdup TITLE failed", argv[0]);
             break;
          case 'y':
             year = (unsigned int) strtonum(optarg, 0, INT_MAX, &errstr);
             if (errstr != NULL)
                errx(1, "invalid year '%s': %s", optarg, errstr);
-            break;
-         case 'c':
-            if ((comment = strdup(optarg)) == NULL)
-               err(1, "%s: strdup COMMENT failed", argv[0]);
             break;
          case 'h':
          case '?':

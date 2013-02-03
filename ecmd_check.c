@@ -106,16 +106,16 @@ ecmd_check_parse(int argc, char **argv)
 {
    int ch;
 
-   while ((ch = getopt(argc, argv, "rsd")) != -1) {
+   while ((ch = getopt(argc, argv, "drs")) != -1) {
       switch (ch) {
+         case 'd':
+            show_database = true;
+            break;
          case 'r':
             show_raw = true;
             break;
          case 's':
             show_sanitized = true;
-            break;
-         case 'd':
-            show_database = true;
             break;
          case 'h':
          case '?':
