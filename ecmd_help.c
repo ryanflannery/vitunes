@@ -39,16 +39,16 @@ The complete manual for each can be obtained by doing:\n\
 The list of available commands are:\n\n\
    Command     Description\n\
    -------     ------------------------------------------------------------\n\
-   add         Add files to the vitunes database.\n\
-   addurl      Add non-files/URLs to the vitunes database.\n\
-   check       Scan files for meta-info and if they are in the database.\n\
-   flush       Output the records of all files in the database.\n\
+   add         Add files to the database.\n\
+   addurl      Add URL (or non-file playable item) to the database.\n\
+   check       Check files for meta-information.\n\
+   flush       Output the contents of the database to stdout.\n\
    help        This command.\n\
-   init        Create the initial database used by vitunes.\n\
-   rm          Remove files/URLs from the database.\n\
+   init        Initialize the media database.\n\
+   rm          Remove a file or a URL from the database.\n\
    rmfile      Alias for \"rm\".\n\
-   tag         Add or modify meta-information tags in raw files.\n\
-   update      Scan all files in the database and update their records.\n\
+   tag         Set the meta-information tags in media files.\n\
+   update      Update all files in the database.\n\
 ");
       return;
    }
