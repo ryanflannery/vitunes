@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2010, 2011, 2012 Ryan Flannery <ryan.flannery@gmail.com>
+ * Copyright (c) 2013 Tiago Cunha <tcunha@gmx.com>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,45 +15,50 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#ifndef E_COMMANDS_H
-#define E_COMMANDS_H
-
-#include "compat.h"
-
-#include <stdbool.h>
-#include <getopt.h>
+#include <err.h>
 #include <string.h>
 #include <unistd.h>
-#include <stdio.h>
-#include <err.h>
 
-#include "meta_info.h"
+#include "ecmd.h"
 #include "medialib.h"
-#include "playlist.h"
+#include "vitunes.h"
 
-/* from vitunes.c */
-extern char *vitunes_dir;
-extern char *playlist_dir;
-extern char *db_file;
+static char *time_format = "%Y %m %d %H:%M:%S";
 
-/* "main" functions for each command */
-int ecmd_init(int argc, char *argv[]);
-int ecmd_add(int argc, char *argv[]);
-int ecmd_addurl(int argc, char *argv[]);
-int ecmd_flush(int argc, char *argv[]);
-int ecmd_check(int argc, char *argv[]);
-int ecmd_rmfile(int argc, char *argv[]);
-int ecmd_tag(int argc, char *argv[]);
-int ecmd_update(int argc, char *argv[]);
-int ecmd_help(int argc, char *argv[]);
+static int
+ecmd_flush_parse(int argc, char **argv)
+{
+   int ch;
 
-/* e-command struct and set of commands */
-struct ecmd {
-   char *name;
-   int   (*func)(int argc, char *argv[]);
+   while ((ch = getopt(argc, argv, "t:")) != -1) {
+      switch (ch) {
+         case 't':
+            if ((time_format = strdup(optarg)) == NULL)
+               err(1, "%s: strdup of time_format failed", argv[0]);
+            break;
+         case '?':
+         case 'h':
+         default:
+            return -1;
+      }
+   }
+
+   return 0;
+}
+
+static void
+ecmd_flush_exec(UNUSED int argc, UNUSED char **argv)
+{
+   medialib_load(db_file, playlist_dir);
+   medialib_db_flush(stdout, time_format);
+   medialib_destroy();
+}
+
+const struct ecmd ecmd_flush = {
+   "flush", NULL,
+   "[-t format]",
+   0, 0,
+   ecmd_flush_parse,
+   NULL,
+   ecmd_flush_exec
 };
-
-extern const struct ecmd ECMD_PATH[];
-extern const int ECMD_PATH_SIZE;
-
-#endif

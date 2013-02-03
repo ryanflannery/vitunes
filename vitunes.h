@@ -27,6 +27,7 @@
 #include <signal.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "debug.h"
 #include "enums.h"
@@ -35,11 +36,25 @@
 #include "medialib.h"
 #include "player.h"
 #include "uinterface.h"
-#include "e_commands.h"
+#include "ecmd.h"
+
+/* for unused arguments */
+#if defined(__GNUC__) || defined(__clang__)
+#  define UNUSED  __attribute__((__unused__))
+#else
+#  define UNUSED
+#endif
 
 /*
  * These are the various things defined in vitunes.c used elsewhere.
  */
+
+/* configurable paths */
+extern char *vitunes_dir;
+extern char *playlist_dir;
+extern char *db_file;
+
+extern char *progname;
 
 /* record keeping  */
 extern playlist   *viewing_playlist;
