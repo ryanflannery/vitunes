@@ -22,13 +22,6 @@
 #include "ecmd.h"
 #include "meta_info.h"
 
-static bool          set_artist;
-static bool          set_album;
-static bool          set_title;
-static bool          set_genre;
-static bool          set_track;
-static bool          set_year;
-static bool          set_comment;
 static char         *artist;
 static char         *album;
 static char         *title;
@@ -46,39 +39,32 @@ ecmd_tag_parse(int argc, char **argv)
    while ((ch = getopt(argc, argv, "a:A:t:g:T:y:c:")) != -1) {
       switch (ch) {
          case 'a':
-            set_artist = true;
             if ((artist = strdup(optarg)) == NULL)
                err(1, "%s: strdup ARTIST failed", argv[0]);
             break;
          case 'A':
-            set_album = true;
             if ((album = strdup(optarg)) == NULL)
                err(1, "%s: strdup ALBUM failed", argv[0]);
             break;
          case 't':
-            set_title = true;
             if ((title = strdup(optarg)) == NULL)
                err(1, "%s: strdup TITLE failed", argv[0]);
             break;
          case 'g':
-            set_genre = true;
             if ((genre = strdup(optarg)) == NULL)
                err(1, "%s: strdup GENRE failed", argv[0]);
             break;
          case 'T':
-            set_track = true;
             track = (unsigned int) strtonum(optarg, 0, INT_MAX, &errstr);
             if (errstr != NULL)
                errx(1, "%s: invalid track '%s': %s", argv[0], optarg, errstr);
             break;
          case 'y':
-            set_year = true;
             year = (unsigned int) strtonum(optarg, 0, INT_MAX, &errstr);
             if (errstr != NULL)
                errx(1, "%s: invalid year '%s': %s", argv[0], optarg, errstr);
             break;
          case 'c':
-            set_comment = true;
             if ((comment = strdup(optarg)) == NULL)
                err(1, "%s: strdup COMMENT failed", argv[0]);
             break;
@@ -105,13 +91,13 @@ ecmd_tag_exec(int argc, char **argv)
 
    /* be verbose, indicate what we're setting... */
    printf("Setting the following tags to all files:\n");
-   if (set_artist) printf("%10.10s => '%s'\n", "artist", artist);
-   if (set_album) printf("%10.10s => '%s'\n", "album", album);
-   if (set_title) printf("%10.10s => '%s'\n", "title", title);
-   if (set_genre) printf("%10.10s => '%s'\n", "genre", genre);
-   if (set_track) printf("%10.10s => %u\n", "track", track);
-   if (set_year) printf("%10.10s => %u\n", "year", year);
-   if (set_comment) printf("%10.10s => '%s'\n", "comment", comment);
+   if (artist != NULL) printf("%10.10s => '%s'\n", "artist", artist);
+   if (album != NULL) printf("%10.10s => '%s'\n", "album", album);
+   if (title != NULL) printf("%10.10s => '%s'\n", "title", title);
+   if (genre != NULL ) printf("%10.10s => '%s'\n", "genre", genre);
+   if (track) printf("%10.10s => %u\n", "track", track);
+   if (year) printf("%10.10s => %u\n", "year", year);
+   if (comment != NULL) printf("%10.10s => '%s'\n", "comment", comment);
 
    /* tag files ... */
    taglib_set_strings_unicode(false);
@@ -129,13 +115,13 @@ ecmd_tag_exec(int argc, char **argv)
       tag = taglib_file_tag(tag_file);
 
       /* apply changes */
-      if (set_artist) taglib_tag_set_artist(tag, artist);
-      if (set_album) taglib_tag_set_album(tag, album);
-      if (set_title) taglib_tag_set_title(tag, title);
-      if (set_genre) taglib_tag_set_genre(tag, genre);
-      if (set_track) taglib_tag_set_track(tag, track);
-      if (set_year) taglib_tag_set_year(tag, year);
-      if (set_comment) taglib_tag_set_comment(tag, comment);
+      if (artist != NULL) taglib_tag_set_artist(tag, artist);
+      if (album != NULL) taglib_tag_set_album(tag, album);
+      if (title != NULL) taglib_tag_set_title(tag, title);
+      if (genre != NULL) taglib_tag_set_genre(tag, genre);
+      if (track) taglib_tag_set_track(tag, track);
+      if (year) taglib_tag_set_year(tag, year);
+      if (comment != NULL) taglib_tag_set_comment(tag, comment);
 
 
       /* save changes and cleanup */
