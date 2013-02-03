@@ -17,6 +17,7 @@
 
 #include <err.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
@@ -40,6 +41,7 @@ ecmd_tag_parse(int argc, char **argv)
    while ((ch = getopt(argc, argv, "A:T:a:c:g:t:y:")) != -1) {
       switch (ch) {
          case 'A':
+            free(album);
             if ((album = strdup(optarg)) == NULL)
                err(1, "%s: strdup ALBUM failed", argv[0]);
             break;
@@ -49,18 +51,22 @@ ecmd_tag_parse(int argc, char **argv)
                errx(1, "invalid track '%s': %s", optarg, errstr);
             break;
          case 'a':
+            free(artist);
             if ((artist = strdup(optarg)) == NULL)
                err(1, "%s: strdup ARTIST failed", argv[0]);
             break;
          case 'c':
+            free(comment);
             if ((comment = strdup(optarg)) == NULL)
                err(1, "%s: strdup COMMENT failed", argv[0]);
             break;
          case 'g':
+            free(genre);
             if ((genre = strdup(optarg)) == NULL)
                err(1, "%s: strdup GENRE failed", argv[0]);
             break;
          case 't':
+            free(title);
             if ((title = strdup(optarg)) == NULL)
                err(1, "%s: strdup TITLE failed", argv[0]);
             break;
