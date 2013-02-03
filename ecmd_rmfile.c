@@ -93,7 +93,7 @@ ecmd_rmfile_exec(UNUSED int argc, char **argv)
 const struct ecmd ecmd_rmfile = {
    "rmfile", "rm",
    "[-f] URL|path",
-   2, 2,
+   1, 1,
    ecmd_rmfile_parse,
    ecmd_rmfile_exec
 };
