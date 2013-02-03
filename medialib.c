@@ -232,7 +232,7 @@ medialib_db_load(const char *db_file)
       printf("Remove the existing database and rebuild by doing:\n");
       printf("\t$ rm %s\n", db_file);
       printf("\t$ vitunes -e init\n");
-      printf("\t$ vitunes -e add /path/to/music ...\n");
+      printf("\t$ vitunes -e add path [...]\n");
       fflush(stdout);
       exit(1);
    }

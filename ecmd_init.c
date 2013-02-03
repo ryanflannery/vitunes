@@ -27,7 +27,7 @@ ecmd_init_exec(UNUSED int argc, UNUSED char **argv)
    printf("Creating all necessary files and directories for vitunes...\n");
    medialib_setup_files(vitunes_dir, db_file, playlist_dir);
 
-   printf("\nNow use 'vitunes -e add dir1 dir2 ...' to add files to vitunes.\n");
+   printf("\nNow use 'vitunes -e add path [...]' to add files to vitunes.\n");
 }
 
 const struct ecmd ecmd_init = {
