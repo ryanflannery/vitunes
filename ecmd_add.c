@@ -28,7 +28,7 @@ ecmd_add_exec(UNUSED int argc, char **argv)
    medialib_load(db_file, playlist_dir);
 
    printf("Scanning directories for files to add to database...\n");
-   medialib_db_scan_dirs(argv + 1);
+   medialib_db_scan_dirs(argv);
 
    medialib_destroy();
 }

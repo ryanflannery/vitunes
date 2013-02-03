@@ -59,23 +59,18 @@ ecmd_check_exec(int argc, char **argv)
    meta_info *mi;
    bool   found;
    char   realfile[PATH_MAX];
-   char **files;
-   int    nfiles;
    int    f, i;
 
-   files = argv + optind;
-   nfiles = argc - optind;
-
    /* scan through files... */
-   for (f = 0; f < nfiles; f++) {
+   for (f = 0; f < argc; f++) {
 
-      printf("Checking: '%s'\n", files[f]);
+      printf("Checking: '%s'\n", argv[f]);
 
       /* show raw or sanitized information */
       if (show_raw || show_sanitized) {
-         mi = mi_extract(files[f]);
+         mi = mi_extract(argv[f]);
          if (mi == NULL)
-            warnx("Failed to extract any meta-information from '%s'", files[f]);
+            warnx("Failed to extract any meta-information from '%s'", argv[f]);
          else {
             /* show raw info */
             if (show_raw) {
@@ -98,8 +93,8 @@ ecmd_check_exec(int argc, char **argv)
       if (show_database) {
 
          /* get absolute filename */
-         if (realpath(files[f], realfile) == NULL) {
-            warn("%s: realpath failed for %s: skipping", argv[0], files[f]);
+         if (realpath(argv[f], realfile) == NULL) {
+            warn("%s: realpath failed for %s: skipping", argv[0], argv[f]);
             continue;
          }
 
@@ -116,7 +111,7 @@ ecmd_check_exec(int argc, char **argv)
          }
 
          if (!found)
-            warnx("File '%s' does NOT exist in the database", files[f]);
+            warnx("File '%s' does NOT exist in the database", argv[f]);
          else {
             printf("\tThe meta-information in the DATABASE is:\n");
             for (i = 0; i < MI_NUM_CINFO; i++)

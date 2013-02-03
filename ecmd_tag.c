@@ -83,11 +83,7 @@ ecmd_tag_exec(int argc, char **argv)
 {
    TagLib_File *tag_file;
    TagLib_Tag  *tag;
-   char **files;
-   int nfiles, f;
-
-   files  = argv + optind;
-   nfiles = argc - optind;
+   int f;
 
    /* be verbose, indicate what we're setting... */
    printf("Setting the following tags to all files:\n");
@@ -101,12 +97,12 @@ ecmd_tag_exec(int argc, char **argv)
 
    /* tag files ... */
    taglib_set_strings_unicode(false);
-   for (f = 0; f < nfiles; f++) {
-      printf("tagging: '%s'\n", files[f]);
+   for (f = 0; f < argc; f++) {
+      printf("tagging: '%s'\n", argv[f]);
 
       /* extract taglib stuff */
-      if ((tag_file = taglib_file_new(files[f])) == NULL) {
-         warnx("TagLib: failed to open file '%s': skipping.", files[f]);
+      if ((tag_file = taglib_file_new(argv[f])) == NULL) {
+         warnx("TagLib: failed to open file '%s': skipping.", argv[f]);
          printf("  => Causes: format not supported by TagLib or format doesn't support tags\n");
          fflush(stdout);
          continue;

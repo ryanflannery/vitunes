@@ -36,7 +36,7 @@ ecmd_addurl_exec(UNUSED int argc, char **argv)
    /* start new record, set filename */
    m = mi_new();
    m->is_url = true;
-   if ((m->filename = strdup(argv[1])) == NULL)
+   if ((m->filename = strdup(argv[0])) == NULL)
       err(1, "%s: strdup failed (filename)", argv[0]);
 
    /* get fields from user */

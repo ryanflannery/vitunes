@@ -49,23 +49,17 @@ ecmd_rmfile_parse(int argc, char **argv)
 static void
 ecmd_rmfile_exec(UNUSED int argc, char **argv)
 {
-   char *filename;
    char  input[255];
    bool  found;
    int   found_idx;
    int   i;
-
-   if (argc == 3)
-      filename = argv[2];
-   else
-      filename = argv[1];
 
    /* load database and search for record */
    medialib_load(db_file, playlist_dir);
    found = false;
    found_idx = -1;
    for (i = 0; i < mdb.library->nfiles && !found; i++) {
-      if (strcmp(filename, mdb.library->files[i]->filename) == 0) {
+      if (strcmp(argv[0], mdb.library->files[i]->filename) == 0) {
          found = true;
          found_idx = i;
       }
@@ -74,12 +68,12 @@ ecmd_rmfile_exec(UNUSED int argc, char **argv)
    /* if not found then error */
    if (!found) {
       i = (forced ? 0 : 1);
-      errx(i, "%s: %s: No such file or URL", argv[0], filename);
+      errx(i, "%s: %s: No such file or URL", argv[0], argv[0]);
    }
 
    /* if not forced, prompt user if they are sure */
    if (!forced) {
-      printf("Are you sure you want to delete '%s'? [y/n] ", filename);
+      printf("Are you sure you want to delete '%s'? [y/n] ", argv[0]);
       if (fgets(input, sizeof(input), stdin) == NULL
       || (strcasecmp(input, "yes\n") != 0 && strcasecmp(input, "y\n") != 0))
          errx(1, "%s: operation canceled.  Database unchanged.", argv[0]);
