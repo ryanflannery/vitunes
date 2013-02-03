@@ -27,6 +27,80 @@ static bool show_raw;
 static bool show_sanitized;
 static bool show_database;
 
+static void
+ecmd_check_show_db(const char *path)
+{
+   bool       found;
+   char       realfile[PATH_MAX];
+   int        i;
+   meta_info *mi;
+
+   if (show_database == false)
+      return;
+   if (realpath(path, realfile) == NULL) {
+      warn("realpath failed for %s: skipping", path);
+      return;
+   }
+
+   /* check if file is in database */
+   medialib_load(db_file, playlist_dir);
+   found = false;
+   mi = NULL;
+   for (i = 0; i < mdb.library->nfiles && !found; i++) {
+      if (strcmp(realfile, mdb.library->files[i]->filename) == 0) {
+         found = true;
+         mi = mdb.library->files[i];
+      }
+   }
+
+   if (!found)
+      warnx("File '%s' does NOT exist in the database", path);
+   else {
+      printf("\tThe meta-information in the DATABASE is:\n");
+      for (i = 0; i < MI_NUM_CINFO; i++)
+         printf("\t%10.10s: '%s'\n", MI_CINFO_NAMES[i], mi->cinfo[i]);
+   }
+
+   medialib_destroy();
+}
+
+static void
+ecmd_check_show_raw(const char *path)
+{
+   int        i;
+   meta_info *mi;
+
+   if (show_raw == false)
+      return;
+   if ((mi = mi_extract(path)) == NULL) {
+      warnx("Failed to extract any meta-information from '%s'", path);
+      return;
+   }
+
+   printf("\tThe RAW meta-information from the file is:\n");
+   for (i = 0; i < MI_NUM_CINFO; i++)
+      printf("\t%10.10s: '%s'\n", MI_CINFO_NAMES[i], mi->cinfo[i]);
+}
+
+static void
+ecmd_check_show_sanitized(const char *path)
+{
+   int        i;
+   meta_info *mi;
+
+   if (show_sanitized == false)
+      return;
+   if ((mi = mi_extract(path)) == NULL) {
+      warnx("Failed to extract any meta-information from '%s'", path);
+      return;
+   }
+
+   mi_sanitize(mi);
+   printf("\tThe SANITIZED meta-information from the file is:\n");
+   for (i = 0; i < MI_NUM_CINFO; i++)
+      printf("\t%10.10s: '%s'\n", MI_CINFO_NAMES[i], mi->cinfo[i]);
+}
+
 static int
 ecmd_check_parse(int argc, char **argv)
 {
@@ -56,71 +130,14 @@ ecmd_check_parse(int argc, char **argv)
 static void
 ecmd_check_exec(int argc, char **argv)
 {
-   meta_info *mi;
-   bool   found;
-   char   realfile[PATH_MAX];
-   int    f, i;
+   int i;
 
    /* scan through files... */
-   for (f = 0; f < argc; f++) {
-
-      printf("Checking: '%s'\n", argv[f]);
-
-      /* show raw or sanitized information */
-      if (show_raw || show_sanitized) {
-         mi = mi_extract(argv[f]);
-         if (mi == NULL)
-            warnx("Failed to extract any meta-information from '%s'", argv[f]);
-         else {
-            /* show raw info */
-            if (show_raw) {
-               printf("\tThe RAW meta-information from the file is:\n");
-               for (i = 0; i < MI_NUM_CINFO; i++)
-                  printf("\t%10.10s: '%s'\n", MI_CINFO_NAMES[i], mi->cinfo[i]);
-            }
-
-            /* show sanitized info */
-            if (show_sanitized) {
-               mi_sanitize(mi);
-               printf("\tThe SANITIZED meta-information from the file is:\n");
-               for (i = 0; i < MI_NUM_CINFO; i++)
-                  printf("\t%10.10s: '%s'\n", MI_CINFO_NAMES[i], mi->cinfo[i]);
-            }
-         }
-      }
-
-      /* check if it's in the database */
-      if (show_database) {
-
-         /* get absolute filename */
-         if (realpath(argv[f], realfile) == NULL) {
-            warn("realpath failed for %s: skipping", argv[f]);
-            continue;
-         }
-
-         /* check if file is in database */
-         medialib_load(db_file, playlist_dir);
-
-         found = false;
-         mi = NULL;
-         for (i = 0; i < mdb.library->nfiles && !found; i++) {
-            if (strcmp(realfile, mdb.library->files[i]->filename) == 0) {
-               found = true;
-               mi = mdb.library->files[i];
-            }
-         }
-
-         if (!found)
-            warnx("File '%s' does NOT exist in the database", argv[f]);
-         else {
-            printf("\tThe meta-information in the DATABASE is:\n");
-            for (i = 0; i < MI_NUM_CINFO; i++)
-               printf("\t%10.10s: '%s'\n", MI_CINFO_NAMES[i], mi->cinfo[i]);
-         }
-
-         medialib_destroy();
-      }
-
+   for (i = 0; i < argc; i++) {
+      printf("Checking: '%s'\n", argv[i]);
+      ecmd_check_show_raw(argv[i]);
+      ecmd_check_show_sanitized(argv[i]);
+      ecmd_check_show_db(argv[i]);
    }
 }
 
