@@ -517,6 +517,11 @@ handle_switches(int argc, char *argv[])
             /* NOT REACHED */
       }
    }
+   argc -= optind;
+   argv += optind;
+
+   if (argc)
+      usage();
 
    return 0;
 }
