@@ -17,15 +17,24 @@
 #include "ecmd.h"
 
 static int
-ecmd_parse(const struct ecmd *ecmd, int argc, char **argv)
+ecmd_parse(const struct ecmd *ecmd, int argc, char ***argv)
 {
    /* reset getopt(3) variables */
    optind = 0;
    optreset = 1;
 
-   /* parse error */
-   if (ecmd->parse != NULL && ecmd->parse(argc, argv) == -1)
-      return -1;
+   /* parse command line and if valid, skip parsed arguments */
+   if (ecmd->parse != NULL) {
+      /* parse error */
+      if (ecmd->parse(argc, *argv) == -1)
+         return -1;
+      argc -= optind;
+      *argv += optind;
+   } else {
+      /* no parse function; skip only its name */
+      argc--;
+      (*argv)++;
+   }
  
    /* invalid number of arguments */
    if (argc < ecmd->args_lower)
@@ -33,7 +42,8 @@ ecmd_parse(const struct ecmd *ecmd, int argc, char **argv)
    if (ecmd->args_upper >= 0 && argc > ecmd->args_upper)
       return -1;
 
-   return 0;
+   /* return updated (no name) number of arguments */
+   return argc;
 }
 
 int
@@ -68,7 +78,7 @@ ecmd_exec(const char *ecmd, int argc, char **argv)
    }
 
    /* parse e-command arguments */
-   if (ecmd_parse(ecmdtab[i], argc, argv) == -1) {
+   if ((argc = ecmd_parse(ecmdtab[i], argc, &argv)) == -1) {
       fprintf(stderr, "usage: %s -e %s %s\n", progname, ecmdtab[i]->name,
           ecmdtab[i]->usage != NULL ? ecmdtab[i]->usage : "");
       return 1;
