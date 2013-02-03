@@ -57,12 +57,12 @@ ecmd_tag_parse(int argc, char **argv)
          case 'T':
             track = (unsigned int) strtonum(optarg, 0, INT_MAX, &errstr);
             if (errstr != NULL)
-               errx(1, "%s: invalid track '%s': %s", argv[0], optarg, errstr);
+               errx(1, "invalid track '%s': %s", optarg, errstr);
             break;
          case 'y':
             year = (unsigned int) strtonum(optarg, 0, INT_MAX, &errstr);
             if (errstr != NULL)
-               errx(1, "%s: invalid year '%s': %s", argv[0], optarg, errstr);
+               errx(1, "invalid year '%s': %s", optarg, errstr);
             break;
          case 'c':
             if ((comment = strdup(optarg)) == NULL)
