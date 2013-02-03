@@ -89,5 +89,6 @@ const struct ecmd ecmd_rmfile = {
    "[-f] URL|path",
    1, 1,
    ecmd_rmfile_parse,
+   NULL,
    ecmd_rmfile_exec
 };

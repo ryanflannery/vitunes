@@ -78,6 +78,16 @@ ecmd_tag_parse(int argc, char **argv)
    return 0;
 }
 
+static int
+ecmd_tag_check(void)
+{
+   if (artist == NULL && album == NULL && title == NULL && genre == NULL
+   &&  track == 0 && year == 0 && comment == NULL)
+      return -1;
+
+   return 0;
+}
+
 static void
 ecmd_tag_exec(int argc, char **argv)
 {
@@ -133,5 +143,6 @@ const struct ecmd ecmd_tag = {
    \t[-y year] path [...]",
    1, -1,
    ecmd_tag_parse,
+   ecmd_tag_check,
    ecmd_tag_exec
 };

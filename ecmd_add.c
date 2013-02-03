@@ -38,5 +38,6 @@ const struct ecmd ecmd_add = {
    "path [...]",
    1, -1,
    NULL,
+   NULL,
    ecmd_add_exec
 };

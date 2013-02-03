@@ -31,6 +31,7 @@ struct ecmd {
    int          args_lower; /* minimum number of arguments */
    int          args_upper; /* negative number means no limit */
    int        (*parse)(int argc, char **argv); /* may be NULL */
+   int        (*check)(void);                  /* may be NULL */
    void       (*exec)(int argc, char **argv);
 };
 

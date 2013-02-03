@@ -28,6 +28,8 @@ ecmd_parse(const struct ecmd *ecmd, int argc, char ***argv)
       /* parse error */
       if (ecmd->parse(argc, *argv) == -1)
          return -1;
+      if (ecmd->check != NULL && ecmd->check() == -1)
+         return -1;
       argc -= optind;
       *argv += optind;
    } else {

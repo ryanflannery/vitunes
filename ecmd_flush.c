@@ -58,5 +58,6 @@ const struct ecmd ecmd_flush = {
    "[-t format]",
    0, 0,
    ecmd_flush_parse,
+   NULL,
    ecmd_flush_exec
 };

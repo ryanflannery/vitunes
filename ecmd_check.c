@@ -127,6 +127,14 @@ ecmd_check_parse(int argc, char **argv)
    return 0;
 }
 
+static int
+ecmd_check_check(void)
+{
+   if (!show_raw && !show_sanitized && !show_database)
+      return -1;
+   return 0;
+}
+
 static void
 ecmd_check_exec(int argc, char **argv)
 {
@@ -146,5 +154,6 @@ const struct ecmd ecmd_check = {
    "-d | -r | -s path [...]",
    1, -1,
    ecmd_check_parse,
+   ecmd_check_check,
    ecmd_check_exec
 };

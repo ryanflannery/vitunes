@@ -65,5 +65,6 @@ const struct ecmd ecmd_update = {
    "[-fs]",
    0, 0,
    ecmd_update_parse,
+   NULL,
    ecmd_update_exec
 };
