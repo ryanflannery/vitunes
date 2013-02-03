@@ -120,8 +120,7 @@ ecmd_tag_exec(int argc, char **argv)
       /* extract taglib stuff */
       if ((tag_file = taglib_file_new(argv[i])) == NULL) {
          warnx("TagLib: failed to open file '%s': skipping.", argv[i]);
-         printf("  => Causes: format not supported by TagLib or format doesn't support tags\n");
-         fflush(stdout);
+         warnx("  => Causes: format not supported by TagLib or format doesn't support tags");
          continue;
       }
 
