@@ -25,7 +25,7 @@
 static bool force_update;
 static bool show_skipped;
 
-static void
+static int
 ecmd_update_parse(int argc, char **argv)
 {
    int ch;
@@ -41,11 +41,13 @@ ecmd_update_parse(int argc, char **argv)
          case 'h':
          case '?':
          default:
-            errx(1, "usage: -e %s [-fs]", argv[0]);
+            return -1;
       }
    }
    if (optind < argc)
-      errx(1, "usage: -e %s [-fs]", argv[0]);
+      return -1;
+
+   return 0;
 }
 
 static void

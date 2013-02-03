@@ -37,7 +37,7 @@ static char         *comment;
 static unsigned int  track;
 static unsigned int  year;
 
-static void
+static int
 ecmd_tag_parse(int argc, char **argv)
 {
    const char *errstr;
@@ -85,15 +85,17 @@ ecmd_tag_parse(int argc, char **argv)
          case 'h':
          case '?':
          default:
-            errx(1, "usage: see 'vitunes -e help tag'");
+            return -1;
       }
    }
 
    if (!set_artist && !set_album && !set_title && !set_genre
    &&  !set_track && !set_year && !set_comment)
-      errx(1, "%s: nothing to set!  See 'vitunes -e help tag'", argv[0]);
+      return -1;
    if (argc == 1)
-      errx(1, "%s: must provide at least one file to tag.", argv[0]);
+      return -1;
+
+   return 0;
 }
 
 static void

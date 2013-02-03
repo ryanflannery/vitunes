@@ -24,7 +24,7 @@
 
 static char *time_format = "%Y %m %d %H:%M:%S";
 
-static void
+static int
 ecmd_flush_parse(int argc, char **argv)
 {
    int ch;
@@ -38,9 +38,11 @@ ecmd_flush_parse(int argc, char **argv)
          case '?':
          case 'h':
          default:
-            errx(1, "usage: %s [-t format]", argv[0]);
+            return -1;
       }
    }
+
+   return 0;
 }
 
 static void

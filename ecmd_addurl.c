@@ -24,11 +24,12 @@
 #include "playlist.h"
 #include "vitunes.h"
 
-static void
-ecmd_addurl_parse(int argc, char **argv)
+static int
+ecmd_addurl_parse(int argc, UNUSED char **argv)
 {
    if (argc != 2)
-      errx(1, "usage: -e %s URL|path", argv[0]);
+      return -1;
+   return 0;
 }
 
 static void

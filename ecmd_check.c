@@ -27,13 +27,13 @@ static bool show_raw;
 static bool show_sanitized;
 static bool show_database;
 
-static void
+static int
 ecmd_check_parse(int argc, char **argv)
 {
    int ch;
 
    if (argc < 3)
-      errx(1, "usage: -e %s [-drs] path [...]", argv[0]);
+      return -1;
 
    while ((ch = getopt(argc, argv, "rsd")) != -1) {
       switch (ch) {
@@ -49,13 +49,15 @@ ecmd_check_parse(int argc, char **argv)
          case 'h':
          case '?':
          default:
-            errx(1, "usage: -e %s [-drs] path [...]", argv[0]);
+            return -1;
       }
    }
    if (!show_raw && !show_sanitized && !show_database)
-      errx(1, "%s: must specify at least one of -r, -s, or -d", argv[0]);
+      return -1;
    if (argc == 1)
-      errx(1, "%s: must provide at least one file to check.", argv[0]);
+      return -1;
+
+   return 0;
 }
 
 static void

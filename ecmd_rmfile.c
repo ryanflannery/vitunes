@@ -25,17 +25,19 @@
 
 static bool forced;
 
-static void
+static int
 ecmd_rmfile_parse(int argc, char **argv)
 {
    if (argc < 2 || argc > 3)
-      errx(1, "usage: -e %s [-f] URL|path", argv[0]);
+      return -1;
 
    if (argc == 3) {
       if (strcmp(argv[1], "-f") != 0)
-         errx(1, "usage: -e %s [-f] URL|path", argv[0]);
+         return -1;
       forced = true;
    }
+
+   return 0;
 }
 
 static void

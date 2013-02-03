@@ -16,14 +16,14 @@
 
 #include "ecmd.h"
 
-static void
+static int
 ecmd_parse(const struct ecmd *ecmd, int argc, char **argv)
 {
    /* reset getopt(3) variables */
    optind = 0;
    optreset = 1;
 
-   ecmd->parse(argc, argv);
+   return ecmd->parse(argc, argv);
 }
 
 int
@@ -58,7 +58,11 @@ ecmd_exec(const char *ecmd, int argc, char **argv)
    }
 
    /* parse e-command arguments */
-   ecmd_parse(ecmdtab[i], argc, argv);
+   if (ecmd_parse(ecmdtab[i], argc, argv) == -1) {
+      fprintf(stderr, "usage: %s -e %s %s\n", progname, ecmdtab[i]->name,
+          ecmdtab[i]->usage != NULL ? ecmdtab[i]->usage : "");
+      return 1;
+   }
 
    /* finally execute it */
    ecmdtab[i]->exec(argc, argv);

@@ -22,11 +22,13 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "vitunes.h"
+
 struct ecmd {
    const char  *name;
    const char  *alias;      /* may be NULL */
    const char  *usage;      /* may be NULL */
-   void       (*parse)(int argc, char **argv); /* may be NULL */
+   int        (*parse)(int argc, char **argv); /* may be NULL */
    void       (*exec)(int argc, char **argv);
 };
 

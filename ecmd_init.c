@@ -21,11 +21,12 @@
 #include "medialib.h"
 #include "vitunes.h"
 
-static void
-ecmd_init_parse(int argc, char **argv)
+static int
+ecmd_init_parse(int argc, UNUSED char **argv)
 {
    if (argc != 1)
-      errx(1, "usage: -e %s", argv[0]);
+      return -1;
+   return 0;
 }
 
 static void

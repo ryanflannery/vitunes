@@ -22,13 +22,14 @@
 #include "ecmd.h"
 #include "vitunes.h"
 
-static void
-ecmd_help_parse(int argc, char **argv)
+static int
+ecmd_help_parse(int argc, UNUSED char **argv)
 {
    if (argc == 1)
-      return;
+      return 0;
    if (argc != 2)
-      errx(1, "usage: -e %s [command]", argv[0]);
+      return -1;
+   return 0;
 }
 
 static void
