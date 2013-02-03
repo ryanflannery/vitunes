@@ -17,6 +17,7 @@
 #include <err.h>
 #include <stdbool.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "ecmd.h"
 #include "medialib.h"
@@ -28,13 +29,21 @@ static bool forced;
 static int
 ecmd_rmfile_parse(int argc, char **argv)
 {
+   int ch;
+
    if (argc < 2 || argc > 3)
       return -1;
 
-   if (argc == 3) {
-      if (strcmp(argv[1], "-f") != 0)
-         return -1;
-      forced = true;
+   while ((ch = getopt(argc, argv, "f")) != -1) {
+      switch (ch) {
+         case 'f':
+            forced = true;
+            break;
+         case 'h':
+         case '?':
+         default:
+            return -1;
+      }
    }
 
    return 0;
