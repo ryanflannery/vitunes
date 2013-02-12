@@ -30,7 +30,7 @@ MANDIR = $(PREFIX)/man/man1
 ### Defaults should be fine as long as TagLib is installed.
 #######################################################################
 TAGLIB_CFLAGS  = `pkg-config taglib --cflags`
-TAGLIB_LDFLAGS = `pkg-config taglib --libs` -ltag_c
+TAGLIB_LIBS    = `pkg-config taglib --libs` -ltag_c
 
 
 #######################################################################
@@ -38,7 +38,7 @@ TAGLIB_LDFLAGS = `pkg-config taglib --libs` -ltag_c
 #######################################################################
 
 #GSTREAMER_CFLAGS  = `pkg-config gstreamer-0.10 --cflags` -DENABLE_GSTREAMER
-#GSTREAMER_LDFLAGS = `pkg-config gstreamer-0.10 --libs`   -ltag_c
+#GSTREAMER_LIBS    = `pkg-config gstreamer-0.10 --libs`
 #GSTREAMER_OBJS    = gstplayer.o
 
 
