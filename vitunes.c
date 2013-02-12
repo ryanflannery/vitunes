@@ -64,6 +64,9 @@ char *db_file;
 char *playlist_dir;
 char *player_backend;
 
+/* program name with directories removed */
+char *progname;
+
 
 /*****************************************************************************
  * local functions
@@ -71,7 +74,7 @@ char *player_backend;
 
 /* misc. functions */
 int  handle_switches(int argc, char *argv[]);
-void usage(const char *);
+void usage(void);
 void signal_handler(int);
 void setup_timer();
 
@@ -85,6 +88,12 @@ main(int argc, char *argv[])
    int            sock = -1;
    fd_set         fds;
    struct passwd *pw;
+
+   /* save program name for later use */
+   if ((progname = strrchr(argv[0], '/')) == NULL)
+      progname = argv[0];
+   else
+      progname++;
 
 #ifdef DEBUG
    if ((debug_log = fopen("vitunes-debug.log", "w")) == NULL)
@@ -253,13 +262,13 @@ main(int argc, char *argv[])
 
 /* print proper usage */
 void
-usage(const char *pname)
+usage(void)
 {
    fprintf(stderr,"\
 usage: %s [-f config-file] [-d database-file] [-p playlist-dir] [-m player-path] [-e COMMAND ...]\n\
 See \"%s -e help\" for information about what e-commands are available.\n\
 ",
-   pname, pname);
+   progname, progname);
    exit(1);
 }
 
@@ -462,16 +471,13 @@ int
 handle_switches(int argc, char *argv[])
 {
    int ch;
-   int i;
-   int had_c_commands = 0;
 
    while ((ch = getopt(argc, argv, "he:f:d:p:m:c:")) != -1) {
       switch (ch) {
          case 'c':
             if(sock_send_msg(optarg) == -1)
                errx(1, "Failed to send message. Vitunes not running?");
-            had_c_commands = 1;
-            break;
+            exit(0);
 
          case 'd':
             free(db_file);
@@ -484,14 +490,7 @@ handle_switches(int argc, char *argv[])
             argc -= optind - 1;
             argv += optind - 1;
 
-            for (i = 0; i < ECMD_PATH_SIZE; i++) {
-               if (strcmp(optarg, ECMD_PATH[i].name) == 0)
-                  exit((ECMD_PATH[i].func)(argc, argv));
-            }
-
-            errx(1, "Unknown e-command '%s'.  See 'vitunes -e help' for list.",
-               optarg);
-            break;
+            exit(ecmd_exec(optarg, argc, argv));
 
          case 'f':
             free(conf_file);
@@ -514,13 +513,15 @@ handle_switches(int argc, char *argv[])
          case 'h':
          case '?':
          default:
-            usage(argv[0]);
+            usage();
             /* NOT REACHED */
       }
    }
+   argc -= optind;
+   argv += optind;
 
-   if(had_c_commands)
-      exit(0);
+   if (argc)
+      usage();
 
    return 0;
 }

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2010, 2011 Ryan Flannery <ryan.flannery@gmail.com>
+ * Copyright (c) 2010, 2011, 2012 Ryan Flannery <ryan.flannery@gmail.com>
+ * Copyright (c) 2013 Tiago Cunha <tcunha@gmx.com>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,37 +15,26 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#ifndef DEBUG_H
-#define DEBUG_H
-
 #include <stdio.h>
 
-/* log file for debugging */
-extern FILE *debug_log;
+#include "ecmd.h"
+#include "medialib.h"
+#include "vitunes.h"
 
-#ifdef DEBUG
+static void
+ecmd_init_exec(UNUSED int argc, UNUSED char **argv)
+{
+   printf("Creating all necessary files and directories for vitunes...\n");
+   medialib_setup_files(vitunes_dir, db_file, playlist_dir);
 
-/* debug file logger that goes to the file opened in vitunes.c */
-#define DFLOG(format, args...) \
-   fprintf(debug_log, "%s.%d (%s): ", __FILE__, __LINE__, __FUNCTION__); \
-   fprintf(debug_log, format, ## args); \
-   fprintf(debug_log, "\n"); \
-   fflush(debug_log);
+   printf("\nNow use 'vitunes -e add path [...]' to add files to vitunes.\n");
+}
 
-/* console logger.  goes to stdout.  doesn't work well in curses */
-#define DCLOG(format, args...) \
-   printf("%d: ", __LINE__); \
-   printf(format, ## args); \
-   printf("\n"); \
-   fflush(stdout);
-
-
-#else
-
-#define DFLOG(format, args...) 0;
-#define DCLOG(format, args...) 0;
-
-#endif
-
-
-#endif
+const struct ecmd ecmd_init = {
+   "init", NULL,
+   NULL,
+   0, 0,
+   NULL,
+   NULL,
+   ecmd_init_exec
+};

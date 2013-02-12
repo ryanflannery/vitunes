@@ -214,12 +214,12 @@ medialib_db_load(const char *db_file)
    int        version[3];
 
    if ((fin = fopen(db_file, "r")) == NULL)
-      err(1, "medialib_db_load: failed to open database file '%s'", db_file);
+      err(1, "Failed to open database file '%s'", db_file);
 
    /* read and check header & version */
    fread(header, strlen("vitunes"), 1, fin);
    if (strncmp(header, "vitunes", strlen("vitunes")) != 0)
-      errx(1, "medialib_db_load: db file '%s' NOT a vitunes database", db_file);
+      errx(1, "Database file '%s' NOT a vitunes database", db_file);
 
    fread(version, sizeof(version), 1, fin);
    if (version[0] != DB_VERSION_MAJOR || version[1] != DB_VERSION_MINOR
@@ -232,7 +232,7 @@ medialib_db_load(const char *db_file)
       printf("Remove the existing database and rebuild by doing:\n");
       printf("\t$ rm %s\n", db_file);
       printf("\t$ vitunes -e init\n");
-      printf("\t$ vitunes -e add /path/to/music ...\n");
+      printf("\t$ vitunes -e add path [...]\n");
       fflush(stdout);
       exit(1);
    }
@@ -244,7 +244,7 @@ medialib_db_load(const char *db_file)
       if (feof(fin))
          mi_free(mi);
       else if (ferror(fin))
-         err(1, "medialib_db_load: error loading database file '%s'", db_file);
+         err(1, "Error loading database file '%s'", db_file);
       else
          playlist_files_append(mdb.library, &mi, 1, false);
    }

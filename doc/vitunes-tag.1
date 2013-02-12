@@ -22,19 +22,12 @@
 .Nm vitunes -e tag
 .Bk -words
 .Op Fl A Ar album
-.Op Fl -album=string
 .Op Fl a Ar artist
-.Op Fl -artist=string
 .Op Fl g Ar genre
-.Op Fl -genre=string
 .Op Fl t Ar title
-.Op Fl -title=string
 .Op Fl T Ar track
-.Op Fl -track=string
 .Op Fl y Ar year
-.Op Fl -year=number
 .Op Fl c Ar comment
-.Op Fl -comment=string
 .Ar path
 .Op ...
 .Ek
@@ -51,29 +44,21 @@ For each
 specified, the given fields will be set to the provided value.
 .Pp
 The options are as follows:
-.Pp
-.Bl -tag -width Fl -compact
+.Bl -tag -width Fl
 .It Fl A Ar album
-.It Fl -album=string
 Sets the album field to the provided string.
 .It Fl a Ar artist
-.It Fl -artist=string
 Sets the artist field to the provided string.
 .It Fl c Ar comment
-.It Fl -comment=string
 Sets the comment field to the provided string.
 .It Fl g Ar genre
-.It Fl -genre=string
 Sets the genre field to the provided string.
 .It Fl T Ar track
-.It Fl --track=number
 Sets the track field to the provided number.
 Note that the number must be between 0 and INT_MAX.
 .It Fl t Ar title
-.It Fl -title=string
 Sets the title field to the provided string.
 .It Fl y Ar year
-.It Fl -year=number
 Sets the year field to the provided number.
 Note that the number must be between 0 and INT_MAX.
 .El
@@ -95,7 +80,7 @@ Below is an example of correcting this and then updating the
 .Xr vitunes 1
 database:
 .Pp
-.Dl $ vitunes -e tag --artist=\&"The White Stripes" /path/to/De_Stijl/*
+.Dl $ vitunes -e tag -a \&"The White Stripes" /path/to/De_Stijl/*
 .Dl $ vitunes -e update
 .Sh SEE ALSO
 .Xr vitunes 1 ,
