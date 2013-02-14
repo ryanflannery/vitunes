@@ -56,7 +56,7 @@ int cmd_toggle(int argc, char *argv[]);
 int cmd_playlist(int argc, char *argv[]);
 
 /* parse a string and execute it as a command */
-void cmd_execute(char *cmd);
+void cmd_execute(const char *cmd);
 
 
 /****************************************************************************
@@ -80,7 +80,7 @@ void toggleset_init();
 void toggleset_free();
 
 toggle_list *toggle_list_create(int registr, int argc, char *argv[]);
-void toggle_list_add_command(toggle_list *t, char *cmd);
+void toggle_list_add_command(toggle_list *t, const char *cmd);
 void toggle_list_free(toggle_list *t);
 
 void toggle_add(toggle_list *t);

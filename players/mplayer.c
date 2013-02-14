@@ -19,9 +19,9 @@
 
 /* callback functions */
 void (*mplayer_callback_playnext)(void) = NULL;
-void (*mplayer_callback_notice)(char *, ...) = NULL;
-void (*mplayer_callback_error)(char *, ...) = NULL;
-void (*mplayer_callback_fatal)(char *, ...) = NULL;
+void (*mplayer_callback_notice)(const char *, ...) = NULL;
+void (*mplayer_callback_error)(const char *, ...) = NULL;
+void (*mplayer_callback_fatal)(const char *, ...) = NULL;
 
 
 /* record keeping */
@@ -306,19 +306,19 @@ mplayer_set_callback_playnext(void (*f)(void))
 }
 
 void
-mplayer_set_callback_notice(void (*f)(char *, ...))
+mplayer_set_callback_notice(void (*f)(const char *, ...))
 {
    mplayer_callback_notice = f;
 }
 
 void
-mplayer_set_callback_error(void (*f)(char *, ...))
+mplayer_set_callback_error(void (*f)(const char *, ...))
 {
    mplayer_callback_error = f;
 }
 
 void
-mplayer_set_callback_fatal(void (*f)(char *, ...))
+mplayer_set_callback_fatal(void (*f)(const char *, ...))
 {
    mplayer_callback_fatal = f;
 }
