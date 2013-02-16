@@ -144,7 +144,7 @@ ecmd_tag_exec(int argc, char **argv)
 }
 
 const struct ecmd ecmd_tag = {
-   "tag", NULL,
+   "tag",
    "[-A album] [-T track] [-a artist] [-c comment] [-g genre] [-t title]\n\
    \t[-y year] path [...]",
    1, -1,

@@ -69,7 +69,7 @@ The list of available commands are:\n\n\
 }
 
 const struct ecmd ecmd_help = {
-   "help", NULL,
+   "help",
    "[command]",
    0, 1,
    NULL,

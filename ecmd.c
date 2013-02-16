@@ -69,15 +69,10 @@ ecmd_exec(const char *ecmd, int argc, char **argv)
    int                i;
    const struct ecmd *ecmdp = NULL;
 
-   /* search for e-command (first by name and alias, then by abbreviation) */
+   /* search for e-command (first by name and then by abbreviation) */
    for (i = 0; i < ecmdtab_size; i++) {
       /* exact match */
       if (strcmp(ecmd, ecmdtab[i]->name) == 0) {
-         ecmdp = ecmdtab[i];
-         break;
-      }
-      /* alias match */
-      if (ecmdtab[i]->alias != NULL && strcmp(ecmd, ecmdtab[i]->alias) == 0) {
          ecmdp = ecmdtab[i];
          break;
       }

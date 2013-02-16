@@ -31,7 +31,7 @@ ecmd_init_exec(UNUSED int argc, UNUSED char **argv)
 }
 
 const struct ecmd ecmd_init = {
-   "init", NULL,
+   "init",
    NULL,
    0, 0,
    NULL,

@@ -55,7 +55,7 @@ ecmd_flush_exec(UNUSED int argc, UNUSED char **argv)
 }
 
 const struct ecmd ecmd_flush = {
-   "flush", NULL,
+   "flush",
    "[-t format]",
    0, 0,
    ecmd_flush_parse,
