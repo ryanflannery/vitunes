@@ -17,6 +17,20 @@
 
 #include "ecmd.h"
 
+/* set of e-commands */
+static const struct ecmd *ecmdtab[] = {
+   &ecmd_add,
+   &ecmd_addurl,
+   &ecmd_check,
+   &ecmd_flush,
+   &ecmd_help,
+   &ecmd_init,
+   &ecmd_rmfile,
+   &ecmd_tag,
+   &ecmd_update,
+};
+static const int ecmdtab_size = sizeof ecmdtab / sizeof ecmdtab[0];
+
 static int
 ecmd_parse(const struct ecmd *ecmd, int argc, char ***argv)
 {
@@ -49,22 +63,23 @@ ecmd_parse(const struct ecmd *ecmd, int argc, char ***argv)
    return argc;
 }
 
+static void
+ecmd_print_ambiguous(const char *ecmd)
+{
+   int i;
+
+   fprintf(stderr, "%s: Ambiguous e-command '%s'.  Matches: ", progname, ecmd);
+   for (i = 0; i < ecmdtab_size; i++) {
+      if (strncmp(ecmd, ecmdtab[i]->name, strlen(ecmd)) != 0)
+          continue;
+      fprintf(stderr, "%s ", ecmdtab[i]->name);
+   }
+   fputs("\n", stderr);
+}
+
 int
 ecmd_exec(const char *ecmd, int argc, char **argv)
 {
-   /* set of e-commands */
-   static const struct ecmd *ecmdtab[] = {
-      &ecmd_add,
-      &ecmd_addurl,
-      &ecmd_check,
-      &ecmd_flush,
-      &ecmd_help,
-      &ecmd_init,
-      &ecmd_rmfile,
-      &ecmd_tag,
-      &ecmd_update,
-   };
-   static const int   ecmdtab_size = sizeof ecmdtab / sizeof ecmdtab[0];
    bool               ambiguous = false;
    int                i;
    const struct ecmd *ecmdp = NULL;
@@ -92,7 +107,7 @@ ecmd_exec(const char *ecmd, int argc, char **argv)
    }
    /* ambiguous e-command */
    if (ambiguous) {
-      warnx("Ambiguous e-command '%s'.  See 'vitunes -e help' for list.", ecmd);
+      ecmd_print_ambiguous(ecmd);
       return -1;
    }
 
