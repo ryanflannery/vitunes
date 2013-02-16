@@ -59,7 +59,7 @@ ecmd_parse(const struct ecmd *ecmd, int argc, char ***argv)
    if (ecmd->args_upper >= 0 && argc > ecmd->args_upper)
       return -1;
 
-   /* return updated (no name) number of arguments */
+   /* return updated number of arguments */
    return argc;
 }
 
