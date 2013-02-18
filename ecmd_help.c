@@ -45,7 +45,6 @@ The list of available commands are:\n\n\
    flush\n\
    help\n\
    init\n\
-   rm\n\
    rmfile\n\
    tag\n\
    update\n\
