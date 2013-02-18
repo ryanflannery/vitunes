@@ -46,6 +46,7 @@ extern const struct ecmd ecmd_rmfile;
 extern const struct ecmd ecmd_tag;
 extern const struct ecmd ecmd_update;
 
-int ecmd_exec(const char *ecmd, int argc, char **argv);
+const char *ecmd_get_names(void);
+int         ecmd_exec(const char *ecmd, int argc, char **argv);
 
 #endif

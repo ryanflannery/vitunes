@@ -26,13 +26,16 @@
 static void
 ecmd_help_exec(UNUSED int argc, char **argv)
 {
-   char *man_args[3];
+   char       *man_args[3];
+   const char *name;
 
    /* no help requested for a specific command, give a list of all e-cmds */
    if (argc == 0) {
-      printf("Available e-commands: "
-         "add addurl check flush help init rmfile tag update\n\n"
-         "Each is executed by doing:\n"
+      printf("Available e-commands: ");
+      while ((name = ecmd_get_names()) != NULL)
+         printf("%s ", name);
+      puts("\n");
+      printf("Each is executed by doing:\n"
          "$ vitunes -e e-command [...]\n"
          "The complete manual for each can be obtained by doing:\n"
          "$ vitunes -e help e-command\n");

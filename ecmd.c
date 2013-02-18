@@ -77,6 +77,19 @@ ecmd_print_ambiguous(const char *ecmd)
    fputs("\n", stderr);
 }
 
+const char *
+ecmd_get_names(void)
+{
+   static int         i = 0;
+   const struct ecmd *ecmdp;
+
+   if (i == ecmdtab_size)
+      return (NULL);
+
+   ecmdp = ecmdtab[i++];
+   return (ecmdp->name);
+}
+
 int
 ecmd_exec(const char *ecmd, int argc, char **argv)
 {
