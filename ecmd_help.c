@@ -37,18 +37,18 @@ Each command is executed by doing:\n\
 The complete manual for each can be obtained by doing:\n\
    $ vitunes -e help COMMAND\n\
 The list of available commands are:\n\n\
-   Command     Description\n\
-   -------     ------------------------------------------------------------\n\
-   add         Add files to the database.\n\
-   addurl      Add URL (or non-file playable item) to the database.\n\
-   check       Check files for meta-information.\n\
-   flush       Output the contents of the database to stdout.\n\
-   help        This command.\n\
-   init        Initialize the media database.\n\
-   rm          Remove a file or a URL from the database.\n\
-   rmfile      Alias for \"rm\".\n\
-   tag         Set the meta-information tags in media files.\n\
-   update      Update all files in the database.\n\
+   Command\n\
+   -------\n\
+   add\n\
+   addurl\n\
+   check\n\
+   flush\n\
+   help\n\
+   init\n\
+   rm\n\
+   rmfile\n\
+   tag\n\
+   update\n\
 ");
       return;
    }
