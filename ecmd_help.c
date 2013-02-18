@@ -30,25 +30,12 @@ ecmd_help_exec(UNUSED int argc, char **argv)
 
    /* no help requested for a specific command, give a list of all e-cmds */
    if (argc == 0) {
-      printf("\
-The following is a list of e-commands supported by vitunes.\n\
-Each command is executed by doing:\n\
-   $ vitunes -e COMMAND [args ...]\n\
-The complete manual for each can be obtained by doing:\n\
-   $ vitunes -e help COMMAND\n\
-The list of available commands are:\n\n\
-   Command\n\
-   -------\n\
-   add\n\
-   addurl\n\
-   check\n\
-   flush\n\
-   help\n\
-   init\n\
-   rmfile\n\
-   tag\n\
-   update\n\
-");
+      printf("Available e-commands: "
+         "add addurl check flush help init rmfile tag update\n\n"
+         "Each is executed by doing:\n"
+         "$ vitunes -e e-command [...]\n"
+         "The complete manual for each can be obtained by doing:\n"
+         "$ vitunes -e help e-command\n");
       return;
    }
 
