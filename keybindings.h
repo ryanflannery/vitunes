@@ -17,6 +17,10 @@
 #ifndef KEYBINDINGS_H
 #define KEYBINDINGS_H
 
+#include <stdbool.h>
+
+#include "meta_info.h"
+
 /*
  * List of all actions that can be bound by keybindings.
  * NOTE: Using "count" trick (see last element), so no enum should be defined.

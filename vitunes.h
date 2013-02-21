@@ -17,6 +17,10 @@
 #ifndef VITUNES_H
 #define VITUNES_H
 
+#include <signal.h>
+
+#include "playlist.h"
+
 /* for unused arguments */
 #if defined(__GNUC__) || defined(__clang__)
 #  define UNUSED  __attribute__((__unused__))

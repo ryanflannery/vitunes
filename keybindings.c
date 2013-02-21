@@ -14,12 +14,21 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#include <ncurses.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "commands.h"
 #include "compat.h"
 #include "debug.h"
 #include "enums.h"
 #include "error.h"
 #include "keybindings.h"
+#include "medialib.h"
 #include "paint.h"
+#include "player.h"
+#include "str2argv.h"
+#include "uinterface.h"
 #include "vitunes.h"
 
 /* This table maps KeyActions to their string representations */

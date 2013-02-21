@@ -14,7 +14,9 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include <err.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "compat.h"
 #include "debug.h"
@@ -22,6 +24,8 @@
 #include "paint.h"
 #include "player.h"
 #include "playlist.h"
+#include "uinterface.h"
+#include "vitunes.h"
 
 /* "static" backends (those that aren't dynamically loaded) */
 #include "players/mplayer.h"

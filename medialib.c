@@ -14,13 +14,14 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include <sys/errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#include <errno.h>
 #include <fts.h>
 #include <limits.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 #include "compat.h"

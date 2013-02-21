@@ -16,11 +16,13 @@
 
 #include <sys/time.h>
 
-#include <getopt.h>
+#include <ctype.h>
+#include <errno.h>
 #include <locale.h>
 #include <pwd.h>
 #include <signal.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
@@ -32,8 +34,10 @@
 #include "error.h"
 #include "keybindings.h"
 #include "medialib.h"
+#include "paint.h"
 #include "player.h"
 #include "socket.h"
+#include "str2argv.h"
 #include "uinterface.h"
 #include "vitunes.h"
 #include "config.h"     /* NOTE: must be after vitunes.h */

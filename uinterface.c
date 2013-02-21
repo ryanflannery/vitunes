@@ -17,7 +17,6 @@
 #include <sys/ioctl.h>
 
 #include <ctype.h>
-#include <err.h>
 #include <ncurses.h>
 #include <stdbool.h>
 #include <stdio.h>

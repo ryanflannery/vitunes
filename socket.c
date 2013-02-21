@@ -18,11 +18,13 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 
+#include <fcntl.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 
 #include "commands.h"
+#include "keybindings.h"
 #include "socket.h"
 
 #define VITUNES_SOCK    "/tmp/.vitunes"

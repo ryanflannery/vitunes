@@ -17,6 +17,8 @@
 #ifndef UINTERFACE_H
 #define UINTERFACE_H
 
+#include <ncurses.h>
+
 /* struct & methods for a scrollable window */
 typedef struct
 {

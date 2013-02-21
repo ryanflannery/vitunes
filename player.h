@@ -17,6 +17,8 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include "playlist.h"
+
 /*
  * Available play-modes.
  *    Linear:  Songs in the queue play in the order they appear

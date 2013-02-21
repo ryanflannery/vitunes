@@ -17,6 +17,10 @@
 #ifndef COMMANDS_H
 #define COMMANDS_H
 
+#include <stdio.h>
+
+#include "playlist.h"
+
 /****************************************************************************
  * Toggle-list handling stuff
  ***************************************************************************/

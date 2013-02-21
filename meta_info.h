@@ -17,6 +17,11 @@
 #ifndef META_INFO_H
 #define META_INFO_H
 
+#include <stdbool.h>
+#include <stdio.h>
+
+#include "enums.h"
+
 /* the character-info fields.  used for all meta-info that's shown */
 #define MI_NUM_CINFO     8
 #define MI_CINFO_ARTIST  0

@@ -17,6 +17,8 @@
 #ifndef PAINT_H
 #define PAINT_H
 
+#include "meta_info.h"
+
 /* colors used by paint - each of these will be a number for a COLOR_PAIR */
 typedef struct {
    /* visual dividers of windows */

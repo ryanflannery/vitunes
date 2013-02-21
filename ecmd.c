@@ -15,12 +15,12 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include <err.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 
 #include "ecmd.h"
+#include "error.h"
 #include "vitunes.h"
 
 static int

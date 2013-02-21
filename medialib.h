@@ -25,6 +25,8 @@
 #ifndef MEDIALIB_H
 #define MEDIALIB_H
 
+#include "playlist.h"
+
 #define MEDIALIB_PLAYLISTS_CHUNK_SIZE  100
 
 /* current database file-format version */
