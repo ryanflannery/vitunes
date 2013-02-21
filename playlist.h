@@ -32,6 +32,7 @@
 #include <unistd.h>
 
 #include "debug.h"
+#include "error.h"
 #include "meta_info.h"
 
 #define PLAYLIST_CHUNK_SIZE   100

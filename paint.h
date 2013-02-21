@@ -27,6 +27,7 @@
 #include <time.h>
 
 #include "enums.h"
+#include "error.h"
 #include "meta_info.h"
 #include "player.h"
 #include "playlist.h"

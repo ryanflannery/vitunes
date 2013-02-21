@@ -39,7 +39,7 @@ mi_new(void)
    int i;
 
    if ((mi = malloc(sizeof(meta_info))) == NULL)
-      err(1, "mi_new: meta_info malloc failed");
+      fatal("mi_new: meta_info malloc failed");
 
    mi->filename = NULL;
    mi->length = 0;
@@ -112,14 +112,14 @@ mi_fread(meta_info *mi, FILE *fin)
 
    /* allocate all needed space in the meta_info struct, and zero */
    if ((mi->filename = calloc(lengths[0] + 1, sizeof(char))) == NULL)
-      err(1, "mi_fread: calloc filename failed");
+      fatal("mi_fread: calloc filename failed");
 
    bzero(mi->filename, sizeof(char) * (lengths[0] + 1));
 
    for (i = 0; i < MI_NUM_CINFO; i++) {
       if (lengths[i+1] > 0) {
          if ((mi->cinfo[i] = calloc(lengths[i+1] + 1, sizeof(char))) == NULL)
-            err(1, "mi_fread: failed to calloc cinfo");
+            fatal("mi_fread: failed to calloc cinfo");
 
          bzero(mi->cinfo[i], sizeof(char) * (lengths[i+1] + 1));
       }
@@ -181,10 +181,10 @@ mi_extract(const char *filename)
    /* store full filename in meta_info struct */
    bzero(fullname, sizeof(fullname));
    if (realpath(filename, fullname) == NULL)
-      err(1, "mi_extract: realpath failed to resolve '%s'", filename);
+      fatal("mi_extract: realpath failed to resolve '%s'", filename);
 
    if ((mi->filename = strdup(fullname)) == NULL)
-      errx(1, "mi_extract: strdup failed for '%s'", fullname);
+      fatalx("mi_extract: strdup failed for '%s'", fullname);
 
    /* start extracting fields using TagLib... */
 
@@ -221,25 +221,25 @@ mi_extract(const char *filename)
    ||  mi->cinfo[MI_CINFO_TITLE] == NULL
    ||  mi->cinfo[MI_CINFO_GENRE] == NULL
    ||  mi->cinfo[MI_CINFO_COMMENT] == NULL)
-      err(1, "mi_extract: strdup for CINFO failed");
+      fatal("mi_extract: strdup for CINFO failed");
 
    /* track number */
    if (taglib_tag_track(tag) > 0) {
       if (asprintf(&(mi->cinfo[MI_CINFO_TRACK]), "%3i", taglib_tag_track(tag)) == -1)
-         err(1, "mi_extract: asprintf failed for CINFO_TRACK");
+         fatal("mi_extract: asprintf failed for CINFO_TRACK");
    }
 
    /* year */
    if (taglib_tag_year(tag) > 0) {
       if (asprintf(&(mi->cinfo[MI_CINFO_YEAR]), "%i", taglib_tag_year(tag)) == -1)
-         err(1, "mi_extract: asprintf failed for CINFO_YEAR");
+         fatal("mi_extract: asprintf failed for CINFO_YEAR");
    }
 
    /* playlength in seconds (will be 0 if unavailable) */
    mi->length = taglib_audioproperties_length(properties);
    if (mi->length > 0) {
       if ((mi->cinfo[MI_CINFO_LENGTH] = strdup(time2str(mi->length))) == NULL)
-         err(1, "mi_extract: strdup failed for CINO_LENGTH");
+         fatal("mi_extract: strdup failed for CINO_LENGTH");
    }
 
    /* record the time we extracted this info */
@@ -336,7 +336,7 @@ void
 mi_query_add_token(const char *token)
 {
    if (_mi_query.ntokens == MI_MAX_QUERY_TOKENS)
-      errx(1, "mi_query_add_token: reached shamefull limit");
+      fatalx("mi_query_add_token: reached shamefull limit");
 
    /* match or no? */
    if (token[0] == '!') {
@@ -347,7 +347,7 @@ mi_query_add_token(const char *token)
 
    /* copy token */
    if ((_mi_query.tokens[_mi_query.ntokens++] = strdup(token)) == NULL)
-      err(1, "mi_query_add_token: strdup failed");
+      fatal("mi_query_add_token: strdup failed");
 }
 
 void
@@ -357,7 +357,7 @@ mi_query_setraw(const char *query)
       free(_mi_query.raw);
 
    if ((_mi_query.raw = strdup(query)) == NULL)
-      err(1, "mi_query_setraw: query strdup failed");
+      fatal("mi_query_setraw: query strdup failed");
 }
 
 const char *
@@ -492,7 +492,7 @@ mi_sort_set(const char *s, const char **errmsg)
    *errmsg = NULL;
 
    if ((line = strdup(s)) == NULL)
-      err(1, "mi_sort_set: sort strdup failed");
+      fatal("mi_sort_set: sort strdup failed");
 
    idx = 0;
    copy = line;
@@ -700,7 +700,7 @@ mi_display_set(const char *display, const char **errmsg)
    new_display.nfields = 0;
 
    if ((s = strdup(display)) == NULL)
-      err(1, "mi_display_set: display strdup failed");
+      fatal("mi_display_set: display strdup failed");
 
    copy = s;
    idx = 0;

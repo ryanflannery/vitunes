@@ -22,6 +22,7 @@
 #include <unistd.h>
 
 #include "ecmd.h"
+#include "error.h"
 #include "meta_info.h"
 
 static char         *artist;
@@ -43,37 +44,37 @@ ecmd_tag_parse(int argc, char **argv)
          case 'A':
             free(album);
             if ((album = strdup(optarg)) == NULL)
-               err(1, "%s: strdup ALBUM failed", argv[0]);
+               fatal("%s: strdup ALBUM failed", argv[0]);
             break;
           case 'T':
             track = (unsigned int) strtonum(optarg, 0, INT_MAX, &errstr);
             if (errstr != NULL)
-               errx(1, "invalid track '%s': %s", optarg, errstr);
+               fatalx("invalid track '%s': %s", optarg, errstr);
             break;
          case 'a':
             free(artist);
             if ((artist = strdup(optarg)) == NULL)
-               err(1, "%s: strdup ARTIST failed", argv[0]);
+               fatal("%s: strdup ARTIST failed", argv[0]);
             break;
          case 'c':
             free(comment);
             if ((comment = strdup(optarg)) == NULL)
-               err(1, "%s: strdup COMMENT failed", argv[0]);
+               fatal("%s: strdup COMMENT failed", argv[0]);
             break;
          case 'g':
             free(genre);
             if ((genre = strdup(optarg)) == NULL)
-               err(1, "%s: strdup GENRE failed", argv[0]);
+               fatal("%s: strdup GENRE failed", argv[0]);
             break;
          case 't':
             free(title);
             if ((title = strdup(optarg)) == NULL)
-               err(1, "%s: strdup TITLE failed", argv[0]);
+               fatal("%s: strdup TITLE failed", argv[0]);
             break;
          case 'y':
             year = (unsigned int) strtonum(optarg, 0, INT_MAX, &errstr);
             if (errstr != NULL)
-               errx(1, "invalid year '%s': %s", optarg, errstr);
+               fatalx("invalid year '%s': %s", optarg, errstr);
             break;
          case 'h':
          case '?':
@@ -119,8 +120,8 @@ ecmd_tag_exec(int argc, char **argv)
 
       /* extract taglib stuff */
       if ((tag_file = taglib_file_new(argv[i])) == NULL) {
-         warnx("TagLib: failed to open file '%s': skipping.", argv[i]);
-         warnx("  => Causes: format not supported by TagLib or format doesn't support tags");
+         infox("TagLib: failed to open file '%s': skipping.", argv[i]);
+         infox("  => Causes: format not supported by TagLib or format doesn't support tags");
          continue;
       }
 

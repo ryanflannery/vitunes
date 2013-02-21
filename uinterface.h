@@ -34,6 +34,7 @@
 
 #include "debug.h"
 #include "enums.h"
+#include "error.h"
 
 /* struct & methods for a scrollable window */
 typedef struct

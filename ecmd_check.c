@@ -39,7 +39,7 @@ ecmd_check_show_db(const char *path)
    if (show_database == false)
       return;
    if (realpath(path, realfile) == NULL) {
-      warn("realpath failed for %s: skipping", path);
+      info("realpath failed for %s: skipping", path);
       return;
    }
 
@@ -55,7 +55,7 @@ ecmd_check_show_db(const char *path)
    }
 
    if (!found)
-      warnx("File '%s' does NOT exist in the database", path);
+      infox("File '%s' does NOT exist in the database", path);
    else {
       printf("\tThe meta-information in the DATABASE is:\n");
       for (i = 0; i < MI_NUM_CINFO; i++)
@@ -74,7 +74,7 @@ ecmd_check_show_raw(const char *path)
    if (show_raw == false)
       return;
    if ((mi = mi_extract(path)) == NULL) {
-      warnx("Failed to extract any meta-information from '%s'", path);
+      infox("Failed to extract any meta-information from '%s'", path);
       return;
    }
 
@@ -92,7 +92,7 @@ ecmd_check_show_sanitized(const char *path)
    if (show_sanitized == false)
       return;
    if ((mi = mi_extract(path)) == NULL) {
-      warnx("Failed to extract any meta-information from '%s'", path);
+      infox("Failed to extract any meta-information from '%s'", path);
       return;
    }
 

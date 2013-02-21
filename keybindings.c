@@ -261,7 +261,7 @@ kb_increase_capacity()
    KeyBindingsCapacity += KEYBINDINGS_CHUNK_SIZE;
    nbytes = KeyBindingsCapacity * sizeof(KeyBinding);
    if ((new_buffer = realloc(KeyBindings, nbytes)) == NULL)
-      err(1, "%s: failed to realloc(3) keybindings", __FUNCTION__);
+      fatal("%s: failed to realloc(3) keybindings", __FUNCTION__);
 
    KeyBindings = new_buffer;
 }
@@ -487,7 +487,7 @@ kba_scroll_row(KbaArgs a)
       ui.active->crow -= n;
       break;
    default:
-      errx(1, "%s: invalid direction", __FUNCTION__);
+      fatalx("%s: invalid direction", __FUNCTION__);
    }
 
    /* handle off-the-edge cases */
@@ -551,7 +551,7 @@ kba_scroll_page(KbaArgs a)
       maintain_row_idx = false;
       break;
    default:
-      errx(1, "scroll_page: invalid amount");
+      fatalx("scroll_page: invalid amount");
    }
    swindow_scroll(ui.active, a.direction, diff);
 
@@ -647,11 +647,11 @@ kba_scroll_col(KbaArgs a)
             ui.active->hoffset = maxhoff;
             break;
          default:
-            errx(1, "scroll_col: invalid direction");
+            fatalx("scroll_col: invalid direction");
       }
       break;
    default:
-      errx(1, "scroll_col: invalid amount");
+      fatalx("scroll_col: invalid amount");
    }
 
    /* redraw */
@@ -690,7 +690,7 @@ kba_jumpto_screen(KbaArgs a)
          ui.active->crow = max_row - n + 1;
          break;
       default:
-         errx(1, "jumpto_page: invalid location");
+         fatalx("jumpto_page: invalid location");
    }
 
    /* sanitize current row */
@@ -753,7 +753,7 @@ kba_jumpto_file(KbaArgs a)
             break;
 
          default:
-            errx(1, "jumpto_file: NUMBER type with no num!");
+            fatalx("jumpto_file: NUMBER type with no num!");
       }
 
       break;
@@ -767,7 +767,7 @@ kba_jumpto_file(KbaArgs a)
       break;
 
    default:
-      errx(1, "jumpto_file: invalid scale");
+      fatalx("jumpto_file: invalid scale");
    }
 
    /* jump */
@@ -821,7 +821,7 @@ kba_search(KbaArgs a)
          prompt = "?";
          break;
       default:
-         errx(1, "search: invalid direction");
+         fatalx("search: invalid direction");
    }
 
    /* get search phrase from user */
@@ -878,7 +878,7 @@ kba_search_find(KbaArgs a)
          break;
 
       default:
-         errx(1, "search_find: invalid direction");
+         fatalx("search_find: invalid direction");
    }
 
    /* start looking from current row */
@@ -1029,7 +1029,7 @@ kba_cut(KbaArgs a UNUSED)
       }
 
       if (asprintf(&warning, "Are you sure you want to delete '%s'?", p->name) == -1)
-         err(1, "cut: asprintf failed");
+         fatal("cut: asprintf failed");
 
       /* make sure user wants this */
       if (user_get_yesno(warning, &response) != 0) {
@@ -1213,7 +1213,7 @@ kba_paste(KbaArgs a)
             start = p->nfiles;
             break;
          default:
-            errx(1, "paste: invalid placement [if]");
+            fatalx("paste: invalid placement [if]");
       }
 
    } else {
@@ -1227,7 +1227,7 @@ kba_paste(KbaArgs a)
             if (start > p->nfiles) start = p->nfiles;
             break;
          default:
-            errx(1, "paste: invalid placement [else]");
+            fatalx("paste: invalid placement [else]");
       }
    }
 
@@ -1491,7 +1491,7 @@ kba_volume(KbaArgs a)
       pcnt *= -1;
       break;
    default:
-      errx(1, "kba_volume: invalid direction");
+      fatalx("kba_volume: invalid direction");
    }
 
    player_volume_step(pcnt);
@@ -1511,7 +1511,7 @@ kba_seek(KbaArgs a)
       secs = a.num * 60;
       break;
    default:
-      errx(1, "seek_playback: invalid scale");
+      fatalx("seek_playback: invalid scale");
    }
 
    /* adjust for direction */
@@ -1523,7 +1523,7 @@ kba_seek(KbaArgs a)
       secs *= -1;
       break;
    default:
-      errx(1, "seek_playback: invalid direction");
+      fatalx("seek_playback: invalid direction");
    }
 
    /* is there a multiplier? */
@@ -1588,7 +1588,7 @@ kba_toggle(KbaArgs a)
          }
          break;
       default:
-         errx(1, "%s: invalid direction", __FUNCTION__);
+         fatalx("%s: invalid direction", __FUNCTION__);
    }
 
    /* execute */
@@ -1659,7 +1659,7 @@ ybuffer_init()
 {
    _yank_buffer.files = calloc(YANK_BUFFER_CHUNK_SIZE, sizeof(meta_info*));
    if (_yank_buffer.files == NULL)
-      err(1, "ybuffer_init: calloc(3) failed");
+      fatal("ybuffer_init: calloc(3) failed");
 
    _yank_buffer.capacity = YANK_BUFFER_CHUNK_SIZE;
    _yank_buffer.nfiles = 0;
@@ -1689,7 +1689,7 @@ ybuffer_add(meta_info *f)
       _yank_buffer.capacity += YANK_BUFFER_CHUNK_SIZE;
       int new_capacity = _yank_buffer.capacity * sizeof(meta_info*);
       if ((new_buff = realloc(_yank_buffer.files, new_capacity)) == NULL)
-         err(1, "ybuffer_add: realloc(3) failed [%i]", new_capacity);
+         fatal("ybuffer_add: realloc(3) failed [%i]", new_capacity);
 
       _yank_buffer.files = new_buff;
    }
@@ -1734,7 +1734,7 @@ match_command_name(const char *input, const char *cmd)
    /* check for '!' weirdness and abbreviations */
 
    if ((icopy = strdup(input)) == NULL)
-      err(1, "match_command_name: strdup(3) failed");
+      fatal("match_command_name: strdup(3) failed");
 
    /* remove '!' from input, if present */
    if (strstr(icopy, "!") != NULL)

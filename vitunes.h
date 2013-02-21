@@ -37,6 +37,7 @@
 #include "player.h"
 #include "uinterface.h"
 #include "ecmd.h"
+#include "error.h"
 
 /* for unused arguments */
 #if defined(__GNUC__) || defined(__clang__)

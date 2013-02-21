@@ -37,6 +37,7 @@
 #include <unistd.h>
 
 #include "debug.h"
+#include "error.h"
 #include "meta_info.h"
 #include "playlist.h"
 

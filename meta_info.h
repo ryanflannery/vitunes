@@ -36,6 +36,7 @@
 
 #include "debug.h"
 #include "enums.h"
+#include "error.h"
 
 /* the character-info fields.  used for all meta-info that's shown */
 #define MI_NUM_CINFO     8

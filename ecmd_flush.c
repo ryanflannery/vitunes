@@ -20,6 +20,7 @@
 #include <unistd.h>
 
 #include "ecmd.h"
+#include "error.h"
 #include "medialib.h"
 #include "vitunes.h"
 
@@ -34,7 +35,7 @@ ecmd_flush_parse(int argc, char **argv)
       switch (ch) {
          case 't':
             if ((time_format = strdup(optarg)) == NULL)
-               err(1, "%s: strdup of time_format failed", argv[0]);
+               fatal("%s: strdup of time_format failed", argv[0]);
             break;
          case '?':
          case 'h':

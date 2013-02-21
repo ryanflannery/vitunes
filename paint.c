@@ -67,7 +67,7 @@ num2fmt(int n, Direction d)
 
    if (n <= 0) {
       endwin();
-      errx(1, "num2sfmt: invalid number %d provided", n);
+      fatalx("num2sfmt: invalid number %d provided", n);
    }
 
    if (d == LEFT)
@@ -688,7 +688,7 @@ paint_str2color(const char *str)
       int   number;
 
       if ((color = strdup(str)) == NULL)
-         err(1, "%s: strdup of '%s' failed.", __FUNCTION__, str);
+         fatal("%s: strdup of '%s' failed.", __FUNCTION__, str);
 
       if ((numberstr = strtok(color, "color")) == NULL) {
          free(color);

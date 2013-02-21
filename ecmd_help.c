@@ -21,6 +21,7 @@
 #include <unistd.h>
 
 #include "ecmd.h"
+#include "error.h"
 #include "vitunes.h"
 
 static void
@@ -61,11 +62,11 @@ The list of available commands are:\n\n\
 
    man_args[0] = "man";
    if (asprintf(&man_args[1], "vitunes-%s", argv[0]) == -1)
-      err(1, "ecmd_help: asprintf failed");
+      fatal("ecmd_help: asprintf failed");
    man_args[2] = NULL;
 
    execvp("man", man_args);
-   err(1, "ecmd_help: execvp failed");
+   fatal("ecmd_help: execvp failed");
 }
 
 const struct ecmd ecmd_help = {

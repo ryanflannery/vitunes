@@ -27,7 +27,7 @@ playlist_increase_capacity(playlist *p)
    p->capacity += PLAYLIST_CHUNK_SIZE;
    nbytes = p->capacity * sizeof(meta_info*);
    if ((new_files = realloc(p->files, nbytes)) == NULL)
-      err(1, "%s: failed to realloc(3) files", __FUNCTION__);
+      fatal("%s: failed to realloc(3) files", __FUNCTION__);
 
    p->files = new_files;
 }
@@ -42,10 +42,10 @@ playlist_new(void)
    playlist *p;
    
    if ((p = malloc(sizeof(playlist))) == NULL)
-      err(1, "playlist_new: failed to allocate playlist");
+      fatal("playlist_new: failed to allocate playlist");
 
    if ((p->files = calloc(PLAYLIST_CHUNK_SIZE, sizeof(meta_info*))) == NULL)
-      err(1, "playlist_new: failed to allocate files");
+      fatal("playlist_new: failed to allocate files");
 
    p->capacity = PLAYLIST_CHUNK_SIZE;
    p->filename = NULL;
@@ -87,17 +87,17 @@ playlist_dup(const playlist *original, const char *filename,
 
    if (name != NULL) {
       if ((newplist->name = strdup(name)) == NULL)
-         err(1, "playlist_dup: strdup name failed");
+         fatal("playlist_dup: strdup name failed");
    }
    if (filename != NULL) {
       if ((newplist->filename = strdup(filename)) == NULL)
-         err(1, "playlist_dup: strdup filename failed");
+         fatal("playlist_dup: strdup filename failed");
    }
 
    /* copy all of the files */
    newplist->files = calloc(original->nfiles, sizeof(meta_info*));
    if (newplist->files == NULL)
-      err(1, "playlist_dup: failed to allocate files");
+      fatal("playlist_dup: failed to allocate files");
 
    for (i = 0; i < original->nfiles; i++)
       newplist->files[i] = original->files[i];
@@ -115,7 +115,7 @@ playlist_files_add(playlist *p, meta_info **f, int start, int size, bool record)
    int i;
 
    if (start < 0 || start > p->nfiles)
-      errx(1, "playlist_file_add: index %d out of range", start);
+      fatalx("playlist_file_add: index %d out of range", start);
 
    while (p->capacity <= p->nfiles + size)
       playlist_increase_capacity(p);
@@ -154,7 +154,7 @@ playlist_files_remove(playlist *p, int start, int size, bool record)
    int i;
 
    if (start < 0 || start >= p->nfiles)
-      errx(1, "playlist_remove_file: index %d out of range", start);
+      fatalx("playlist_remove_file: index %d out of range", start);
 
    if (record) {
       changes = changeset_create(CHANGE_REMOVE, size, &(p->files[start]), start);
@@ -174,7 +174,7 @@ void
 playlist_file_replace(playlist *p, int index, meta_info *newEntry)
 {
    if (index < 0 || index >= p->nfiles)
-      errx(1, "playlist_file_replace: index %d out of range", index);
+      fatalx("playlist_file_replace: index %d out of range", index);
 
    p->files[index] = newEntry;
 }
@@ -209,14 +209,14 @@ playlist_load(const char *filename, meta_info **db, int ndb)
 
    /* open file */
    if ((fin = fopen(filename, "r")) == NULL)
-      err(1, "playlist_load: failed to open playlist '%s'", filename);
+      fatal("playlist_load: failed to open playlist '%s'", filename);
 
    /* create playlist and setup */
    playlist *p = playlist_new();
    p->filename = strdup(filename);
    p->name     = strdup(basename(p->filename));
    if (p->filename == NULL || p->name == NULL)
-      err(1, "playlist_load: failed to allocate info for playlist '%s'", filename);
+      fatal("playlist_load: failed to allocate info for playlist '%s'", filename);
 
    /* hack to remove '.playlist' from name */
    period  = strrchr(p->name, '.');
@@ -238,11 +238,11 @@ playlist_load(const char *filename, meta_info **db, int ndb)
          mi = mi_new();
          mi->filename = strdup(entry);
          if (mi->filename == NULL)
-            err(1, "playlist_load: failed to strdup filename");
+            fatal("playlist_load: failed to strdup filename");
 
          /* add new record to the db and link it to the playlist */
          playlist_files_append(p, &mi, 1, false);
-         warnx("playlist \"%s\", file \"%s\" is NOT in media database (added for now)",
+         infox("playlist \"%s\", file \"%s\" is NOT in media database (added for now)",
             p->name, entry);
       }
    }
@@ -262,12 +262,12 @@ playlist_save(const playlist *p)
    int   i;
 
    if ((fout = fopen(p->filename, "w")) == NULL)
-      err(1, "playlist_save: failed to open playlist \"%s\"", p->filename);
+      fatal("playlist_save: failed to open playlist \"%s\"", p->filename);
 
    /* write each song to file */
    for (i = 0; i < p->nfiles; i++) {
       if (fprintf(fout, "%s\n", p->files[i]->filename) == -1)
-         err(1, "playlist_save: failed to record playlist \"%s\"", p->filename);
+         fatal("playlist_save: failed to record playlist \"%s\"", p->filename);
    }
 
    fclose(fout);
@@ -282,7 +282,7 @@ playlist_delete(playlist *p)
 {
    /* delete file if the playlist is stored in a file */
    if (p->filename != NULL && unlink(p->filename) != 0)
-      err(1, "playlist_delete: failed to delete playlist \"%s\"", p->filename);
+      fatal("playlist_delete: failed to delete playlist \"%s\"", p->filename);
 
    /* destroy/free() all memory */
    playlist_free(p);
@@ -354,20 +354,20 @@ retrieve_playlist_filenames(const char *dirname, char ***fnames)
 
    /* build the search pattern */
    if (asprintf(&glob_pattern, "%s/*.playlist", dirname) == -1)
-      errx(1, "failed in building glob pattern");
+      fatalx("failed in building glob pattern");
 
    /* get the files */
    globbed = glob(glob_pattern, 0, NULL, &files);
    if (globbed != 0 && globbed != GLOB_NOMATCH && errno != 0)
-      err(1, "failed to glob playlists directory");
+      fatal("failed to glob playlists directory");
 
    /* allocate & copy each of the filenames found into the filenames array */
    if ((*fnames = calloc(files.gl_pathc, sizeof(char*))) == NULL)
-      err(1, "failed to allocate playlist filenames array");
+      fatal("failed to allocate playlist filenames array");
 
    for (fcount = 0; fcount < files.gl_pathc; fcount++) {
       if (asprintf(&((*fnames)[fcount]), "%s", files.gl_pathv[fcount]) == -1)
-         errx(1, "failed to allocate filename for playlist");
+         fatalx("failed to allocate filename for playlist");
    }
 
    /* cleanup */
@@ -385,10 +385,10 @@ changeset_create(short type, size_t size, meta_info **files, int loc)
    playlist_changeset *c;
 
    if ((c = malloc(sizeof(playlist_changeset))) == NULL)
-      err(1, "%s: malloc(3) failed", __FUNCTION__);
+      fatal("%s: malloc(3) failed", __FUNCTION__);
 
    if ((c->files = calloc(size, sizeof(meta_info*))) == NULL)
-      err(1, "%s: calloc(3) failed", __FUNCTION__);
+      fatal("%s: calloc(3) failed", __FUNCTION__);
 
    c->type = type;
    c->size = size;
@@ -414,7 +414,7 @@ playlist_history_new(void)
    int i;
 
    if ((h = calloc(history_size, sizeof(playlist_changeset*))) == NULL)
-      err(1, "%s: calloc(3) failed", __FUNCTION__);
+      fatal("%s: calloc(3) failed", __FUNCTION__);
 
    for (i = 0; i < history_size; i++)
       h[i] = NULL;
@@ -479,7 +479,7 @@ playlist_undo(playlist *p)
       playlist_files_add(p, c->files, c->location, c->size, false);
       break;
    default:
-      errx(1, "%s: invalid change type", __FUNCTION__);
+      fatalx("%s: invalid change type", __FUNCTION__);
    }
 
    p->hist_present--;
@@ -506,7 +506,7 @@ playlist_redo(playlist *p)
       playlist_files_remove(p, c->location, c->size, false);
       break;
    default:
-      errx(1, "%s: invalid change type", __FUNCTION__);
+      fatalx("%s: invalid change type", __FUNCTION__);
    }
 
    p->hist_present++;

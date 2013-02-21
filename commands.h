@@ -25,6 +25,7 @@
 #include "vitunes.h"
 #include "debug.h"
 #include "keybindings.h"
+#include "error.h"
 
 /****************************************************************************
  * Toggle-list handling stuff

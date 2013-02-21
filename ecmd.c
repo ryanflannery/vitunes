@@ -76,7 +76,7 @@ ecmd_exec(const char *ecmd, int argc, char **argv)
    }
    /* not found; bail out */
    if (i == ecmdtab_size) {
-      warnx("Unknown e-command '%s'.  See 'vitunes -e help' for list.", ecmd);
+      infox("Unknown e-command '%s'.  See 'vitunes -e help' for list.", ecmd);
       return -1;
    }
 

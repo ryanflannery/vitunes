@@ -24,6 +24,7 @@
 #include "playlist.h"
 #include "paint.h"
 #include "debug.h"
+#include "error.h"
 
 /* "static" backends (those that aren't dynamically loaded) */
 #include "players/mplayer.h"

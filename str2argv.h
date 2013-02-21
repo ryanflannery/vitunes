@@ -26,6 +26,7 @@
 #include <string.h>
 
 #include "debug.h"
+#include "error.h"
 
 /* hard limits on the size of an argv and each entry/token w/in an argv */
 #define ARGV_MAX_ENTRIES    255

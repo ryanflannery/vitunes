@@ -119,10 +119,10 @@ player_init(const char *backend)
    }
 
    if (!found)
-      errx(1, "media backend '%s' is unknown", backend);
+      fatalx("media backend '%s' is unknown", backend);
 
    if (player.dynamic)
-      errx(1, "dynamically loaded backends not yet supported");
+      fatalx("dynamically loaded backends not yet supported");
 
    player.set_callback_playnext(callback_playnext);
    player.set_callback_notice(paint_message);
@@ -148,10 +148,10 @@ void
 player_play()
 {
    if (player_info.queue == NULL)
-      errx(1, "player_play: bad queue/qidx");
+      fatalx("player_play: bad queue/qidx");
 
    if (player_info.qidx < 0 || player_info.qidx > player_info.queue->nfiles)
-      errx(1, "player_play: qidx %i out-of-range", player_info.qidx);
+      fatalx("player_play: qidx %i out-of-range", player_info.qidx);
 
    player.play(player_info.queue->files[player_info.qidx]->filename);
 

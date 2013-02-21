@@ -21,6 +21,7 @@
 
 #include "debug.h"
 #include "enums.h"
+#include "error.h"
 #include "paint.h"
 #include "vitunes.h"
 

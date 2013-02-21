@@ -35,7 +35,7 @@ medialib_load(const char *db_file, const char *playlist_dir)
    mdb.db_file      = strdup(db_file);
    mdb.playlist_dir = strdup(playlist_dir);
    if (mdb.db_file == NULL || mdb.playlist_dir == NULL)
-      err(1, "failed to strdup db file and playlist dir in medialib_init");
+      fatal("failed to strdup db file and playlist dir in medialib_init");
 
    /* setup pseudo-playlists */
    mdb.library = playlist_new();
@@ -47,7 +47,7 @@ medialib_load(const char *db_file, const char *playlist_dir)
    mdb.filter_results->name = strdup("--FILTER--");
 
    if (mdb.library->name == NULL || mdb.filter_results->name == NULL)
-      err(1, "failed to strdup pseudo-names in medialib_load");
+      fatal("failed to strdup pseudo-names in medialib_load");
 
    /* load the actual database */
    medialib_db_load(db_file);
@@ -57,7 +57,7 @@ medialib_load(const char *db_file, const char *playlist_dir)
    mdb.playlists_capacity = 2;
    mdb.playlists = calloc(2, sizeof(playlist*));
    if (mdb.playlists == NULL)
-      err(1, "medialib_load: failed to allocate initial playlists");
+      fatal("medialib_load: failed to allocate initial playlists");
 
    /* add library/filter pseudo-playlists */
    medialib_playlist_add(mdb.library);
@@ -113,7 +113,7 @@ medialib_playlist_add(playlist *p)
       mdb.playlists_capacity += MEDIALIB_PLAYLISTS_CHUNK_SIZE;
       int size = mdb.playlists_capacity * sizeof(playlist*);
       if ((new_playlists = realloc(mdb.playlists, size)) == NULL)
-         err(1, "medialib_playlist_add: realloc failed");
+         fatal("medialib_playlist_add: realloc failed");
 
       mdb.playlists = new_playlists;
    }
@@ -131,7 +131,7 @@ medialib_playlist_remove(int pindex)
    int i;
 
    if (pindex < 0 || pindex >= mdb.nplaylists)
-      errx(1, "medialib_playlist_remove: index %d out of range", pindex);
+      fatalx("medialib_playlist_remove: index %d out of range", pindex);
 
    playlist_delete(mdb.playlists[pindex]);
 
@@ -155,20 +155,20 @@ medialib_setup_files(const char *vitunes_dir, const char *db_file,
    /* create vitunes directory */
    if (mkdir(vitunes_dir, S_IRWXU) == -1) {
       if (errno == EEXIST)
-         warnx("vitunes directory '%s' already exists (OK)", vitunes_dir);
+         infox("vitunes directory '%s' already exists (OK)", vitunes_dir);
       else
-         err(1, "unable to create vitunes directory '%s'", vitunes_dir);
+         fatal("unable to create vitunes directory '%s'", vitunes_dir);
    } else
-      warnx("vitunes directory '%s' created", vitunes_dir);
+      infox("vitunes directory '%s' created", vitunes_dir);
 
    /* create playlists directory */
    if (mkdir(playlist_dir, S_IRWXU) == -1) {
       if (errno == EEXIST)
-         warnx("playlists directory '%s' already exists (OK)", playlist_dir);
+         infox("playlists directory '%s' already exists (OK)", playlist_dir);
       else
-         err(1, "unable to create playlists directory '%s'", playlist_dir);
+         fatal("unable to create playlists directory '%s'", playlist_dir);
    } else
-      warnx("playlists directory '%s' created", playlist_dir);
+      infox("playlists directory '%s' created", playlist_dir);
 
    /* create database file */
    if (stat(db_file, &sb) < 0) {
@@ -179,18 +179,18 @@ medialib_setup_files(const char *vitunes_dir, const char *db_file,
 
          /* open for writing */
          if ((f = fopen(db_file, "w")) == NULL)
-            err(1, "failed to create database file '%s'", db_file);
+            fatal("failed to create database file '%s'", db_file);
 
          /* save header & version */
          fwrite("vitunes", strlen("vitunes"), 1, f);
          fwrite(version, sizeof(version), 1, f);
 
-         warnx("empty database at '%s' created", db_file);
+         infox("empty database at '%s' created", db_file);
          fclose(f);
       } else
-         err(1, "database file '%s' exists, but cannot access it", db_file);
+         fatal("database file '%s' exists, but cannot access it", db_file);
    } else
-      warnx("database file '%s' already exists (OK)", db_file);
+      infox("database file '%s' already exists (OK)", db_file);
 }
 
 /* used to sort media db by filenames. */
@@ -214,12 +214,12 @@ medialib_db_load(const char *db_file)
    int        version[3];
 
    if ((fin = fopen(db_file, "r")) == NULL)
-      err(1, "Failed to open database file '%s'", db_file);
+      fatal("Failed to open database file '%s'", db_file);
 
    /* read and check header & version */
    fread(header, strlen("vitunes"), 1, fin);
    if (strncmp(header, "vitunes", strlen("vitunes")) != 0)
-      errx(1, "Database file '%s' NOT a vitunes database", db_file);
+      fatalx("Database file '%s' NOT a vitunes database", db_file);
 
    fread(version, sizeof(version), 1, fin);
    if (version[0] != DB_VERSION_MAJOR || version[1] != DB_VERSION_MINOR
@@ -244,7 +244,7 @@ medialib_db_load(const char *db_file)
       if (feof(fin))
          mi_free(mi);
       else if (ferror(fin))
-         err(1, "Error loading database file '%s'", db_file);
+         fatal("Error loading database file '%s'", db_file);
       else
          playlist_files_append(mdb.library, &mi, 1, false);
    }
@@ -264,7 +264,7 @@ medialib_db_save(const char *db_file)
    int   i;
 
    if ((fout = fopen(db_file, "w")) == NULL)
-      err(1, "medialib_db_save: failed to open database file '%s'", db_file);
+      fatal("medialib_db_save: failed to open database file '%s'", db_file);
 
    /* save header & version */
    fwrite("vitunes", strlen("vitunes"), 1, fout);
@@ -274,7 +274,7 @@ medialib_db_save(const char *db_file)
    for (i = 0; i < mdb.library->nfiles; i++) {
       mi_fwrite(mdb.library->files[i], fout);
       if (ferror(fout))
-         err(1, "medialib_db_save: error saving database");
+         fatal("medialib_db_save: error saving database");
    }
 
    fclose(fout);
@@ -449,7 +449,7 @@ medialib_db_scan_dirs(char *dirlist[])
 
    fts = fts_open(dirlist, FTS_LOGICAL | FTS_NOCHDIR, NULL);
    if (fts == NULL)
-      err(1, "medialib_db_scan_dirs: fts_open failed");
+      fatal("medialib_db_scan_dirs: fts_open failed");
 
    while ((ftsent = fts_read(fts)) != NULL) {
 
@@ -476,7 +476,7 @@ medialib_db_scan_dirs(char *dirlist[])
 
             /* get the full name for the file */
             if (realpath(ftsent->fts_accpath, fullname) == NULL) {
-               err(1, "medialib_db_scan_dirs: realpath failed for '%s'",
+               fatal("medialib_db_scan_dirs: realpath failed for '%s'",
                   ftsent->fts_accpath);
             }
 
@@ -536,7 +536,7 @@ medialib_db_scan_dirs(char *dirlist[])
    }
 
    if (fts_close(fts) == -1)
-      err(1, "medialib_db_scan_dirs: failed to close file heirarchy");
+      fatal("medialib_db_scan_dirs: failed to close file heirarchy");
 
    /* save to file */
    medialib_db_save(mdb.db_file);
