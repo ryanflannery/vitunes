@@ -14,6 +14,25 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#include <ctype.h>
+#include <err.h>
+#include <errno.h>
+#include <limits.h>
+#include <stdbool.h> 
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <strings.h>
+#include <time.h>
+
+/* non-baes includes (just TagLib) */
+#include <tag_c.h>
+
+#include "compat.h"
+#include "debug.h"
+#include "enums.h"
+#include "error.h"
 #include "meta_info.h"
 
 /* human-readable names of all of the string-type meta information values */

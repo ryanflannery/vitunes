@@ -14,8 +14,13 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#include "compat.h"
+#include "debug.h"
+#include "enums.h"
+#include "error.h"
 #include "keybindings.h"
-
+#include "paint.h"
+#include "vitunes.h"
 
 /* This table maps KeyActions to their string representations */
 typedef struct {

@@ -14,8 +14,29 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+
+#include <sys/wait.h>
+#include <sys/types.h>
+
+#include <err.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <signal.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <unistd.h>
+
+#include "../compat.h"
 #include "mplayer.h"
 #include "mplayer_conf.h"
+#include "player_utils.h"
+
+#ifdef DEBUG
+#  include "../debug.h"
+#endif
 
 /* callback functions */
 void (*mplayer_callback_playnext)(void) = NULL;

@@ -14,6 +14,22 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#include <sys/stat.h>
+#include <sys/types.h>
+
+#include <err.h>
+#include <errno.h>
+#include <glob.h>
+#include <libgen.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
+#include "compat.h"
+#include "debug.h"
+#include "error.h"
+#include "meta_info.h"
 #include "playlist.h"
 
 int history_size = DEFAULT_HISTORY_SIZE;

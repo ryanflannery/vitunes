@@ -14,9 +14,29 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#include <sys/time.h>
+
+#include <getopt.h>
+#include <locale.h>
+#include <pwd.h>
+#include <signal.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+
+#include "commands.h"
+#include "compat.h"
+#include "debug.h"
+#include "ecmd.h"
+#include "enums.h"
+#include "error.h"
+#include "keybindings.h"
+#include "medialib.h"
+#include "player.h"
+#include "socket.h"
+#include "uinterface.h"
 #include "vitunes.h"
 #include "config.h"     /* NOTE: must be after vitunes.h */
-#include "socket.h"
 
 /*****************************************************************************
  * GLOBALS, EXPORTED

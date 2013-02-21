@@ -17,14 +17,6 @@
 #ifndef ERROR_H
 #define ERROR_H
 
-#include <errno.h>
-#include <stdarg.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include <string.h>
-
-#include "vitunes.h"
-
 void fatal(const char *, ...);
 void fatalx(const char *, ...);
 void info(const char *, ...);

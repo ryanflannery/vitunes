@@ -13,18 +13,19 @@
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
-#include <stdio.h>
-#include <string.h>
+
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/un.h>
+
+#include <stdio.h>
+#include <string.h>
 #include <unistd.h>
 
-#include "socket.h"
 #include "commands.h"
+#include "socket.h"
 
 #define VITUNES_SOCK    "/tmp/.vitunes"
-
 
 int
 sock_send_msg(const char *msg)

@@ -17,28 +17,6 @@
 #ifndef VITUNES_H
 #define VITUNES_H
 
-#include "compat.h"
-
-#include <sys/time.h>
-
-#include <getopt.h>
-#include <locale.h>
-#include <pwd.h>
-#include <signal.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <string.h>
-
-#include "debug.h"
-#include "enums.h"
-#include "commands.h"
-#include "keybindings.h"
-#include "medialib.h"
-#include "player.h"
-#include "uinterface.h"
-#include "ecmd.h"
-#include "error.h"
-
 /* for unused arguments */
 #if defined(__GNUC__) || defined(__clang__)
 #  define UNUSED  __attribute__((__unused__))

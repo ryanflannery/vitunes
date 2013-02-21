@@ -14,7 +14,21 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#include <sys/errno.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+
+#include <fts.h>
+#include <limits.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+#include "compat.h"
+#include "debug.h"
+#include "error.h"
 #include "medialib.h"
+#include "meta_info.h"
+#include "playlist.h"
 
 /* The global media library struct */
 medialib mdb;

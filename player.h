@@ -17,21 +17,6 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "compat.h"
-
-#include <err.h>
-
-#include "playlist.h"
-#include "paint.h"
-#include "debug.h"
-#include "error.h"
-
-/* "static" backends (those that aren't dynamically loaded) */
-#include "players/mplayer.h"
-#if defined(ENABLE_GSTREAMER)
-#  include "players/gstplayer.h"
-#endif
-
 /*
  * Available play-modes.
  *    Linear:  Songs in the queue play in the order they appear

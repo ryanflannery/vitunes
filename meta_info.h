@@ -17,27 +17,6 @@
 #ifndef META_INFO_H
 #define META_INFO_H
 
-#include "compat.h"
-
-#include <ctype.h>
-#include <limits.h>
-#include <err.h>
-#include <errno.h>
-#include <stdbool.h> 
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <strings.h>
-#include <time.h>
-
-/* non-baes includes (just TagLib) */
-#include <tag_c.h>
-
-#include "debug.h"
-#include "enums.h"
-#include "error.h"
-
 /* the character-info fields.  used for all meta-info that's shown */
 #define MI_NUM_CINFO     8
 #define MI_CINFO_ARTIST  0

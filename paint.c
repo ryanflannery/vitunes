@@ -14,7 +14,22 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#include <curses.h>
+#include <math.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <string.h>
+#include <time.h>
+
+#include "compat.h"
+#include "enums.h"
+#include "error.h"
+#include "meta_info.h"
 #include "paint.h"
+#include "player.h"
+#include "playlist.h"
+#include "uinterface.h"
+#include "vitunes.h"
 
 /* globals */
 _colors colors;

@@ -16,8 +16,6 @@
 #ifndef SOCKET_H
 #define SOCKET_H
 
-#include <sys/types.h>
-
 #define VITUNES_RUNNING "WHOWASPHONE?"
 
 /*

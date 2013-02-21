@@ -17,16 +17,6 @@
 #ifndef COMMANDS_H
 #define COMMANDS_H
 
-#include "compat.h"
-
-#include "enums.h"
-#include "paint.h"
-#include "str2argv.h"
-#include "vitunes.h"
-#include "debug.h"
-#include "keybindings.h"
-#include "error.h"
-
 /****************************************************************************
  * Toggle-list handling stuff
  ***************************************************************************/

@@ -14,6 +14,23 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#include <sys/ioctl.h>
+
+#include <ctype.h>
+#include <err.h>
+#include <ncurses.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+#include <termios.h>
+#include <unistd.h>
+
+#include "compat.h"
+#include "debug.h"
+#include "enums.h"
+#include "error.h"
 #include "uinterface.h"
 
 /* the global user interface object */

@@ -14,7 +14,20 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#include <err.h>
+
+#include "compat.h"
+#include "debug.h"
+#include "error.h"
+#include "paint.h"
 #include "player.h"
+#include "playlist.h"
+
+/* "static" backends (those that aren't dynamically loaded) */
+#include "players/mplayer.h"
+#if defined(ENABLE_GSTREAMER)
+#  include "players/gstplayer.h"
+#endif
 
 /* globals */
 player_backend_t player;

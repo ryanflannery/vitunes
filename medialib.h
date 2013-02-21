@@ -25,22 +25,6 @@
 #ifndef MEDIALIB_H
 #define MEDIALIB_H
 
-#include "compat.h"
-
-#include <sys/errno.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-
-#include <fts.h>
-#include <limits.h>
-#include <stdlib.h>
-#include <unistd.h>
-
-#include "debug.h"
-#include "error.h"
-#include "meta_info.h"
-#include "playlist.h"
-
 #define MEDIALIB_PLAYLISTS_CHUNK_SIZE  100
 
 /* current database file-format version */

@@ -14,6 +14,15 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#include <err.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "compat.h"
+#include "debug.h"
+#include "error.h"
 #include "str2argv.h"
 
 /* initialize empty argc/argv struct */

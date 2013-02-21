@@ -17,23 +17,6 @@
 #ifndef PAINT_H
 #define PAINT_H
 
-#include "compat.h"
-
-#include <curses.h>
-#include <math.h>
-#include <string.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <time.h>
-
-#include "enums.h"
-#include "error.h"
-#include "meta_info.h"
-#include "player.h"
-#include "playlist.h"
-#include "uinterface.h"
-#include "vitunes.h"
-
 /* colors used by paint - each of these will be a number for a COLOR_PAIR */
 typedef struct {
    /* visual dividers of windows */

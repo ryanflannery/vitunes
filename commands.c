@@ -15,6 +15,13 @@
  */
 
 #include "commands.h"
+#include "debug.h"
+#include "enums.h"
+#include "error.h"
+#include "keybindings.h"
+#include "paint.h"
+#include "str2argv.h"
+#include "vitunes.h"
 
 bool sorts_need_saving = false;
 
