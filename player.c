@@ -121,10 +121,8 @@ player_init(const char *backend)
    if (!found)
       errx(1, "media backend '%s' is unknown", backend);
 
-   if (player.dynamic) {
-      ui_destroy();
+   if (player.dynamic)
       errx(1, "dynamically loaded backends not yet supported");
-   }
 
    player.set_callback_playnext(callback_playnext);
    player.set_callback_notice(paint_message);
