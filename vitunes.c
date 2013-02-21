@@ -107,8 +107,9 @@ main(int argc, char *argv[])
    /* get home dir */
    if ((home = getenv("HOME")) == NULL || *home == '\0') {
       if ((pw = getpwuid(getuid())) == NULL)
-         errx(1, "Couldn't determine home directory. Can't find my config files.");
-      home = pw->pw_dir;
+         home = "/";
+      else
+         home = pw->pw_dir;
    }
 
    /* build paths & other needed strings */
