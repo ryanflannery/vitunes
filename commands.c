@@ -995,8 +995,6 @@ user_getstr(const char *prompt, char **response)
    if ((input = calloc(MAX_INPUT_SIZE, sizeof(char))) == NULL)
       fatal("user_getstr: calloc(3) failed for input string");
 
-   bzero(input, MAX_INPUT_SIZE);
-
    /* start getting input */
    ret = 0;
    pos = 0;

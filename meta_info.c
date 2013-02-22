@@ -131,14 +131,10 @@ mi_fread(meta_info *mi, FILE *fin)
    if ((mi->filename = calloc(lengths[0] + 1, sizeof(char))) == NULL)
       fatal("mi_fread: calloc filename failed");
 
-   bzero(mi->filename, sizeof(char) * (lengths[0] + 1));
-
    for (i = 0; i < MI_NUM_CINFO; i++) {
       if (lengths[i+1] > 0) {
          if ((mi->cinfo[i] = calloc(lengths[i+1] + 1, sizeof(char))) == NULL)
             fatal("mi_fread: failed to calloc cinfo");
-
-         bzero(mi->cinfo[i], sizeof(char) * (lengths[i+1] + 1));
       }
    }
 
