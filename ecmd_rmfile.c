@@ -15,8 +15,8 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include <err.h>
 #include <stdbool.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
@@ -70,7 +70,8 @@ ecmd_rmfile_exec(UNUSED int argc, char **argv)
    /* if not found then error */
    if (!found) {
       i = (forced ? 0 : 1);
-      errx(i, "%s: %s: No such file or URL", argv[0], argv[0]);
+      infox("%s: No such file or URL", argv[0]);
+      exit(i);
    }
 
    /* if not forced, prompt user if they are sure */
