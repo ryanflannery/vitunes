@@ -28,7 +28,6 @@
 
 #include "commands.h"
 #include "compat.h"
-#include "debug.h"
 #include "ecmd.h"
 #include "enums.h"
 #include "error.h"
@@ -66,9 +65,6 @@ volatile sig_atomic_t VSIG_PLAYER_MONITOR = 0;  /* 1 = update player stats */
  */
 enum { EXIT_NORMAL, BAD_PLAYER };
 volatile sig_atomic_t QUIT_CAUSE = EXIT_NORMAL;
-
-/* used with -DDEBUG */
-FILE  *debug_log;
 
 
 /*****************************************************************************
@@ -121,11 +117,6 @@ main(int argc, char *argv[])
 
    /* error messages go to stderr before the user interface is set up */
    error_init(ERROR_STDERR);
-
-#ifdef DEBUG
-   if ((debug_log = fopen("vitunes-debug.log", "w")) == NULL)
-      fatal("failed to open debug log");
-#endif
 
    /*------------------------------------------------------------------------
     * build paths names needed by vitunes & handle switches

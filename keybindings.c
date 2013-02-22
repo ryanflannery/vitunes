@@ -20,7 +20,6 @@
 
 #include "commands.h"
 #include "compat.h"
-#include "debug.h"
 #include "enums.h"
 #include "error.h"
 #include "keybindings.h"

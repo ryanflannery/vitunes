@@ -25,7 +25,6 @@
 #include <unistd.h>
 
 #include "compat.h"
-#include "debug.h"
 #include "error.h"
 #include "medialib.h"
 #include "meta_info.h"

@@ -42,7 +42,7 @@ vitunes: $(OBJS)
 	$(CC) $(CFLAGS) $<
 
 debug:
-	make CDEBUG="-DDEBUG -g"
+	make CDEBUG="-g"
 
 clean:
 	rm -f *.o

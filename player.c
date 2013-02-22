@@ -19,7 +19,6 @@
 #include <string.h>
 
 #include "compat.h"
-#include "debug.h"
 #include "error.h"
 #include "paint.h"
 #include "player.h"

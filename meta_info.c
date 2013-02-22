@@ -29,7 +29,6 @@
 #include <tag_c.h>
 
 #include "compat.h"
-#include "debug.h"
 #include "enums.h"
 #include "error.h"
 #include "meta_info.h"

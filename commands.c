@@ -18,7 +18,6 @@
 #include <string.h>
 
 #include "commands.h"
-#include "debug.h"
 #include "enums.h"
 #include "error.h"
 #include "keybindings.h"

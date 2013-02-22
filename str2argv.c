@@ -20,7 +20,6 @@
 #include <string.h>
 
 #include "compat.h"
-#include "debug.h"
 #include "error.h"
 #include "str2argv.h"
 

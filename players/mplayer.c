@@ -34,10 +34,6 @@
 #include "mplayer_conf.h"
 #include "player_utils.h"
 
-#ifdef DEBUG
-#  include "../debug.h"
-#endif
-
 /* callback functions */
 void (*mplayer_callback_playnext)(void) = NULL;
 void (*mplayer_callback_notice)(char *, ...) = NULL;
