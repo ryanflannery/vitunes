@@ -24,7 +24,7 @@ OBJS=commands.o compat.o ecmd.o \
 	  error.o keybindings.o medialib.o meta_info.o \
 	  mplayer.o paint.o player.o player_utils.o \
 	  playlist.o socket.o str2argv.o \
-	  uinterface.o vitunes.o \
+	  uinterface.o vitunes.o xmalloc.o \
 	  $(ODEPS)
 
 # subdirectories with code (.PATH for BSD make, VPATH for GNU make)
