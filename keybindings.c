@@ -925,7 +925,7 @@ kba_search_find(KbaArgs a)
       /* found one, jump to it */
       if (matches) {
          if (msg != NULL)
-            paint_message(msg);
+            paint_message("%s", msg);
 
          gnum_set(idx + 1);
          foo = get_dummy_args();
