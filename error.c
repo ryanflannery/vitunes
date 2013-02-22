@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2010, 2011, 2012 Ryan Flannery <ryan.flannery@gmail.com>
  * Copyright (c) 2013 Tiago Cunha <tcunha@gmx.com>
  *
  * Permission to use, copy, modify, and distribute this software for any
@@ -23,11 +24,40 @@
 #include <string.h>
 
 #include "error.h"
+#include "paint.h"
 #include "uinterface.h"
 #include "vitunes.h"
 
 /* error type which depends on the context */
 static int error_type;
+
+/*
+ * Starts by fetching the needed attributes that depend on the type of the
+ * message. It, then, paints it to the command/status window and, if wanted
+ * appends the errno message string. A beep is also issued if it's an error
+ * message.
+ */
+static void
+error_paint(bool errnoflag, bool iserr, const char *fmt, va_list ap)
+{
+   int attrs, which;
+
+   which = iserr ? colors.errors : colors.messages;
+   attrs = COLOR_PAIR(which);
+
+   werase(ui.command);
+   wmove(ui.command, 0, 0);
+   wattron(ui.command, attrs);
+   vwprintw(ui.command, fmt, ap);
+
+   if (errnoflag)
+      wprintw(ui.command, ": %s", strerror(errno));
+   if (iserr)
+      beep();
+
+   wattroff(ui.command, attrs);
+   wrefresh(ui.command);
+}
 
 /*
  * Prints the provided error message to standard error and, if wanted, appends
@@ -60,6 +90,18 @@ error_cfg(bool errnoflag, bool iserr, const char *fmt, va_list ap)
 }
 
 /*
+ * Prints a message to standard error and terminates the process if it's an
+ * error.
+ */
+static void
+error_stderr(bool errnoflag, bool iserr, const char *fmt, va_list ap)
+{
+   error_print(errnoflag, fmt, ap);
+   if (iserr)
+      exit(1);
+}
+
+/*
  * Check which context we are in and call the function responsible to output the
  * error message.
  */
@@ -70,8 +112,11 @@ error_doit(bool errnoflag, bool iserr, const char *fmt, va_list ap)
    case ERROR_CFG:
       error_cfg(errnoflag, iserr, fmt, ap);
       break;
+   case ERROR_PAINT:
+      error_paint(errnoflag, iserr, fmt, ap);
+      break;
    default:
-      error_print(errnoflag, fmt, ap);
+      error_stderr(errnoflag, iserr, fmt, ap);
       break;
    }
 }
@@ -82,10 +127,7 @@ error_init(int type)
    error_type = type;
 }
 
-/*
- * Outputs a fatal message, appends the errno message string and terminates the
- * process.
- */
+/* Outputs a fatal message with the errno message string appended. */
 void
 fatal(const char *fmt, ...)
 {
@@ -94,10 +136,9 @@ fatal(const char *fmt, ...)
    va_start(ap, fmt);
    error_doit(true, true, fmt, ap);
    va_end(ap);
-   exit(1);
 }
 
-/* Outputs a fatal message and terminates the process. */
+/* Outputs a fatal message. */
 void
 fatalx(const char *fmt, ...)
 {
@@ -106,7 +147,6 @@ fatalx(const char *fmt, ...)
    va_start(ap, fmt);
    error_doit(false, true, fmt, ap);
    va_end(ap);
-   exit(1);
 }
 
 /* Outputs an informational message with the errno message string appended. */

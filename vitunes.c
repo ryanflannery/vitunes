@@ -224,6 +224,9 @@ main(int argc, char *argv[])
    /* initial painting of the display */
    paint_all();
 
+   /* configuration file ok; paint messages from now on */
+   error_init(ERROR_PAINT);
+
    /* -----------------------------------------------------------------------
     * begin input loop
     * -------------------------------------------------------------------- */
