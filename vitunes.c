@@ -299,9 +299,8 @@ void
 usage(void)
 {
    fprintf(stderr,"\
-usage: %s [-f config-file] [-d database-file] [-p playlist-dir] [-m player-path] [-e COMMAND ...]\n\
-See \"%s -e help\" for information about what e-commands are available.\n\
-",
+usage: %s [-v] [-f config-file] [-d database-file] [-p playlist-dir] [-m player-path]\n\
+\t[-e COMMAND ...]\nSee \"%s -e help\" for information about what e-commands are available.\n",
    progname, progname);
    exit(1);
 }
@@ -499,7 +498,7 @@ handle_switches(int argc, char *argv[])
 {
    int ch;
 
-   while ((ch = getopt(argc, argv, "he:f:d:p:m:c:")) != -1) {
+   while ((ch = getopt(argc, argv, "he:f:d:p:m:c:v")) != -1) {
       switch (ch) {
          case 'c':
             if(sock_send_msg(optarg) == -1)
@@ -535,6 +534,9 @@ handle_switches(int argc, char *argv[])
             free(playlist_dir);
             if ((playlist_dir = strdup(optarg)) == NULL)
                fatal("handle_switches: strdup playlist_dir failed");
+            break;
+
+         case 'v':
             break;
 
          case 'h':
