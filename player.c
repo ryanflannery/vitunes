@@ -141,8 +141,8 @@ player_init(const char *backend)
       fatalx("dynamically loaded backends not yet supported");
 
    player.set_callback_playnext(callback_playnext);
-   player.set_callback_notice(paint_message);
-   player.set_callback_error(paint_error);
+   player.set_callback_notice(infox);
+   player.set_callback_error(fatalx);
    player.set_callback_fatal(callback_fatal);
    player.start();
 }

@@ -66,10 +66,6 @@ void paint_all();
 extern bool showing_file_info;
 void paint_playlist_file_info(const meta_info *m);
 
-/* routines for painting errors/messages in the command/status window */
-void paint_error(const char *fmt, ...);
-void paint_message(const char *fmt, ...);
-
 /* for setting up and working with the colors */
 void paint_setup_colors();
 int  paint_str2item(const char *str);
