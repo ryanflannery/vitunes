@@ -569,7 +569,7 @@ paint_all()
  * identical to that of printf(3) (vwprintw(3) actually).
  */
 void
-paint_error(char *fmt, ...)
+paint_error(const char *fmt, ...)
 {
    va_list ap;
 
@@ -591,7 +591,7 @@ paint_error(char *fmt, ...)
  * is identical to that of printf(3) (vwprintw(3) actually).
  */
 void
-paint_message(char *fmt, ...)
+paint_message(const char *fmt, ...)
 {
    va_list ap;
 

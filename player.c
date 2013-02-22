@@ -41,7 +41,7 @@ player_info_t player_info;
 static void callback_playnext() { player_skip_song(1); }
 
 static void
-callback_fatal(char *fmt, ...)
+callback_fatal(const char *fmt, ...)
 {
    va_list ap;
 
