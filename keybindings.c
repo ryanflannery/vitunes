@@ -845,7 +845,7 @@ kba_search(KbaArgs a)
 
    /* set the global query description and the search direction */
    if (str2argv(search_phrase, &argc, &argv, &errmsg) != 0) {
-      paint_error("parse error: %s in '%s'", errmsg, search_phrase);
+      fatalx("parse error: %s in '%s'", errmsg, search_phrase);
       free(search_phrase);
       return;
    }
@@ -924,7 +924,7 @@ kba_search_find(KbaArgs a)
       /* found one, jump to it */
       if (matches) {
          if (msg != NULL)
-            paint_message("%s", msg);
+            infox("%s", msg);
 
          gnum_set(idx + 1);
          foo = get_dummy_args();
@@ -935,7 +935,7 @@ kba_search_find(KbaArgs a)
       }
    }
 
-   paint_error("Pattern not found: %s", mi_query_getraw());
+   fatalx("Pattern not found: %s", mi_query_getraw());
 }
 
 
@@ -943,7 +943,7 @@ void
 kba_visual(KbaArgs a UNUSED)
 {
    if (ui.active == ui.library) {
-      paint_message("No visual mode in library window.  Sorry.");
+      infox("No visual mode in library window.  Sorry.");
       return;
    }
 
@@ -1018,7 +1018,7 @@ kba_cut(KbaArgs a UNUSED)
    }
 
    if (start >= ui.active->nrows) {
-      paint_message("nothing to delete here!");
+      infox("nothing to delete here!");
       return;
    }
 
@@ -1033,11 +1033,11 @@ kba_cut(KbaArgs a UNUSED)
        * while drunk.
        */
       if (end != start + 1) {
-         paint_error("cannot delete multiple playlists");
+         fatalx("cannot delete multiple playlists");
          return;
       }
       if (p == mdb.library || p == mdb.filter_results) {
-         paint_error("cannot delete pseudo-playlists like LIBRARY or FILTER");
+         fatalx("cannot delete pseudo-playlists like LIBRARY or FILTER");
          return;
       }
 
@@ -1046,12 +1046,12 @@ kba_cut(KbaArgs a UNUSED)
 
       /* make sure user wants this */
       if (user_get_yesno(warning, &response) != 0) {
-         paint_message("delete of '%s' cancelled", p->name);
+         infox("delete of '%s' cancelled", p->name);
          free(warning);
          return;
       }
       if (response != 1) {
-         paint_message("playlist '%s' not deleted", p->name);
+         infox("playlist '%s' not deleted", p->name);
          free(warning);
          return;
       }
@@ -1079,7 +1079,7 @@ kba_cut(KbaArgs a UNUSED)
 
    /* can't delete from library */
    if (viewing_playlist == mdb.library) {
-      paint_error("cannot delete from library");
+      fatalx("cannot delete from library");
       return;
    }
 
@@ -1105,7 +1105,7 @@ kba_cut(KbaArgs a UNUSED)
    /* redraw */
    paint_playlist();
    paint_library();
-   paint_message("%d fewer files.", end - start);
+   infox("%d fewer files.", end - start);
 }
 
 void
@@ -1117,12 +1117,12 @@ kba_yank(KbaArgs a UNUSED)
    int  n;
 
    if (ui.active == ui.library) {
-      paint_error("cannot yank in library window");
+      fatalx("cannot yank in library window");
       return;
    }
 
    if (viewing_playlist->nfiles == 0) {
-      paint_error("nothing to yank!");
+      fatalx("nothing to yank!");
       return;
    }
 
@@ -1188,7 +1188,7 @@ kba_yank(KbaArgs a UNUSED)
 
    paint_playlist();
    /* notify user # of rows yanked */
-   paint_message("Yanked %d files.", end - start);
+   infox("Yanked %d files.", end - start);
 }
 
 void
@@ -1198,7 +1198,7 @@ kba_paste(KbaArgs a)
    int start = 0;
 
    if (_yank_buffer.nfiles == 0) {
-      paint_error("nothing to paste");
+      fatalx("nothing to paste");
       return;
    }
 
@@ -1212,7 +1212,7 @@ kba_paste(KbaArgs a)
 
    /* can't alter library */
    if (p == mdb.library) {
-      paint_error("Cannot alter %s pseudo-playlist", mdb.library->name);
+      fatalx("Cannot alter %s pseudo-playlist", mdb.library->name);
       return;
    }
 
@@ -1256,9 +1256,9 @@ kba_paste(KbaArgs a)
    paint_library();
    paint_playlist();
    if (ui.active == ui.library)
-      paint_message("Pasted %d files to '%s'", _yank_buffer.nfiles, p->name);
+      infox("Pasted %d files to '%s'", _yank_buffer.nfiles, p->name);
    else
-      paint_message("Pasted %d files.", _yank_buffer.nfiles);
+      infox("Pasted %d files.", _yank_buffer.nfiles);
 }
 
 
@@ -1266,14 +1266,14 @@ void
 kba_undo(KbaArgs a UNUSED)
 {
    if (ui.active == ui.library) {
-      paint_message("Cannot undo in library window.");
+      infox("Cannot undo in library window.");
       return;
    }
 
    if (playlist_undo(viewing_playlist) != 0)
-      paint_message("Nothing to undo.");
+      infox("Nothing to undo.");
    else
-      paint_message("Undo successfull.");
+      infox("Undo successfull.");
 
    /* TODO more informative message like in vim */
 
@@ -1288,14 +1288,14 @@ void
 kba_redo(KbaArgs a UNUSED)
 {
    if (ui.active == ui.library) {
-      paint_message("Cannot redo in library window.");
+      infox("Cannot redo in library window.");
       return;
    }
 
    if (playlist_redo(viewing_playlist) != 0)
-      paint_message("Nothing to redo.");
+      infox("Nothing to redo.");
    else
-      paint_message("Redo successfull.");
+      infox("Redo successfull.");
 
    /* TODO */
 
@@ -1381,7 +1381,7 @@ kba_show_file_info(KbaArgs a UNUSED)
       return;
 
    if (ui.active->crow >= ui.active->nrows) {
-      paint_message("no file here");
+      infox("no file here");
       return;
    }
 
@@ -1411,7 +1411,7 @@ kba_load_playlist(KbaArgs a UNUSED)
    } else {
       /* play song */
       if (ui.active->crow >= ui.active->nrows) {
-         paint_message("no file here");
+         infox("no file here");
          return;
       }
       player_set_queue(viewing_playlist, ui.active->voffset + ui.active->crow);
@@ -1437,7 +1437,7 @@ kba_play(KbaArgs a UNUSED)
    } else {
       /* play song */
       if (ui.active->crow >= ui.active->nrows) {
-         paint_message("no file here");
+         infox("no file here");
          return;
       }
       player_set_queue(viewing_playlist, ui.active->voffset + ui.active->crow);
@@ -1581,7 +1581,7 @@ kba_toggle(KbaArgs a)
 
    /* get the command to execute */
    if ((t = toggle_get(registr)) == NULL) {
-      paint_error("No toggle list in register %c (%i).", registr, registr);
+      fatalx("No toggle list in register %c (%i).", registr, registr);
       return;
    }
 

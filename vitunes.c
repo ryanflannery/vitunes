@@ -362,7 +362,7 @@ process_signals()
          paint_playlist();
       }
       if (prev_volume != player.volume()) {
-         paint_message("volume: %3.0f%%", player.volume());
+         infox("volume: %3.0f%%", player.volume());
          prev_volume = player.volume();
       }
 
