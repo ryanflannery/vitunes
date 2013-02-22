@@ -28,8 +28,8 @@
 #include "uinterface.h"
 #include "vitunes.h"
 
-/* error type which depends on the context */
-static int error_type;
+static FILE *error_fp;     /* error debug file */
+static int   error_type;   /* error type which depends on the context */
 
 /*
  * Starts by fetching the needed attributes that depend on the type of the
@@ -64,14 +64,14 @@ error_paint(bool errnoflag, bool iserr, const char *fmt, va_list ap)
  * the errno message string.
  */
 static void
-error_print(bool errnoflag, const char *fmt, va_list ap)
+error_file(FILE *fp, bool errnoflag, const char *fmt, va_list ap)
 {
-   fprintf(stderr, "%s: ", progname);
-   vfprintf(stderr, fmt, ap);
+   fprintf(fp, "%s: ", progname);
+   vfprintf(fp, fmt, ap);
 
    if (errnoflag)
-      fprintf(stderr, ": %s", strerror(errno));
-   fputs("\n", stderr);
+      fprintf(fp, ": %s", strerror(errno));
+   fputs("\n", fp);
 }
 
 /*
@@ -85,7 +85,7 @@ error_cfg(bool errnoflag, bool iserr, const char *fmt, va_list ap)
       return;
 
    endwin();
-   error_print(errnoflag, fmt, ap);
+   error_file(stderr, errnoflag, fmt, ap);
    exit(1);
 }
 
@@ -96,7 +96,7 @@ error_cfg(bool errnoflag, bool iserr, const char *fmt, va_list ap)
 static void
 error_stderr(bool errnoflag, bool iserr, const char *fmt, va_list ap)
 {
-   error_print(errnoflag, fmt, ap);
+   error_file(stderr, errnoflag, fmt, ap);
    if (iserr)
       exit(1);
 }
@@ -121,10 +121,33 @@ error_doit(bool errnoflag, bool iserr, const char *fmt, va_list ap)
    }
 }
 
+/* Outputs a message if debugging is turned on. */
+void
+debug(const char *fmt, ...)
+{
+   va_list ap;
+
+   if (error_fp == NULL)
+      return;
+   
+   va_start(ap, fmt);
+   error_file(error_fp, false, fmt, ap);
+   va_end(ap);
+}
+
 void
 error_init(int type)
 {
    error_type = type;
+}
+
+void
+error_open(void)
+{
+   if (error_fp != NULL)
+      return;
+   if ((error_fp = fopen(ERROR_LOG_PATH, "w")) == NULL)
+      error_file(stderr, true, "%s: fopen", ERROR_LOG_PATH);
 }
 
 /* Outputs a fatal message with the errno message string appended. */

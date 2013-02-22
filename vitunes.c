@@ -537,6 +537,7 @@ handle_switches(int argc, char *argv[])
             break;
 
          case 'v':
+            error_open();
             break;
 
          case 'h':

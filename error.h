@@ -17,11 +17,15 @@
 #ifndef ERROR_H
 #define ERROR_H
 
+#define ERROR_LOG_PATH  "vitunes-debug.log"
+
 #define ERROR_STDERR 0
 #define ERROR_CFG    1
 #define ERROR_PAINT  2
 
+void debug(const char *, ...);
 void error_init(int);
+void error_open(void);
 void fatal(const char *, ...);
 void fatalx(const char *, ...);
 void info(const char *, ...);
