@@ -17,6 +17,9 @@
 #ifndef ERROR_H
 #define ERROR_H
 
+#define ERROR_STDERR 0
+
+void error_init(int);
 void fatal(const char *, ...);
 void fatalx(const char *, ...);
 void info(const char *, ...);

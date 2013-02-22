@@ -24,6 +24,9 @@
 #include "error.h"
 #include "vitunes.h"
 
+/* error type which depends on the context */
+static int error_type;
+
 /*
  * Prints the provided error message to standard error and, if wanted, appends
  * the errno message string.
@@ -40,6 +43,26 @@ error_print(bool errnoflag, const char *fmt, va_list ap)
 }
 
 /*
+ * Check which context we are in and call the function responsible to output the
+ * error message.
+ */
+static void
+error_doit(bool errnoflag, const char *fmt, va_list ap)
+{
+   switch (error_type) {
+   default:
+      error_print(errnoflag, fmt, ap);
+      break;
+   }
+}
+
+void
+error_init(int type)
+{
+   error_type = type;
+}
+
+/*
  * Outputs a fatal message, appends the errno message string and terminates the
  * process.
  */
@@ -49,7 +72,7 @@ fatal(const char *fmt, ...)
    va_list ap;
 
    va_start(ap, fmt);
-   error_print(true, fmt, ap);
+   error_doit(true, fmt, ap);
    va_end(ap);
    exit(1);
 }
@@ -61,7 +84,7 @@ fatalx(const char *fmt, ...)
    va_list ap;
 
    va_start(ap, fmt);
-   error_print(false, fmt, ap);
+   error_doit(false, fmt, ap);
    va_end(ap);
    exit(1);
 }
@@ -73,7 +96,7 @@ info(const char *fmt, ...)
    va_list ap;
 
    va_start(ap, fmt);
-   error_print(true, fmt, ap);
+   error_doit(true, fmt, ap);
    va_end(ap);
 }
 
@@ -84,6 +107,6 @@ infox(const char *fmt, ...)
    va_list ap;
 
    va_start(ap, fmt);
-   error_print(false, fmt, ap);
+   error_doit(false, fmt, ap);
    va_end(ap);
 }
