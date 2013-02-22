@@ -15,6 +15,7 @@
  */
 
 #include <errno.h>
+#include <ncurses.h>
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -22,6 +23,7 @@
 #include <string.h>
 
 #include "error.h"
+#include "uinterface.h"
 #include "vitunes.h"
 
 /* error type which depends on the context */
@@ -43,13 +45,31 @@ error_print(bool errnoflag, const char *fmt, va_list ap)
 }
 
 /*
+ * Prints a fatal message (informational messages are pointless in this context)
+ * and terminates the process.
+ */
+static void
+error_cfg(bool errnoflag, bool iserr, const char *fmt, va_list ap)
+{
+   if (!iserr)
+      return;
+
+   endwin();
+   error_print(errnoflag, fmt, ap);
+   exit(1);
+}
+
+/*
  * Check which context we are in and call the function responsible to output the
  * error message.
  */
 static void
-error_doit(bool errnoflag, const char *fmt, va_list ap)
+error_doit(bool errnoflag, bool iserr, const char *fmt, va_list ap)
 {
    switch (error_type) {
+   case ERROR_CFG:
+      error_cfg(errnoflag, iserr, fmt, ap);
+      break;
    default:
       error_print(errnoflag, fmt, ap);
       break;
@@ -72,7 +92,7 @@ fatal(const char *fmt, ...)
    va_list ap;
 
    va_start(ap, fmt);
-   error_doit(true, fmt, ap);
+   error_doit(true, true, fmt, ap);
    va_end(ap);
    exit(1);
 }
@@ -84,7 +104,7 @@ fatalx(const char *fmt, ...)
    va_list ap;
 
    va_start(ap, fmt);
-   error_doit(false, fmt, ap);
+   error_doit(false, true, fmt, ap);
    va_end(ap);
    exit(1);
 }
@@ -96,7 +116,7 @@ info(const char *fmt, ...)
    va_list ap;
 
    va_start(ap, fmt);
-   error_doit(true, fmt, ap);
+   error_doit(true, false, fmt, ap);
    va_end(ap);
 }
 
@@ -107,6 +127,6 @@ infox(const char *fmt, ...)
    va_list ap;
 
    va_start(ap, fmt);
-   error_doit(false, fmt, ap);
+   error_doit(false, false, fmt, ap);
    va_end(ap);
 }

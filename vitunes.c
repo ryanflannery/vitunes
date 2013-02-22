@@ -119,6 +119,9 @@ main(int argc, char *argv[])
    else
       progname++;
 
+   /* error messages go to stderr before the user interface is set up */
+   error_init(ERROR_STDERR);
+
 #ifdef DEBUG
    if ((debug_log = fopen("vitunes-debug.log", "w")) == NULL)
       fatal("failed to open debug log");
@@ -204,6 +207,9 @@ main(int argc, char *argv[])
 
    /* setup user interface and default colors */
    kb_init();
+
+   /* user interface being initialised; set context, accordingly */
+   error_init(ERROR_CFG);
    ui_init(DEFAULT_LIBRARY_WINDOW_WIDTH);
    paint_setup_colors();
 
@@ -449,10 +455,8 @@ load_config()
       }
 
       /* parse line into argc/argv */
-      if (str2argv(copy, &argc, &argv, &errmsg) != 0) {
-         endwin();
+      if (str2argv(copy, &argc, &argv, &errmsg) != 0)
          fatalx("%s line %zd: parse error: %s", conf_file, linenum, errmsg);
-      }
 
       /* run command */
       found = false;
@@ -466,20 +470,15 @@ load_config()
       }
 
       if (found && num_matches == 1) {
-         if ((ret = (CommandPath[found_idx].func)(argc, argv)) != 0) {
-            endwin();
+         if ((ret = (CommandPath[found_idx].func)(argc, argv)) != 0)
             fatalx("%s line %zd: error with command '%s' [%i]",
                conf_file, linenum, argv[0], ret);
-         }
-      } else if (num_matches > 1) {
-         endwin();
+      } else if (num_matches > 1)
          fatalx("%s line %zd: ambiguous abbreviation '%s'",
             conf_file, linenum, argv[0]);
-      } else {
-         endwin();
+      else
          fatalx("%s line %zd: unknown command '%s'",
             conf_file, linenum, argv[0]);
-      }
 
       argv_free(&argc, &argv);
       free(line);

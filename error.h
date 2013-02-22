@@ -18,6 +18,7 @@
 #define ERROR_H
 
 #define ERROR_STDERR 0
+#define ERROR_CFG    1
 
 void error_init(int);
 void fatal(const char *, ...);
