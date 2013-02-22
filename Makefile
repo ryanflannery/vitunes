@@ -11,9 +11,10 @@ LDEPS=$(TAGLIB_LIBS) $(GSTREAMER_LIBS)
 ODEPS=$(GSTREAMER_OBJS)
 
 # build variables
-CC		  ?= /usr/bin/cc
-CFLAGS  += -c -std=c89 -Wall -Wextra -Wno-unused-value $(CDEBUG) $(CDEPS)
-LIBS    += -lm -lncurses -lutil $(LDEPS)
+CC       ?= /usr/bin/cc
+CPPFLAGS += -I. -Icompat -Iplayers -iquote.
+CFLAGS   += -c -std=c89 -Wall -Wextra -Wno-unused-value $(CDEBUG) $(CDEPS)
+LIBS     += -lm -lncurses -lutil $(LDEPS)
 
 # object files
 OBJS=commands.o compat.o ecmd.o \
@@ -39,7 +40,7 @@ vitunes: $(OBJS)
 	$(CC) -o $@ $(LDFLAGS) $(OBJS) $(LIBS)
 
 .c.o:
-	$(CC) $(CFLAGS) $<
+	$(CC) $(CPPFLAGS) $(CFLAGS) $<
 
 debug:
 	make CDEBUG="-g"
@@ -93,4 +94,3 @@ reports: report.mandoc report.cppcheck report.scan-build
 	@figlet "Static Checks Complete"
 	cat report.mandoc
 	cat report.cppcheck
-

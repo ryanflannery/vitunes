@@ -27,9 +27,9 @@
 #include "vitunes.h"
 
 /* "static" backends (those that aren't dynamically loaded) */
-#include "players/mplayer.h"
+#include "mplayer.h"
 #if defined(ENABLE_GSTREAMER)
-#  include "players/gstplayer.h"
+#  include "gstplayer.h"
 #endif
 
 /* globals */

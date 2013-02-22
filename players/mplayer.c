@@ -29,7 +29,7 @@
 #include <time.h>
 #include <unistd.h>
 
-#include "../compat.h"
+#include "compat.h"
 #include "mplayer.h"
 #include "mplayer_conf.h"
 #include "player_utils.h"
