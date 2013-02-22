@@ -24,6 +24,8 @@
 #define ERROR_PAINT  2
 
 void debug(const char *, ...);
+void die(const char *, ...);
+void diex(const char *, ...);
 void error_init(int);
 void error_open(void);
 void fatal(const char *, ...);

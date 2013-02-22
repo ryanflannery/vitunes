@@ -150,6 +150,33 @@ error_open(void)
       error_file(stderr, true, "%s: fopen", ERROR_LOG_PATH);
 }
 
+/*
+ * Outputs a fatal message with the errno message string appended and terminates
+ * the process.
+ */
+void
+die(const char *fmt, ...)
+{
+   va_list ap;
+
+   va_start(ap, fmt);
+   error_file(stderr, true, fmt, ap);
+   va_end(ap);
+   exit(1);
+}
+
+/* Outputs a fatal message and terminates the process. */
+void
+diex(const char *fmt, ...)
+{
+   va_list ap;
+
+   va_start(ap, fmt);
+   error_file(stderr, false, fmt, ap);
+   va_end(ap);
+   exit(1);
+}
+
 /* Outputs a fatal message with the errno message string appended. */
 void
 fatal(const char *fmt, ...)
