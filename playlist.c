@@ -350,9 +350,12 @@ retrieve_playlist_filenames(const char *dirname, char ***fnames)
    xasprintf(&glob_pattern, "%s/*.playlist", dirname);
 
    /* get the files */
+   fcount = 0;
    globbed = glob(glob_pattern, 0, NULL, &files);
    if (globbed != 0 && globbed != GLOB_NOMATCH && errno != 0)
       fatal("failed to glob playlists directory");
+   if (files.gl_pathc == 0)
+      goto out;
 
    /* allocate & copy each of the filenames found into the filenames array */
    *fnames = xcalloc(files.gl_pathc, sizeof(char*));
@@ -361,6 +364,7 @@ retrieve_playlist_filenames(const char *dirname, char ***fnames)
       xasprintf(&((*fnames)[fcount]), "%s", files.gl_pathv[fcount]);
 
    /* cleanup */
+out:
    globfree(&files);
    free(glob_pattern);
 

@@ -73,17 +73,18 @@ medialib_load(const char *db_file, const char *playlist_dir)
 
    /* load the rest */
    npfiles = retrieve_playlist_filenames(mdb.playlist_dir, &pfiles);
-   for (i = 0; i < npfiles; i++) {
-      p = playlist_load(pfiles[i], mdb.library->files, mdb.library->nfiles);
-      medialib_playlist_add(p);
-      free(pfiles[i]);
+   if (npfiles) {
+      for (i = 0; i < npfiles; i++) {
+         p = playlist_load(pfiles[i], mdb.library->files, mdb.library->nfiles);
+         medialib_playlist_add(p);
+         free(pfiles[i]);
+      }
+      free(pfiles);
    }
 
    /* set all playlists as saved initially */
    for (i = 0; i < mdb.nplaylists; i++)
       mdb.playlists[i]->needs_saving = false;
-
-   free(pfiles);
 }
 
 /* free() all memory associated with global media library */
