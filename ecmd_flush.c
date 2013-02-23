@@ -22,6 +22,7 @@
 #include "error.h"
 #include "medialib.h"
 #include "vitunes.h"
+#include "xmalloc.h"
 
 static char *time_format = "%Y %m %d %H:%M:%S";
 
@@ -33,8 +34,7 @@ ecmd_flush_parse(int argc, char **argv)
    while ((ch = getopt(argc, argv, "t:")) != -1) {
       switch (ch) {
          case 't':
-            if ((time_format = strdup(optarg)) == NULL)
-               fatal("%s: strdup of time_format failed", argv[0]);
+            time_format = xstrdup(optarg);
             break;
          case '?':
          case 'h':

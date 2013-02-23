@@ -30,21 +30,15 @@
 #include "error.h"
 #include "meta_info.h"
 #include "playlist.h"
+#include "xmalloc.h"
 
 int history_size = DEFAULT_HISTORY_SIZE;
 
 void
 playlist_increase_capacity(playlist *p)
 {
-   meta_info **new_files;
-   size_t      nbytes;
-
    p->capacity += PLAYLIST_CHUNK_SIZE;
-   nbytes = p->capacity * sizeof(meta_info*);
-   if ((new_files = realloc(p->files, nbytes)) == NULL)
-      fatal("%s: failed to realloc(3) files", __FUNCTION__);
-
-   p->files = new_files;
+   p->files = xrealloc(p->files, p->capacity, sizeof(meta_info *));
 }
 
 /*
@@ -56,12 +50,8 @@ playlist_new(void)
 {
    playlist *p;
    
-   if ((p = malloc(sizeof(playlist))) == NULL)
-      fatal("playlist_new: failed to allocate playlist");
-
-   if ((p->files = calloc(PLAYLIST_CHUNK_SIZE, sizeof(meta_info*))) == NULL)
-      fatal("playlist_new: failed to allocate files");
-
+   p = xmalloc(sizeof(playlist));
+   p->files = xcalloc(PLAYLIST_CHUNK_SIZE, sizeof(meta_info*));
    p->capacity = PLAYLIST_CHUNK_SIZE;
    p->filename = NULL;
    p->name     = NULL;
@@ -100,20 +90,13 @@ playlist_dup(const playlist *original, const char *filename,
    newplist->nfiles   = original->nfiles;
    newplist->capacity = original->nfiles;
 
-   if (name != NULL) {
-      if ((newplist->name = strdup(name)) == NULL)
-         fatal("playlist_dup: strdup name failed");
-   }
-   if (filename != NULL) {
-      if ((newplist->filename = strdup(filename)) == NULL)
-         fatal("playlist_dup: strdup filename failed");
-   }
+   if (name != NULL)
+      newplist->name = xstrdup(name);
+   if (filename != NULL)
+      newplist->filename = xstrdup(filename);
 
    /* copy all of the files */
-   newplist->files = calloc(original->nfiles, sizeof(meta_info*));
-   if (newplist->files == NULL)
-      fatal("playlist_dup: failed to allocate files");
-
+   newplist->files = xcalloc(original->nfiles, sizeof(meta_info*));
    for (i = 0; i < original->nfiles; i++)
       newplist->files[i] = original->files[i];
 
@@ -228,10 +211,8 @@ playlist_load(const char *filename, meta_info **db, int ndb)
 
    /* create playlist and setup */
    playlist *p = playlist_new();
-   p->filename = strdup(filename);
-   p->name     = strdup(basename(p->filename));
-   if (p->filename == NULL || p->name == NULL)
-      fatal("playlist_load: failed to allocate info for playlist '%s'", filename);
+   p->filename = xstrdup(filename);
+   p->name     = xstrdup(basename(p->filename));
 
    /* hack to remove '.playlist' from name */
    period  = strrchr(p->name, '.');
@@ -251,9 +232,7 @@ playlist_load(const char *filename, meta_info **db, int ndb)
       } else {            /* file does NOT exist in DB */
          /* create empty meta-info object with just the file name */
          mi = mi_new();
-         mi->filename = strdup(entry);
-         if (mi->filename == NULL)
-            fatal("playlist_load: failed to strdup filename");
+         mi->filename = xstrdup(entry);
 
          /* add new record to the db and link it to the playlist */
          playlist_files_append(p, &mi, 1, false);
@@ -368,8 +347,7 @@ retrieve_playlist_filenames(const char *dirname, char ***fnames)
 #  endif
 
    /* build the search pattern */
-   if (asprintf(&glob_pattern, "%s/*.playlist", dirname) == -1)
-      fatalx("failed in building glob pattern");
+   xasprintf(&glob_pattern, "%s/*.playlist", dirname);
 
    /* get the files */
    globbed = glob(glob_pattern, 0, NULL, &files);
@@ -377,13 +355,10 @@ retrieve_playlist_filenames(const char *dirname, char ***fnames)
       fatal("failed to glob playlists directory");
 
    /* allocate & copy each of the filenames found into the filenames array */
-   if ((*fnames = calloc(files.gl_pathc, sizeof(char*))) == NULL)
-      fatal("failed to allocate playlist filenames array");
+   *fnames = xcalloc(files.gl_pathc, sizeof(char*));
 
-   for (fcount = 0; fcount < files.gl_pathc; fcount++) {
-      if (asprintf(&((*fnames)[fcount]), "%s", files.gl_pathv[fcount]) == -1)
-         fatalx("failed to allocate filename for playlist");
-   }
+   for (fcount = 0; fcount < files.gl_pathc; fcount++)
+      xasprintf(&((*fnames)[fcount]), "%s", files.gl_pathv[fcount]);
 
    /* cleanup */
    globfree(&files);
@@ -396,15 +371,10 @@ playlist_changeset*
 changeset_create(short type, size_t size, meta_info **files, int loc)
 {
    size_t i;
-
    playlist_changeset *c;
 
-   if ((c = malloc(sizeof(playlist_changeset))) == NULL)
-      fatal("%s: malloc(3) failed", __FUNCTION__);
-
-   if ((c->files = calloc(size, sizeof(meta_info*))) == NULL)
-      fatal("%s: calloc(3) failed", __FUNCTION__);
-
+   c = xmalloc(sizeof(playlist_changeset));
+   c->files = xcalloc(size, sizeof(meta_info*));
    c->type = type;
    c->size = size;
    c->location = loc;
@@ -425,16 +395,7 @@ changeset_free(playlist_changeset *c)
 playlist_changeset**
 playlist_history_new(void)
 {
-   playlist_changeset **h;
-   int i;
-
-   if ((h = calloc(history_size, sizeof(playlist_changeset*))) == NULL)
-      fatal("%s: calloc(3) failed", __FUNCTION__);
-
-   for (i = 0; i < history_size; i++)
-      h[i] = NULL;
-
-   return h;
+   return xcalloc(history_size, sizeof(playlist_changeset*));
 }
 
 void

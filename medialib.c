@@ -29,6 +29,7 @@
 #include "medialib.h"
 #include "meta_info.h"
 #include "playlist.h"
+#include "xmalloc.h"
 
 /* The global media library struct */
 medialib mdb;
@@ -46,22 +47,17 @@ medialib_load(const char *db_file, const char *playlist_dir)
    int        i;
 
    /* copy file/directory names */
-   mdb.db_file      = strdup(db_file);
-   mdb.playlist_dir = strdup(playlist_dir);
-   if (mdb.db_file == NULL || mdb.playlist_dir == NULL)
-      fatal("failed to strdup db file and playlist dir in medialib_init");
+   mdb.db_file      = xstrdup(db_file);
+   mdb.playlist_dir = xstrdup(playlist_dir);
 
    /* setup pseudo-playlists */
    mdb.library = playlist_new();
    mdb.library->filename = NULL;
-   mdb.library->name = strdup("--LIBRARY--");
+   mdb.library->name = xstrdup("--LIBRARY--");
 
    mdb.filter_results = playlist_new();
    mdb.filter_results->filename = NULL;
-   mdb.filter_results->name = strdup("--FILTER--");
-
-   if (mdb.library->name == NULL || mdb.filter_results->name == NULL)
-      fatal("failed to strdup pseudo-names in medialib_load");
+   mdb.filter_results->name = xstrdup("--FILTER--");
 
    /* load the actual database */
    medialib_db_load(db_file);
@@ -69,9 +65,7 @@ medialib_load(const char *db_file, const char *playlist_dir)
    /* setup initial record keeping for playlists */
    mdb.nplaylists = 0;
    mdb.playlists_capacity = 2;
-   mdb.playlists = calloc(2, sizeof(playlist*));
-   if (mdb.playlists == NULL)
-      fatal("medialib_load: failed to allocate initial playlists");
+   mdb.playlists = xcalloc(2, sizeof(playlist*));
 
    /* add library/filter pseudo-playlists */
    medialib_playlist_add(mdb.library);
@@ -120,16 +114,11 @@ medialib_destroy()
 void
 medialib_playlist_add(playlist *p)
 {
-   playlist **new_playlists;
-
    /* check to see if we need to resize the array */
    if (mdb.nplaylists == mdb.playlists_capacity) {
       mdb.playlists_capacity += MEDIALIB_PLAYLISTS_CHUNK_SIZE;
-      int size = mdb.playlists_capacity * sizeof(playlist*);
-      if ((new_playlists = realloc(mdb.playlists, size)) == NULL)
-         fatal("medialib_playlist_add: realloc failed");
-
-      mdb.playlists = new_playlists;
+      mdb.playlists = xrealloc(mdb.playlists, mdb.playlists_capacity,
+         sizeof(playlist *));
    }
 
    mdb.playlists[mdb.nplaylists++] = p;

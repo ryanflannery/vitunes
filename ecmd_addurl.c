@@ -24,6 +24,7 @@
 #include "meta_info.h"
 #include "playlist.h"
 #include "vitunes.h"
+#include "xmalloc.h"
 
 static void
 ecmd_addurl_exec(UNUSED int argc, char **argv)
@@ -37,8 +38,7 @@ ecmd_addurl_exec(UNUSED int argc, char **argv)
    /* start new record, set filename */
    m = mi_new();
    m->is_url = true;
-   if ((m->filename = strdup(argv[0])) == NULL)
-      fatal("%s: strdup failed (filename)", __FUNCTION__);
+   m->filename = xstrdup(argv[0]);
 
    /* get fields from user */
    for (field = 0; field < MI_NUM_CINFO; field++) {
@@ -53,8 +53,7 @@ ecmd_addurl_exec(UNUSED int argc, char **argv)
       if (input[strlen(input) - 1] == '\n')
          input[strlen(input) - 1] = '\0';
 
-      if ((m->cinfo[field] = strdup(input)) == NULL)
-         fatal("%s: strdup failed (field)", __FUNCTION__);
+      m->cinfo[field] = xstrdup(input);
    }
 
    /* load existing database and see if file/URL already exists */

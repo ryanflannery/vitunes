@@ -32,6 +32,7 @@
 #include "playlist.h"
 #include "uinterface.h"
 #include "vitunes.h"
+#include "xmalloc.h"
 
 /* globals */
 _colors colors;
@@ -661,8 +662,7 @@ paint_str2color(const char *str)
       char *numberstr;
       int   number;
 
-      if ((color = strdup(str)) == NULL)
-         fatal("%s: strdup of '%s' failed.", __FUNCTION__, str);
+      color = xstrdup(str);
 
       if ((numberstr = strtok(color, "color")) == NULL) {
          free(color);

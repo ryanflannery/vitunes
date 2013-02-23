@@ -22,17 +22,14 @@
 #include "compat.h"
 #include "error.h"
 #include "str2argv.h"
+#include "xmalloc.h"
 
 /* initialize empty argc/argv struct */
 void
 argv_init(int *argc, char ***argv)
 {
-   if ((*argv = calloc(ARGV_MAX_ENTRIES, sizeof(char*))) == NULL)
-      fatal("argv_init: argv calloc fail");
-
-   if (((*argv)[0] = calloc(ARGV_MAX_TOKEN_LEN, sizeof(char))) == NULL)
-      fatal("argv_init: argv[i] calloc fail");
-
+   *argv = xcalloc(ARGV_MAX_ENTRIES, sizeof(char*));
+   (*argv)[0] = xcalloc(ARGV_MAX_TOKEN_LEN, sizeof(char));
    *argc = 0;
 }
 
@@ -73,8 +70,7 @@ argv_finish_token(int *argc, char ***argv)
       return;
 
    *argc = *argc + 1;
-   if (((*argv)[*argc] = calloc(ARGV_MAX_TOKEN_LEN, sizeof(char))) == NULL)
-      fatal("argv_finish_token: failed to calloc argv[i]");
+   (*argv)[*argc] = xcalloc(ARGV_MAX_TOKEN_LEN, sizeof(char));
 }
 
 /*
@@ -244,8 +240,7 @@ argv2str(int argc, char *argv[])
    }
 
    /* allocate result */
-   if ((result = calloc(len, sizeof(char))) == NULL)
-      fatal("argv2str: calloc failed");
+   result = xcalloc(len, sizeof(char));
 
    /* build result */
    off = 0;

@@ -39,6 +39,7 @@
 #include "str2argv.h"
 #include "uinterface.h"
 #include "vitunes.h"
+#include "xmalloc.h"
 #include "config.h"     /* NOTE: must be after vitunes.h */
 
 /*****************************************************************************
@@ -131,16 +132,11 @@ main(int argc, char *argv[])
    }
 
    /* build paths & other needed strings */
-   if (asprintf(&vitunes_dir, VITUNES_DIR_FMT, home) == -1)
-      fatal("main: asprintf failed");
-   if (asprintf(&conf_file, CONF_FILE_FMT, home) == -1)
-      fatal("main: asprintf failed");
-   if (asprintf(&db_file, DB_FILE_FMT, home) == -1)
-      fatal("main: asprintf failed");
-   if (asprintf(&playlist_dir, PLAYLIST_DIR_FMT, home) == -1)
-      fatal("main: asprintf failed");
-   if (asprintf(&player_backend, "%s", DEFAULT_PLAYER_BACKEND) == -1)
-      fatal("main: asprintf failed");
+   xasprintf(&vitunes_dir, VITUNES_DIR_FMT, home);
+   xasprintf(&conf_file, CONF_FILE_FMT, home);
+   xasprintf(&db_file, DB_FILE_FMT, home);
+   xasprintf(&playlist_dir, PLAYLIST_DIR_FMT, home);
+   xasprintf(&player_backend, "%s", DEFAULT_PLAYER_BACKEND);
 
    /* handle command-line switches & e-commands */
    handle_switches(argc, argv);
@@ -498,8 +494,7 @@ handle_switches(int argc, char *argv[])
 
          case 'd':
             free(db_file);
-            if ((db_file = strdup(optarg)) == NULL)
-               fatal("handle_switches: strdup db_file failed");
+            db_file = xstrdup(optarg);
             break;
 
          case 'e':
@@ -511,20 +506,17 @@ handle_switches(int argc, char *argv[])
 
          case 'f':
             free(conf_file);
-            if ((conf_file = strdup(optarg)) == NULL)
-               fatal("handle_switches: strdup conf_file failed");
+            conf_file = xstrdup(optarg);
             break;
 
          case 'm':
             free(player_backend);
-            if ((player_backend = strdup(optarg)) == NULL)
-               fatal("handle_switches: strdup player_backend failed");
+            player_backend = xstrdup(optarg);
             break;
 
          case 'p':
             free(playlist_dir);
-            if ((playlist_dir = strdup(optarg)) == NULL)
-               fatal("handle_switches: strdup playlist_dir failed");
+            playlist_dir = xstrdup(optarg);
             break;
 
          case 'v':

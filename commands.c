@@ -27,6 +27,7 @@
 #include "str2argv.h"
 #include "uinterface.h"
 #include "vitunes.h"
+#include "xmalloc.h"
 
 bool sorts_need_saving = false;
 
@@ -69,9 +70,8 @@ void
 toggleset_init()
 {
    const int max_size = 52;  /* since we only have registers a-z and A-Z */
-   if ((toggleset = calloc(max_size, sizeof(toggle_list*))) == NULL)
-      fatal("%s: calloc(3) failed", __FUNCTION__);
 
+   toggleset = xcalloc(max_size, sizeof(toggle_list*));
    toggleset_size = 0;
 }
 
@@ -89,29 +89,20 @@ toggleset_free()
 void
 toggle_list_add_command(toggle_list *t, char *cmd)
 {
-   char **new_cmds;
-   int    idx;
+   int idx;
 
    /* resize array */
    if (t->size == 0) {
-      if ((t->commands = malloc(sizeof(char*))) == NULL)
-         fatal("%s: malloc(3) failed", __FUNCTION__);
-
+      t->commands = xmalloc(sizeof(char*));
       idx = 0;
       t->size = 1;
    } else {
-      int new_size = (t->size + 1) * sizeof(char*);
-      if ((new_cmds = realloc(t->commands, new_size)) == NULL)
-         fatal("%s: realloc(3) failed", __FUNCTION__);
-
-      idx = t->size;
-      t->commands = new_cmds;
-      t->size++;
+      t->commands = xrealloc(t->commands, t->size + 1, sizeof(char *));
+      idx = t->size++;
    }
 
    /* add command */
-   if ((t->commands[idx] = strdup(cmd)) == NULL)
-      fatal("%s: strdup(3) failed", __FUNCTION__);
+   t->commands[idx] = xstrdup(cmd);
 }
 
 toggle_list*
@@ -121,9 +112,7 @@ toggle_list_create(int registr, int argc, char *argv[])
    char *cmd = NULL;
    int   i, j;
 
-   if ((t = malloc(sizeof(toggle_list))) == NULL)
-      fatal("%s: malloc(3) failed", __FUNCTION__);
-
+   t = xmalloc(sizeof(toggle_list));
    t->commands = NULL;
    t->registr  = registr;
    t->size     = 0;
@@ -317,8 +306,7 @@ cmd_write(int argc, char *argv[])
       bool  will_clobber;
 
       /* build filename for playlist */
-      if (asprintf(&filename, "%s/%s.playlist", mdb.playlist_dir, argv[1]) == -1)
-         fatal("cmd_write: asprintf failed");
+      xasprintf(&filename, "%s/%s.playlist", mdb.playlist_dir, argv[1]);
 
       /* check to see if playlist with that name already exists */
       will_clobber = false;
@@ -420,16 +408,14 @@ cmd_new(int argc, char *argv[])
       }
 
       name = argv[1];
-      if (asprintf(&filename, "%s/%s.playlist", mdb.playlist_dir, name) == -1)
-         fatal("cmd_new: asprintf failed");
+      xasprintf(&filename, "%s/%s.playlist", mdb.playlist_dir, name);
    }
 
    /* create & setup playlist */
    p = playlist_new();
    p->needs_saving = true;
    p->filename = filename;
-   if ((p->name = strdup(name)) == NULL)
-      fatal("cmd_new: strdup(3) failed");
+   p->name = xstrdup(name);
 
    /* add playlist to media library and update ui */
    medialib_playlist_add(p);
@@ -735,11 +721,8 @@ cmd_reload(int argc, char *argv[])
 
    /* reload database or config file */
    if (strcasecmp(argv[1], "db") == 0) {
-
-      char *db_file = strdup(mdb.db_file);
-      char *playlist_dir = strdup(mdb.playlist_dir);
-      if (db_file == NULL || playlist_dir == NULL)
-         fatal("cmd_reload: strdup(3) failed");
+      char *db_file = xstrdup(mdb.db_file);
+      char *playlist_dir = xstrdup(mdb.playlist_dir);
 
       /* stop playback TODO investigate a nice way around this */
       player_stop();
@@ -992,8 +975,7 @@ user_getstr(const char *prompt, char **response)
    wrefresh(ui.command);
 
    /* allocate input space and clear */
-   if ((input = calloc(MAX_INPUT_SIZE, sizeof(char))) == NULL)
-      fatal("user_getstr: calloc(3) failed for input string");
+   input = xcalloc(MAX_INPUT_SIZE, sizeof(char));
 
    /* start getting input */
    ret = 0;
@@ -1064,9 +1046,7 @@ user_getstr(const char *prompt, char **response)
       input[pos] = '\0';
 
    /* trim the fat */
-   if ((*response = calloc(strlen(input) + 1, sizeof(char))) == NULL)
-      fatal("user_getstr: calloc(3) failed for result");
-
+   *response = xcalloc(strlen(input) + 1, sizeof(char));
    snprintf(*response, strlen(input) + 1, "%s", input);
 
 end:

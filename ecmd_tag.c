@@ -26,6 +26,7 @@
 #include "ecmd.h"
 #include "error.h"
 #include "meta_info.h"
+#include "xmalloc.h"
 
 static char         *artist;
 static char         *album;
@@ -45,8 +46,7 @@ ecmd_tag_parse(int argc, char **argv)
       switch (ch) {
          case 'A':
             free(album);
-            if ((album = strdup(optarg)) == NULL)
-               fatal("%s: strdup ALBUM failed", argv[0]);
+            album = xstrdup(optarg);
             break;
           case 'T':
             track = (unsigned int) strtonum(optarg, 0, INT_MAX, &errstr);
@@ -55,23 +55,19 @@ ecmd_tag_parse(int argc, char **argv)
             break;
          case 'a':
             free(artist);
-            if ((artist = strdup(optarg)) == NULL)
-               fatal("%s: strdup ARTIST failed", argv[0]);
+            artist = xstrdup(optarg);
             break;
          case 'c':
             free(comment);
-            if ((comment = strdup(optarg)) == NULL)
-               fatal("%s: strdup COMMENT failed", argv[0]);
+            comment = xstrdup(optarg);
             break;
          case 'g':
             free(genre);
-            if ((genre = strdup(optarg)) == NULL)
-               fatal("%s: strdup GENRE failed", argv[0]);
+            genre = xstrdup(optarg);
             break;
          case 't':
             free(title);
-            if ((title = strdup(optarg)) == NULL)
-               fatal("%s: strdup TITLE failed", argv[0]);
+            title = xstrdup(optarg);
             break;
          case 'y':
             year = (unsigned int) strtonum(optarg, 0, INT_MAX, &errstr);

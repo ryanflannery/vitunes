@@ -22,6 +22,7 @@
 #include "ecmd.h"
 #include "error.h"
 #include "vitunes.h"
+#include "xmalloc.h"
 
 static void
 ecmd_help_exec(UNUSED int argc, char **argv)
@@ -60,8 +61,7 @@ The list of available commands are:\n\n\
    }
 
    man_args[0] = "man";
-   if (asprintf(&man_args[1], "vitunes-%s", argv[0]) == -1)
-      fatal("ecmd_help: asprintf failed");
+   xasprintf(&man_args[1], "vitunes-%s", argv[0]);
    man_args[2] = NULL;
 
    execvp("man", man_args);

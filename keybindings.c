@@ -29,6 +29,7 @@
 #include "str2argv.h"
 #include "uinterface.h"
 #include "vitunes.h"
+#include "xmalloc.h"
 
 /* This table maps KeyActions to their string representations */
 typedef struct {
@@ -268,15 +269,8 @@ size_t KeyBindingsCapacity;
 void
 kb_increase_capacity()
 {
-   KeyBinding  *new_buffer;
-   size_t       nbytes;
-
    KeyBindingsCapacity += KEYBINDINGS_CHUNK_SIZE;
-   nbytes = KeyBindingsCapacity * sizeof(KeyBinding);
-   if ((new_buffer = realloc(KeyBindings, nbytes)) == NULL)
-      fatal("%s: failed to realloc(3) keybindings", __FUNCTION__);
-
-   KeyBindings = new_buffer;
+   KeyBindings = xrealloc(KeyBindings, KeyBindingsCapacity, sizeof(KeyBinding));
 }
 
 
@@ -1041,8 +1035,7 @@ kba_cut(KbaArgs a UNUSED)
          return;
       }
 
-      if (asprintf(&warning, "Are you sure you want to delete '%s'?", p->name) == -1)
-         fatal("cut: asprintf failed");
+      xasprintf(&warning, "Are you sure you want to delete '%s'?", p->name);
 
       /* make sure user wants this */
       if (user_get_yesno(warning, &response) != 0) {
@@ -1670,10 +1663,7 @@ yank_buffer _yank_buffer;
 void
 ybuffer_init()
 {
-   _yank_buffer.files = calloc(YANK_BUFFER_CHUNK_SIZE, sizeof(meta_info*));
-   if (_yank_buffer.files == NULL)
-      fatal("ybuffer_init: calloc(3) failed");
-
+   _yank_buffer.files = xcalloc(YANK_BUFFER_CHUNK_SIZE, sizeof(meta_info*));
    _yank_buffer.capacity = YANK_BUFFER_CHUNK_SIZE;
    _yank_buffer.nfiles = 0;
 }
@@ -1695,16 +1685,11 @@ ybuffer_free()
 void
 ybuffer_add(meta_info *f)
 {
-   meta_info **new_buff;
-
    /* do we need to realloc()? */
    if (_yank_buffer.nfiles == _yank_buffer.capacity) {
       _yank_buffer.capacity += YANK_BUFFER_CHUNK_SIZE;
-      int new_capacity = _yank_buffer.capacity * sizeof(meta_info*);
-      if ((new_buff = realloc(_yank_buffer.files, new_capacity)) == NULL)
-         fatal("ybuffer_add: realloc(3) failed [%i]", new_capacity);
-
-      _yank_buffer.files = new_buff;
+      _yank_buffer.files = xrealloc(_yank_buffer.files, _yank_buffer.capacity,
+         sizeof(meta_info *));
    }
 
    /* add the file */
@@ -1746,8 +1731,7 @@ match_command_name(const char *input, const char *cmd)
 
    /* check for '!' weirdness and abbreviations */
 
-   if ((icopy = strdup(input)) == NULL)
-      fatal("match_command_name: strdup(3) failed");
+   icopy = xstrdup(input);
 
    /* remove '!' from input, if present */
    if (strstr(icopy, "!") != NULL)

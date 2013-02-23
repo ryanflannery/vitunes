@@ -33,6 +33,7 @@
 #include "mplayer.h"
 #include "mplayer_conf.h"
 #include "player_utils.h"
+#include "xmalloc.h"
 
 /* callback functions */
 void (*mplayer_callback_playnext)(void) = NULL;
@@ -195,9 +196,7 @@ mplayer_play(const char *file)
    static const char *cmd_fmt = "\nloadfile \"%s\" 0\nget_property time_pos\n";
    char *cmd;
 
-   if (asprintf(&cmd, cmd_fmt, file) == -1)
-      err(1, "%s: asprintf failed", __FUNCTION__);
-
+   xasprintf(&cmd, cmd_fmt, file);
    mplayer_send_cmd(cmd);
    free(cmd);
 
@@ -239,9 +238,7 @@ mplayer_seek(int seconds)
    if (!mplayer_state.playing)
       return;
 
-   if (asprintf(&cmd, cmd_fmt, seconds) == -1)
-      err(1, "%s: asprintf failed", __FUNCTION__);
-
+   xasprintf(&cmd, cmd_fmt, seconds);
    mplayer_send_cmd(cmd);
    free(cmd);
 
@@ -267,9 +264,7 @@ mplayer_volume_step(float percent)
       return;
    }
 
-   if (asprintf(&cmd, cmd_fmt, percent) == -1)
-      err(1, "%s: asprintf failed", __FUNCTION__);
-
+   xasprintf(&cmd, cmd_fmt, percent);
    mplayer_send_cmd(cmd);
    free(cmd);
 
@@ -288,10 +283,7 @@ mplayer_volume_set(float percent)
    if (percent > 100) percent = 100;
    if (percent < 0)   percent = 0;
 
-   if (asprintf(&cmd, cmd_fmt, percent) == -1)
-      err(1, "%s: asprintf failed", __FUNCTION__);
-
-
+   xasprintf(&cmd, cmd_fmt, percent);
    mplayer_send_cmd(cmd);
    free(cmd);
 

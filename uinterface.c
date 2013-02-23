@@ -30,6 +30,7 @@
 #include "enums.h"
 #include "error.h"
 #include "uinterface.h"
+#include "xmalloc.h"
 
 /* the global user interface object */
 uinterface ui;
@@ -41,10 +42,9 @@ uinterface ui;
 swindow*
 swindow_new(int h, int w, int y, int x)
 {
-   swindow *swin = malloc(sizeof(swindow));
-   if (swin == NULL)
-      fatal("swindow_new failed to allocate swin");
-
+   swindow *swin;
+   
+   swin = xmalloc(sizeof(swindow));
    swin->w        = w;
    swin->h        = h;
    swin->voffset  = 0;
