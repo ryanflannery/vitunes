@@ -559,6 +559,7 @@ kba_scroll_page(KbaArgs a)
       break;
    default:
       fatalx("scroll_page: invalid amount");
+      return;
    }
    swindow_scroll(ui.active, a.direction, diff);
 
@@ -761,6 +762,7 @@ kba_jumpto_file(KbaArgs a)
 
          default:
             fatalx("jumpto_file: NUMBER type with no num!");
+            return;
       }
 
       break;
@@ -775,6 +777,7 @@ kba_jumpto_file(KbaArgs a)
 
    default:
       fatalx("jumpto_file: invalid scale");
+      return;
    }
 
    /* jump */
@@ -886,6 +889,7 @@ kba_search_find(KbaArgs a)
 
       default:
          fatalx("search_find: invalid direction");
+         return;
    }
 
    /* start looking from current row */
@@ -1518,6 +1522,7 @@ kba_seek(KbaArgs a)
       break;
    default:
       fatalx("seek_playback: invalid scale");
+      return;
    }
 
    /* adjust for direction */
@@ -1530,6 +1535,7 @@ kba_seek(KbaArgs a)
       break;
    default:
       fatalx("seek_playback: invalid direction");
+      return;
    }
 
    /* is there a multiplier? */
