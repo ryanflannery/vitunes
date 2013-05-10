@@ -409,17 +409,10 @@ setup_timer()
 void
 load_config()
 {
-   const char *errmsg = NULL;
    size_t  length, linenum;
    FILE   *fin;
    char   *line;
    char   *copy;
-   char  **argv;
-   int     argc;
-   bool    found;
-   int     found_idx = 0;
-   int     num_matches;
-   int     i, ret;
 
    if ((fin = fopen(conf_file, "r")) == NULL)
       return;
@@ -443,33 +436,7 @@ load_config()
          continue;
       }
 
-      /* parse line into argc/argv */
-      if (str2argv(copy, &argc, &argv, &errmsg) != 0)
-         fatalx("%s line %zd: parse error: %s", conf_file, linenum, errmsg);
-
-      /* run command */
-      found = false;
-      num_matches = 0;
-      for (i = 0; i < CommandPathSize; i++) {
-         if (match_command_name(argv[0], CommandPath[i].name)) {
-            found = true;
-            found_idx = i;
-            num_matches++;
-         }
-      }
-
-      if (found && num_matches == 1) {
-         if ((ret = (CommandPath[found_idx].func)(argc, argv)) != 0)
-            fatalx("%s line %zd: error with command '%s' [%i]",
-               conf_file, linenum, argv[0], ret);
-      } else if (num_matches > 1)
-         fatalx("%s line %zd: ambiguous abbreviation '%s'",
-            conf_file, linenum, argv[0]);
-      else
-         fatalx("%s line %zd: unknown command '%s'",
-            conf_file, linenum, argv[0]);
-
-      argv_free(&argc, &argv);
+      cmd_execute(line);
       free(line);
    }
 
