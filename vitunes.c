@@ -420,16 +420,8 @@ load_config()
    if ((fin = fopen(conf_file, "r")) == NULL)
       return;
 
-   while (!feof(fin)) {
-
-      /* get next line */
-      if ((line = fparseln(fin, &length, &conf_linenum, NULL, 0)) == NULL) {
-         if (ferror(fin))
-            fatal("error reading config file '%s'", conf_file);
-         else
-            break;
-      }
-
+   /* get next line */
+   while ((line = fparseln(fin, &length, &conf_linenum, NULL, 0)) != NULL) {
       /* skip whitespace */
       copy = line;
       copy += strspn(copy, " \t\n");
@@ -441,6 +433,8 @@ load_config()
       cmd_execute(line);
       free(line);
    }
+   if (ferror(fin))
+      fatal("error reading config file '%s'", conf_file);
 
    fclose(fin);
 }
