@@ -88,6 +88,9 @@ char *player_backend;
 /* program name with directories removed */
 char *progname;
 
+/* configuration file line number */
+size_t conf_linenum;
+
 
 /*****************************************************************************
  * local functions
@@ -409,7 +412,7 @@ setup_timer()
 void
 load_config()
 {
-   size_t  length, linenum;
+   size_t  length;
    FILE   *fin;
    char   *line;
    char   *copy;
@@ -417,11 +420,10 @@ load_config()
    if ((fin = fopen(conf_file, "r")) == NULL)
       return;
 
-   linenum = 0;
    while (!feof(fin)) {
 
       /* get next line */
-      if ((line = fparseln(fin, &length, &linenum, NULL, 0)) == NULL) {
+      if ((line = fparseln(fin, &length, &conf_linenum, NULL, 0)) == NULL) {
          if (ferror(fin))
             fatal("error reading config file '%s'", conf_file);
          else

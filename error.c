@@ -66,7 +66,11 @@ error_paint(bool errnoflag, bool iserr, const char *fmt, va_list ap)
 static void
 error_file(FILE *fp, bool errnoflag, const char *fmt, va_list ap)
 {
-   fprintf(fp, "%s: ", progname);
+   fprintf(fp, "%s:", progname);
+   if (error_type == ERROR_CFG)
+      fprintf(fp, " %s line %zd:", conf_file, conf_linenum);
+
+   fputs(" ", fp);
    vfprintf(fp, fmt, ap);
 
    if (errnoflag)

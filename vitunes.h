@@ -34,10 +34,12 @@
 
 /* configurable paths */
 extern char *vitunes_dir;
+extern char *conf_file;
 extern char *playlist_dir;
 extern char *db_file;
 
 extern char *progname;
+size_t       conf_linenum;
 
 /* record keeping  */
 extern playlist   *viewing_playlist;
