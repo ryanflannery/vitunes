@@ -434,7 +434,7 @@ load_config()
       free(line);
    }
    if (ferror(fin))
-      fatal("error reading config file '%s'", conf_file);
+      fatal("error reading config file");
 
    fclose(fin);
 }
