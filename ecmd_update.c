@@ -64,6 +64,7 @@ ecmd_update_exec(UNUSED int argc, UNUSED char **argv)
 const struct ecmd ecmd_update = {
    "update", NULL,
    "[-fs]",
+   "fs",
    0, 0,
    ecmd_update_parse,
    NULL,

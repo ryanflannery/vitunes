@@ -146,6 +146,7 @@ const struct ecmd ecmd_tag = {
    "tag", NULL,
    "[-A album] [-T track] [-a artist] [-c comment] [-g genre] [-t title]\n\
    \t[-y year] path [...]",
+   "A:T:a:c:g:t:y:",
    1, -1,
    ecmd_tag_parse,
    ecmd_tag_check,
