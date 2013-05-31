@@ -41,4 +41,9 @@ void argv_free(int *argc, char ***argv);
  */
 char *argv2str(int argc, char *argv[]);
 
+/*
+ * Duplicates the given argc/argv set of parameters.
+ */
+char **argv_copy(int argc, char **argv);
+
 #endif

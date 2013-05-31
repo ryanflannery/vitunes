@@ -59,6 +59,20 @@ argv_addch(int argc, char **argv, int c)
    argv[argc][n] = c;
 }
 
+char **
+argv_copy(int argc, char **argv)
+{
+   char  **new_argv;
+   int     i;
+
+   new_argv = xcalloc(argc + 1, sizeof *new_argv);
+   for (i = 0; i < argc; i++)
+      new_argv[i] = xstrdup(argv[i]);
+   new_argv[i] = NULL;
+
+   return new_argv;
+}
+
 /* complete the current entry in the argc/argv and setup the next one */
 void
 argv_finish_token(int *argc, char ***argv)
