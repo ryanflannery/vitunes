@@ -21,7 +21,7 @@
 struct ecmd {
    const char  *name;
    const char  *alias;      /* may be NULL */
-   const char  *usage;      /* may be NULL */
+   const char  *usage;      /* may be an empty string */
    const char  *optstring;
    int          args_lower; /* minimum number of arguments */
    int          args_upper; /* negative number means no limit */

@@ -92,7 +92,7 @@ ecmd_exec(const char *ecmd, int argc, char **argv)
    /* parse e-command arguments */
    if ((args = ecmd_parse(ecmdtab[i], argc, argv)) == NULL) {
       fprintf(stderr, "usage: %s -e %s %s\n", progname, ecmdtab[i]->name,
-          ecmdtab[i]->usage != NULL ? ecmdtab[i]->usage : "");
+          ecmdtab[i]->usage);
       return 1;
    }
 
