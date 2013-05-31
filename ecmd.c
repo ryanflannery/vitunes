@@ -20,23 +20,26 @@
 #include <unistd.h>
 
 #include "ecmd.h"
+#include "ecmd_args.h"
 #include "error.h"
 #include "vitunes.h"
 
-static int
-ecmd_parse(const struct ecmd *ecmd, int argc, char ***argv)
+static struct ecmd_args *
+ecmd_parse(const struct ecmd *ecmd, int argc, char **argv)
 {
-   /* reset getopt(3) variables */
-   optind = 0;
-   optreset = 1;
+   struct ecmd_args  *args;
+
+   /* generically parse command-line options */
+   if ((args = ecmd_args_parse(ecmd->optstring, argc, argv)) == NULL)
+      return NULL;
 
    /* parse command line and if valid, skip parsed arguments */
    if (ecmd->parse != NULL) {
       /* parse error */
-      if (ecmd->parse(argc, *argv) == -1)
-         return -1;
+      if (ecmd->parse(argc, argv) == -1)
+         return NULL;
       if (ecmd->check != NULL && ecmd->check() == -1)
-         return -1;
+         return NULL;
       argc -= optind;
       *argv += optind;
    } else {
@@ -47,12 +50,11 @@ ecmd_parse(const struct ecmd *ecmd, int argc, char ***argv)
  
    /* invalid number of arguments */
    if (argc < ecmd->args_lower)
-      return -1;
+      return NULL;
    if (ecmd->args_upper >= 0 && argc > ecmd->args_upper)
-      return -1;
+      return NULL;
 
-   /* return updated (no name) number of arguments */
-   return argc;
+   return args;
 }
 
 int
@@ -70,8 +72,9 @@ ecmd_exec(const char *ecmd, int argc, char **argv)
       &ecmd_tag,
       &ecmd_update,
    };
-   static const int ecmdtab_size = sizeof ecmdtab / sizeof ecmdtab[0];
-   int              i;
+   static const int  ecmdtab_size = sizeof ecmdtab / sizeof ecmdtab[0];
+   int               i;
+   struct ecmd_args *args;
 
    /* search for e-command (first by name and then by alias) */
    for (i = 0; i < ecmdtab_size; i++) {
@@ -87,7 +90,7 @@ ecmd_exec(const char *ecmd, int argc, char **argv)
    }
 
    /* parse e-command arguments */
-   if ((argc = ecmd_parse(ecmdtab[i], argc, &argv)) == -1) {
+   if ((args = ecmd_parse(ecmdtab[i], argc, argv)) == NULL) {
       fprintf(stderr, "usage: %s -e %s %s\n", progname, ecmdtab[i]->name,
           ecmdtab[i]->usage != NULL ? ecmdtab[i]->usage : "");
       return 1;

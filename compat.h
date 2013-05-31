@@ -38,6 +38,7 @@
 
 /* OpenBSD has fparseln(3), but it must be included thusly */
 #if defined(__OpenBSD__)
+#  include <sys/tree.h>
 #  include <stdio.h>
 #  include <util.h>
 #  include <libgen.h>
