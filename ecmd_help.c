@@ -25,12 +25,12 @@
 #include "xmalloc.h"
 
 static void
-ecmd_help_exec(UNUSED int argc, char **argv)
+ecmd_help_exec(struct ecmd_args *args)
 {
    char *man_args[3];
 
    /* no help requested for a specific command, give a list of all e-cmds */
-   if (argc == 0) {
+   if (args->argc == 0) {
       printf("\
 The following is a list of e-commands supported by vitunes.\n\
 Each command is executed by doing:\n\
@@ -55,13 +55,13 @@ The list of available commands are:\n\n\
    }
 
    /* if reach here, help fora specific command was requested */
-   if (strcmp(argv[0], "help") == 0) {
+   if (strcmp(args->argv[0], "help") == 0) {
       printf("You're a damn fool if you need help with help.\n");
       return;
    }
 
    man_args[0] = "man";
-   xasprintf(&man_args[1], "vitunes-%s", argv[0]);
+   xasprintf(&man_args[1], "vitunes-%s", args->argv[0]);
    man_args[2] = NULL;
 
    execvp("man", man_args);

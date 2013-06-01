@@ -35,6 +35,7 @@ struct ecmd_args {
 
 struct ecmd_args;
 void               ecmd_args_add(struct ecmd_args *, int, const char *);
+int                ecmd_args_empty(struct ecmd_args *);
 const char        *ecmd_args_get(struct ecmd_args *, int);
 struct ecmd_args  *ecmd_args_parse(const char *, int, char **);
 

@@ -47,7 +47,7 @@ ecmd_flush_parse(int argc, char **argv)
 }
 
 static void
-ecmd_flush_exec(UNUSED int argc, UNUSED char **argv)
+ecmd_flush_exec(UNUSED struct ecmd_args *args)
 {
    medialib_load(db_file, playlist_dir);
    medialib_db_flush(stdout, time_format);

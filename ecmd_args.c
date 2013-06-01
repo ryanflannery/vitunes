@@ -66,6 +66,16 @@ ecmd_args_add(struct ecmd_args *args, int flag, const char *value)
    RB_INSERT(ecmd_args_tree, &args->tree, entry);
 }
 
+/*
+ * Checks if the arguments tree is empty. Useful for those e-commands that need
+ * at least one flag.
+ */
+int
+ecmd_args_empty(struct ecmd_args *args)
+{
+   return RB_EMPTY(&args->tree);
+}
+
 /* Get e-command argument value. */
 const char *
 ecmd_args_get(struct ecmd_args *args, int flag)

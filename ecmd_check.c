@@ -131,7 +131,7 @@ ecmd_check_parse(int argc, char **argv)
 }
 
 static int
-ecmd_check_check(void)
+ecmd_check_check(struct ecmd_args *args)
 {
    if (!show_raw && !show_sanitized && !show_database)
       return -1;
@@ -139,16 +139,16 @@ ecmd_check_check(void)
 }
 
 static void
-ecmd_check_exec(int argc, char **argv)
+ecmd_check_exec(struct ecmd_args *args)
 {
    int i;
 
    /* scan through files... */
-   for (i = 0; i < argc; i++) {
-      printf("Checking: '%s'\n", argv[i]);
-      ecmd_check_show_raw(argv[i]);
-      ecmd_check_show_sanitized(argv[i]);
-      ecmd_check_show_db(argv[i]);
+   for (i = 0; i < args->argc; i++) {
+      printf("Checking: '%s'\n", args->argv[i]);
+      ecmd_check_show_raw(args->argv[i]);
+      ecmd_check_show_sanitized(args->argv[i]);
+      ecmd_check_show_db(args->argv[i]);
    }
 }
 

@@ -18,6 +18,8 @@
 #ifndef ECMD_H
 #define ECMD_H
 
+#include "ecmd_args.h"
+
 struct ecmd {
    const char  *name;
    const char  *alias;      /* may be NULL */
@@ -25,9 +27,9 @@ struct ecmd {
    const char  *optstring;
    int          args_lower; /* minimum number of arguments */
    int          args_upper; /* negative number means no limit */
-   int        (*parse)(int argc, char **argv); /* may be NULL */
-   int        (*check)(void);                  /* may be NULL */
-   void       (*exec)(int argc, char **argv);
+   int        (*parse)(int argc, char **argv);  /* may be NULL */
+   int        (*check)(struct ecmd_args *args); /* may be NULL */
+   void       (*exec)(struct ecmd_args *args);
 };
 
 extern const struct ecmd ecmd_add;

@@ -49,7 +49,7 @@ ecmd_rmfile_parse(int argc, char **argv)
 }
 
 static void
-ecmd_rmfile_exec(UNUSED int argc, char **argv)
+ecmd_rmfile_exec(struct ecmd_args *args)
 {
    char  input[255];
    bool  found;
@@ -61,7 +61,7 @@ ecmd_rmfile_exec(UNUSED int argc, char **argv)
    found = false;
    found_idx = -1;
    for (i = 0; i < mdb.library->nfiles && !found; i++) {
-      if (strcmp(argv[0], mdb.library->files[i]->filename) == 0) {
+      if (strcmp(args->argv[0], mdb.library->files[i]->filename) == 0) {
          found = true;
          found_idx = i;
       }
@@ -70,13 +70,13 @@ ecmd_rmfile_exec(UNUSED int argc, char **argv)
    /* if not found then error */
    if (!found) {
       i = (forced ? 0 : 1);
-      infox("%s: No such file or URL", argv[0]);
+      infox("%s: No such file or URL", args->argv[0]);
       exit(i);
    }
 
    /* if not forced, prompt user if they are sure */
    if (!forced) {
-      printf("Are you sure you want to delete '%s'? [y/n] ", argv[0]);
+      printf("Are you sure you want to delete '%s'? [y/n] ", args->argv[0]);
       if (fgets(input, sizeof(input), stdin) == NULL
       || (strcasecmp(input, "yes\n") != 0 && strcasecmp(input, "y\n") != 0))
          fatalx("Operation canceled.  Database unchanged.");

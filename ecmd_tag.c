@@ -85,7 +85,7 @@ ecmd_tag_parse(int argc, char **argv)
 }
 
 static int
-ecmd_tag_check(void)
+ecmd_tag_check(struct ecmd_args *args)
 {
    if (artist == NULL && album == NULL && title == NULL && genre == NULL
    &&  track == 0 && year == 0 && comment == NULL)
@@ -95,7 +95,7 @@ ecmd_tag_check(void)
 }
 
 static void
-ecmd_tag_exec(int argc, char **argv)
+ecmd_tag_exec(struct ecmd_args *args)
 {
    TagLib_File *tag_file;
    TagLib_Tag  *tag;
@@ -113,12 +113,12 @@ ecmd_tag_exec(int argc, char **argv)
 
    /* tag files ... */
    taglib_set_strings_unicode(false);
-   for (i = 0; i < argc; i++) {
-      printf("tagging: '%s'\n", argv[i]);
+   for (i = 0; i < args->argc; i++) {
+      printf("tagging: '%s'\n", args->argv[i]);
 
       /* extract taglib stuff */
-      if ((tag_file = taglib_file_new(argv[i])) == NULL) {
-         infox("TagLib: failed to open file '%s': skipping.", argv[i]);
+      if ((tag_file = taglib_file_new(args->argv[i])) == NULL) {
+         infox("TagLib: failed to open file '%s': skipping.", args->argv[i]);
          infox("  => Causes: format not supported by TagLib or format doesn't support tags");
          continue;
       }

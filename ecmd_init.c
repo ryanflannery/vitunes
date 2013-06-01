@@ -22,7 +22,7 @@
 #include "vitunes.h"
 
 static void
-ecmd_init_exec(UNUSED int argc, UNUSED char **argv)
+ecmd_init_exec(UNUSED struct ecmd_args *args)
 {
    printf("Creating all necessary files and directories for vitunes...\n");
    medialib_setup_files(vitunes_dir, db_file, playlist_dir);

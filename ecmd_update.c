@@ -50,7 +50,7 @@ ecmd_update_parse(int argc, char **argv)
 }
 
 static void
-ecmd_update_exec(UNUSED int argc, UNUSED char **argv)
+ecmd_update_exec(UNUSED struct ecmd_args *args)
 {
    printf("Loading existing database...\n");
    medialib_load(db_file, playlist_dir);

@@ -20,7 +20,6 @@
 #include <unistd.h>
 
 #include "ecmd.h"
-#include "ecmd_args.h"
 #include "error.h"
 #include "vitunes.h"
 
@@ -32,7 +31,7 @@ ecmd_parse(const struct ecmd *ecmd, int argc, char **argv)
    /* generically parse command-line options */
    if ((args = ecmd_args_parse(ecmd->optstring, argc, argv)) == NULL)
       return NULL;
-   if (ecmd->check != NULL && ecmd->check() == -1)
+   if (ecmd->check != NULL && ecmd->check(args) == -1)
       return NULL;
 
    /* invalid number of arguments */
@@ -84,6 +83,6 @@ ecmd_exec(const char *ecmd, int argc, char **argv)
    }
 
    /* finally execute it */
-   ecmdtab[i]->exec(argc, argv);
+   ecmdtab[i]->exec(args);
    return 0;
 }

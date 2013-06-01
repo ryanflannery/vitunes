@@ -27,7 +27,7 @@
 #include "xmalloc.h"
 
 static void
-ecmd_addurl_exec(UNUSED int argc, char **argv)
+ecmd_addurl_exec(struct ecmd_args *args)
 {
    meta_info   *m;
    bool         found;
@@ -38,7 +38,7 @@ ecmd_addurl_exec(UNUSED int argc, char **argv)
    /* start new record, set filename */
    m = mi_new();
    m->is_url = true;
-   m->filename = xstrdup(argv[0]);
+   m->filename = xstrdup(args->argv[0]);
 
    /* get fields from user */
    for (field = 0; field < MI_NUM_CINFO; field++) {
@@ -70,7 +70,8 @@ ecmd_addurl_exec(UNUSED int argc, char **argv)
    }
 
    if (found) {
-      printf("Warning: file/URL '%s' already in the database.\n", argv[0]);
+      printf("Warning: file/URL '%s' already in the database.\n",
+          args->argv[0]);
       printf("Do you want to replace the existing record? [y/n] ");
 
       if (fgets(input, sizeof(input), stdin) == NULL
