@@ -66,6 +66,17 @@ ecmd_args_add(struct ecmd_args *args, int flag, const char *value)
    RB_INSERT(ecmd_args_tree, &args->tree, entry);
 }
 
+/* Get e-command argument value. */
+const char *
+ecmd_args_get(struct ecmd_args *args, int flag)
+{
+   struct ecmd_args_entry  *entry;
+
+   if ((entry = ecmd_args_find(args, flag)) == NULL)
+      return NULL;
+   return entry->value;
+}
+
 /*
  * Generically parse function that adds the flags and, if applicable, its
  * values to the arguments tree. It initialises the arguments structure, which

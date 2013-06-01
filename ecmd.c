@@ -32,26 +32,13 @@ ecmd_parse(const struct ecmd *ecmd, int argc, char **argv)
    /* generically parse command-line options */
    if ((args = ecmd_args_parse(ecmd->optstring, argc, argv)) == NULL)
       return NULL;
-
-   /* parse command line and if valid, skip parsed arguments */
-   if (ecmd->parse != NULL) {
-      /* parse error */
-      if (ecmd->parse(argc, argv) == -1)
-         return NULL;
-      if (ecmd->check != NULL && ecmd->check() == -1)
-         return NULL;
-      argc -= optind;
-      *argv += optind;
-   } else {
-      /* no parse function; skip only its name */
-      argc--;
-      (*argv)++;
-   }
- 
-   /* invalid number of arguments */
-   if (argc < ecmd->args_lower)
+   if (ecmd->check != NULL && ecmd->check() == -1)
       return NULL;
-   if (ecmd->args_upper >= 0 && argc > ecmd->args_upper)
+
+   /* invalid number of arguments */
+   if (args->argc < ecmd->args_lower)
+      return NULL;
+   if (ecmd->args_upper >= 0 && args->argc > ecmd->args_upper)
       return NULL;
 
    return args;
