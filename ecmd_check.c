@@ -133,9 +133,7 @@ ecmd_check_parse(int argc, char **argv)
 static int
 ecmd_check_check(struct ecmd_args *args)
 {
-   if (!show_raw && !show_sanitized && !show_database)
-      return -1;
-   return 0;
+   return ecmd_args_empty(args) == 0 ? 0 : -1;
 }
 
 static void

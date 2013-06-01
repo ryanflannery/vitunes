@@ -87,11 +87,7 @@ ecmd_tag_parse(int argc, char **argv)
 static int
 ecmd_tag_check(struct ecmd_args *args)
 {
-   if (artist == NULL && album == NULL && title == NULL && genre == NULL
-   &&  track == 0 && year == 0 && comment == NULL)
-      return -1;
-
-   return 0;
+   return ecmd_args_empty(args) == 0 ? 0 : -1;
 }
 
 static void

@@ -17,6 +17,8 @@
 #ifndef ECMD_ARGS
 #define ECMD_ARGS
 
+#include <stdbool.h>
+
 #include "compat.h"
 
 /* E-command arguments structure. */
@@ -35,8 +37,10 @@ struct ecmd_args {
 
 struct ecmd_args;
 void               ecmd_args_add(struct ecmd_args *, int, const char *);
+bool               ecmd_args_bool(struct ecmd_args *, int);
 int                ecmd_args_empty(struct ecmd_args *);
 const char        *ecmd_args_get(struct ecmd_args *, int);
 struct ecmd_args  *ecmd_args_parse(const char *, int, char **);
+int                ecmd_args_strtonum(struct ecmd_args *, int, int, int);
 
 #endif

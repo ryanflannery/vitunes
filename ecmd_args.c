@@ -18,6 +18,7 @@
 #include <unistd.h>
 
 #include "ecmd_args.h"
+#include "error.h"
 #include "str2argv.h"
 #include "xmalloc.h"
 
@@ -64,6 +65,15 @@ ecmd_args_add(struct ecmd_args *args, int flag, const char *value)
    if (value != NULL)
       entry->value = xstrdup(value);
    RB_INSERT(ecmd_args_tree, &args->tree, entry);
+}
+
+/* Checks if the given flag was set an either return true or false. */
+bool
+ecmd_args_bool(struct ecmd_args *args, int flag)
+{
+   if (ecmd_args_find(args, flag) == NULL)
+      return false;
+   return true;
 }
 
 /*
@@ -116,4 +126,24 @@ ecmd_args_parse(const char *optstring, int argc, char **argv)
    args->argv = argv_copy(argc, argv);
 
    return args;
+}
+
+/*
+ * Convert the argument value to an integer. Since, no e-command (currently)
+ * expects a negative value, returns -1 if the flag wasn't set.
+ */
+int
+ecmd_args_strtonum(struct ecmd_args *args, int flag, int minval, int maxval)
+{
+   const char  *errstr, *value;
+   int          n;
+
+   if ((value = ecmd_args_get(args, flag)) == NULL)
+      return -1;
+
+   n = strtonum(value, minval, maxval, &errstr);
+   if (errstr != NULL)
+      fatalx("number %s", errstr);
+
+   return n;
 }
