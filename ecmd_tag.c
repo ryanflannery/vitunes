@@ -17,72 +17,12 @@
 
 #include <limits.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-
 #include <tag_c.h>
 
 #include "ecmd.h"
 #include "error.h"
 #include "meta_info.h"
 #include "xmalloc.h"
-
-static char         *artist;
-static char         *album;
-static char         *title;
-static char         *genre;
-static char         *comment;
-static unsigned int  track;
-static unsigned int  year;
-
-static int
-ecmd_tag_parse(int argc, char **argv)
-{
-   const char *errstr;
-   int         ch;
-
-   while ((ch = getopt(argc, argv, "A:T:a:c:g:t:y:")) != -1) {
-      switch (ch) {
-         case 'A':
-            free(album);
-            album = xstrdup(optarg);
-            break;
-          case 'T':
-            track = (unsigned int) strtonum(optarg, 0, INT_MAX, &errstr);
-            if (errstr != NULL)
-               fatalx("invalid track '%s': %s", optarg, errstr);
-            break;
-         case 'a':
-            free(artist);
-            artist = xstrdup(optarg);
-            break;
-         case 'c':
-            free(comment);
-            comment = xstrdup(optarg);
-            break;
-         case 'g':
-            free(genre);
-            genre = xstrdup(optarg);
-            break;
-         case 't':
-            free(title);
-            title = xstrdup(optarg);
-            break;
-         case 'y':
-            year = (unsigned int) strtonum(optarg, 0, INT_MAX, &errstr);
-            if (errstr != NULL)
-               fatalx("invalid year '%s': %s", optarg, errstr);
-            break;
-         case 'h':
-         case '?':
-         default:
-            return -1;
-      }
-   }
-
-   return 0;
-}
 
 static int
 ecmd_tag_check(struct ecmd_args *args)
@@ -152,7 +92,6 @@ const struct ecmd ecmd_tag = {
    \t[-y year] path [...]",
    "A:T:a:c:g:t:y:",
    1, -1,
-   ecmd_tag_parse,
    ecmd_tag_check,
    ecmd_tag_exec
 };

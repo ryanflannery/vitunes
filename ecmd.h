@@ -22,12 +22,11 @@
 
 struct ecmd {
    const char  *name;
-   const char  *alias;      /* may be NULL */
-   const char  *usage;      /* may be an empty string */
-   const char  *optstring;
-   int          args_lower; /* minimum number of arguments */
-   int          args_upper; /* negative number means no limit */
-   int        (*parse)(int argc, char **argv);  /* may be NULL */
+   const char  *alias;        /* may be NULL */
+   const char  *usage;        /* may be an empty string */
+   const char  *optstring;    /* may be NULL */
+   int          args_lower;   /* minimum number of arguments */
+   int          args_upper;   /* negative number means no limit */
    int        (*check)(struct ecmd_args *args); /* may be NULL */
    void       (*exec)(struct ecmd_args *args);
 };

@@ -18,35 +18,12 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 
 #include "ecmd.h"
 #include "error.h"
 #include "medialib.h"
 #include "playlist.h"
 #include "vitunes.h"
-
-static bool forced;
-
-static int
-ecmd_rmfile_parse(int argc, char **argv)
-{
-   int ch;
-
-   while ((ch = getopt(argc, argv, "f")) != -1) {
-      switch (ch) {
-         case 'f':
-            forced = true;
-            break;
-         case 'h':
-         case '?':
-         default:
-            return -1;
-      }
-   }
-
-   return 0;
-}
 
 static void
 ecmd_rmfile_exec(struct ecmd_args *args)
@@ -92,7 +69,6 @@ const struct ecmd ecmd_rmfile = {
    "[-f] URL|path",
    "f",
    1, 1,
-   ecmd_rmfile_parse,
    NULL,
    ecmd_rmfile_exec
 };

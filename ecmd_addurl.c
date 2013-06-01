@@ -99,6 +99,5 @@ const struct ecmd ecmd_addurl = {
    NULL,
    1, 1,
    NULL,
-   NULL,
    ecmd_addurl_exec
 };

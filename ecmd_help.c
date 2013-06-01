@@ -74,6 +74,5 @@ const struct ecmd ecmd_help = {
    NULL,
    0, 1,
    NULL,
-   NULL,
    ecmd_help_exec
 };

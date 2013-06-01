@@ -39,6 +39,5 @@ const struct ecmd ecmd_add = {
    NULL,
    1, -1,
    NULL,
-   NULL,
    ecmd_add_exec
 };

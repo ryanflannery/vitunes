@@ -36,6 +36,5 @@ const struct ecmd ecmd_init = {
    NULL,
    0, 0,
    NULL,
-   NULL,
    ecmd_init_exec
 };

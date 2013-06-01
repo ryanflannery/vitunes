@@ -19,16 +19,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 
 #include "ecmd.h"
 #include "error.h"
 #include "medialib.h"
 #include "vitunes.h"
-
-static bool show_raw;
-static bool show_sanitized;
-static bool show_database;
 
 static void
 ecmd_check_show_db(struct ecmd_args *args, const char *path)
@@ -105,32 +100,6 @@ ecmd_check_show_sanitized(struct ecmd_args *args, const char *path)
 }
 
 static int
-ecmd_check_parse(int argc, char **argv)
-{
-   int ch;
-
-   while ((ch = getopt(argc, argv, "drs")) != -1) {
-      switch (ch) {
-         case 'd':
-            show_database = true;
-            break;
-         case 'r':
-            show_raw = true;
-            break;
-         case 's':
-            show_sanitized = true;
-            break;
-         case 'h':
-         case '?':
-         default:
-            return -1;
-      }
-   }
-
-   return 0;
-}
-
-static int
 ecmd_check_check(struct ecmd_args *args)
 {
    return ecmd_args_empty(args) == 0 ? 0 : -1;
@@ -155,7 +124,6 @@ const struct ecmd ecmd_check = {
    "-d | -r | -s path [...]",
    "drs",
    1, -1,
-   ecmd_check_parse,
    ecmd_check_check,
    ecmd_check_exec
 };

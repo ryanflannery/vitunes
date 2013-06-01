@@ -15,36 +15,10 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include <string.h>
-#include <unistd.h>
-
 #include "ecmd.h"
-#include "error.h"
 #include "medialib.h"
 #include "vitunes.h"
 #include "xmalloc.h"
-
-static char *time_format = "%Y %m %d %H:%M:%S";
-
-static int
-ecmd_flush_parse(int argc, char **argv)
-{
-   int ch;
-
-   while ((ch = getopt(argc, argv, "t:")) != -1) {
-      switch (ch) {
-         case 't':
-            time_format = xstrdup(optarg);
-            break;
-         case '?':
-         case 'h':
-         default:
-            return -1;
-      }
-   }
-
-   return 0;
-}
 
 static void
 ecmd_flush_exec(struct ecmd_args *args)
@@ -55,7 +29,7 @@ ecmd_flush_exec(struct ecmd_args *args)
       timefmt = "%Y %m %d %H:%M:%S";
 
    medialib_load(db_file, playlist_dir);
-   medialib_db_flush(stdout, time_format);
+   medialib_db_flush(stdout, timefmt);
    medialib_destroy();
 }
 
@@ -64,7 +38,6 @@ const struct ecmd ecmd_flush = {
    "[-t format]",
    "t:",
    0, 0,
-   ecmd_flush_parse,
    NULL,
    ecmd_flush_exec
 };
