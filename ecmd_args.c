@@ -80,8 +80,8 @@ ecmd_args_parse(const char *optstring, int argc, char **argv)
    /* Initialise e-command arguments structure. */
    args = xcalloc(1, sizeof *args);
 
-   /* Reset getopt(3) variables. */
-   optind = 0;
+   /* Reset getopt(3) variables (skip e-command name). */
+   optind = 1;
    optreset = 1;
    while ((ch = getopt(argc, argv, optstring)) != -1) {
       if (ch == '?')
