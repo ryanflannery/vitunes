@@ -50,11 +50,15 @@ ecmd_update_parse(int argc, char **argv)
 }
 
 static void
-ecmd_update_exec(UNUSED struct ecmd_args *args)
+ecmd_update_exec(struct ecmd_args *args)
 {
+   bool  force_update, show_skipped;
+
    printf("Loading existing database...\n");
    medialib_load(db_file, playlist_dir);
 
+   force_update = ecmd_args_bool(args, 'f');
+   show_skipped = ecmd_args_bool(args, 's');
    printf("Updating existing database...\n");
    medialib_db_update(show_skipped, force_update);
 

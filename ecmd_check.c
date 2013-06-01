@@ -31,14 +31,14 @@ static bool show_sanitized;
 static bool show_database;
 
 static void
-ecmd_check_show_db(const char *path)
+ecmd_check_show_db(struct ecmd_args *args, const char *path)
 {
    bool       found;
    char       realfile[PATH_MAX];
    int        i;
    meta_info *mi;
 
-   if (show_database == false)
+   if (ecmd_args_bool(args, 'd') == false)
       return;
    if (realpath(path, realfile) == NULL) {
       info("realpath failed for %s: skipping", path);
@@ -68,12 +68,12 @@ ecmd_check_show_db(const char *path)
 }
 
 static void
-ecmd_check_show_raw(const char *path)
+ecmd_check_show_raw(struct ecmd_args *args, const char *path)
 {
    int        i;
    meta_info *mi;
 
-   if (show_raw == false)
+   if (ecmd_args_bool(args, 'r') == false)
       return;
    if ((mi = mi_extract(path)) == NULL) {
       infox("Failed to extract any meta-information from '%s'", path);
@@ -86,12 +86,12 @@ ecmd_check_show_raw(const char *path)
 }
 
 static void
-ecmd_check_show_sanitized(const char *path)
+ecmd_check_show_sanitized(struct ecmd_args *args, const char *path)
 {
    int        i;
    meta_info *mi;
 
-   if (show_sanitized == false)
+   if (ecmd_args_bool(args, 's') == false)
       return;
    if ((mi = mi_extract(path)) == NULL) {
       infox("Failed to extract any meta-information from '%s'", path);
@@ -144,9 +144,9 @@ ecmd_check_exec(struct ecmd_args *args)
    /* scan through files... */
    for (i = 0; i < args->argc; i++) {
       printf("Checking: '%s'\n", args->argv[i]);
-      ecmd_check_show_raw(args->argv[i]);
-      ecmd_check_show_sanitized(args->argv[i]);
-      ecmd_check_show_db(args->argv[i]);
+      ecmd_check_show_raw(args, args->argv[i]);
+      ecmd_check_show_sanitized(args, args->argv[i]);
+      ecmd_check_show_db(args, args->argv[i]);
    }
 }
 

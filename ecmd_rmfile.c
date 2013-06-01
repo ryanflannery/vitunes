@@ -52,9 +52,8 @@ static void
 ecmd_rmfile_exec(struct ecmd_args *args)
 {
    char  input[255];
-   bool  found;
-   int   found_idx;
-   int   i;
+   bool  forced, found;
+   int   found_idx, i;
 
    /* load database and search for record */
    medialib_load(db_file, playlist_dir);
@@ -68,6 +67,7 @@ ecmd_rmfile_exec(struct ecmd_args *args)
    }
 
    /* if not found then error */
+   forced = ecmd_args_bool(args, 'f');
    if (!found) {
       i = (forced ? 0 : 1);
       infox("%s: No such file or URL", args->argv[0]);

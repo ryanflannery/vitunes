@@ -95,17 +95,25 @@ ecmd_tag_exec(struct ecmd_args *args)
 {
    TagLib_File *tag_file;
    TagLib_Tag  *tag;
-   int          i;
+   const char  *album, *artist, *comment, *genre, *title;
+   int          i, track, year;
 
    /* be verbose, indicate what we're setting... */
    printf("Setting the following tags to all files:\n");
-   if (artist != NULL) printf("%10.10s => '%s'\n", "artist", artist);
-   if (album != NULL) printf("%10.10s => '%s'\n", "album", album);
-   if (title != NULL) printf("%10.10s => '%s'\n", "title", title);
-   if (genre != NULL ) printf("%10.10s => '%s'\n", "genre", genre);
-   if (track) printf("%10.10s => %u\n", "track", track);
-   if (year) printf("%10.10s => %u\n", "year", year);
-   if (comment != NULL) printf("%10.10s => '%s'\n", "comment", comment);
+   if ((artist = ecmd_args_get(args, 'a')) != NULL)
+      printf("%10.10s => '%s'\n", "artist", artist);
+   if ((album = ecmd_args_get(args, 'A')) != NULL)
+      printf("%10.10s => '%s'\n", "album", album);
+   if ((title = ecmd_args_get(args, 't')) != NULL)
+      printf("%10.10s => '%s'\n", "title", title);
+   if ((genre = ecmd_args_get(args, 'g')) != NULL)
+      printf("%10.10s => '%s'\n", "genre", genre);
+   if ((track = ecmd_args_strtonum(args, 'T', 0, INT_MAX)) != -1)
+      printf("%10.10s => %u\n", "track", track);
+   if ((year = ecmd_args_strtonum(args, 'y', 0, INT_MAX)) != -1)
+      printf("%10.10s => %u\n", "year", year);
+   if ((comment = ecmd_args_get(args, 'c')) != NULL)
+      printf("%10.10s => '%s'\n", "comment", comment);
 
    /* tag files ... */
    taglib_set_strings_unicode(false);
@@ -126,8 +134,8 @@ ecmd_tag_exec(struct ecmd_args *args)
       if (album != NULL) taglib_tag_set_album(tag, album);
       if (title != NULL) taglib_tag_set_title(tag, title);
       if (genre != NULL) taglib_tag_set_genre(tag, genre);
-      if (track) taglib_tag_set_track(tag, track);
-      if (year) taglib_tag_set_year(tag, year);
+      if (track != -1) taglib_tag_set_track(tag, track);
+      if (year != -1) taglib_tag_set_year(tag, year);
       if (comment != NULL) taglib_tag_set_comment(tag, comment);
 
 

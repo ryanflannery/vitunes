@@ -47,8 +47,13 @@ ecmd_flush_parse(int argc, char **argv)
 }
 
 static void
-ecmd_flush_exec(UNUSED struct ecmd_args *args)
+ecmd_flush_exec(struct ecmd_args *args)
 {
+   const char  *timefmt;
+
+   if ((timefmt = ecmd_args_get(args, 't')) == NULL)
+      timefmt = "%Y %m %d %H:%M:%S";
+
    medialib_load(db_file, playlist_dir);
    medialib_db_flush(stdout, time_format);
    medialib_destroy();
