@@ -68,20 +68,16 @@ echo
 HaveTaglib=0
 
 # Check for taglib
-result=`which pkg-config > /dev/null 2>&1`
+result=`which taglib-config > /dev/null 2>&1`
 if [[ 0 -eq $? ]];
 then
-   result=`pkg-config --exists taglib`
-   if [[ "$?" == "0" ]];
-   then
-      echo "FOUND"
-      HaveTaglib=1
-      TAGLIB_BLOCK="
-# taglib library detected by pkg-config
-TAGLIB_CFLAGS=\`pkg-config taglib --cflags\`
-TAGLIB_LIBS=\`pkg-config taglib --libs\` -ltag_c
+   echo "FOUND"
+   HaveTaglib=1
+   TAGLIB_BLOCK="
+# taglib-config found.  Using to determine CFLAGS and LDFLAGS
+TAGLIB_CFLAGS=\`taglib-config --cflags\`
+TAGLIB_LIBS=\`taglib-config --libs\` -ltag_c
 "
-   fi
 fi
 
 # No taglib.  Alert but continue.
