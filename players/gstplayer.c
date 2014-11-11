@@ -162,7 +162,7 @@ gstplayer_seek(int seconds)
    gint64 seek;
    if (seconds == 0)
       return;
-   gst_element_query_position(GST_ELEMENT(gplayer.player), &seek_format, &seek);
+   gst_element_query_position(GST_ELEMENT(gplayer.player), seek_format, &seek);
    seek += (seconds * GST_SECOND);
    gst_element_seek_simple(GST_ELEMENT(gplayer.player), seek_format,
                            seek_flags, seek);
@@ -254,7 +254,7 @@ gstplayer_get_position(void)
       gplayer.fatal_cb("gstplayer_monitor: player not initialized");
 
    /* update time */
-   gst_element_query_position(GST_ELEMENT(gplayer.player), &pos_format, &pos);
+   gst_element_query_position(GST_ELEMENT(gplayer.player), pos_format, &pos);
    /* position is in nanoseconds, lets convert */
    actual_pos = (float) (pos / GST_SECOND);
    msg = gst_bus_pop(gplayer.bus);
