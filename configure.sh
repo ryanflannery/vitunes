@@ -108,7 +108,7 @@ then
 fi
 
 # Check for gstreamer
-gstreamer=gstreamer-0.10
+gstreamer=gstreamer-1.0
 result=`pkg-config --exists ${gstreamer} > /dev/null 2>&1`
 if [[ 0 -eq $? ]];
 then

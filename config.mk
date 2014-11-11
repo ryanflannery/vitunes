@@ -14,6 +14,11 @@
 ### The default contents of this file may not be suited to your OS & setup.
 ### Please run the configure.sh script.
 
+# XXX
+# Changes to this file are untracked by git via:
+#    git update-index --assume-unchanged config.mk
+# to undo:
+#    git update-index --no-assume-unchanged config.mk
 
 #######################################################################
 ### Install Locations.  These control where vitunes is installed.
