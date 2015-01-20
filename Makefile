@@ -71,6 +71,10 @@ cscope.out: *.h *.c
 
 ### static analysis checks
 
+# this one needs work
+flawfinder: *.c
+	flawfinder *.c
+
 report.mandoc: doc/*.1
 	@figlet "mandoc -Tlint"
 	-mandoc -Tlint doc/vitunes*.1 2> $@
