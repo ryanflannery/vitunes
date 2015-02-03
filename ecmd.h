@@ -18,22 +18,17 @@
 #ifndef ECMD_H
 #define ECMD_H
 
-#include <err.h>
-#include <stdio.h>
-#include <string.h>
-#include <unistd.h>
-
-#include "vitunes.h"
+#include "ecmd_args.h"
 
 struct ecmd {
    const char  *name;
-   const char  *alias;      /* may be NULL */
-   const char  *usage;      /* may be NULL */
-   int          args_lower; /* minimum number of arguments */
-   int          args_upper; /* negative number means no limit */
-   int        (*parse)(int argc, char **argv); /* may be NULL */
-   int        (*check)(void);                  /* may be NULL */
-   void       (*exec)(int argc, char **argv);
+   const char  *alias;        /* may be NULL */
+   const char  *usage;        /* may be an empty string */
+   const char  *optstring;    /* may be NULL */
+   int          args_lower;   /* minimum number of arguments */
+   int          args_upper;   /* negative number means no limit */
+   int        (*check)(struct ecmd_args *args); /* may be NULL */
+   void       (*exec)(struct ecmd_args *args);
 };
 
 extern const struct ecmd ecmd_add;

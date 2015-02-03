@@ -17,7 +17,7 @@
 #include "compat.h"
 
 #ifdef COMPAT_NEED_FPARSELN
-#  include "compat/fparseln.c"
+#  include "fparseln.c"
 #endif
 
 #ifdef COMPAT_NEED_OPTRESET
@@ -25,10 +25,10 @@
 #endif
 
 #ifdef COMPAT_NEED_STRLCAT
-#  include "compat/strlcat.c"
+#  include "strlcat.c"
 #endif
 
 #ifdef COMPAT_NEED_STRTONUM
-#  include "compat/strtonum.c"
+#  include "strtonum.c"
 #endif
 

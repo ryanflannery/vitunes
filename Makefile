@@ -11,19 +11,20 @@ LDEPS=$(TAGLIB_LIBS) $(GSTREAMER_LIBS)
 ODEPS=$(GSTREAMER_OBJS)
 
 # build variables
-CC		  ?= /usr/bin/cc
-CFLAGS  += -c -std=c89 -Wall -Wextra -Wno-unused-value $(CDEBUG) $(CDEPS)
-LIBS    += -lm -lncurses -lutil $(LDEPS)
+CC       ?= /usr/bin/cc
+CPPFLAGS += -I. -Icompat -Iplayers -iquote.
+CFLAGS   += -c -std=c89 -Wall -Wextra -Wno-unused-value $(CDEBUG) $(CDEPS)
+LIBS     += -lm -lncurses -lutil $(LDEPS)
 
 # object files
-OBJS=commands.o compat.o ecmd.o \
+OBJS=commands.o compat.o ecmd.o ecmd_args.o \
 	  ecmd_add.o ecmd_addurl.o ecmd_check.o \
 	  ecmd_flush.o ecmd_help.o ecmd_init.o \
 	  ecmd_rmfile.o ecmd_tag.o ecmd_update.o \
-	  keybindings.o medialib.o meta_info.o \
+	  error.o keybindings.o medialib.o meta_info.o \
 	  mplayer.o paint.o player.o player_utils.o \
 	  playlist.o socket.o str2argv.o \
-	  uinterface.o vitunes.o \
+	  uinterface.o vitunes.o xmalloc.o \
 	  $(ODEPS)
 
 # subdirectories with code (.PATH for BSD make, VPATH for GNU make)
@@ -39,10 +40,10 @@ vitunes: $(OBJS)
 	$(CC) -o $@ $(LDFLAGS) $(OBJS) $(LIBS)
 
 .c.o:
-	$(CC) $(CFLAGS) $<
+	$(CC) $(CPPFLAGS) $(CFLAGS) $<
 
 debug:
-	make CDEBUG="-DDEBUG -g"
+	make CDEBUG="-g"
 
 clean:
 	rm -f *.o
@@ -97,4 +98,3 @@ reports: report.mandoc report.cppcheck report.scan-build
 	@figlet "Static Checks Complete"
 	cat report.mandoc
 	cat report.cppcheck
-

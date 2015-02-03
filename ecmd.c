@@ -15,38 +15,32 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+
 #include "ecmd.h"
+#include "error.h"
+#include "vitunes.h"
 
-static int
-ecmd_parse(const struct ecmd *ecmd, int argc, char ***argv)
+static struct ecmd_args *
+ecmd_parse(const struct ecmd *ecmd, int argc, char **argv)
 {
-   /* reset getopt(3) variables */
-   optind = 0;
-   optreset = 1;
+   struct ecmd_args  *args;
 
-   /* parse command line and if valid, skip parsed arguments */
-   if (ecmd->parse != NULL) {
-      /* parse error */
-      if (ecmd->parse(argc, *argv) == -1)
-         return -1;
-      if (ecmd->check != NULL && ecmd->check() == -1)
-         return -1;
-      argc -= optind;
-      *argv += optind;
-   } else {
-      /* no parse function; skip only its name */
-      argc--;
-      (*argv)++;
-   }
- 
+   /* generically parse command-line options */
+   if ((args = ecmd_args_parse(ecmd->optstring, argc, argv)) == NULL)
+      return NULL;
+   if (ecmd->check != NULL && ecmd->check(args) == -1)
+      return NULL;
+
    /* invalid number of arguments */
-   if (argc < ecmd->args_lower)
-      return -1;
-   if (ecmd->args_upper >= 0 && argc > ecmd->args_upper)
-      return -1;
+   if (args->argc < ecmd->args_lower)
+      return NULL;
+   if (ecmd->args_upper >= 0 && args->argc > ecmd->args_upper)
+      return NULL;
 
-   /* return updated (no name) number of arguments */
-   return argc;
+   return args;
 }
 
 int
@@ -64,8 +58,9 @@ ecmd_exec(const char *ecmd, int argc, char **argv)
       &ecmd_tag,
       &ecmd_update,
    };
-   static const int ecmdtab_size = sizeof ecmdtab / sizeof ecmdtab[0];
-   int              i;
+   static const int  ecmdtab_size = sizeof ecmdtab / sizeof ecmdtab[0];
+   int               i;
+   struct ecmd_args *args;
 
    /* search for e-command (first by name and then by alias) */
    for (i = 0; i < ecmdtab_size; i++) {
@@ -76,18 +71,18 @@ ecmd_exec(const char *ecmd, int argc, char **argv)
    }
    /* not found; bail out */
    if (i == ecmdtab_size) {
-      warnx("Unknown e-command '%s'.  See 'vitunes -e help' for list.", ecmd);
+      infox("Unknown e-command '%s'.  See 'vitunes -e help' for list.", ecmd);
       return -1;
    }
 
    /* parse e-command arguments */
-   if ((argc = ecmd_parse(ecmdtab[i], argc, &argv)) == -1) {
+   if ((args = ecmd_parse(ecmdtab[i], argc, argv)) == NULL) {
       fprintf(stderr, "usage: %s -e %s %s\n", progname, ecmdtab[i]->name,
-          ecmdtab[i]->usage != NULL ? ecmdtab[i]->usage : "");
+          ecmdtab[i]->usage);
       return 1;
    }
 
    /* finally execute it */
-   ecmdtab[i]->exec(argc, argv);
+   ecmdtab[i]->exec(args);
    return 0;
 }

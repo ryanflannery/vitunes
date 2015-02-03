@@ -17,23 +17,7 @@
 #ifndef UINTERFACE_H
 #define UINTERFACE_H
 
-#include "compat.h"
-
-#include <sys/ioctl.h>
-
-#include <ctype.h>
-#include <err.h>
 #include <ncurses.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <string.h>
-#include <termios.h>
-#include <unistd.h>
-
-#include "debug.h"
-#include "enums.h"
 
 /* struct & methods for a scrollable window */
 typedef struct

@@ -15,112 +15,55 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include <err.h>
+#include <limits.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
+#include <tag_c.h>
 
 #include "ecmd.h"
+#include "error.h"
 #include "meta_info.h"
-
-static char         *artist;
-static char         *album;
-static char         *title;
-static char         *genre;
-static char         *comment;
-static unsigned int  track;
-static unsigned int  year;
+#include "xmalloc.h"
 
 static int
-ecmd_tag_parse(int argc, char **argv)
+ecmd_tag_check(struct ecmd_args *args)
 {
-   const char *errstr;
-   int         ch;
-
-   while ((ch = getopt(argc, argv, "A:T:a:c:g:t:y:")) != -1) {
-      switch (ch) {
-         case 'A':
-            free(album);
-            if ((album = strdup(optarg)) == NULL)
-               err(1, "%s: strdup ALBUM failed", argv[0]);
-            break;
-          case 'T':
-            track = (unsigned int) strtonum(optarg, 0, INT_MAX, &errstr);
-            if (errstr != NULL)
-               errx(1, "invalid track '%s': %s", optarg, errstr);
-            break;
-         case 'a':
-            free(artist);
-            if ((artist = strdup(optarg)) == NULL)
-               err(1, "%s: strdup ARTIST failed", argv[0]);
-            break;
-         case 'c':
-            free(comment);
-            if ((comment = strdup(optarg)) == NULL)
-               err(1, "%s: strdup COMMENT failed", argv[0]);
-            break;
-         case 'g':
-            free(genre);
-            if ((genre = strdup(optarg)) == NULL)
-               err(1, "%s: strdup GENRE failed", argv[0]);
-            break;
-         case 't':
-            free(title);
-            if ((title = strdup(optarg)) == NULL)
-               err(1, "%s: strdup TITLE failed", argv[0]);
-            break;
-         case 'y':
-            year = (unsigned int) strtonum(optarg, 0, INT_MAX, &errstr);
-            if (errstr != NULL)
-               errx(1, "invalid year '%s': %s", optarg, errstr);
-            break;
-         case 'h':
-         case '?':
-         default:
-            return -1;
-      }
-   }
-
-   return 0;
-}
-
-static int
-ecmd_tag_check(void)
-{
-   if (artist == NULL && album == NULL && title == NULL && genre == NULL
-   &&  track == 0 && year == 0 && comment == NULL)
-      return -1;
-
-   return 0;
+   return ecmd_args_empty(args) == 0 ? 0 : -1;
 }
 
 static void
-ecmd_tag_exec(int argc, char **argv)
+ecmd_tag_exec(struct ecmd_args *args)
 {
    TagLib_File *tag_file;
    TagLib_Tag  *tag;
-   int          i;
+   const char  *album, *artist, *comment, *genre, *title;
+   int          i, track, year;
 
    /* be verbose, indicate what we're setting... */
    printf("Setting the following tags to all files:\n");
-   if (artist != NULL) printf("%10.10s => '%s'\n", "artist", artist);
-   if (album != NULL) printf("%10.10s => '%s'\n", "album", album);
-   if (title != NULL) printf("%10.10s => '%s'\n", "title", title);
-   if (genre != NULL ) printf("%10.10s => '%s'\n", "genre", genre);
-   if (track) printf("%10.10s => %u\n", "track", track);
-   if (year) printf("%10.10s => %u\n", "year", year);
-   if (comment != NULL) printf("%10.10s => '%s'\n", "comment", comment);
+   if ((artist = ecmd_args_get(args, 'a')) != NULL)
+      printf("%10.10s => '%s'\n", "artist", artist);
+   if ((album = ecmd_args_get(args, 'A')) != NULL)
+      printf("%10.10s => '%s'\n", "album", album);
+   if ((title = ecmd_args_get(args, 't')) != NULL)
+      printf("%10.10s => '%s'\n", "title", title);
+   if ((genre = ecmd_args_get(args, 'g')) != NULL)
+      printf("%10.10s => '%s'\n", "genre", genre);
+   if ((track = ecmd_args_strtonum(args, 'T', 0, INT_MAX)) != -1)
+      printf("%10.10s => %u\n", "track", track);
+   if ((year = ecmd_args_strtonum(args, 'y', 0, INT_MAX)) != -1)
+      printf("%10.10s => %u\n", "year", year);
+   if ((comment = ecmd_args_get(args, 'c')) != NULL)
+      printf("%10.10s => '%s'\n", "comment", comment);
 
    /* tag files ... */
    taglib_set_strings_unicode(false);
-   for (i = 0; i < argc; i++) {
-      printf("tagging: '%s'\n", argv[i]);
+   for (i = 0; i < args->argc; i++) {
+      printf("tagging: '%s'\n", args->argv[i]);
 
       /* extract taglib stuff */
-      if ((tag_file = taglib_file_new(argv[i])) == NULL) {
-         warnx("TagLib: failed to open file '%s': skipping.", argv[i]);
-         warnx("  => Causes: format not supported by TagLib or format doesn't support tags");
+      if ((tag_file = taglib_file_new(args->argv[i])) == NULL) {
+         infox("TagLib: failed to open file '%s': skipping.", args->argv[i]);
+         infox("  => Causes: format not supported by TagLib or format doesn't support tags");
          continue;
       }
 
@@ -131,8 +74,8 @@ ecmd_tag_exec(int argc, char **argv)
       if (album != NULL) taglib_tag_set_album(tag, album);
       if (title != NULL) taglib_tag_set_title(tag, title);
       if (genre != NULL) taglib_tag_set_genre(tag, genre);
-      if (track) taglib_tag_set_track(tag, track);
-      if (year) taglib_tag_set_year(tag, year);
+      if (track != -1) taglib_tag_set_track(tag, track);
+      if (year != -1) taglib_tag_set_year(tag, year);
       if (comment != NULL) taglib_tag_set_comment(tag, comment);
 
 
@@ -147,8 +90,8 @@ const struct ecmd ecmd_tag = {
    "tag", NULL,
    "[-A album] [-T track] [-a artist] [-c comment] [-g genre] [-t title]\n\
    \t[-y year] path [...]",
+   "A:T:a:c:g:t:y:",
    1, -1,
-   ecmd_tag_parse,
    ecmd_tag_check,
    ecmd_tag_exec
 };

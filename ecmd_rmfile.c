@@ -15,69 +15,48 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include <err.h>
 #include <stdbool.h>
+#include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 
 #include "ecmd.h"
+#include "error.h"
 #include "medialib.h"
 #include "playlist.h"
 #include "vitunes.h"
 
-static bool forced;
-
-static int
-ecmd_rmfile_parse(int argc, char **argv)
-{
-   int ch;
-
-   while ((ch = getopt(argc, argv, "f")) != -1) {
-      switch (ch) {
-         case 'f':
-            forced = true;
-            break;
-         case 'h':
-         case '?':
-         default:
-            return -1;
-      }
-   }
-
-   return 0;
-}
-
 static void
-ecmd_rmfile_exec(UNUSED int argc, char **argv)
+ecmd_rmfile_exec(struct ecmd_args *args)
 {
    char  input[255];
-   bool  found;
-   int   found_idx;
-   int   i;
+   bool  forced, found;
+   int   found_idx, i;
 
    /* load database and search for record */
    medialib_load(db_file, playlist_dir);
    found = false;
    found_idx = -1;
    for (i = 0; i < mdb.library->nfiles && !found; i++) {
-      if (strcmp(argv[0], mdb.library->files[i]->filename) == 0) {
+      if (strcmp(args->argv[0], mdb.library->files[i]->filename) == 0) {
          found = true;
          found_idx = i;
       }
    }
 
    /* if not found then error */
+   forced = ecmd_args_bool(args, 'f');
    if (!found) {
       i = (forced ? 0 : 1);
-      errx(i, "%s: %s: No such file or URL", argv[0], argv[0]);
+      infox("%s: No such file or URL", args->argv[0]);
+      exit(i);
    }
 
    /* if not forced, prompt user if they are sure */
    if (!forced) {
-      printf("Are you sure you want to delete '%s'? [y/n] ", argv[0]);
+      printf("Are you sure you want to delete '%s'? [y/n] ", args->argv[0]);
       if (fgets(input, sizeof(input), stdin) == NULL
       || (strcasecmp(input, "yes\n") != 0 && strcasecmp(input, "y\n") != 0))
-         errx(1, "Operation canceled.  Database unchanged.");
+         fatalx("Operation canceled.  Database unchanged.");
    }
 
    playlist_files_remove(mdb.library, found_idx, 1, false);
@@ -88,8 +67,8 @@ ecmd_rmfile_exec(UNUSED int argc, char **argv)
 const struct ecmd ecmd_rmfile = {
    "rmfile", "rm",
    "[-f] URL|path",
+   "f",
    1, 1,
-   ecmd_rmfile_parse,
    NULL,
    ecmd_rmfile_exec
 };

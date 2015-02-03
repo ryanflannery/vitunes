@@ -15,21 +15,22 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include <err.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 
 #include "ecmd.h"
+#include "error.h"
 #include "vitunes.h"
+#include "xmalloc.h"
 
 static void
-ecmd_help_exec(UNUSED int argc, char **argv)
+ecmd_help_exec(struct ecmd_args *args)
 {
    char *man_args[3];
 
    /* no help requested for a specific command, give a list of all e-cmds */
-   if (argc == 0) {
+   if (args->argc == 0) {
       printf("\
 The following is a list of e-commands supported by vitunes.\n\
 Each command is executed by doing:\n\
@@ -54,25 +55,24 @@ The list of available commands are:\n\n\
    }
 
    /* if reach here, help fora specific command was requested */
-   if (strcmp(argv[0], "help") == 0) {
+   if (strcmp(args->argv[0], "help") == 0) {
       printf("You're a damn fool if you need help with help.\n");
       return;
    }
 
    man_args[0] = "man";
-   if (asprintf(&man_args[1], "vitunes-%s", argv[0]) == -1)
-      err(1, "ecmd_help: asprintf failed");
+   xasprintf(&man_args[1], "vitunes-%s", args->argv[0]);
    man_args[2] = NULL;
 
    execvp("man", man_args);
-   err(1, "ecmd_help: execvp failed");
+   fatal("ecmd_help: execvp failed");
 }
 
 const struct ecmd ecmd_help = {
    "help", NULL,
    "[command]",
-   0, 1,
    NULL,
+   0, 1,
    NULL,
    ecmd_help_exec
 };

@@ -14,7 +14,25 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#include <math.h>
+#include <ncurses.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
+#include "compat.h"
+#include "enums.h"
+#include "error.h"
+#include "medialib.h"
+#include "meta_info.h"
 #include "paint.h"
+#include "player.h"
+#include "playlist.h"
+#include "uinterface.h"
+#include "vitunes.h"
+#include "xmalloc.h"
 
 /* globals */
 _colors colors;
@@ -67,7 +85,7 @@ num2fmt(int n, Direction d)
 
    if (n <= 0) {
       endwin();
-      errx(1, "num2sfmt: invalid number %d provided", n);
+      fatalx("num2sfmt: invalid number %d provided", n);
    }
 
    if (d == LEFT)
@@ -548,49 +566,6 @@ paint_all()
 }
 
 /*
- * Paints an error message to the command/status window.  The usage is
- * identical to that of printf(3) (vwprintw(3) actually).
- */
-void
-paint_error(char *fmt, ...)
-{
-   va_list ap;
-
-   werase(ui.command);
-   wmove(ui.command, 0, 0);
-   wattron(ui.command, COLOR_PAIR(colors.errors));
-
-   va_start(ap, fmt);
-   vwprintw(ui.command, fmt, ap);
-   va_end(ap);
-
-   beep();
-   wattroff(ui.command, COLOR_PAIR(colors.errors));
-   wrefresh(ui.command);
-}
-
-/*
- * Paints an informational message to the command/status window.  The usage
- * is identical to that of printf(3) (vwprintw(3) actually).
- */
-void
-paint_message(char *fmt, ...)
-{
-   va_list ap;
-
-   werase(ui.command);
-   wmove(ui.command, 0, 0);
-   wattron(ui.command, COLOR_PAIR(colors.messages));
-
-   va_start(ap, fmt);
-   vwprintw(ui.command, fmt, ap);
-   va_end(ap);
-
-   wattroff(ui.command, COLOR_PAIR(colors.messages));
-   wrefresh(ui.command);
-}
-
-/*
  * Each of these members of the global color object will be
  * run through init_pair(3)
  */
@@ -687,8 +662,7 @@ paint_str2color(const char *str)
       char *numberstr;
       int   number;
 
-      if ((color = strdup(str)) == NULL)
-         err(1, "%s: strdup of '%s' failed.", __FUNCTION__, str);
+      color = xstrdup(str);
 
       if ((numberstr = strtok(color, "color")) == NULL) {
          free(color);

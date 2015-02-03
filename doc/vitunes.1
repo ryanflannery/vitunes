@@ -21,6 +21,7 @@
 .Sh SYNOPSIS
 .Nm vitunes
 .Bk -words
+.Op Fl v
 .Op Fl c Ar command
 .Op Fl d Ar database-file
 .Op Fl e Ar command Op argument ...
@@ -138,6 +139,10 @@ will be created here.
 .Pp
 The default location is
 .Pa ~/.vitunes/playlists/ .
+.It Fl v
+Turn verbose logging on.
+Log messages will be saved in the vitunes-debug.log file in the current
+directory.
 .El
 .Sh GETTING STARTED
 .Nm

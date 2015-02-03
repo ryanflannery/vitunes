@@ -38,6 +38,7 @@
 
 /* OpenBSD has fparseln(3), but it must be included thusly */
 #if defined(__OpenBSD__)
+#  include <sys/tree.h>
 #  include <stdio.h>
 #  include <util.h>
 #  include <libgen.h>
@@ -49,24 +50,28 @@
 #  include <sys/types.h>
 #  include <libutil.h>
 #  include <libgen.h>
+#  include "tree.h"
 #endif
 
 /* Mac OS X has fparseln(3), but it must be included thusly */
 #if defined(__MACH__)
 #  include <stdio.h>
 #  include <util.h>
+#  include "tree.h"
 #endif
 
 /* Mac OS X needs strtonum(3) */
 #if defined(__APPLE__) && defined(__MACH__)
 #  include <inttypes.h>
 #  include <stdlib.h>
+#  include "tree.h"
 #  define COMPAT_NEED_STRTONUM
 #  define COMPAT_NEED_STRTOLL
 #endif
 
 /* Linux needs the following.. */
 #if defined(__linux)
+#  include "tree.h"
 #  define _GNU_SOURCE
 #  define COMPAT_NEED_FPARSELN
 #  define COMPAT_NEED_OPTRESET

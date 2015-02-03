@@ -17,16 +17,6 @@
 #ifndef STR2ARGV_H
 #define STR2ARGV_H
 
-#include "compat.h"
-
-#include <err.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "debug.h"
-
 /* hard limits on the size of an argv and each entry/token w/in an argv */
 #define ARGV_MAX_ENTRIES    255
 #define ARGV_MAX_TOKEN_LEN  255
@@ -50,5 +40,10 @@ void argv_free(int *argc, char ***argv);
  * space between each.  Tokens with multiple words are quoted.
  */
 char *argv2str(int argc, char *argv[]);
+
+/*
+ * Duplicates the given argc/argv set of parameters.
+ */
+char **argv_copy(int argc, char **argv);
 
 #endif

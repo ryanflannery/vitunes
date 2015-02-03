@@ -15,31 +15,28 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include <err.h>
+#include <limits.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 
 #include "ecmd.h"
+#include "error.h"
 #include "medialib.h"
 #include "vitunes.h"
 
-static bool show_raw;
-static bool show_sanitized;
-static bool show_database;
-
 static void
-ecmd_check_show_db(const char *path)
+ecmd_check_show_db(struct ecmd_args *args, const char *path)
 {
    bool       found;
    char       realfile[PATH_MAX];
    int        i;
    meta_info *mi;
 
-   if (show_database == false)
+   if (ecmd_args_bool(args, 'd') == false)
       return;
    if (realpath(path, realfile) == NULL) {
-      warn("realpath failed for %s: skipping", path);
+      info("realpath failed for %s: skipping", path);
       return;
    }
 
@@ -55,7 +52,7 @@ ecmd_check_show_db(const char *path)
    }
 
    if (!found)
-      warnx("File '%s' does NOT exist in the database", path);
+      infox("File '%s' does NOT exist in the database", path);
    else {
       printf("\tThe meta-information in the DATABASE is:\n");
       for (i = 0; i < MI_NUM_CINFO; i++)
@@ -66,15 +63,15 @@ ecmd_check_show_db(const char *path)
 }
 
 static void
-ecmd_check_show_raw(const char *path)
+ecmd_check_show_raw(struct ecmd_args *args, const char *path)
 {
    int        i;
    meta_info *mi;
 
-   if (show_raw == false)
+   if (ecmd_args_bool(args, 'r') == false)
       return;
    if ((mi = mi_extract(path)) == NULL) {
-      warnx("Failed to extract any meta-information from '%s'", path);
+      infox("Failed to extract any meta-information from '%s'", path);
       return;
    }
 
@@ -84,15 +81,15 @@ ecmd_check_show_raw(const char *path)
 }
 
 static void
-ecmd_check_show_sanitized(const char *path)
+ecmd_check_show_sanitized(struct ecmd_args *args, const char *path)
 {
    int        i;
    meta_info *mi;
 
-   if (show_sanitized == false)
+   if (ecmd_args_bool(args, 's') == false)
       return;
    if ((mi = mi_extract(path)) == NULL) {
-      warnx("Failed to extract any meta-information from '%s'", path);
+      infox("Failed to extract any meta-information from '%s'", path);
       return;
    }
 
@@ -103,58 +100,30 @@ ecmd_check_show_sanitized(const char *path)
 }
 
 static int
-ecmd_check_parse(int argc, char **argv)
+ecmd_check_check(struct ecmd_args *args)
 {
-   int ch;
-
-   while ((ch = getopt(argc, argv, "drs")) != -1) {
-      switch (ch) {
-         case 'd':
-            show_database = true;
-            break;
-         case 'r':
-            show_raw = true;
-            break;
-         case 's':
-            show_sanitized = true;
-            break;
-         case 'h':
-         case '?':
-         default:
-            return -1;
-      }
-   }
-
-   return 0;
-}
-
-static int
-ecmd_check_check(void)
-{
-   if (!show_raw && !show_sanitized && !show_database)
-      return -1;
-   return 0;
+   return ecmd_args_empty(args) == 0 ? 0 : -1;
 }
 
 static void
-ecmd_check_exec(int argc, char **argv)
+ecmd_check_exec(struct ecmd_args *args)
 {
    int i;
 
    /* scan through files... */
-   for (i = 0; i < argc; i++) {
-      printf("Checking: '%s'\n", argv[i]);
-      ecmd_check_show_raw(argv[i]);
-      ecmd_check_show_sanitized(argv[i]);
-      ecmd_check_show_db(argv[i]);
+   for (i = 0; i < args->argc; i++) {
+      printf("Checking: '%s'\n", args->argv[i]);
+      ecmd_check_show_raw(args, args->argv[i]);
+      ecmd_check_show_sanitized(args, args->argv[i]);
+      ecmd_check_show_db(args, args->argv[i]);
    }
 }
 
 const struct ecmd ecmd_check = {
    "check", NULL,
    "-d | -r | -s path [...]",
+   "drs",
    1, -1,
-   ecmd_check_parse,
    ecmd_check_check,
    ecmd_check_exec
 };

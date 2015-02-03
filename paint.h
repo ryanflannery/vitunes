@@ -17,21 +17,7 @@
 #ifndef PAINT_H
 #define PAINT_H
 
-#include "compat.h"
-
-#include <curses.h>
-#include <math.h>
-#include <string.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <time.h>
-
-#include "enums.h"
 #include "meta_info.h"
-#include "player.h"
-#include "playlist.h"
-#include "uinterface.h"
-#include "vitunes.h"
 
 /* colors used by paint - each of these will be a number for a COLOR_PAIR */
 typedef struct {
@@ -79,10 +65,6 @@ void paint_all();
 
 extern bool showing_file_info;
 void paint_playlist_file_info(const meta_info *m);
-
-/* routines for painting errors/messages in the command/status window */
-void paint_error(char *fmt, ...);
-void paint_message(char *fmt, ...);
 
 /* for setting up and working with the colors */
 void paint_setup_colors();

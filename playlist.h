@@ -17,21 +17,6 @@
 #ifndef PLAYLIST_H
 #define PLAYLIST_H
 
-#include "compat.h"
-
-#include <sys/stat.h>
-#include <sys/types.h>
-
-#include <err.h>
-#include <errno.h>
-#include <glob.h>
-#include <stdio.h>
-#include <libgen.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-
-#include "debug.h"
 #include "meta_info.h"
 
 #define PLAYLIST_CHUNK_SIZE   100

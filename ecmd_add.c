@@ -22,13 +22,13 @@
 #include "vitunes.h"
 
 static void
-ecmd_add_exec(UNUSED int argc, char **argv)
+ecmd_add_exec(struct ecmd_args *args)
 {
    printf("Loading existing database...\n");
    medialib_load(db_file, playlist_dir);
 
    printf("Scanning directories for files to add to database...\n");
-   medialib_db_scan_dirs(argv);
+   medialib_db_scan_dirs(args->argv);
 
    medialib_destroy();
 }
@@ -36,8 +36,8 @@ ecmd_add_exec(UNUSED int argc, char **argv)
 const struct ecmd ecmd_add = {
    "add", NULL,
    "path [...]",
-   1, -1,
    NULL,
+   1, -1,
    NULL,
    ecmd_add_exec
 };

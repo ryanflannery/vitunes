@@ -17,44 +17,21 @@
 
 #include <stdbool.h>
 #include <stdio.h>
-#include <unistd.h>
 
 #include "ecmd.h"
 #include "medialib.h"
 #include "vitunes.h"
 
-static bool force_update;
-static bool show_skipped;
-
-static int
-ecmd_update_parse(int argc, char **argv)
-{
-   int ch;
-
-   while ((ch = getopt(argc, argv, "fs")) != -1) {
-      switch (ch) {
-         case 'f':
-            force_update = true;
-            break;
-         case 's':
-            show_skipped = true;
-            break;
-         case 'h':
-         case '?':
-         default:
-            return -1;
-      }
-   }
-
-   return 0;
-}
-
 static void
-ecmd_update_exec(UNUSED int argc, UNUSED char **argv)
+ecmd_update_exec(struct ecmd_args *args)
 {
+   bool  force_update, show_skipped;
+
    printf("Loading existing database...\n");
    medialib_load(db_file, playlist_dir);
 
+   force_update = ecmd_args_bool(args, 'f');
+   show_skipped = ecmd_args_bool(args, 's');
    printf("Updating existing database...\n");
    medialib_db_update(show_skipped, force_update);
 
@@ -64,8 +41,8 @@ ecmd_update_exec(UNUSED int argc, UNUSED char **argv)
 const struct ecmd ecmd_update = {
    "update", NULL,
    "[-fs]",
+   "fs",
    0, 0,
-   ecmd_update_parse,
    NULL,
    ecmd_update_exec
 };
