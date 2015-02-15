@@ -21,12 +21,14 @@
 .Sh SYNOPSIS
 .Nm vitunes
 .Bk -words
-.Op Fl c Ar command
+.Op Fl h
+.Op Fl c Ar command Op ...
 .Op Fl d Ar database-file
-.Op Fl e Ar command Op argument ...
+.Op Fl e Ar e-command Op flags
 .Op Fl f Ar config-file
 .Op Fl m Ar media-backend
 .Op Fl p Ar playlist-dir
+.Op Fl s Ar socket-file
 .Ek
 .Sh DESCRIPTION
 .Nm
@@ -37,14 +39,14 @@ creation/management.
 It is not intended to be a feature-rich media player, but rather a quick,
 vi-like media indexer and playlist manager that also happens to be able to
 play the media it indexes (via
-.Xr mplayer 1 ).
+.Xr mplayer 1 Ns ).
 .Pp
 .Nm
 accepts the following command line options:
 .Bl -tag -width Fl
-.It Fl c Ar command
+.It Fl c Ar command Op ...
 Execute the specified
-.Ar commands
+.Ar command
 in the currently running
 .Nm
 instance, and exit.
@@ -63,9 +65,8 @@ section below.
 .Pp
 Note that for this to work, when
 .Nm
-starts up it attempts to create a socket at
-.Pa /tmp/.vitunes
-that are used by this option to communicate with the original instance.
+starts up it attempts to create a socket that is used by this option to
+communicate with the original instance.
 If this socket cannot be created for any reason, this option will not work.
 .It Fl d Ar database-file
 Specifies the
@@ -79,7 +80,7 @@ be specified before the e-command.
 .Pp
 The default location is
 .Pa ~/.vitunes/vitunes.db .
-.It Fl e Ar command Ar options
+.It Fl e Ar e-command Op flags
 Execute one of the available e-commands to manipulate the database that
 .Nm
 uses.
@@ -138,6 +139,12 @@ will be created here.
 .Pp
 The default location is
 .Pa ~/.vitunes/playlists/ .
+.It Fl s Ar socket-file
+Specifies an alternative
+.Ar socket-file .
+.Pp
+The default location is
+.Pa ~/.vitunes/vitunes.sock .
 .El
 .Sh GETTING STARTED
 .Nm
@@ -241,7 +248,7 @@ Below is a listing of all run-time commands supported by
 .Pp
 All commands are entered by typing ':' followed by the command name and any
 parameters (just like in
-.Xr vi 1 ).
+.Xr vi 1 Ns ).
 .Pp
 Note that abbreviations are also supported.
 That is, entering any non-ambiguous abbreviation of a command name will also
@@ -1024,7 +1031,7 @@ Default playlist directory
 This can be overridden with the
 .Op Fl p Ar playlist-dir
 flag.
-.It Pa /tmp/.vitunes
+.It Pa ~/.vitunes/vitunes.sock
 Default location for the socket created on start-up that can be used to control
 .Nm .
 .It Pa /usr/local/bin/mplayer

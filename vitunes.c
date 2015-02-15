@@ -56,6 +56,7 @@ const char *VITUNES_DIR_FMT  = "%s/.vitunes";
 const char *CONF_FILE_FMT    = "%s/.vitunes/vitunes.conf";
 const char *DB_FILE_FMT      = "%s/.vitunes/vitunes.db";
 const char *PLAYLIST_DIR_FMT = "%s/.vitunes/playlists";
+const char *SOCKET_FILE_FMT  = "%s/.vitunes/vitunes.sock";
 
 /* absolute paths of key stuff */
 char *vitunes_dir;
@@ -63,6 +64,7 @@ char *conf_file;
 char *db_file;
 char *playlist_dir;
 char *player_backend;
+char *socket_file;
 
 /* program name with directories removed */
 char *progname;
@@ -122,15 +124,17 @@ main(int argc, char *argv[])
       err(1, "main: asprintf failed");
    if (asprintf(&player_backend, "%s", DEFAULT_PLAYER_BACKEND) == -1)
       err(1, "main: asprintf failed");
+   if (asprintf(&socket_file, SOCKET_FILE_FMT, home) == -1)
+      err(1, "main: asprintf failed");
 
    /* handle command-line switches & e-commands */
    handle_switches(argc, argv);
 
-   if(sock_send_msg(VITUNES_RUNNING) != -1) {
-      printf("Vitunes appears to be running already. Won't open socket.");
-   } else {
-      if((sock = sock_listen()) == -1)
-         errx(1, "failed to open socket.");
+   if (sock_send_msg(socket_file, VITUNES_RUNNING) != -1)
+      warnx("Vitunes appears to be running already. Won't open socket.");
+   else {
+      if ((sock = sock_listen(socket_file)) == -1)
+         err(1, "failed to open socket");
    }
 
 
@@ -264,10 +268,10 @@ main(int argc, char *argv[])
 void
 usage(void)
 {
-   fprintf(stderr,"\
-usage: %s [-f config-file] [-d database-file] [-p playlist-dir] [-m player-path] [-e COMMAND ...]\n\
-See \"%s -e help\" for information about what e-commands are available.\n\
-",
+   fprintf(stderr, "\
+usage: %s [-h] [-c command [...]] [-d database-file] [-e e-command [flags]]\n\
+\t[-f config-file] [-m media-backend] [-p playlist-dir] [-s socket-file]\n\
+See \"%s -e help\" for information about what e-commands are available.\n",
    progname, progname);
    exit(1);
 }
@@ -472,11 +476,11 @@ handle_switches(int argc, char *argv[])
 {
    int ch;
 
-   while ((ch = getopt(argc, argv, "he:f:d:p:m:c:")) != -1) {
+   while ((ch = getopt(argc, argv, "hc:d:e:f:m:p:s:")) != -1) {
       switch (ch) {
          case 'c':
-            if(sock_send_msg(optarg) == -1)
-               errx(1, "Failed to send message. Vitunes not running?");
+            if (sock_send_msg(socket_file, optarg) == -1)
+               err(1, "Failed to send message. Vitunes not running?");
             exit(0);
 
          case 'd':
@@ -508,6 +512,12 @@ handle_switches(int argc, char *argv[])
             free(playlist_dir);
             if ((playlist_dir = strdup(optarg)) == NULL)
                err(1, "handle_switches: strdup playlist_dir failed");
+            break;
+
+         case 's':
+            free(socket_file);
+            if ((socket_file = strdup(optarg)) == NULL)
+               err(1, "handle_switches: strdup socket_file failed");
             break;
 
          case 'h':

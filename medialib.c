@@ -159,7 +159,7 @@ medialib_setup_files(const char *vitunes_dir, const char *db_file,
       else
          err(1, "unable to create vitunes directory '%s'", vitunes_dir);
    } else
-      warnx("vitunes directory '%s' created", vitunes_dir);
+      printf("vitunes directory '%s' created\n", vitunes_dir);
 
    /* create playlists directory */
    if (mkdir(playlist_dir, S_IRWXU) == -1) {
@@ -168,7 +168,7 @@ medialib_setup_files(const char *vitunes_dir, const char *db_file,
       else
          err(1, "unable to create playlists directory '%s'", playlist_dir);
    } else
-      warnx("playlists directory '%s' created", playlist_dir);
+      printf("playlists directory '%s' created\n", playlist_dir);
 
    /* create database file */
    if (stat(db_file, &sb) < 0) {
@@ -185,7 +185,7 @@ medialib_setup_files(const char *vitunes_dir, const char *db_file,
          fwrite("vitunes", strlen("vitunes"), 1, f);
          fwrite(version, sizeof(version), 1, f);
 
-         warnx("empty database at '%s' created", db_file);
+         printf("empty database at '%s' created\n", db_file);
          fclose(f);
       } else
          err(1, "database file '%s' exists, but cannot access it", db_file);
