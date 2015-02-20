@@ -87,6 +87,11 @@ void toggle_add(toggle_list *t);
 void toggle_remove(int registr);
 toggle_list* toggle_get(int registr);
 
+/****************************************************************************
+ * Command mode history handling stuff
+ ***************************************************************************/
+
+void cmd_mode_hist_add(const char *s);
 
 /****************************************************************************
  * Misc.

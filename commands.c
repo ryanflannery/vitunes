@@ -194,6 +194,33 @@ toggle_get(int registr)
 
 
 /****************************************************************************
+ * Command mode history functions
+ ***************************************************************************/
+
+char	**cmd_mode_hist;
+size_t	  cmd_mode_hist_size;
+
+void
+cmd_mode_hist_add(const char *s)
+{
+   char   **new_ptr;
+   size_t   new_size = sizeof *cmd_mode_hist * (cmd_mode_hist_size + 1);
+
+   if (cmd_mode_hist_size + 1 == 0)
+      errx(1, "%s: overflow", __FUNCTION__);
+   if (cmd_mode_hist_size + 1 > SIZE_MAX / sizeof *cmd_mode_hist)
+      errx(1, "%s: overflow", __FUNCTION__);
+   if ((new_ptr = realloc(cmd_mode_hist, new_size)) == NULL)
+      err(1, "%s: realloc(3) failed", __FUNCTION__);
+   cmd_mode_hist = new_ptr;
+
+   if ((cmd_mode_hist[cmd_mode_hist_size] = strdup(s)) == NULL)
+      err(1, "%s: strdup(3) failed", __FUNCTION__);
+   cmd_mode_hist_size++;
+}
+
+
+/****************************************************************************
  * Misc handy functions
  ***************************************************************************/
 
@@ -966,9 +993,9 @@ cmd_execute(char *cmd)
 int
 user_getstr(const char *prompt, char **response)
 {
-   const int MAX_INPUT_SIZE = 1000; /* TODO remove this limit */
-   char *input;
-   int  pos, ch, ret;
+   char   *input, *new_input, *ptr;
+   int     ch, ret;
+   size_t  len, pos, hist_index = cmd_mode_hist_size;
 
    /* display the prompt */
    werase(ui.command);
@@ -979,15 +1006,9 @@ user_getstr(const char *prompt, char **response)
    wmove(ui.command, 0, strlen(prompt));
    wrefresh(ui.command);
 
-   /* allocate input space and clear */
-   if ((input = calloc(MAX_INPUT_SIZE, sizeof(char))) == NULL)
-      err(1, "user_getstr: calloc(3) failed for input string");
-
-   bzero(input, MAX_INPUT_SIZE);
-
    /* start getting input */
-   ret = 0;
-   pos = 0;
+   input = NULL;
+   len = ret = pos = 0;
    while ((ch = getch()) && !VSIG_QUIT) {
 
       /*
@@ -1007,15 +1028,17 @@ user_getstr(const char *prompt, char **response)
       if (ch == '\n' || ch == 13)
          break;
 
-      /* handle 'escape' */
-      if (ch == 27) {
+      switch (ch) {
+      case 27:
+         /* handle 'escape' */
          ret = 1;
          goto end;
-      }
-
-      /* handle 'backspace' / left-arrow, etc. */
-      if (ch == 127    || ch == KEY_BACKSPACE || ch == KEY_LEFT
-       || ch == KEY_DC || ch == KEY_SDC) {
+      case 127:
+      case KEY_BACKSPACE:
+      case KEY_LEFT:
+      case KEY_DC:
+      case KEY_SDC:
+         /* handle 'backspace' / left-arrow, etc. */
          if (pos == 0) {
             if (ch == KEY_BACKSPACE) {
                ret = 1;
@@ -1029,17 +1052,73 @@ user_getstr(const char *prompt, char **response)
             pos--;
          }
          continue;
+      case KEY_UP:
+         if (cmd_mode_hist == NULL)
+            continue;
+
+         /* redisplay prompt to clean previous entry */
+         werase(ui.command);
+         mvwprintw(ui.command, 0, 0, "%s", prompt);
+
+         /* stay on the first entry if there are no more elements; just like Vim */
+         if (hist_index - 1 < cmd_mode_hist_size)
+            hist_index--;
+
+         ptr = cmd_mode_hist[hist_index];
+
+         /* copy it to the input buffer */
+         free(input);
+         if ((input = strdup(ptr)) == NULL)
+            err(1, "%s: strdup(3) failed", __FUNCTION__);
+         len = pos = strlen(input);
+
+         mvwaddstr(ui.command, 0, strlen(prompt), ptr);
+         break;
+      case KEY_DOWN:
+         if (cmd_mode_hist == NULL)
+            continue;
+
+         /* redisplay prompt to clean previous entry */
+         werase(ui.command);
+         mvwprintw(ui.command, 0, 0, "%s", prompt);
+
+         /* show an empty prompt if there are no more elements; just like Vim */
+         if (hist_index == SIZE_MAX || hist_index + 1 >= cmd_mode_hist_size) {
+            hist_index = cmd_mode_hist_size;
+            pos = 0;
+            continue;
+         }
+
+         /* retrieve next entry */
+         hist_index++;
+         ptr = cmd_mode_hist[hist_index];
+
+         /* copy it to the input buffer */
+         free(input);
+         if ((input = strdup(ptr)) == NULL)
+            err(1, "%s: strdup(3) failed", __FUNCTION__);
+         len = pos = strlen(input);
+
+         mvwaddstr(ui.command, 0, strlen(prompt), ptr);
+         break;
+      default:
+         /* got regular input.  add to buffer. */
+         if (pos >= len) {
+            if (len == SIZE_MAX)
+               err(1, "%s: overflow", __FUNCTION__);
+            if ((new_input = realloc(input, len + 2)) == NULL)
+               err(1, "%s: realloc(3) failed", __FUNCTION__);
+            input = new_input;
+            len++;
+         }
+
+         input[pos] = ch;
+         mvwaddch(ui.command, 0, strlen(prompt) + pos, ch);
+         pos++;
+         break;
       }
 
-      /* got regular input.  add to buffer. */
-      input[pos] = ch;
-      mvwaddch(ui.command, 0, strlen(prompt) + pos, ch);
       wrefresh(ui.command);
-      pos++;
-
-      /* see todo above - realloc input buffer here if position reaches max */
-      if (pos >= MAX_INPUT_SIZE)
-         errx(1, "user_getstr: shamefull limit reached");
    }
 
    /* For lack of input, bail out */
@@ -1050,14 +1129,12 @@ user_getstr(const char *prompt, char **response)
 
    /* NULL-terminate and trim off trailing whitespace */
    input[pos--] = '\0';
-   for (; input[pos] == ' ' && pos >= 0; pos--)
+   for (; input[pos] == ' '; pos--)
       input[pos] = '\0';
 
    /* trim the fat */
-   if ((*response = calloc(strlen(input) + 1, sizeof(char))) == NULL)
-      err(1, "user_getstr: calloc(3) failed for result");
-
-   snprintf(*response, strlen(input) + 1, "%s", input);
+   if ((*response = strdup(input)) == NULL)
+      err(1, "%s: strdup(3) failed for result", __FUNCTION__);
 
 end:
    free(input);
@@ -1085,4 +1162,3 @@ user_get_yesno(const char *msg, int *response)
    free(answer);
    return 0;
 }
-
