@@ -683,24 +683,13 @@ paint_str2color(const char *str)
 {
    if (strncasecmp(str, "color", 5) == 0) {
       const char *errstr;
-      char *color;
-      char *numberstr;
-      int   number;
+      int         number;
 
-      if ((color = strdup(str)) == NULL)
-         err(1, "%s: strdup of '%s' failed.", __FUNCTION__, str);
-
-      if ((numberstr = strtok(color, "color")) == NULL) {
-         free(color);
+      str += strspn(str, "color");
+      number = (int)strtonum(str, -1, 255, &errstr);
+      if (errstr != NULL)
          return -2;
-      }
-      number = (int)strtonum(numberstr, -1, 255, &errstr);
-      if (errstr != NULL) {
-         free(color);
-         return -2;
-      }
 
-      free(color);
       return number;
 
    } else if (strcasecmp(str, "black") == 0)
