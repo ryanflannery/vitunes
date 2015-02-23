@@ -78,28 +78,17 @@ void
 toggle_list_add_command(toggle_list *t, char *cmd)
 {
    char **new_cmds;
-   int    idx;
+   int    new_size;
 
-   /* resize array */
-   if (t->size == 0) {
-      if ((t->commands = malloc(sizeof(char*))) == NULL)
-         err(1, "%s: malloc(3) failed", __FUNCTION__);
+   new_size = (t->size + 1) * sizeof *t->commands;
+   if ((new_cmds = realloc(t->commands, new_size)) == NULL)
+      err(1, "%s: realloc(3) failed", __FUNCTION__);
+   t->commands = new_cmds;
 
-      idx = 0;
-      t->size = 1;
-   } else {
-      int new_size = (t->size + 1) * sizeof(char*);
-      if ((new_cmds = realloc(t->commands, new_size)) == NULL)
-         err(1, "%s: realloc(3) failed", __FUNCTION__);
-
-      idx = t->size;
-      t->commands = new_cmds;
-      t->size++;
-   }
-
-   /* add command */
-   if ((t->commands[idx] = strdup(cmd)) == NULL)
+   if ((t->commands[t->size] = strdup(cmd)) == NULL)
       err(1, "%s: strdup(3) failed", __FUNCTION__);
+
+   t->size++;
 }
 
 toggle_list*
@@ -125,7 +114,7 @@ toggle_list_create(int registr, int argc, char *argv[])
       for (j = i; j < argc && strcmp("/", argv[j]); j++);
 
       /* now collapse them into a single string */
-      cmd = argv2str(j - i + 1, argv + i);
+      cmd = argv2str(j - i, argv + i);
       toggle_list_add_command(t, cmd);
       free(cmd);
 
@@ -173,6 +162,7 @@ toggle_remove(int registr)
 
    if (!found) return;
 
+   toggle_list_free(toggleset[idx]);
    for (i = idx; i < toggleset_size - 1; i++)
       toggleset[i] = toggleset[i + 1];
 
