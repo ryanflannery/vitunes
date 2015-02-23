@@ -291,7 +291,7 @@ bool mi_query_match_filename;
 
 /* initialize the query structures */
 void
-mi_query_init()
+mi_query_init(void)
 {
    int i;
 
@@ -305,14 +305,14 @@ mi_query_init()
 
 /* determine if a query has been set */
 bool
-mi_query_isset()
+mi_query_isset(void)
 {
    return _mi_query.ntokens != 0;
 }
 
 /* free the query structures */
 void
-mi_query_clear()
+mi_query_clear(void)
 {
    int i;
 
@@ -361,7 +361,7 @@ mi_query_setraw(const char *query)
 }
 
 const char *
-mi_query_getraw()
+mi_query_getraw(void)
 {
    return _mi_query.raw;
 }
@@ -434,7 +434,7 @@ mi_sort_description _mi_sort;
 
 /* initialize the sort ordering to what i like */
 void
-mi_sort_init()
+mi_sort_init(void)
 {
    _mi_sort.order[0] = MI_CINFO_ARTIST;
    _mi_sort.order[1] = MI_CINFO_ALBUM;
@@ -451,7 +451,7 @@ mi_sort_init()
 
 /* clear the current sort */
 void
-mi_sort_clear()
+mi_sort_clear(void)
 {
    _mi_sort.nfields = 0;
 }
@@ -590,7 +590,7 @@ mi_display_description mi_display;
 
 /* initialize global display description to what i like */
 void
-mi_display_init()
+mi_display_init(void)
 {
    mi_display.nfields = 6;
 
@@ -618,14 +618,14 @@ mi_display_init()
 
 /* reset the display to what i like */
 void
-mi_display_reset()
+mi_display_reset(void)
 {
    mi_display_init();
 }
 
 /* return the total width of the current display description */
 int
-mi_display_getwidth()
+mi_display_getwidth(void)
 {
    int   sum;
    int   i;
@@ -639,7 +639,7 @@ mi_display_getwidth()
 
 /* convert current display to a string for showing elsewhere */
 char *
-mi_display_tostr()
+mi_display_tostr(void)
 {
    /*
     * NOTE: for the below "dirty hack" ... it would require some *huge*

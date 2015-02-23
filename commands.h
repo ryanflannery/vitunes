@@ -19,12 +19,12 @@
 
 #include "compat.h"
 
+#include "debug.h"
 #include "enums.h"
+#include "keybindings.h"
 #include "paint.h"
 #include "str2argv.h"
 #include "vitunes.h"
-#include "debug.h"
-#include "keybindings.h"
 
 /****************************************************************************
  * Toggle-list handling stuff
@@ -76,8 +76,8 @@ extern toggle_list **toggleset;
 extern size_t        toggleset_size;
 
 /* initialize and free the toggleset */
-void toggleset_init();
-void toggleset_free();
+void toggleset_init(void);
+void toggleset_free(void);
 
 toggle_list *toggle_list_create(int registr, int argc, char *argv[]);
 void toggle_list_add_command(toggle_list *t, char *cmd);

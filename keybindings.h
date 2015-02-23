@@ -92,12 +92,12 @@ typedef int KeyCode;
 
 
 /* Keybinding initializing and binding routines */
-void kb_init();
-void kb_free();
+void kb_init(void);
+void kb_free(void);
 void kb_bind(KeyAction, KeyCode);
 void kb_unbind_action(KeyAction);
 void kb_unbind_key(KeyCode);
-void kb_unbind_all();
+void kb_unbind_all(void);
 bool kb_execute(KeyCode);
 bool kb_execute_by_name(const char *);
 
@@ -162,15 +162,15 @@ void kba_toggle(KbaArgs a);
  * how the sequence "15j" will move down 15 lines.  "15" is the gnum here.
  * These are the routines used to init/set/clear the gnum.
  */
-void gnum_clear();
+void gnum_clear(void);
 void gnum_set(int x);
 void gnum_add(int x);
-int  gnum_get();        /* Return current gnum. */
-int  gnum_retrieve();   /* Return current gnum and then clear it. */
+int  gnum_get(void);        /* Return current gnum. */
+int  gnum_retrieve(void);   /* Return current gnum and then clear it. */
 
 
 /* These are used to set/use the search direction */
-Direction search_dir_get();
+Direction search_dir_get(void);
 void  search_dir_set(Direction d);
 
 
@@ -183,14 +183,14 @@ typedef struct {
 } yank_buffer;
 extern yank_buffer _yank_buffer;
 
-void ybuffer_init();
-void ybuffer_clear();
-void ybuffer_free();
+void ybuffer_init(void);
+void ybuffer_clear(void);
+void ybuffer_free(void);
 void ybuffer_add(meta_info *f);
 
 
 /* Misc. handy functions used frequently */
-void redraw_active();
+void redraw_active(void);
 bool match_command_name(const char *s, const char *cmd);
 void execute_external_command(const char *cmd);
 

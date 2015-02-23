@@ -80,7 +80,7 @@ num2fmt(int n, Direction d)
 
 /* paint the status bar */
 void
-paint_status_bar()
+paint_status_bar(void)
 {
    static char scratchpad[500];
    char       *focusName;
@@ -127,7 +127,7 @@ paint_status_bar()
 
 /* paint the player */
 void
-paint_player()
+paint_player(void)
 {
    static char *playmode;
    static char *finfo;
@@ -194,7 +194,7 @@ paint_player()
 
 /* paint the library window */
 void
-paint_library()
+paint_library(void)
 {
    char *str;
    int   row, hoff, index, x;
@@ -286,7 +286,7 @@ paint_library()
 
 /* paint the playlist window */
 void
-paint_playlist()
+paint_playlist(void)
 {
    playlist   *plist;
    bool        hasinfo;
@@ -470,7 +470,7 @@ paint_playlist()
 
 /* paint borders between windows */
 void
-paint_borders()
+paint_borders(void)
 {
    int w, h;
    getmaxyx(stdscr, h, w);
@@ -538,7 +538,7 @@ paint_playlist_file_info(const meta_info *m)
 
 /* paint all windows */
 void
-paint_all()
+paint_all(void)
 {
    paint_borders();
    paint_player();
@@ -595,7 +595,7 @@ paint_message(char *fmt, ...)
  * run through init_pair(3)
  */
 void
-paint_setup_colors()
+paint_setup_colors(void)
 {
    int i;
 

@@ -43,7 +43,7 @@ bool restarting = false;
 
 
 void mplayer_volume_set(float);
-void mplayer_volume_query();
+void mplayer_volume_query(void);
 
 static void
 mplayer_send_cmd(const char *cmd)
@@ -52,7 +52,7 @@ mplayer_send_cmd(const char *cmd)
 }
 
 void
-mplayer_start()
+mplayer_start(void)
 {
    int pwrite[2];
    int pread[2];
@@ -114,7 +114,7 @@ mplayer_start()
 }
 
 void
-mplayer_finish()
+mplayer_finish(void)
 {
    mplayer_send_cmd("\nquit\n");
 
@@ -125,7 +125,7 @@ mplayer_finish()
 }
 
 void
-mplayer_restart()
+mplayer_restart(void)
 {
    int status;
 
@@ -144,7 +144,7 @@ mplayer_restart()
 }
 
 void
-mplayer_sigchld_message()
+mplayer_sigchld_message(void)
 {
    /* TODO find a way to check if mplayer is in $PATH in start() */
    mplayer_callback_fatal("%s is crashing too often.  Possible causes are:\n\
@@ -154,7 +154,7 @@ mplayer_sigchld_message()
 }
 
 void
-mplayer_sigchld()
+mplayer_sigchld(void)
 {
    static time_t  last_sigchld = -1;
 
@@ -195,7 +195,7 @@ mplayer_play(const char *file)
 }
 
 void
-mplayer_stop()
+mplayer_stop(void)
 {
    mplayer_send_cmd("\nstop\n");
 
@@ -204,7 +204,7 @@ mplayer_stop()
 }
 
 void
-mplayer_pause()
+mplayer_pause(void)
 {
    if (!mplayer_state.playing)
       return;
@@ -282,7 +282,7 @@ mplayer_volume_set(float percent)
 }
 
 void
-mplayer_volume_query()
+mplayer_volume_query(void)
 {
    static const char *cmd = "\npausing_keep get_property volume\n";
 
@@ -336,7 +336,7 @@ mplayer_set_callback_fatal(void (*f)(char *, ...))
  *       song, according to the current playmode.
  ****************************************************************************/
 void
-mplayer_monitor()
+mplayer_monitor(void)
 {
    static const char *query_cmd   = "\nget_property time_pos\n";
    static const char *answer_fail = "ANS_ERROR=PROPERTY_UNAVAILABLE";

@@ -20,9 +20,9 @@
 #include "compat.h"
 
 #include <ctype.h>
-#include <limits.h>
 #include <err.h>
 #include <errno.h>
+#include <limits.h>
 #include <stdbool.h> 
 #include <stdint.h>
 #include <stdio.h>
@@ -118,13 +118,13 @@ typedef struct {
 extern bool mi_query_match_filename;
 
 /* initialize, set, and clear global query description */
-void mi_query_init();
-bool mi_query_isset();
-void mi_query_clear();
+void mi_query_init(void);
+bool mi_query_isset(void);
+void mi_query_clear(void);
 void mi_query_add_token(const char *token);
 
 void mi_query_setraw(const char *query);
-const char *mi_query_getraw();
+const char *mi_query_getraw(void);
 
 /* match a given meta_info/string against the global query description */
 bool mi_match(const meta_info *mi);
@@ -149,8 +149,8 @@ typedef struct {
 } mi_sort_description;
 
 /* initialize, set, and clear global sort description */
-void mi_sort_init();
-void mi_sort_clear();
+void mi_sort_init(void);
+void mi_sort_clear(void);
 int  mi_sort_set(const char *str, const char **errmsg);
 
 /* compare two meta_info's using the global sort description */
@@ -173,14 +173,14 @@ typedef struct {
 extern mi_display_description mi_display;
 
 /* initialize and set the global display description */
-void  mi_display_init();
+void  mi_display_init(void);
 int   mi_display_set(const char *str, const char **errmsg);
-void  mi_display_reset();
+void  mi_display_reset(void);
 
 /* convert current display to a string */
-char *mi_display_tostr();
+char *mi_display_tostr(void);
 
 /* get total width of display */
-int   mi_display_getwidth();
+int   mi_display_getwidth(void);
 
 #endif

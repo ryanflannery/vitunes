@@ -39,16 +39,16 @@
 /* OpenBSD has fparseln(3), but it must be included thusly */
 #if defined(__OpenBSD__)
 #  include <stdio.h>
-#  include <util.h>
 #  include <libgen.h>
+#  include <util.h>
 #endif
 
 /* FreeBSD has fparseln(3), but it must be included thusly */
 #if defined(__FreeBSD__)
-#  include <stdio.h>
 #  include <sys/types.h>
-#  include <libutil.h>
+#  include <stdio.h>
 #  include <libgen.h>
+#  include <libutil.h>
 #endif
 
 /* Mac OS X has fparseln(3), but it must be included thusly */

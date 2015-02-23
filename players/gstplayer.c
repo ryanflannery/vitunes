@@ -38,7 +38,7 @@ gstplayer_handle_about_to_finish(GstElement *obj UNUSED, gpointer userdata UNUSE
 }
 
 void
-gstplayer_init()
+gstplayer_init(void)
 {
    /* 
     * - init gstreamer
@@ -109,7 +109,7 @@ gstplayer_play(const char *filename)
 
 /* pause / unpause playback */
 void
-gstplayer_pause()
+gstplayer_pause(void)
 {
    /* assertions */
    if (!gplayer.player)
@@ -131,7 +131,7 @@ gstplayer_pause()
 
 /* stop playback */
 void
-gstplayer_stop()
+gstplayer_stop(void)
 {
    if (!gplayer.player)
       gplayer.fatal_cb("gstplayer_pause: player not initialized\n");
@@ -144,7 +144,7 @@ gstplayer_stop()
 }
 
 void
-gstplayer_cleanup()
+gstplayer_cleanup(void)
 {
    if (! gplayer.player)
       return;
@@ -171,7 +171,7 @@ gstplayer_seek(int seconds)
 
 
 void
-gstplayer_monitor()
+gstplayer_monitor(void)
 {
    GstMessage *msg;
    if (!gplayer.bus)
@@ -205,7 +205,7 @@ gstplayer_monitor()
 }
 
 bool
-gstplayer_is_playing()
+gstplayer_is_playing(void)
 {
    if (!gplayer.player)
       return false;
@@ -213,7 +213,7 @@ gstplayer_is_playing()
 }
 
 bool
-gstplayer_is_paused()
+gstplayer_is_paused(void)
 {
    if (!gplayer.player)
       return false;

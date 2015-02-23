@@ -21,9 +21,9 @@
 
 #include <err.h>
 
-#include "playlist.h"
-#include "paint.h"
 #include "debug.h"
+#include "paint.h"
+#include "playlist.h"
 
 /* "static" backends (those that aren't dynamically loaded) */
 #include "players/mplayer.h"
@@ -46,20 +46,20 @@ typedef enum {
 
 /* player setup/destroy functions */
 void player_init(const char *backend);
-void player_destroy();
+void player_destroy(void);
 
 void player_set_queue(playlist *queue, int position);
 
 /* player control functions */
-void player_play();
-void player_stop();
-void player_pause();
+void player_play(void);
+void player_stop(void);
+void player_pause(void);
 void player_seek(int seconds);
 void player_skip_song(int num);
 void player_volume_step(float percent);
 
 /* This is called periodically to monitor the backend player */
-void player_monitor();
+void player_monitor(void);
 
 
 /* Available back-end players */

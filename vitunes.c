@@ -76,7 +76,7 @@ char *progname;
 int  handle_switches(int argc, char *argv[]);
 void usage(void);
 void signal_handler(int);
-void setup_timer();
+void setup_timer(void);
 
 
 int
@@ -126,10 +126,10 @@ main(int argc, char *argv[])
    /* handle command-line switches & e-commands */
    handle_switches(argc, argv);
 
-   if(sock_send_msg(VITUNES_RUNNING) != -1) {
+   if (sock_send_msg(VITUNES_RUNNING) != -1) {
       printf("Vitunes appears to be running already. Won't open socket.");
    } else {
-      if((sock = sock_listen()) == -1)
+      if ((sock = sock_listen()) == -1)
          errx(1, "failed to open socket.");
    }
 
@@ -209,21 +209,21 @@ main(int argc, char *argv[])
 
       FD_ZERO(&fds);
       FD_SET(0, &fds);
-      if(sock > 0)
+      if (sock > 0)
          FD_SET(sock, &fds);
       errno = 0;
-      if(select((sock > 0 ? sock : 0) + 1, &fds, NULL, NULL, &tv) == -1) {
-         if(errno == 0 || errno == EINTR)
+      if (select((sock > 0 ? sock : 0) + 1, &fds, NULL, NULL, &tv) == -1) {
+         if (errno == 0 || errno == EINTR)
             continue;
          break;
       }
 
-      if(sock > 0) {
-         if(FD_ISSET(sock, &fds))
+      if (sock > 0) {
+         if (FD_ISSET(sock, &fds))
             sock_recv_and_exec(sock);
       }
 
-      if(FD_ISSET(0, &fds)) {
+      if (FD_ISSET(0, &fds)) {
          /* handle any available input */
          if ((input = getch()) && input != ERR) {
             if (isdigit(input) &&  (input != '0' || gnum_get() > 0))
@@ -297,7 +297,7 @@ signal_handler(int sig)
 
 /* handle any signal flags */
 void
-process_signals()
+process_signals(void)
 {
    /* cppcheck-suppress variableScope */
    static playlist *prev_queue = NULL;
@@ -357,7 +357,7 @@ process_signals()
 
 /* setup timer signal handler above */
 void
-setup_timer()
+setup_timer(void)
 {
    struct sigaction sig_act;
    struct itimerval timer;
@@ -387,7 +387,7 @@ setup_timer()
  * XXX note that this requires mdb, ui, and player to all be loaded/setup
  */
 void
-load_config()
+load_config(void)
 {
    const char *errmsg = NULL;
    size_t  length, linenum;
@@ -475,7 +475,7 @@ handle_switches(int argc, char *argv[])
    while ((ch = getopt(argc, argv, "he:f:d:p:m:c:")) != -1) {
       switch (ch) {
          case 'c':
-            if(sock_send_msg(optarg) == -1)
+            if (sock_send_msg(optarg) == -1)
                errx(1, "Failed to send message. Vitunes not running?");
             exit(0);
 

@@ -21,22 +21,21 @@
 
 #include <sys/time.h>
 
-#include <getopt.h>
 #include <locale.h>
 #include <pwd.h>
 #include <signal.h>
-#include <unistd.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
-#include "debug.h"
-#include "enums.h"
 #include "commands.h"
+#include "debug.h"
+#include "ecmd.h"
+#include "enums.h"
 #include "keybindings.h"
 #include "medialib.h"
 #include "player.h"
 #include "uinterface.h"
-#include "ecmd.h"
 
 /* for unused arguments */
 #if defined(__GNUC__) || defined(__clang__)
@@ -65,7 +64,7 @@ extern int         visual_mode_start;
 extern volatile sig_atomic_t VSIG_QUIT;
 
 /* other */
-void load_config();
-void process_signals();
+void load_config(void);
+void process_signals(void);
 
 #endif

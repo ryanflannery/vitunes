@@ -80,7 +80,7 @@ medialib_load(const char *db_file, const char *playlist_dir)
 
 /* free() all memory associated with global media library */
 void
-medialib_destroy()
+medialib_destroy(void)
 {
    int i;
 

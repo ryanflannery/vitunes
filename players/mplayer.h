@@ -23,7 +23,6 @@
 #include <sys/types.h>
 
 #include <err.h>
-#include <time.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <signal.h>
@@ -31,6 +30,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <unistd.h>
 
 #include "player_utils.h"
@@ -39,26 +39,26 @@
 #  include "../debug.h"
 #endif
 
-void mplayer_start();
-void mplayer_finish();
-void mplayer_sigchld();
+void mplayer_start(void);
+void mplayer_finish(void);
+void mplayer_sigchld(void);
 
 void mplayer_play(const char *file);
-void mplayer_stop();
-void mplayer_pause();
+void mplayer_stop(void);
+void mplayer_pause(void);
 void mplayer_seek(int seconds);
 void mplayer_volume_step(float percent);
 
-float mplayer_get_position();
-float mplayer_get_volume();
-bool  mplayer_is_playing();
-bool  mplayer_is_paused();
+float mplayer_get_position(void);
+float mplayer_get_volume(void);
+bool  mplayer_is_playing(void);
+bool  mplayer_is_paused(void);
 
 void  mplayer_set_callback_playnext(void (*f)(void));
 void  mplayer_set_callback_notice(void (*f)(char *, ...));
 void  mplayer_set_callback_error(void (*f)(char *, ...));
 void  mplayer_set_callback_fatal(void (*f)(char *, ...));
 
-void mplayer_monitor();
+void mplayer_monitor(void);
 
 #endif

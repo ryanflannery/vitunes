@@ -22,7 +22,7 @@ player_info_t player_info;
 
 
 /* callbacks */
-static void callback_playnext() { player_skip_song(1); }
+static void callback_playnext(void) { player_skip_song(1); }
 
 static void
 callback_fatal(char *fmt, ...)
@@ -134,7 +134,7 @@ player_init(const char *backend)
 }
 
 void
-player_destroy()
+player_destroy(void)
 {
    player.finish();
 }
@@ -147,7 +147,7 @@ player_set_queue(playlist *queue, int pos)
 }
 
 void
-player_play()
+player_play(void)
 {
    if (player_info.queue == NULL)
       errx(1, "player_play: bad queue/qidx");
@@ -160,13 +160,13 @@ player_play()
 }
 
 void
-player_stop()
+player_stop(void)
 {
    player.stop();
 }
 
 void
-player_pause()
+player_pause(void)
 {
    if (!player.playing())
       return;
