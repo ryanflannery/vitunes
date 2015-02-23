@@ -15,15 +15,16 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include <err.h>
 #include <stdio.h>
 #include <string.h>
 
 #include "ecmd.h"
+#include "error.h"
 #include "medialib.h"
 #include "meta_info.h"
 #include "playlist.h"
 #include "vitunes.h"
+#include "xmalloc.h"
 
 static void
 ecmd_addurl_exec(UNUSED int argc, char **argv)
@@ -37,15 +38,14 @@ ecmd_addurl_exec(UNUSED int argc, char **argv)
    /* start new record, set filename */
    m = mi_new();
    m->is_url = true;
-   if ((m->filename = strdup(argv[0])) == NULL)
-      err(1, "%s: strdup failed (filename)", __FUNCTION__);
+   m->filename = xstrdup(argv[0]);
 
    /* get fields from user */
    for (field = 0; field < MI_NUM_CINFO; field++) {
 
       printf("%10.10s: ", MI_CINFO_NAMES[field]);
       if (fgets(input, sizeof(input), stdin) == NULL) {
-         warnx("Operation canceled. Database unchanged.");
+         infox("Operation canceled. Database unchanged.");
          mi_free(m);
          return;
       }
@@ -53,8 +53,7 @@ ecmd_addurl_exec(UNUSED int argc, char **argv)
       if (input[strlen(input) - 1] == '\n')
          input[strlen(input) - 1] = '\0';
 
-      if ((m->cinfo[field] = strdup(input)) == NULL)
-         err(1, "%s: strdup failed (field)", __FUNCTION__);
+      m->cinfo[field] = xstrdup(input);
    }
 
    /* load existing database and see if file/URL already exists */
@@ -76,7 +75,7 @@ ecmd_addurl_exec(UNUSED int argc, char **argv)
 
       if (fgets(input, sizeof(input), stdin) == NULL
       || (strcasecmp(input, "yes\n") != 0 && strcasecmp(input, "y\n") != 0)) {
-         warnx("Operation Canceled.  Database unchanged.");
+         infox("Operation Canceled.  Database unchanged.");
          mi_free(m);
          medialib_destroy();
          return;

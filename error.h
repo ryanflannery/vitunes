@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2011 Ryan Flannery <ryan.flannery@gmail.com>
+ * Copyright (c) 2013 Tiago Cunha <tcunha@gmx.com>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,37 +14,23 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#ifndef DEBUG_H
-#define DEBUG_H
+#ifndef ERROR_H
+#define ERROR_H
 
-#include <stdio.h>
+#define ERROR_LOG_PATH  "vitunes-debug.log"
 
-/* log file for debugging */
-extern FILE *debug_log;
+#define ERROR_STDERR 0
+#define ERROR_CFG    1
+#define ERROR_PAINT  2
 
-#ifdef DEBUG
-
-/* debug file logger that goes to the file opened in vitunes.c */
-#define DFLOG(format, args...) \
-   fprintf(debug_log, "%s.%d (%s): ", __FILE__, __LINE__, __FUNCTION__); \
-   fprintf(debug_log, format, ## args); \
-   fprintf(debug_log, "\n"); \
-   fflush(debug_log);
-
-/* console logger.  goes to stdout.  doesn't work well in curses */
-#define DCLOG(format, args...) \
-   printf("%d: ", __LINE__); \
-   printf(format, ## args); \
-   printf("\n"); \
-   fflush(stdout);
-
-
-#else
-
-#define DFLOG(format, args...) 0;
-#define DCLOG(format, args...) 0;
-
-#endif
-
+void debug(const char *, ...);
+void die(const char *, ...);
+void diex(const char *, ...);
+void error_init(int);
+void error_open(void);
+void fatal(const char *, ...);
+void fatalx(const char *, ...);
+void info(const char *, ...);
+void infox(const char *, ...);
 
 #endif

@@ -18,13 +18,6 @@
 #ifndef ECMD_H
 #define ECMD_H
 
-#include <err.h>
-#include <stdio.h>
-#include <string.h>
-#include <unistd.h>
-
-#include "vitunes.h"
-
 struct ecmd {
    const char  *name;
    const char  *alias;      /* may be NULL */

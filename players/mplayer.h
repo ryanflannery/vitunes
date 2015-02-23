@@ -17,28 +17,6 @@
 #ifndef MPLAYER_H
 #define MPLAYER_H
 
-#include "../compat.h"
-
-#include <sys/wait.h>
-#include <sys/types.h>
-
-#include <err.h>
-#include <time.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <signal.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-
-#include "player_utils.h"
-
-#ifdef DEBUG
-#  include "../debug.h"
-#endif
-
 void mplayer_start();
 void mplayer_finish();
 void mplayer_sigchld();
@@ -55,9 +33,9 @@ bool  mplayer_is_playing();
 bool  mplayer_is_paused();
 
 void  mplayer_set_callback_playnext(void (*f)(void));
-void  mplayer_set_callback_notice(void (*f)(char *, ...));
-void  mplayer_set_callback_error(void (*f)(char *, ...));
-void  mplayer_set_callback_fatal(void (*f)(char *, ...));
+void  mplayer_set_callback_notice(void (*f)(const char *, ...));
+void  mplayer_set_callback_error(void (*f)(const char *, ...));
+void  mplayer_set_callback_fatal(void (*f)(const char *, ...));
 
 void mplayer_monitor();
 

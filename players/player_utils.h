@@ -17,15 +17,6 @@
 #ifndef PLAYER_UTILS_H
 #define PLAYER_UTILS_H
 
-#include "../compat.h"
-
-#include <stdbool.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <err.h>
-
 bool exe_in_path(const char *e);
 
 #endif

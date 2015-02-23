@@ -14,7 +14,25 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#include <ctype.h>
+#include <errno.h>
+#include <limits.h>
+#include <stdbool.h> 
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <strings.h>
+#include <time.h>
+
+/* non-baes includes (just TagLib) */
+#include <tag_c.h>
+
+#include "compat.h"
+#include "enums.h"
+#include "error.h"
 #include "meta_info.h"
+#include "xmalloc.h"
 
 /* human-readable names of all of the string-type meta information values */
 const char *MI_CINFO_NAMES[] = {
@@ -38,9 +56,7 @@ mi_new(void)
    meta_info *mi;
    int i;
 
-   if ((mi = malloc(sizeof(meta_info))) == NULL)
-      err(1, "mi_new: meta_info malloc failed");
-
+   mi = xmalloc(sizeof(meta_info));
    mi->filename = NULL;
    mi->length = 0;
    mi->last_updated = 0;
@@ -111,18 +127,11 @@ mi_fread(meta_info *mi, FILE *fin)
    fread(lengths, sizeof(lengths), 1, fin);
 
    /* allocate all needed space in the meta_info struct, and zero */
-   if ((mi->filename = calloc(lengths[0] + 1, sizeof(char))) == NULL)
-      err(1, "mi_fread: calloc filename failed");
-
-   bzero(mi->filename, sizeof(char) * (lengths[0] + 1));
+   mi->filename = xcalloc(lengths[0] + 1, sizeof(char));
 
    for (i = 0; i < MI_NUM_CINFO; i++) {
-      if (lengths[i+1] > 0) {
-         if ((mi->cinfo[i] = calloc(lengths[i+1] + 1, sizeof(char))) == NULL)
-            err(1, "mi_fread: failed to calloc cinfo");
-
-         bzero(mi->cinfo[i], sizeof(char) * (lengths[i+1] + 1));
-      }
+      if (lengths[i+1] > 0)
+         mi->cinfo[i] = xcalloc(lengths[i+1] + 1, sizeof(char));
    }
 
    /* read */
@@ -181,10 +190,9 @@ mi_extract(const char *filename)
    /* store full filename in meta_info struct */
    bzero(fullname, sizeof(fullname));
    if (realpath(filename, fullname) == NULL)
-      err(1, "mi_extract: realpath failed to resolve '%s'", filename);
+      fatal("mi_extract: realpath failed to resolve '%s'", filename);
 
-   if ((mi->filename = strdup(fullname)) == NULL)
-      errx(1, "mi_extract: strdup failed for '%s'", fullname);
+   mi->filename = xstrdup(fullname);
 
    /* start extracting fields using TagLib... */
 
@@ -202,45 +210,32 @@ mi_extract(const char *filename)
 
    /* artist/album/title/genre */
    if ((str = taglib_tag_artist(tag)) != NULL)
-      mi->cinfo[MI_CINFO_ARTIST] = strdup(str);
+      mi->cinfo[MI_CINFO_ARTIST] = xstrdup(str);
 
    if ((str = taglib_tag_album(tag)) != NULL)
-      mi->cinfo[MI_CINFO_ALBUM] = strdup(str);
+      mi->cinfo[MI_CINFO_ALBUM] = xstrdup(str);
 
    if ((str = taglib_tag_title(tag)) != NULL)
-      mi->cinfo[MI_CINFO_TITLE] = strdup(str);
+      mi->cinfo[MI_CINFO_TITLE] = xstrdup(str);
 
    if ((str = taglib_tag_genre(tag)) != NULL)
-      mi->cinfo[MI_CINFO_GENRE] = strdup(str);
+      mi->cinfo[MI_CINFO_GENRE] = xstrdup(str);
 
    if ((str = taglib_tag_comment(tag)) != NULL)
-      mi->cinfo[MI_CINFO_COMMENT] = strdup(str);
-
-   if (mi->cinfo[MI_CINFO_ARTIST] == NULL
-   ||  mi->cinfo[MI_CINFO_ALBUM] == NULL
-   ||  mi->cinfo[MI_CINFO_TITLE] == NULL
-   ||  mi->cinfo[MI_CINFO_GENRE] == NULL
-   ||  mi->cinfo[MI_CINFO_COMMENT] == NULL)
-      err(1, "mi_extract: strdup for CINFO failed");
+      mi->cinfo[MI_CINFO_COMMENT] = xstrdup(str);
 
    /* track number */
-   if (taglib_tag_track(tag) > 0) {
-      if (asprintf(&(mi->cinfo[MI_CINFO_TRACK]), "%3i", taglib_tag_track(tag)) == -1)
-         err(1, "mi_extract: asprintf failed for CINFO_TRACK");
-   }
+   if (taglib_tag_track(tag) > 0)
+      xasprintf(&(mi->cinfo[MI_CINFO_TRACK]), "%3i", taglib_tag_track(tag));
 
    /* year */
-   if (taglib_tag_year(tag) > 0) {
-      if (asprintf(&(mi->cinfo[MI_CINFO_YEAR]), "%i", taglib_tag_year(tag)) == -1)
-         err(1, "mi_extract: asprintf failed for CINFO_YEAR");
-   }
+   if (taglib_tag_year(tag) > 0)
+      xasprintf(&(mi->cinfo[MI_CINFO_YEAR]), "%i", taglib_tag_year(tag));
 
    /* playlength in seconds (will be 0 if unavailable) */
    mi->length = taglib_audioproperties_length(properties);
-   if (mi->length > 0) {
-      if ((mi->cinfo[MI_CINFO_LENGTH] = strdup(time2str(mi->length))) == NULL)
-         err(1, "mi_extract: strdup failed for CINO_LENGTH");
-   }
+   if (mi->length > 0)
+      mi->cinfo[MI_CINFO_LENGTH] = xstrdup(time2str(mi->length));
 
    /* record the time we extracted this info */
    time(&mi->last_updated);
@@ -336,7 +331,7 @@ void
 mi_query_add_token(const char *token)
 {
    if (_mi_query.ntokens == MI_MAX_QUERY_TOKENS)
-      errx(1, "mi_query_add_token: reached shamefull limit");
+      fatalx("mi_query_add_token: reached shamefull limit");
 
    /* match or no? */
    if (token[0] == '!') {
@@ -346,8 +341,7 @@ mi_query_add_token(const char *token)
       _mi_query.match[_mi_query.ntokens] = true;
 
    /* copy token */
-   if ((_mi_query.tokens[_mi_query.ntokens++] = strdup(token)) == NULL)
-      err(1, "mi_query_add_token: strdup failed");
+   _mi_query.tokens[_mi_query.ntokens++] = xstrdup(token);
 }
 
 void
@@ -356,8 +350,7 @@ mi_query_setraw(const char *query)
    if (_mi_query.raw != NULL)
       free(_mi_query.raw);
 
-   if ((_mi_query.raw = strdup(query)) == NULL)
-      err(1, "mi_query_setraw: query strdup failed");
+   _mi_query.raw = xstrdup(query);
 }
 
 const char *
@@ -491,9 +484,7 @@ mi_sort_set(const char *s, const char **errmsg)
    };
    *errmsg = NULL;
 
-   if ((line = strdup(s)) == NULL)
-      err(1, "mi_sort_set: sort strdup failed");
-
+   line = xstrdup(s);
    idx = 0;
    copy = line;
 
@@ -699,9 +690,7 @@ mi_display_set(const char *display, const char **errmsg)
    *errmsg = NULL;
    new_display.nfields = 0;
 
-   if ((s = strdup(display)) == NULL)
-      err(1, "mi_display_set: display strdup failed");
-
+   s = xstrdup(display);
    copy = s;
    idx = 0;
 

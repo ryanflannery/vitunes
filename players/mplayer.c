@@ -14,14 +14,32 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+
+#include <sys/wait.h>
+#include <sys/types.h>
+
+#include <err.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <signal.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <unistd.h>
+
+#include "compat.h"
 #include "mplayer.h"
 #include "mplayer_conf.h"
+#include "player_utils.h"
+#include "xmalloc.h"
 
 /* callback functions */
 void (*mplayer_callback_playnext)(void) = NULL;
-void (*mplayer_callback_notice)(char *, ...) = NULL;
-void (*mplayer_callback_error)(char *, ...) = NULL;
-void (*mplayer_callback_fatal)(char *, ...) = NULL;
+void (*mplayer_callback_notice)(const char *, ...) = NULL;
+void (*mplayer_callback_error)(const char *, ...) = NULL;
+void (*mplayer_callback_fatal)(const char *, ...) = NULL;
 
 
 /* record keeping */
@@ -178,9 +196,7 @@ mplayer_play(const char *file)
    static const char *cmd_fmt = "\nloadfile \"%s\" 0\nget_property time_pos\n";
    char *cmd;
 
-   if (asprintf(&cmd, cmd_fmt, file) == -1)
-      err(1, "%s: asprintf failed", __FUNCTION__);
-
+   xasprintf(&cmd, cmd_fmt, file);
    mplayer_send_cmd(cmd);
    free(cmd);
 
@@ -222,9 +238,7 @@ mplayer_seek(int seconds)
    if (!mplayer_state.playing)
       return;
 
-   if (asprintf(&cmd, cmd_fmt, seconds) == -1)
-      err(1, "%s: asprintf failed", __FUNCTION__);
-
+   xasprintf(&cmd, cmd_fmt, seconds);
    mplayer_send_cmd(cmd);
    free(cmd);
 
@@ -250,9 +264,7 @@ mplayer_volume_step(float percent)
       return;
    }
 
-   if (asprintf(&cmd, cmd_fmt, percent) == -1)
-      err(1, "%s: asprintf failed", __FUNCTION__);
-
+   xasprintf(&cmd, cmd_fmt, percent);
    mplayer_send_cmd(cmd);
    free(cmd);
 
@@ -271,10 +283,7 @@ mplayer_volume_set(float percent)
    if (percent > 100) percent = 100;
    if (percent < 0)   percent = 0;
 
-   if (asprintf(&cmd, cmd_fmt, percent) == -1)
-      err(1, "%s: asprintf failed", __FUNCTION__);
-
-
+   xasprintf(&cmd, cmd_fmt, percent);
    mplayer_send_cmd(cmd);
    free(cmd);
 
@@ -306,19 +315,19 @@ mplayer_set_callback_playnext(void (*f)(void))
 }
 
 void
-mplayer_set_callback_notice(void (*f)(char *, ...))
+mplayer_set_callback_notice(void (*f)(const char *, ...))
 {
    mplayer_callback_notice = f;
 }
 
 void
-mplayer_set_callback_error(void (*f)(char *, ...))
+mplayer_set_callback_error(void (*f)(const char *, ...))
 {
    mplayer_callback_error = f;
 }
 
 void
-mplayer_set_callback_fatal(void (*f)(char *, ...))
+mplayer_set_callback_fatal(void (*f)(const char *, ...))
 {
    mplayer_callback_fatal = f;
 }

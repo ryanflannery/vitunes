@@ -15,7 +15,13 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+
 #include "ecmd.h"
+#include "error.h"
+#include "vitunes.h"
 
 static int
 ecmd_parse(const struct ecmd *ecmd, int argc, char ***argv)
@@ -76,7 +82,7 @@ ecmd_exec(const char *ecmd, int argc, char **argv)
    }
    /* not found; bail out */
    if (i == ecmdtab_size) {
-      warnx("Unknown e-command '%s'.  See 'vitunes -e help' for list.", ecmd);
+      infox("Unknown e-command '%s'.  See 'vitunes -e help' for list.", ecmd);
       return -1;
    }
 

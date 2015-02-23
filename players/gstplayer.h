@@ -34,10 +34,10 @@ typedef struct {
    bool         paused; 
    bool         about_to_finish;
    /* callback functions */
-   void	(*playnext_cb)(void);
-   void (*notice_cb)(char *, ...);
-   void (*error_cb)(char *, ...);
-   void (*fatal_cb)(char *, ...);
+   void (*playnext_cb)(void);
+   void (*notice_cb)(const char *, ...);
+   void (*error_cb)(const char *, ...);
+   void (*fatal_cb)(const char *, ...);
 
    /* backend data */
    GstElement  *player;
@@ -60,9 +60,9 @@ bool  gstplayer_is_playing();
 bool  gstplayer_is_paused();
 
 void  gstplayer_set_callback_playnext(void (*f)(void));
-void  gstplayer_set_callback_notice(void (*f)(char *, ...));
-void  gstplayer_set_callback_error(void (*f)(char *, ...));
-void  gstplayer_set_callback_fatal(void (*f)(char *, ...));
+void  gstplayer_set_callback_notice(void (*f)(const char *, ...));
+void  gstplayer_set_callback_error(void (*f)(const char *, ...));
+void  gstplayer_set_callback_fatal(void (*f)(const char *, ...));
 
 void  gstplayer_monitor();
 

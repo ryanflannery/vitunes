@@ -22,7 +22,8 @@
  */
 
 #include "gstplayer.h"
-#include "../player.h"
+#include "player.h"
+#include "vitunes.h"
 
 /* player data */
 static gst_player gplayer;
@@ -269,17 +270,17 @@ gstplayer_set_callback_playnext(void (*f)(void))
    gplayer.playnext_cb = f;
 }
 void
-gstplayer_set_callback_notice(void (*f)(char *, ...))
+gstplayer_set_callback_notice(void (*f)(const char *, ...))
 {
    gplayer.notice_cb = f;
 }
 void
-gstplayer_set_callback_error(void (*f)(char *, ...))
+gstplayer_set_callback_error(void (*f)(const char *, ...))
 {
    gplayer.error_cb = f;
 }
 void 
-gstplayer_set_callback_fatal(void (*f)(char *, ...))
+gstplayer_set_callback_fatal(void (*f)(const char *, ...))
 {
    gplayer.fatal_cb = f;
 }

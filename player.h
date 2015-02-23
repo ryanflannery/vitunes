@@ -17,19 +17,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "compat.h"
-
-#include <err.h>
-
 #include "playlist.h"
-#include "paint.h"
-#include "debug.h"
-
-/* "static" backends (those that aren't dynamically loaded) */
-#include "players/mplayer.h"
-#if defined(ENABLE_GSTREAMER)
-#  include "players/gstplayer.h"
-#endif
 
 /*
  * Available play-modes.
@@ -98,9 +86,9 @@ typedef struct {
 
    /* callback functions */
    void (*set_callback_playnext)(void (*f)(void));
-   void (*set_callback_notice)(void (*f)(char *, ...));
-   void (*set_callback_error)(void (*f)(char *, ...));
-   void (*set_callback_fatal)(void (*f)(char *, ...));
+   void (*set_callback_notice)(void (*f)(const char *, ...));
+   void (*set_callback_error)(void (*f)(const char *, ...));
+   void (*set_callback_fatal)(void (*f)(const char *, ...));
 
    /* monitor function */
    void (*monitor)(void);

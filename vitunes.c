@@ -14,9 +14,33 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include "vitunes.h"
-#include "config.h"     /* NOTE: must be after vitunes.h */
+#include <sys/time.h>
+
+#include <ctype.h>
+#include <errno.h>
+#include <locale.h>
+#include <pwd.h>
+#include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
+#include "commands.h"
+#include "compat.h"
+#include "ecmd.h"
+#include "enums.h"
+#include "error.h"
+#include "keybindings.h"
+#include "medialib.h"
+#include "paint.h"
+#include "player.h"
 #include "socket.h"
+#include "str2argv.h"
+#include "uinterface.h"
+#include "vitunes.h"
+#include "xmalloc.h"
+#include "config.h"     /* NOTE: must be after vitunes.h */
 
 /*****************************************************************************
  * GLOBALS, EXPORTED
@@ -43,9 +67,6 @@ volatile sig_atomic_t VSIG_PLAYER_MONITOR = 0;  /* 1 = update player stats */
 enum { EXIT_NORMAL, BAD_PLAYER };
 volatile sig_atomic_t QUIT_CAUSE = EXIT_NORMAL;
 
-/* used with -DDEBUG */
-FILE  *debug_log;
-
 
 /*****************************************************************************
  * GLOBALS, LOCAL
@@ -66,6 +87,9 @@ char *player_backend;
 
 /* program name with directories removed */
 char *progname;
+
+/* configuration file line number */
+size_t conf_linenum;
 
 
 /*****************************************************************************
@@ -95,10 +119,8 @@ main(int argc, char *argv[])
    else
       progname++;
 
-#ifdef DEBUG
-   if ((debug_log = fopen("vitunes-debug.log", "w")) == NULL)
-      err(1, "failed to open debug log");
-#endif
+   /* error messages go to stderr before the user interface is set up */
+   error_init(ERROR_STDERR);
 
    /*------------------------------------------------------------------------
     * build paths names needed by vitunes & handle switches
@@ -107,21 +129,17 @@ main(int argc, char *argv[])
    /* get home dir */
    if ((home = getenv("HOME")) == NULL || *home == '\0') {
       if ((pw = getpwuid(getuid())) == NULL)
-         errx(1, "Couldn't determine home directory. Can't find my config files.");
-      home = pw->pw_dir;
+         home = "/";
+      else
+         home = pw->pw_dir;
    }
 
    /* build paths & other needed strings */
-   if (asprintf(&vitunes_dir, VITUNES_DIR_FMT, home) == -1)
-      err(1, "main: asprintf failed");
-   if (asprintf(&conf_file, CONF_FILE_FMT, home) == -1)
-      err(1, "main: asprintf failed");
-   if (asprintf(&db_file, DB_FILE_FMT, home) == -1)
-      err(1, "main: asprintf failed");
-   if (asprintf(&playlist_dir, PLAYLIST_DIR_FMT, home) == -1)
-      err(1, "main: asprintf failed");
-   if (asprintf(&player_backend, "%s", DEFAULT_PLAYER_BACKEND) == -1)
-      err(1, "main: asprintf failed");
+   xasprintf(&vitunes_dir, VITUNES_DIR_FMT, home);
+   xasprintf(&conf_file, CONF_FILE_FMT, home);
+   xasprintf(&db_file, DB_FILE_FMT, home);
+   xasprintf(&playlist_dir, PLAYLIST_DIR_FMT, home);
+   xasprintf(&player_backend, "%s", DEFAULT_PLAYER_BACKEND);
 
    /* handle command-line switches & e-commands */
    handle_switches(argc, argv);
@@ -130,7 +148,7 @@ main(int argc, char *argv[])
       printf("Vitunes appears to be running already. Won't open socket.");
    } else {
       if((sock = sock_listen()) == -1)
-         errx(1, "failed to open socket.");
+         fatalx("failed to open socket.");
    }
 
 
@@ -179,6 +197,9 @@ main(int argc, char *argv[])
 
    /* setup user interface and default colors */
    kb_init();
+
+   /* user interface being initialised; set context, accordingly */
+   error_init(ERROR_CFG);
    ui_init(DEFAULT_LIBRARY_WINDOW_WIDTH);
    paint_setup_colors();
 
@@ -192,6 +213,9 @@ main(int argc, char *argv[])
 
    /* initial painting of the display */
    paint_all();
+
+   /* configuration file ok; paint messages from now on */
+   error_init(ERROR_PAINT);
 
    /* -----------------------------------------------------------------------
     * begin input loop
@@ -252,7 +276,7 @@ main(int argc, char *argv[])
    if (QUIT_CAUSE != EXIT_NORMAL) {
       switch (QUIT_CAUSE) {
          case BAD_PLAYER:
-            warnx("It appears the media player is misbehaving.  Apologies.");
+            infox("It appears the media player is misbehaving.  Apologies.");
             break;
       }
    }
@@ -265,9 +289,8 @@ void
 usage(void)
 {
    fprintf(stderr,"\
-usage: %s [-f config-file] [-d database-file] [-p playlist-dir] [-m player-path] [-e COMMAND ...]\n\
-See \"%s -e help\" for information about what e-commands are available.\n\
-",
+usage: %s [-v] [-f config-file] [-d database-file] [-p playlist-dir] [-m player-path]\n\
+\t[-e COMMAND ...]\nSee \"%s -e help\" for information about what e-commands are available.\n",
    progname, progname);
    exit(1);
 }
@@ -338,7 +361,7 @@ process_signals()
          paint_playlist();
       }
       if (prev_volume != player.volume()) {
-         paint_message("volume: %3.0f%%", player.volume());
+         infox("volume: %3.0f%%", player.volume());
          prev_volume = player.volume();
       }
 
@@ -364,12 +387,12 @@ setup_timer()
 
    /* create timer signal handler */
    if (sigemptyset(&sig_act.sa_mask) < 0)
-      err(1, "setup_timer: sigemptyset failed");
+      fatal("setup_timer: sigemptyset failed");
 
    sig_act.sa_flags = 0;
    sig_act.sa_handler = signal_handler;
    if (sigaction(SIGALRM, &sig_act, NULL) < 0)
-      err(1, "setup_timer: sigaction failed");
+      fatal("setup_timer: sigaction failed");
 
    /* setup timer details */
    timer.it_value.tv_sec = 0;
@@ -379,7 +402,7 @@ setup_timer()
 
    /* register timer */
    if (setitimer(ITIMER_REAL, &timer, NULL) < 0)
-      err(1, "setup_timer: setitimer failed");
+      fatal("setup_timer: setitimer failed");
 }
 
 /*
@@ -389,32 +412,16 @@ setup_timer()
 void
 load_config()
 {
-   const char *errmsg = NULL;
-   size_t  length, linenum;
+   size_t  length;
    FILE   *fin;
    char   *line;
    char   *copy;
-   char  **argv;
-   int     argc;
-   bool    found;
-   int     found_idx = 0;
-   int     num_matches;
-   int     i, ret;
 
    if ((fin = fopen(conf_file, "r")) == NULL)
       return;
 
-   linenum = 0;
-   while (!feof(fin)) {
-
-      /* get next line */
-      if ((line = fparseln(fin, &length, &linenum, NULL, 0)) == NULL) {
-         if (ferror(fin))
-            err(1, "error reading config file '%s'", conf_file);
-         else
-            break;
-      }
-
+   /* get next line */
+   while ((line = fparseln(fin, &length, &conf_linenum, NULL, 0)) != NULL) {
       /* skip whitespace */
       copy = line;
       copy += strspn(copy, " \t\n");
@@ -423,42 +430,11 @@ load_config()
          continue;
       }
 
-      /* parse line into argc/argv */
-      if (str2argv(copy, &argc, &argv, &errmsg) != 0) {
-         endwin();
-         errx(1, "%s line %zd: parse error: %s", conf_file, linenum, errmsg);
-      }
-
-      /* run command */
-      found = false;
-      num_matches = 0;
-      for (i = 0; i < CommandPathSize; i++) {
-         if (match_command_name(argv[0], CommandPath[i].name)) {
-            found = true;
-            found_idx = i;
-            num_matches++;
-         }
-      }
-
-      if (found && num_matches == 1) {
-         if ((ret = (CommandPath[found_idx].func)(argc, argv)) != 0) {
-            endwin();
-            errx(1, "%s line %zd: error with command '%s' [%i]",
-               conf_file, linenum, argv[0], ret);
-         }
-      } else if (num_matches > 1) {
-         endwin();
-         errx(1, "%s line %zd: ambiguous abbreviation '%s'",
-            conf_file, linenum, argv[0]);
-      } else {
-         endwin();
-         errx(1, "%s line %zd: unknown command '%s'",
-            conf_file, linenum, argv[0]);
-      }
-
-      argv_free(&argc, &argv);
+      cmd_execute(line);
       free(line);
    }
+   if (ferror(fin))
+      fatal("error reading config file");
 
    fclose(fin);
 }
@@ -472,17 +448,16 @@ handle_switches(int argc, char *argv[])
 {
    int ch;
 
-   while ((ch = getopt(argc, argv, "he:f:d:p:m:c:")) != -1) {
+   while ((ch = getopt(argc, argv, "he:f:d:p:m:c:v")) != -1) {
       switch (ch) {
          case 'c':
             if(sock_send_msg(optarg) == -1)
-               errx(1, "Failed to send message. Vitunes not running?");
+               fatalx("Failed to send message. Vitunes not running?");
             exit(0);
 
          case 'd':
             free(db_file);
-            if ((db_file = strdup(optarg)) == NULL)
-               err(1, "handle_switches: strdup db_file failed");
+            db_file = xstrdup(optarg);
             break;
 
          case 'e':
@@ -494,20 +469,21 @@ handle_switches(int argc, char *argv[])
 
          case 'f':
             free(conf_file);
-            if ((conf_file = strdup(optarg)) == NULL)
-               err(1, "handle_switches: strdup conf_file failed");
+            conf_file = xstrdup(optarg);
             break;
 
          case 'm':
             free(player_backend);
-            if ((player_backend = strdup(optarg)) == NULL)
-               err(1, "handle_switches: strdup player_backend failed");
+            player_backend = xstrdup(optarg);
             break;
 
          case 'p':
             free(playlist_dir);
-            if ((playlist_dir = strdup(optarg)) == NULL)
-               err(1, "handle_switches: strdup playlist_dir failed");
+            playlist_dir = xstrdup(optarg);
+            break;
+
+         case 'v':
+            error_open();
             break;
 
          case 'h':

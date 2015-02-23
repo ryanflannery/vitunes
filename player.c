@@ -14,7 +14,23 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "compat.h"
+#include "error.h"
+#include "paint.h"
 #include "player.h"
+#include "playlist.h"
+#include "uinterface.h"
+#include "vitunes.h"
+
+/* "static" backends (those that aren't dynamically loaded) */
+#include "mplayer.h"
+#if defined(ENABLE_GSTREAMER)
+#  include "gstplayer.h"
+#endif
 
 /* globals */
 player_backend_t player;
@@ -25,7 +41,7 @@ player_info_t player_info;
 static void callback_playnext() { player_skip_song(1); }
 
 static void
-callback_fatal(char *fmt, ...)
+callback_fatal(const char *fmt, ...)
 {
    va_list ap;
 
@@ -119,16 +135,14 @@ player_init(const char *backend)
    }
 
    if (!found)
-      errx(1, "media backend '%s' is unknown", backend);
+      fatalx("media backend '%s' is unknown", backend);
 
-   if (player.dynamic) {
-      ui_destroy();
-      errx(1, "dynamically loaded backends not yet supported");
-   }
+   if (player.dynamic)
+      fatalx("dynamically loaded backends not yet supported");
 
    player.set_callback_playnext(callback_playnext);
-   player.set_callback_notice(paint_message);
-   player.set_callback_error(paint_error);
+   player.set_callback_notice(infox);
+   player.set_callback_error(fatalx);
    player.set_callback_fatal(callback_fatal);
    player.start();
 }
@@ -150,10 +164,10 @@ void
 player_play()
 {
    if (player_info.queue == NULL)
-      errx(1, "player_play: bad queue/qidx");
+      fatalx("player_play: bad queue/qidx");
 
    if (player_info.qidx < 0 || player_info.qidx > player_info.queue->nfiles)
-      errx(1, "player_play: qidx %i out-of-range", player_info.qidx);
+      fatalx("player_play: qidx %i out-of-range", player_info.qidx);
 
    player.play(player_info.queue->files[player_info.qidx]->filename);
 

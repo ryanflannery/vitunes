@@ -14,7 +14,23 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#include <sys/ioctl.h>
+
+#include <ctype.h>
+#include <ncurses.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+#include <termios.h>
+#include <unistd.h>
+
+#include "compat.h"
+#include "enums.h"
+#include "error.h"
 #include "uinterface.h"
+#include "xmalloc.h"
 
 /* the global user interface object */
 uinterface ui;
@@ -26,10 +42,9 @@ uinterface ui;
 swindow*
 swindow_new(int h, int w, int y, int x)
 {
-   swindow *swin = malloc(sizeof(swindow));
-   if (swin == NULL)
-      err(1, "swindow_new failed to allocate swin");
-
+   swindow *swin;
+   
+   swin = xmalloc(sizeof(swindow));
    swin->w        = w;
    swin->h        = h;
    swin->voffset  = 0;
@@ -38,7 +53,7 @@ swindow_new(int h, int w, int y, int x)
    swin->nrows    = 0;
    swin->cwin     = newwin(h, w, y, x);
    if (swin->cwin == NULL)
-      errx(1, "swindow_new: failed to create window");
+      fatalx("swindow_new: failed to create window");
 
    return swin;
 }
@@ -95,7 +110,7 @@ swindow_scroll(swindow *win, Direction d, int n)
       break;
 
    default:
-      err(1, "swindow_scroll: bad direction");
+      fatal("swindow_scroll: bad direction");
    }
 }
 
@@ -129,7 +144,7 @@ ui_init(int library_width)
    ui.player  = newwin(1, cols, 0,         0);
    ui.command = newwin(1, cols, lines - 1, 0);
    if (ui.player == NULL || ui.command == NULL)
-      errx(1, "ui_init: failed to create player/command windows");
+      fatalx("ui_init: failed to create player/command windows");
 
    /* and the rest */
    ui.library  = swindow_new(lines - 3, ui.lwidth, 2, 0);
@@ -172,16 +187,16 @@ ui_resize()
 
    /* get new dimensions and check for changes */
    if (ioctl(STDIN_FILENO, TIOCGWINSZ, &ws) < 0)
-      err(1, "ui_resize: ioctl failed");
+      fatal("ui_resize: ioctl failed");
 
    /* can we even handle the new display size?  if not, just exit */
    if (ws.ws_col < ui.lwidth + 2) {
       endwin();
-      errx(1, "ui_resize: not enough columns to render vitunes nicely");
+      fatalx("ui_resize: not enough columns to render vitunes nicely");
    }
    if (ws.ws_row < 4) {
       endwin();
-      errx(1, "ui_resize: not enough rows to render vitunes nicely");
+      fatalx("ui_resize: not enough rows to render vitunes nicely");
    }
 
    /* resize ncurses */
@@ -234,7 +249,7 @@ ui_unhide_library()
    /* create library window */
    ui.library->cwin = newwin(h - 3, ui.lwidth, 2, 0);
    if (ui.library->cwin == NULL)
-      errx(1, "ui_unhide_library: failed to create newwin");
+      fatalx("ui_unhide_library: failed to create newwin");
 
    /* resize & move playlist window */
    swindow_resize(ui.playlist, h - 3, w - ui.lwidth - 1, 2, ui.lwidth + 1);

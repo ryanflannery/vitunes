@@ -17,12 +17,9 @@
 #ifndef KEYBINDINGS_H
 #define KEYBINDINGS_H
 
-#include "compat.h"
+#include <stdbool.h>
 
-#include "debug.h"
-#include "enums.h"
-#include "paint.h"
-#include "vitunes.h"
+#include "meta_info.h"
 
 /*
  * List of all actions that can be bound by keybindings.
