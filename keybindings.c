@@ -361,7 +361,7 @@ kb_str2action(const char *s, KeyAction *action)
 }
 
 KeyCode
-kb_str2specialKey(char *s)
+kb_str2specialKey(const char *s)
 {
    size_t i;
 
@@ -374,7 +374,7 @@ kb_str2specialKey(char *s)
 }
 
 KeyCode
-kb_str2keycode(char *s)
+kb_str2keycode(const char *s)
 {
    KeyCode val;
 
@@ -387,7 +387,7 @@ kb_str2keycode(char *s)
 }
 
 KeyCode
-kb_str2keycode2(char *control, char *key)
+kb_str2keycode2(const char *control, const char *key)
 {
    KeyCode val;
 

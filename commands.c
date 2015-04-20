@@ -75,7 +75,7 @@ toggleset_free()
 }
 
 void
-toggle_list_add_command(toggle_list *t, char *cmd)
+toggle_list_add_command(toggle_list *t, const char *cmd)
 {
    char **new_cmds;
    int    idx;
@@ -918,7 +918,7 @@ cmd_playlist(int argc, char *argv[])
 }
 
 void
-cmd_execute(char *cmd)
+cmd_execute(const char *cmd)
 {
    const char *errmsg = NULL;
    bool   found;

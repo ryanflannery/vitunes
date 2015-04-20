@@ -54,7 +54,7 @@ extern char *vitunes_dir;
 extern char *playlist_dir;
 extern char *db_file;
 
-extern char *progname;
+extern const char *progname;
 
 /* record keeping  */
 extern playlist   *viewing_playlist;

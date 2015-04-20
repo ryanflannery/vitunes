@@ -65,7 +65,7 @@ char *playlist_dir;
 char *player_backend;
 
 /* program name with directories removed */
-char *progname;
+const char *progname;
 
 
 /*****************************************************************************

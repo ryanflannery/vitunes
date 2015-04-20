@@ -85,7 +85,7 @@ argv_finish_token(int *argc, char ***argv)
  * both argc/argv are set to 0/NULL.
  */
 int
-str2argv(char *str, int *argc, char ***argv, const char **errmsg)
+str2argv(const char *str, int *argc, char ***argv, const char **errmsg)
 {
    bool in_token;
    bool in_container;
