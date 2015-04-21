@@ -38,16 +38,8 @@ medialib_load(const char *db_file, const char *playlist_dir)
       err(1, "failed to strdup db file and playlist dir in medialib_init");
 
    /* setup pseudo-playlists */
-   mdb.library = playlist_new();
-   mdb.library->filename = NULL;
-   mdb.library->name = strdup("--LIBRARY--");
-
-   mdb.filter_results = playlist_new();
-   mdb.filter_results->filename = NULL;
-   mdb.filter_results->name = strdup("--FILTER--");
-
-   if (mdb.library->name == NULL || mdb.filter_results->name == NULL)
-      err(1, "failed to strdup pseudo-names in medialib_load");
+   mdb.library = playlist_new(NULL, "--LIBRARY--");
+   mdb.filter_results = playlist_new(NULL, "--FILTER--");
 
    /* load the actual database */
    medialib_db_load(db_file);
