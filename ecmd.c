@@ -17,6 +17,20 @@
 
 #include "ecmd.h"
 
+/* set of e-commands */
+static const struct ecmd *ecmdtab[] = {
+   &ecmd_add,
+   &ecmd_addurl,
+   &ecmd_check,
+   &ecmd_flush,
+   &ecmd_help,
+   &ecmd_init,
+   &ecmd_rmfile,
+   &ecmd_tag,
+   &ecmd_update,
+};
+static const int ecmdtab_size = sizeof ecmdtab / sizeof ecmdtab[0];
+
 static int
 ecmd_parse(const struct ecmd *ecmd, int argc, char ***argv)
 {
@@ -45,49 +59,79 @@ ecmd_parse(const struct ecmd *ecmd, int argc, char ***argv)
    if (ecmd->args_upper >= 0 && argc > ecmd->args_upper)
       return -1;
 
-   /* return updated (no name) number of arguments */
+   /* return updated number of arguments */
    return argc;
+}
+
+static void
+ecmd_print_ambiguous(const char *ecmd)
+{
+   int i;
+
+   fprintf(stderr, "%s: Ambiguous e-command '%s'.  Matches: ", progname, ecmd);
+   for (i = 0; i < ecmdtab_size; i++) {
+      if (strncmp(ecmd, ecmdtab[i]->name, strlen(ecmd)) != 0)
+          continue;
+      fprintf(stderr, "%s ", ecmdtab[i]->name);
+   }
+   fputs("\n", stderr);
+}
+
+const char *
+ecmd_get_names(void)
+{
+   static int         i = 0;
+   const struct ecmd *ecmdp;
+
+   if (i == ecmdtab_size)
+      return (NULL);
+
+   ecmdp = ecmdtab[i++];
+   return (ecmdp->name);
 }
 
 int
 ecmd_exec(const char *ecmd, int argc, char **argv)
 {
-   /* set of e-commands */
-   static const struct ecmd *ecmdtab[] = {
-      &ecmd_add,
-      &ecmd_addurl,
-      &ecmd_check,
-      &ecmd_flush,
-      &ecmd_help,
-      &ecmd_init,
-      &ecmd_rmfile,
-      &ecmd_tag,
-      &ecmd_update,
-   };
-   static const int ecmdtab_size = sizeof ecmdtab / sizeof ecmdtab[0];
-   int              i;
+   bool               ambiguous = false;
+   int                i;
+   const struct ecmd *ecmdp = NULL;
 
-   /* search for e-command (first by name and then by alias) */
+   /* search for e-command (first by name and then by abbreviation) */
    for (i = 0; i < ecmdtab_size; i++) {
-      if (strcmp(ecmd, ecmdtab[i]->name) == 0)
+      /* exact match */
+      if (strcmp(ecmd, ecmdtab[i]->name) == 0) {
+         ecmdp = ecmdtab[i];
          break;
-      if (ecmdtab[i]->alias != NULL && strcmp(ecmd, ecmdtab[i]->alias) == 0)
+      }
+      /* abbreviation match */
+      if (strncmp(ecmd, ecmdtab[i]->name, strlen(ecmd)) != 0)
+         continue;
+      if (ecmdp != NULL) {
+         ambiguous = true;
          break;
+      }
+      ecmdp = ecmdtab[i];
    }
    /* not found; bail out */
-   if (i == ecmdtab_size) {
+   if (ecmdp == NULL) {
       warnx("Unknown e-command '%s'.  See 'vitunes -e help' for list.", ecmd);
+      return -1;
+   }
+   /* ambiguous e-command */
+   if (ambiguous) {
+      ecmd_print_ambiguous(ecmd);
       return -1;
    }
 
    /* parse e-command arguments */
-   if ((argc = ecmd_parse(ecmdtab[i], argc, &argv)) == -1) {
-      fprintf(stderr, "usage: %s -e %s %s\n", progname, ecmdtab[i]->name,
-          ecmdtab[i]->usage != NULL ? ecmdtab[i]->usage : "");
+   if ((argc = ecmd_parse(ecmdp, argc, &argv)) == -1) {
+      fprintf(stderr, "usage: %s -e %s %s\n", progname, ecmdp->name,
+          ecmdp->usage != NULL ? ecmdp->usage : "");
       return 1;
    }
 
    /* finally execute it */
-   ecmdtab[i]->exec(argc, argv);
+   ecmdp->exec(argc, argv);
    return 0;
 }

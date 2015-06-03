@@ -151,7 +151,7 @@ ecmd_check_exec(int argc, char **argv)
 }
 
 const struct ecmd ecmd_check = {
-   "check", NULL,
+   "check",
    "-d | -r | -s path [...]",
    1, -1,
    ecmd_check_parse,

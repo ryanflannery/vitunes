@@ -235,6 +235,14 @@ section for a complete listing.
 More detailed usage information and examples for each e-command can be
 obtained by issuing:
 .Dl $ vitunes -e help command-name
+.Pp
+Note that abbreviations are also supported.
+That is, entering any non-ambiguous abbreviation of an e-command will also
+execute the e-command.
+.Bd -literal -offset indent
+$ vitunes -e a ~/music
+vitunes: Ambiguous e-command 'a'.  Matches: add addurl
+.Ed
 .Sh RUN-TIME COMMANDS
 Below is a listing of all run-time commands supported by
 .Nm .
@@ -243,9 +251,7 @@ All commands are entered by typing ':' followed by the command name and any
 parameters (just like in
 .Xr vi 1 ).
 .Pp
-Note that abbreviations are also supported.
-That is, entering any non-ambiguous abbreviation of a command name will also
-execute the command.
+As with e-commands, abbreviations are also supported.
 .Bl -tag -width Ds
 .It Pf : Ic bind Ar action Ar keycode
 This will bind the action specified by

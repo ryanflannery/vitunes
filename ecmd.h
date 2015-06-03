@@ -19,6 +19,7 @@
 #define ECMD_H
 
 #include <err.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -27,7 +28,6 @@
 
 struct ecmd {
    const char  *name;
-   const char  *alias;      /* may be NULL */
    const char  *usage;      /* may be NULL */
    int          args_lower; /* minimum number of arguments */
    int          args_upper; /* negative number means no limit */
@@ -46,6 +46,7 @@ extern const struct ecmd ecmd_rmfile;
 extern const struct ecmd ecmd_tag;
 extern const struct ecmd ecmd_update;
 
-int ecmd_exec(const char *ecmd, int argc, char **argv);
+const char *ecmd_get_names(void);
+int         ecmd_exec(const char *ecmd, int argc, char **argv);
 
 #endif

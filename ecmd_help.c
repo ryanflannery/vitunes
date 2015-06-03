@@ -26,30 +26,19 @@
 static void
 ecmd_help_exec(UNUSED int argc, char **argv)
 {
-   char *man_args[3];
+   char       *man_args[3];
+   const char *name;
 
    /* no help requested for a specific command, give a list of all e-cmds */
    if (argc == 0) {
-      printf("\
-The following is a list of e-commands supported by vitunes.\n\
-Each command is executed by doing:\n\
-   $ vitunes -e COMMAND [args ...]\n\
-The complete manual for each can be obtained by doing:\n\
-   $ vitunes -e help COMMAND\n\
-The list of available commands are:\n\n\
-   Command     Description\n\
-   -------     ------------------------------------------------------------\n\
-   add         Add files to the database.\n\
-   addurl      Add URL (or non-file playable item) to the database.\n\
-   check       Check files for meta-information.\n\
-   flush       Output the contents of the database to stdout.\n\
-   help        This command.\n\
-   init        Initialize the media database.\n\
-   rm          Remove a file or a URL from the database.\n\
-   rmfile      Alias for \"rm\".\n\
-   tag         Set the meta-information tags in media files.\n\
-   update      Update all files in the database.\n\
-");
+      printf("Available e-commands: ");
+      while ((name = ecmd_get_names()) != NULL)
+         printf("%s ", name);
+      puts("\n");
+      printf("Each is executed by doing:\n"
+         "$ vitunes -e e-command [...]\n"
+         "The complete manual for each can be obtained by doing:\n"
+         "$ vitunes -e help e-command\n");
       return;
    }
 
@@ -69,7 +58,7 @@ The list of available commands are:\n\n\
 }
 
 const struct ecmd ecmd_help = {
-   "help", NULL,
+   "help",
    "[command]",
    0, 1,
    NULL,
