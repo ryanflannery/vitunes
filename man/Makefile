@@ -20,7 +20,6 @@ MAN_PAGES=vitunes.1 \
 	@echo Nothing to do here
 
 install:
-	mkdir -p $(MANDIR)
 	install -c -m 0444 $(MAN_PAGES) $(MANDIR)
 
 uninstall:

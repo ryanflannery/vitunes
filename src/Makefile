@@ -16,15 +16,16 @@ CFLAGS  += -c -std=c89 -Wall -Wextra -Wno-unused-value $(CDEBUG) $(CDEPS)
 LIBS    += -lm -lncurses -lutil $(LDEPS)
 
 # object files
-OBJS=commands.o compat.o ecmd.o \
-	  ecmd_add.o ecmd_addurl.o ecmd_check.o \
-	  ecmd_flush.o ecmd_help.o ecmd_init.o \
-	  ecmd_rmfile.o ecmd_tag.o ecmd_update.o \
-	  keybindings.o medialib.o meta_info.o \
-	  mplayer.o paint.o player.o player_utils.o \
-	  playlist.o socket.o str2argv.o \
-	  uinterface.o vitunes.o \
-	  $(ODEPS)
+VOBJS=commands.o compat.o ecmd.o \
+		ecmd_add.o ecmd_addurl.o ecmd_check.o \
+		ecmd_flush.o ecmd_help.o ecmd_init.o \
+		ecmd_rmfile.o ecmd_tag.o ecmd_update.o \
+		keybindings.o medialib.o meta_info.o \
+		mplayer.o paint.o player.o player_utils.o \
+		playlist.o socket.o str2argv.o \
+		uinterface.o vitunes.o
+
+ALLOBJS=$(VOBJS) $(ODEPS)
 
 # subdirectories with code (.PATH for BSD make, VPATH for GNU make)
 .PATH:  players
@@ -35,32 +36,26 @@ VPATH = players
 # main build targets
 .DEFAULT: vitunes
 
-vitunes: $(OBJS)
-	$(CC) -o $@ $(LDFLAGS) $(OBJS) $(LIBS)
+vitunes: $(ALLOBJS)
+	$(CC) -o $@ $(LDFLAGS) $(ALLOBJS) $(LIBS)
 
 .c.o:
 	$(CC) $(CFLAGS) $<
 
-debug:
-	make CDEBUG="-DDEBUG -g"
-
 clean:
-	rm -f *.o
+	rm -f $(VOBJS)
 	rm -f vitunes vitunes.core vitunes-debug.log
 
-clean-all: clean
-	rm -rf report.*
-
 install: vitunes
-	mkdir -p $(MANDIR)
 	install -c -m 0555 vitunes $(BINDIR)
-	install -c -m 0444 man/vitunes*.1 $(MANDIR)
 
 uninstall:
 	rm -f $(BINDIR)/vitunes
-	rm -f $(MANDIR)/vitunes*.1
 
 ### static analysis checks
+
+debug:
+	$(MAKE) CDEBUG="-DDEBUG -g"
 
 flawfinder: *.c
 	flawfinder *.c
