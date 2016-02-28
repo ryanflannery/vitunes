@@ -38,7 +38,7 @@ sock_send_msg(const char *msg)
       return -1;
 
    addr.sun_family = AF_UNIX;
-   strcpy(addr.sun_path, VITUNES_SOCK);
+   strlcpy(addr.sun_path, VITUNES_SOCK, sizeof(addr.sun_path));
    addr_len = sizeof(addr.sun_family) + strlen(VITUNES_SOCK) + 1;
 
    if(sendto(ret, msg, strlen(msg), 0, (struct sockaddr *) &addr, addr_len) == -1) {
@@ -64,7 +64,7 @@ sock_listen(void)
       return -1;
 
    addr.sun_family = AF_UNIX;
-   strcpy(addr.sun_path, VITUNES_SOCK);
+   strlcpy(addr.sun_path, VITUNES_SOCK, sizeof(addr.sun_path));
    addr_len = sizeof(addr.sun_family) + strlen(VITUNES_SOCK) + 1;
 
    if(bind(ret, (struct sockaddr *) &addr, addr_len) == -1)

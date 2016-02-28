@@ -515,10 +515,10 @@ kba_scroll_row(KbaArgs a)
 void
 kba_scroll_page(KbaArgs a)
 {
-   bool maintain_row_idx;
+   bool maintain_row_idx = true;
    int  voffset_original;
    int  max_row;
-   int  diff;
+   int  diff = 0;
    int  n;
 
    voffset_original = ui.active->voffset;
@@ -715,6 +715,7 @@ kba_jumpto_file(KbaArgs a)
    int   n, line, input;
 
    /* determine line/percent to jump to */
+   line = 0;
    n = -1;
    if (gnum_get() > 0) {
       n = gnum_get();
@@ -859,7 +860,7 @@ kba_search_find(KbaArgs a)
    KbaArgs  foo;
    bool  matches;
    char *msg;
-   int   dir;
+   int   dir = FORWARDS;
    int   start_idx;
    int   idx;
    int   c;
@@ -1503,6 +1504,7 @@ kba_seek(KbaArgs a)
    int n, secs;
 
    /* determine number of seconds to seek */
+   secs = 0;
    switch (a.scale) {
    case SECONDS:
       secs = a.num;
