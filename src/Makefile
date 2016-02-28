@@ -5,27 +5,28 @@ PREFIX?=/usr/local
 BINDIR?=$(PREFIX)/bin
 MANDIR?=$(PREFIX)/man/man1
 
-# combine all dependencies (from taglib & config.mk)
+# combine all dependencies (from config.mk ... taglib/gstreamer/etc)
 CDEPS=$(TAGLIB_CFLAGS)  $(GSTREAMER_CFLAGS)
 LDEPS=$(TAGLIB_LIBS) $(GSTREAMER_LIBS)
 ODEPS=$(GSTREAMER_OBJS)
+
+# object files
+LOCAL_OBJS=commands.o compat.o ecmd.o \
+			  ecmd_add.o ecmd_addurl.o ecmd_check.o \
+			  ecmd_flush.o ecmd_help.o ecmd_init.o \
+			  ecmd_rmfile.o ecmd_tag.o ecmd_update.o \
+			  keybindings.o medialib.o meta_info.o \
+			  mplayer.o paint.o player.o player_utils.o \
+			  playlist.o socket.o str2argv.o \
+			  uinterface.o vitunes.o
+
+OBJS=$(ODEPS) $(LOCAL_OBJS)
 
 # build variables
 CC		  ?= /usr/bin/cc
 CFLAGS  += -c -std=c89 -Wall -Wextra -Wno-unused-value $(CDEBUG) $(CDEPS)
 LIBS    += -lm -lncurses -lutil $(LDEPS)
 
-# object files
-VOBJS=commands.o compat.o ecmd.o \
-		ecmd_add.o ecmd_addurl.o ecmd_check.o \
-		ecmd_flush.o ecmd_help.o ecmd_init.o \
-		ecmd_rmfile.o ecmd_tag.o ecmd_update.o \
-		keybindings.o medialib.o meta_info.o \
-		mplayer.o paint.o player.o player_utils.o \
-		playlist.o socket.o str2argv.o \
-		uinterface.o vitunes.o
-
-ALLOBJS=$(VOBJS) $(ODEPS)
 
 # subdirectories with code (.PATH for BSD make, VPATH for GNU make)
 .PATH:  players
@@ -36,14 +37,14 @@ VPATH = players
 # main build targets
 .DEFAULT: vitunes
 
-vitunes: $(ALLOBJS)
-	$(CC) -o $@ $(LDFLAGS) $(ALLOBJS) $(LIBS)
+vitunes: $(OBJS)
+	$(CC) -o $@ $(LDFLAGS) $(OBJS) $(LIBS)
 
 .c.o:
 	$(CC) $(CFLAGS) $<
 
 clean:
-	rm -f $(VOBJS)
+	rm -f $(LOCAL_OBJS)
 	rm -f vitunes vitunes.core vitunes-debug.log
 
 install: vitunes
@@ -73,8 +74,7 @@ report.scan-build: *.h *.c
 
 ### wrapper for static checks above
 .PHONY: reports
-reports: report.mandoc report.cppcheck report.scan-build
+reports: report.cppcheck report.scan-build
 	@figlet "Static Checks Complete"
-	cat report.mandoc
 	cat report.cppcheck
 
