@@ -54,7 +54,7 @@ clean-all: clean
 install: vitunes
 	mkdir -p $(MANDIR)
 	install -c -m 0555 vitunes $(BINDIR)
-	install -c -m 0444 doc/vitunes*.1 $(MANDIR)
+	install -c -m 0444 man/vitunes*.1 $(MANDIR)
 
 uninstall:
 	rm -f $(BINDIR)/vitunes
@@ -77,7 +77,7 @@ flawfinder: *.c
 
 report.mandoc: doc/*.1
 	@figlet "mandoc -Tlint"
-	-mandoc -Tlint doc/vitunes*.1 2> $@
+	-mandoc -Tlint man/vitunes*.1 2> $@
 	cat $@
 
 report.cppcheck: *.h *.c
