@@ -9,4 +9,4 @@ creation/management. vitunes does not strive to be a feature-rich media player,
 but rather a quick, vi-like media indexer and playlist manager, that just
 happens to be able to play the music it indexes.
 
-See [Full Website](https://vitunes.org) for more information.
+See [Full Website](http://vitunes.org) for more information.
