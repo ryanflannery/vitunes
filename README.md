@@ -9,7 +9,7 @@ The rest of this README is for developers interested in tweaking vitunes.
 
 
 Introduction
-============
+------------
 For the hacking sort, this document may help navigate the source code to
 vitunes.  ...and myself, 18 months from now when I dive back into vitunes.
 
@@ -33,9 +33,9 @@ and what happens when you "make -DDEBUG".  Two macros are created, one to
 log to a file (DFLOG) and one to log to the console (DCLOG).  The log
 file (vitunes-debug.log) is opened in vitunes.c if "-DDEBUG".
 
-Media Library Structure
-=======================
 
+Media Library Structure
+-----------------------
 Before hacking on vitunes, it's important to understand the following about
 the overall structure.
 
@@ -67,9 +67,9 @@ the overall structure.
    library [1], used in mi_extract() (meta_info.*) for extraction, and
    in ecmd_tag() (vitunes.c) for tagging.
 
-Code Structure: Notable Globals
-===============================
 
+Code Structure: Notable Globals
+-------------------------------
 vitunes maintains a few key global objects (structs) that are used
 throughout much of the code.  They are:
 
@@ -109,8 +109,7 @@ These include global structs in:
 
 
 Code Structure: The Modules
-===========================
-
+---------------------------
 First, the basic configuration is all done in config.h.  Specifically,
    *  keybindings
    *  command-mode bindings
