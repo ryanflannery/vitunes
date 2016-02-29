@@ -73,39 +73,39 @@ Code Structure: Notable Globals
 vitunes maintains a few key global objects (structs) that are used
 throughout much of the code.  They are:
 
-   1. mdb         Maintains all information about the media library,
-                  including the database (an array of meta_info*'s), all
-                  playlists, and the filter results.
-                  See medialib.h for more info.
+    mdb         Maintains all information about the media library,
+                including the database (an array of `meta_info*`s), all
+                playlists, and the filter results.
+                See `medialib.h` for more info.
 
-   2. player      Maintains all information about the fork()'d child
-                  process of that handles playback, including pipes to
-                  read/write to the process, the currently playing playlist
-                  & song.  See player.h for more info.
+    player      Maintains all information about the `fork()`'d child
+                process of that handles playback, including pipes to
+                read/write to the process, the currently playing playlist
+                & song.  See player.h for more info.
 
-   3. player_status
-                  Maintains record keeping about what the media player is
-                  up to.  Is is playing, paused, and what position (in
-                  seconds) into the current file is it?  See player.h for
-                  more info.
+    player_status
+                Maintains record keeping about what the media player is
+                up to.  Is is playing, paused, and what position (in
+                seconds) into the current file is it?  See `player.h` for
+                more info.
 
-   4. ui          Maintains all key information about the display and each
-                  of the 4 windows.  Of key interest are the two
-                  "scrollable-windows" (the library and playlist windows).
-                  The struct maintains their vertical/horizontal scroll
-                  offsets, and a few more things.
-                  See uinterface.h for more info.
+    ui          Maintains all key information about the display and each
+                of the 4 windows.  Of key interest are the two
+                "scrollable-windows" (the library and playlist windows).
+                The struct maintains their vertical/horizontal scroll
+                offsets, and a few more things.
+                See `uinterface.h` for more info.
 
 There are other globals, but few are "exported" in any of the .h files.
 These include global structs in:
 
-   *  meta_info.c       For maintaining the current display description,
-                        sort description, and search/query filter.  With
-                        the exception of the display description, none of
-                        these are exported, and should not be.
+    meta_info.c       For maintaining the current display description,
+                      sort description, and search/query filter.  With
+                      the exception of the display description, none of
+                      these are exported, and should not be.
 
-   *  paint.c           For maintaining the colors used for painting all
-                        of the text to curses.
+    paint.c           For maintaining the colors used for painting all
+                      of the text to curses.
 
 
 Code Structure: The Modules
@@ -225,17 +225,17 @@ References:
 
 CURRENT LIST OF BIG "TODO"'s:
 
-*  Fix sorting of meta_info's so that numeric fields are sorted by their
+*  Fix sorting of `meta_info`'s so that numeric fields are sorted by their
    numeric values rather than character representations. This would require
    some re-working.
 
-*  Sorting of meta_info's: perhaps I could add some magic to ignore a starting
+*  Sorting of `meta_info`'s: perhaps I could add some magic to ignore a starting
    "The" or "A" from the sorting?  I dunno about this... I kinda like it the
    way that it is.
 
 *  Original idea was to make the media player used be more general, so that it
    wasn't specific to mplayer.  Still working on this.  Goal is to have it
-   setup so that one could do "vitunes -m /path/to/player" and the player
+   setup so that one could do `vitunes -m /path/to/player` and the player
    would communicate through stdin/stdout (using a pipe to vitunes) in a
    unified way.  That way, the player could be a simple shell script that
    would allow 1. using different players, 2. using different players for
