@@ -14,8 +14,8 @@ For the hacking sort, this document may help navigate the source code to
 vitunes.  ...and myself, 18 months from now when I dive back into vitunes.
 
 For list of current todo's, known bug's, or other stuff to work on, grep the
-source for TODO's and FIXME's.  Note that "XXX" is used only for important
-notes.  For longer stuff (big, long-term TODO's), there's an up-to-date list
+source for `TODO`s and `FIXME`s.  Note that `XXX` is used only for important
+notes.  For longer stuff (big, long-term to-do's), there's an up-to-date list
 at the bottom of this file.
 
 Below you'll find 3 sections.
@@ -28,10 +28,10 @@ therein.  This should be maintained.
 
 This should be enough for most to jump-into hacking on vitunes.
 
-For debugging (which can be painful in a curses application), see debug.h
-and what happens when you "make -DDEBUG".  Two macros are created, one to
-log to a file (DFLOG) and one to log to the console (DCLOG).  The log
-file (vitunes-debug.log) is opened in vitunes.c if "-DDEBUG".
+For debugging (which can be painful in a curses application), see `debug.h`
+and what happens when you `make -DDEBUG`.  Two macros are created, one to
+log to a file (`DFLOG`) and one to log to the console (`DCLOG`).  The log
+file (`vitunes-debug.log`) is opened in `vitunes.c` if `-DDEBUG`.
 
 
 Media Library Structure
@@ -40,7 +40,9 @@ Before hacking on vitunes, it's important to understand the following about
 the overall structure.
 
 *  vitunes works by maintaining a database of all known files in
+
          ~/.vitunes/vitunes.db
+
 *  The database is initialized, updated, and stuff added to it via, commands
    like
 
@@ -49,7 +51,7 @@ the overall structure.
          $ vitunes -e add ~/music  /path/to/more/music ...
          $ vitunes -e addurl "http://...."
 
-   See "vitunes -e help" for more details.
+   See `vitunes -e help` for more details.
 *  If a media file is not in the database, vitunes cannot play it.
 *  Once the database is setup, vitunes can be run normally as
          $ vitunes
