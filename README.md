@@ -43,10 +43,12 @@ the overall structure.
          ~/.vitunes/vitunes.db
 *  The database is initialized, updated, and stuff added to it via, commands
    like
+         ```
          $ vitunes -e init
          $ vitunes -e update
          $ vitunes -e add ~/music  /path/to/more/music ...
          $ vitunes -e addurl "http://...."
+         ```
    See "vitunes -e help" for more details.
 *  If a media file is not in the database, vitunes cannot play it.
 *  Once the database is setup, vitunes can be run normally as
