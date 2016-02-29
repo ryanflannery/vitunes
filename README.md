@@ -40,9 +40,7 @@ Before hacking on vitunes, it's important to understand the following about
 the overall structure.
 
 *  vitunes works by maintaining a database of all known files in
-
-         ~/.vitunes/vitunes.db
-
+   `~/.vitunes/vitunes.db`
 *  The database is initialized, updated, and stuff added to it via, commands
    like
 
@@ -53,23 +51,21 @@ the overall structure.
 
    See `vitunes -e help` for more details.
 *  If a media file is not in the database, vitunes cannot play it.
-*  Once the database is setup, vitunes can be run normally as
-         $ vitunes
+*  Once the database is setup, vitunes can be run normally as `vitunes`
 *  Once vitunes is run normally, one can browse the library, filter,
    sort, search, copy/paste/delete/etc and create new playlists.  All
-   playlists are stored in
-         ~/.vitunes/playlists/
+   playlists are stored in `~/.vitunes/playlists/`
    by default.
 *  The playlist files themselves contain nothing more than the absolute
-   paths (via realpath(3)) to the media files contained in the database.
+   paths (via `realpath(3)`) to the media files contained in the database.
    There is no meta information in playlists.  All meta information is
    in the database.
 *  media playback is done with either
-   1. a fork()'d instance of mplayer [2], or
-   2. gstreamer
+   1. a `fork()`'d instance of `mplayer` [2], or
+   2. `gstreamer`
 *  extracting meta-information from media files is done with the TagLib
-   library [1], used in mi_extract() (meta_info.*) for extraction, and
-   in ecmd_tag() (vitunes.c) for tagging.
+   library [1], used in `mi_extract()` (`meta_info.*`) for extraction, and
+   in `ecmd_tag()` (`vitunes.c`) for tagging.
 
 
 Code Structure: Notable Globals
@@ -114,7 +110,7 @@ These include global structs in:
 
 Code Structure: The Modules
 ---------------------------
-First, the basic configuration is all done in config.h.  Specifically,
+First, the basic configuration is all done in `config.h`.  Specifically,
    *  keybindings
    *  command-mode bindings
    *  a few other defaults (library width, path to mplayer, etc.)
@@ -129,98 +125,88 @@ Tracing through the source code from "main" to keybindings is, at this
 point, relatively straight-forward.
 
 
-MODULE            DESCRIPTION
---------------    ----------------------------------------------------------
-str2argv          Contains only 2 functions used elsewhere.  They are used
-                  for converting a string (char*) to an 'int argc' and
-                  'char *argv[]' pair, used for the command-mode function
-                  bindings.  The second function is used to free() a
-                  previously built argc/argv structure.
+    MODULE            DESCRIPTION
+    --------------    ----------------------------------------------------------
+    str2argv          Contains only 2 functions used elsewhere.  They are used
+                      for converting a string (char*) to an 'int argc' and
+                      'char *argv[]' pair, used for the command-mode function
+                      bindings.  The second function is used to free() a
+                      previously built argc/argv structure.
 
+    player            Contains all of the code to handle the child-process that
+                      handles media playback.  Includes loading files for
+                      playback, pausing, seeking, etc.
 
-player            Contains all of the code to handle the child-process that
-                  handles media playback.  Includes loading files for
-                  playback, pausing, seeking, etc.
+                      Naming Convention:   player_*
+                      Global Variables Exported:
+                         player        - Record keeping for the child process.
+                         player_status - Record keeping about the playback
+                                         itself (paused, position, etc.).
 
-                  Naming Convention:   player_*
-                  Global Variables Exported:
-                     player        - Record keeping for the child process.
-                     player_status - Record keeping about the playback
-                                     itself (paused, position, etc.).
+    meta_info         Contains all of the code to extract the meta information
+                      (artist name, album name, song title, track number, genre,
+                      and year) from a media-file.  It makes uses of the
+                      external TagLib library [1].  It contains a simple struct
+                      used to represent all such info (meta_info).
 
+                      In addition to this, the logic for sorting songs,
+                      searching/filtering songs, and changing their display in
+                      vitunes is contained here.
 
-meta_info         Contains all of the code to extract the meta information
-                  (artist name, album name, song title, track number, genre,
-                  and year) from a media-file.  It makes uses of the
-                  external TagLib library [1].  It contains a simple struct
-                  used to represent all such info (meta_info).
+                      Naming Convention:   mi_*
+                      Global Variables Exported:
+                         mi_display  -  Description of the current display
+                                        format.
 
-                  In addition to this, the logic for sorting songs,
-                  searching/filtering songs, and changing their display in
-                  vitunes is contained here.
+    playlist          Contains all of the code to represent and work with
+                      playlists, which is a simple struct containing an array
+                      of meta_info's.  Nothing more.
 
-                  Naming Convention:   mi_*
-                  Global Variables Exported:
-                     mi_display  -  Description of the current display
-                                    format.
+                      Naming Convention:   playlist_*
 
+    medialib          Contains all of the code to represent the media library,
+                      which is the database of all known files and array of all
+                      playlists.  Handles initializing, loading, updating, and
+                      adding to the database.
 
-playlist          Contains all of the code to represent and work with
-                  playlists, which is a simple struct containing an array
-                  of meta_info's.  Nothing more.
+                      Naming Convention:   medialib_*
+                      Global Variables Exported:
+                         mdb   - The global media-library struct, containing
+                                 the database of known files and playlists.
 
-                  Naming Convention:   playlist_*
+    uinterface        A small abstraction layer on top of curses(3), mostly for
+                      record keeping.  Provides the code to setup the 4 windows,
+                      resizing, and hiding/unhiding the library wndow.
 
+                      Naming Convention:   ui_*
+                                           swindow_*
+                      Global Variables Exported:
+                         ui    - The global user interface object, which again
+                                 contains mostly record-keeping info.
 
-medialib          Contains all of the code to represent the media library,
-                  which is the database of all known files and array of all
-                  playlists.  Handles initializing, loading, updating, and
-                  adding to the database.
+    paint             All major display stuff is in here.  Functions for
+                      painting each of the 4 window, error/information
+                      messages, and setting up colors.
 
-                  Naming Convention:   medialib_*
-                  Global Variables Exported:
-                     mdb   - The global media-library struct, containing
-                             the database of known files and playlists.
+                      Naming Convention:   paint_*
+                      Global Variables Exported:
+                         colors   - List of colors used for each colorable
+                                    object in vitunes.
 
+    keybindings       All of the keybinding code is located here, including the
+                      code for the default keybindings, the core bind and
+                      unbind code, and more.
 
-uinterface        A small abstraction layer on top of curses(3), mostly for
-                  record keeping.  Provides the code to setup the 4 windows,
-                  resizing, and hiding/unhiding the library wndow.
+    commands          The run-time commands (things like ':set ...',
+                      ':color ...', etc.) is all contained here.
 
-                  Naming Convention:   ui_*
-                                       swindow_*
-                  Global Variables Exported:
-                     ui    - The global user interface object, which again
-                             contains mostly record-keeping info.
+    e_commands        All code for each of the e-commands (vitunes -e CMD ...)
+                      is here.  Used exclusively in vitunes.c.
 
-
-paint             All major display stuff is in here.  Functions for
-                  painting each of the 4 window, error/information
-                  messages, and setting up colors.
-
-                  Naming Convention:   paint_*
-                  Global Variables Exported:
-                     colors   - List of colors used for each colorable
-                                object in vitunes.
-
-
-keybindings       All of the keybinding code is located here, including the
-                  code for the default keybindings, the core bind and
-                  unbind code, and more.
-
-
-commands          The run-time commands (things like ':set ...',
-                  ':color ...', etc.) is all contained here.
-
-
-e_commands        All code for each of the e-commands (vitunes -e CMD ...)
-                  is here.  Used exclusively in vitunes.c.
-
-
-vitunes           The "main" program.  In normal mode, does setup of media-
-                  library, user interface, and main input loop.
-                  Also contains all of the code for all of the e-commands
-                  (things like "vitunes -e update").
+    vitunes           The "main" program.  In normal mode, does setup of media-
+                      library, user interface, and main input loop.
+                      Also contains all of the code for all of the e-commands
+                      (things like "vitunes -e update").
 
 
 ---
