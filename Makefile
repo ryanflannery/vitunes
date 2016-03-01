@@ -13,7 +13,7 @@ cppcheck:
 	cppcheck --std=c89 --enable=all --inline-suppr src 2> doc/cppcheck/results.txt
 
 doxygen:
-	doxygen doxygen.conf
+	doxygen doc/doxygen.conf
 
 flawfinder:
 	flawfinder src > doc/flawfinder/results.txt
