@@ -16,11 +16,22 @@
 
 #include "exe_in_path.h"
 
+#include "../compat/compat.h"
+
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <err.h>
+
 bool
 exe_in_path(const char *e)
 {
    char *path, *path_copy, *part, *test;
    bool  found;
+
+   if (NULL == e || 0 == strlen(e))
+      return false;
 
    if ((path = strdup(getenv("PATH"))) == NULL)
       err(1, "%s: strdup/getenv failed for $PATH", __FUNCTION__);

@@ -30,7 +30,7 @@ LIBS    += -lm -lncurses -lutil $(LDEPS)
 .PATH:  compat ecommands player player/gstreamer player/mplayer util
 VPATH = compat ecommands player player/gstreamer player/mplayer util
 
-.PHONY: clean debug install uninstall
+.PHONY: clean debug install uninstall test
 
 .DEFAULT: vitunes
 
@@ -53,3 +53,25 @@ install: vitunes
 uninstall:
 	rm -f $(BINDIR)/vitunes
 
+###
+
+TESTOBJS=exe_in_path.t.o str2argv.t.o gtest.t.o
+
+gtest: $(OBJS) $(TESTOBJS)
+	$(CC) -o $@ exe_in_path.o str2argv.o $(TESTOBJS) -L/usr/local/lib -lgtest
+	./gtest
+
+.cc.o:
+	$(CC) -c -I/usr/local/include $<
+
+TESTCFLAGS=-I/usr/local/include
+TESTLDFLAGS=-L/usr/local/lib -lgtest
+test:
+	$(CC) -c -o $@.o $(TESTCFLAGS) util/str2argv.t.cc
+	$(CC) -o $@ $(TESTLDFLAGS) test.o str2argv.o
+	./$@
+
+etest:
+	$(CC) -c -o $@.o $(TESTCFLAGS) util/exe_in_path.t.cc
+	$(CC) -o $@ $(TESTLDFLAGS) $@.o exe_in_path.o
+	./$@
