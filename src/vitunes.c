@@ -173,7 +173,7 @@ main(int argc, char *argv[])
    qsort(mdb.library->files, mdb.library->nfiles, sizeof(meta_info*), mi_compare);
 
    /* start media player child */
-   player_init(player_backend);
+   player_init(player_backend, paint_message, paint_error);
    player_info.mode = DEFAULT_PLAYER_MODE;
    atexit(player_destroy);
 

@@ -17,8 +17,6 @@
 #ifndef MPLAYER_H
 #define MPLAYER_H
 
-#include "../../compat/compat.h"
-
 #include <sys/wait.h>
 #include <sys/types.h>
 
@@ -34,10 +32,6 @@
 #include <unistd.h>
 
 #include "../../util/exe_in_path.h"
-
-#ifdef DEBUG
-#  include "../../debug.h"
-#endif
 
 void mplayer_start();
 void mplayer_finish();

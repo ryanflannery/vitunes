@@ -1,0 +1,35 @@
+[src/ecommands/ecmd_rmfile.c:53]: (style) The scope of the variable 'input' can be reduced.
+[src/ecommands/ecmd_tag.c:101]: (style) The scope of the variable 'tag_file' can be reduced.
+[src/keybindings.c:607]: (style) The scope of the variable 'maxlen' can be reduced.
+[src/keybindings.c:610]: (style) The scope of the variable 'i' can be reduced.
+[src/keybindings.c:954]: (style) The scope of the variable 'p' can be reduced.
+[src/keybindings.c:956]: (style) The scope of the variable 'got_target' can be reduced.
+[src/keybindings.c:959]: (style) The scope of the variable 'input' can be reduced.
+[src/keybindings.c:1102]: (style) The scope of the variable 'got_target' can be reduced.
+[src/keybindings.c:1104]: (style) The scope of the variable 'input' can be reduced.
+[src/keybindings.c:1758]: (style) The scope of the variable 'input' can be reduced.
+[src/medialib.c:29]: (style) The scope of the variable 'p' can be reduced.
+[src/medialib.c:287]: (style) The scope of the variable 'mi' can be reduced.
+[src/medialib.c:288]: (style) The scope of the variable 'ltime' can be reduced.
+[src/medialib.c:291]: (style) The scope of the variable 'len' can be reduced.
+[src/medialib.c:337]: (style) The scope of the variable 'filename' can be reduced.
+[src/meta_info.c:262]: (style) The scope of the variable 'c' can be reduced.
+[src/meta_info.c:373]: (style) The scope of the variable 'matches' can be reduced.
+[src/meta_info.c:411]: (style) The scope of the variable 'matches' can be reduced.
+[src/meta_info.c:556]: (style) The scope of the variable 'field' can be reduced.
+[src/meta_info.c:557]: (style) The scope of the variable 'ret' can be reduced.
+[src/meta_info.c:651]: (style) The scope of the variable 'cinfo' can be reduced.
+[src/meta_info.c:651]: (style) The scope of the variable 'num' can be reduced.
+[src/paint.c:137]: (style) The scope of the variable 'whole' can be reduced.
+[src/paint.c:200]: (style) The scope of the variable 'index' can be reduced.
+[src/paint.c:200]: (style) The scope of the variable 'x' can be reduced.
+[src/paint.c:293]: (style) The scope of the variable 'visual' can be reduced.
+[src/paint.c:295]: (style) The scope of the variable 'findex' can be reduced.
+[src/playlist.c:153]: (style) The scope of the variable 'changes' can be reduced.
+[src/playlist.c:205]: (style) The scope of the variable 'mit' can be reduced.
+[src/util/str2argv.c:94]: (style) The scope of the variable 'c' can be reduced.
+[src/vitunes.c:521]: (warning) Assignment of function parameter has no effect outside the function. Did you forget dereferencing it?
+[src/keybindings.c:293]: (style) The function 'kb_free' is never used.
+[src/meta_info.c:454]: (style) The function 'mi_sort_clear' is never used.
+[src/compat/strlcat.c:80]: (style) The function 'strlcat' is never used.
+(information) Cppcheck cannot find all the include files (use --check-config for details)

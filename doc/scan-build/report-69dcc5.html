@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-<title>players/mplayer.c</title>
+<title>player/mplayer/mplayer.c</title>
 <style type="text/css">
  body { color:#000000; background-color:#ffffff }
  body { font-family:Helvetica, sans-serif; font-size:10pt }
@@ -60,11 +60,11 @@
 
 <!-- BUGCATEGORY Logic error -->
 
-<!-- BUGFILE /home/ryan/vitunes/src/players/mplayer.c -->
+<!-- BUGFILE /home/ryan/vitunes/src/player/mplayer/mplayer.c -->
 
-<!-- BUGLINE 79 -->
+<!-- BUGLINE 92 -->
 
-<!-- BUGCOLUMN 35 -->
+<!-- BUGCOLUMN 34 -->
 
 <!-- BUGPATHLENGTH 7 -->
 
@@ -72,8 +72,8 @@
 <!-- REPORTHEADER -->
 <h3>Bug Summary</h3>
 <table class="simpletable">
-<tr><td class="rowname">File:</td><td>players/mplayer.c</td></tr>
-<tr><td class="rowname">Location:</td><td><a href="#EndPath">line 79, column 35</a></td></tr>
+<tr><td class="rowname">File:</td><td>player/mplayer/mplayer.c</td></tr>
+<tr><td class="rowname">Location:</td><td><a href="#EndPath">line 92, column 34</a></td></tr>
 <tr><td class="rowname">Description:</td><td>Function call argument is an uninitialized value</td></tr>
 </table>
 <!-- REPORTSUMMARYEXTRA -->
@@ -147,7 +147,7 @@
 <tr><td class="num" id="LN65">65</td><td class="line">      err(1, <span class='string_literal'>"%s: pipe() failed"</span>, <span class='keyword'>__FUNCTION__</span>);</td></tr>
 <tr><td class="num" id="LN66">66</td><td class="line"> </td></tr>
 <tr><td class="num" id="LN67">67</td><td class="line">   <span class='keyword'>switch</span> (mplayer_state.pid = fork()) {</td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path6" class="msg msgControl" style="margin-left:4ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">6</div></td><td><div class="PathNav"><a href="#Path5" title="Previous event (5)">&#x2190;</a></div></td></td><td>Control jumps to 'case 0:'  at line 72</td><td><div class="PathNav"><a href="#EndPath" title="Next event (7)">&#x2192;</a></div></td></tr></table></div></td></tr>
+<tr><td class="num"></td><td class="line"><div id="Path6" class="msg msgControl" style="margin-left:4ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">6</div></td><td><div class="PathNav"><a href="#Path5" title="Previous event (5)">&#x2190;</a></div></td></td><td>'Default' branch taken. Execution continues on line 92</td><td><div class="PathNav"><a href="#EndPath" title="Next event (7)">&#x2192;</a></div></td></tr></table></div></td></tr>
 <tr><td class="num" id="LN68">68</td><td class="line">   <span class='keyword'>case</span> -1:</td></tr>
 <tr><td class="num" id="LN69">69</td><td class="line">      err(1, <span class='string_literal'>"%s: fork() failed"</span>, <span class='keyword'>__FUNCTION__</span>);</td></tr>
 <tr><td class="num" id="LN70">70</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
@@ -159,8 +159,7 @@
 <tr><td class="num" id="LN76">76</td><td class="line">      <span class='keyword'>if</span> (close(pwrite[1]) == -1 || close(pread[0]) == -1)</td></tr>
 <tr><td class="num" id="LN77">77</td><td class="line">         err(1, <span class='string_literal'>"%s: child close()'s failed(2)"</span>, <span class='keyword'>__FUNCTION__</span>);</td></tr>
 <tr><td class="num" id="LN78">78</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN79">79</td><td class="line">      <span class='keyword'>if</span> (dup(pwrite[0]) == -1 || dup(<span class="mrange">pread[1]</span>) == -1)</td></tr>
-<tr><td class="num"></td><td class="line"><div id="EndPath" class="msg msgEvent" style="margin-left:35ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">7</div></td><td><div class="PathNav"><a href="#Path6" title="Previous event (6)">&#x2190;</a></div></td></td><td>Function call argument is an uninitialized value</td></tr></table></div></td></tr>
+<tr><td class="num" id="LN79">79</td><td class="line">      <span class='keyword'>if</span> (dup(pwrite[0]) == -1 || dup(pread[1]) == -1)</td></tr>
 <tr><td class="num" id="LN80">80</td><td class="line">         err(1, <span class='string_literal'>"%s: child dup()'s failed"</span>, <span class='keyword'>__FUNCTION__</span>);</td></tr>
 <tr><td class="num" id="LN81">81</td><td class="line"> </td></tr>
 <tr><td class="num" id="LN82">82</td><td class="line">      <span class='keyword'>if</span> (execvp(MPLAYER_PATH, MPLAYER_ARGS) == -1)</td></tr>
@@ -173,7 +172,8 @@
 <tr><td class="num" id="LN89">89</td><td class="line">   <span class='comment'>/* Back to the parent... */</span></td></tr>
 <tr><td class="num" id="LN90">90</td><td class="line"> </td></tr>
 <tr><td class="num" id="LN91">91</td><td class="line">   <span class='comment'>/* close unnecessary pipe ends */</span></td></tr>
-<tr><td class="num" id="LN92">92</td><td class="line">   <span class='keyword'>if</span> (close(pwrite[0]) == -1 || close(pread[1]) == -1)</td></tr>
+<tr><td class="num" id="LN92">92</td><td class="line">   <span class='keyword'>if</span> (close(pwrite[0]) == -1 || close(<span class="mrange">pread[1]</span>) == -1)</td></tr>
+<tr><td class="num"></td><td class="line"><div id="EndPath" class="msg msgEvent" style="margin-left:34ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">7</div></td><td><div class="PathNav"><a href="#Path6" title="Previous event (6)">&#x2190;</a></div></td></td><td>Function call argument is an uninitialized value</td></tr></table></div></td></tr>
 <tr><td class="num" id="LN93">93</td><td class="line">      err(1, <span class='string_literal'>"%s: parent close()'s failed"</span>, <span class='keyword'>__FUNCTION__</span>);</td></tr>
 <tr><td class="num" id="LN94">94</td><td class="line"> </td></tr>
 <tr><td class="num" id="LN95">95</td><td class="line">   <span class='comment'>/* setup player pipes */</span></td></tr>

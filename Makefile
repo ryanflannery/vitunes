@@ -7,9 +7,16 @@
 all: .DEFAULT
 
 # docs
+doc: cppcheck doxygen flawfinder scan-build
+
+cppcheck:
+	cppcheck --std=c89 --enable=all --inline-suppr src 2> doc/cppcheck/results.txt
 
 doxygen:
 	doxygen doxygen.conf
+
+flawfinder:
+	flawfinder src > doc/flawfinder/results.txt
 
 scan-build:
 	make clean

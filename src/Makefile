@@ -32,7 +32,7 @@ LIBS    += -lm -lncurses -lutil $(LDEPS)
 .PATH:  compat ecommands player player/gstreamer player/mplayer util
 VPATH = compat ecommands player player/gstreamer player/mplayer util
 
-.PHONY: debug clean clean-all install uninstall
+.PHONY: clean debug install uninstall
 
 # main build targets
 .DEFAULT: vitunes
@@ -47,28 +47,11 @@ clean:
 	rm -f $(LOCAL_OBJS)
 	rm -f vitunes vitunes.core vitunes-debug.log
 
+debug:
+	$(MAKE) CDEBUG="-DDEBUG -g"
+
 install: vitunes
 	install -c -m 0555 vitunes $(BINDIR)
 
 uninstall:
 	rm -f $(BINDIR)/vitunes
-
-### static analysis checks
-
-debug:
-	$(MAKE) CDEBUG="-DDEBUG -g"
-
-flawfinder: *.c
-	flawfinder *.c
-
-report.cppcheck: *.h *.c
-	@figlet "cppcheck"
-	cppcheck --std=c89 --enable=all --inline-suppr  -i compat . 2> $@
-	@cat $@
-
-### wrapper for static checks above
-.PHONY: reports
-reports: report.cppcheck report.scan-build
-	@figlet "Static Checks Complete"
-	cat report.cppcheck
-

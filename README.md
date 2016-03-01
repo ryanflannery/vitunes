@@ -9,6 +9,8 @@ The rest of this README is for developers interested in tweaking vitunes.
 
 Utilities
  * [doxygen](https://rawgit.com/ryanflannery/vitunes/refactoring/doc/doxygen/html/index.html)
+ * [cppcheck](https://rawgit.com/ryanflannery/vitunes/refactoring/doc/cppcheck/results.txt)
+ * [flawfinder](https://rawgit.com/ryanflannery/vitunes/refactoring/doc/flawfinder/results.txt)
  * [scan-build](https://rawgit.com/ryanflannery/vitunes/refactoring/doc/scan-build/index.html)
 
 

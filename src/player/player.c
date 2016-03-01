@@ -97,7 +97,9 @@ const size_t PlayerBackendsSize = sizeof(PlayerBackends) / sizeof(player_backend
 
 /* setup/destroy functions */
 void
-player_init(const char *backend)
+player_init(const char *backend,
+      void (message_handler)(char *fmt, ...),
+      void (error_handler)(char *fmt, ...))
 {
    bool   found;
    size_t i;
@@ -127,8 +129,8 @@ player_init(const char *backend)
    }
 
    player.set_callback_playnext(callback_playnext);
-   player.set_callback_notice(paint_message);
-   player.set_callback_error(paint_error);
+   player.set_callback_notice(message_handler);
+   player.set_callback_error(error_handler);
    player.set_callback_fatal(callback_fatal);
    player.start();
 }

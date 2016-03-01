@@ -17,13 +17,10 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "../compat/compat.h"
-
 #include <err.h>
 
 #include "../playlist.h"
 #include "../paint.h"
-#include "../debug.h"
 
 /* "static" backends (those that aren't dynamically loaded) */
 #include "mplayer/mplayer.h"
@@ -45,7 +42,9 @@ typedef enum {
 
 
 /* player setup/destroy functions */
-void player_init(const char *backend);
+void player_init(const char *backend,
+      void (message_handler)(char *fmt, ...),
+      void (error_handler)(char *fmt, ...));
 void player_destroy();
 
 void player_set_queue(playlist *queue, int position);

@@ -22,7 +22,6 @@
  */
 
 #include "gstplayer.h"
-#include "../player.h"
 
 /* player data */
 static gst_player gplayer;

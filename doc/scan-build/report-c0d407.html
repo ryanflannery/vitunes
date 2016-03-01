@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-<title>players/mplayer.c</title>
+<title>player/mplayer/mplayer.c</title>
 <style type="text/css">
  body { color:#000000; background-color:#ffffff }
  body { font-family:Helvetica, sans-serif; font-size:10pt }
@@ -54,17 +54,17 @@
 </style>
 </head>
 <body>
-<!-- BUGDESC Function call argument is an uninitialized value -->
+<!-- BUGDESC Assigned value is garbage or undefined -->
 
-<!-- BUGTYPE Uninitialized argument value -->
+<!-- BUGTYPE Assigned value is garbage or undefined -->
 
 <!-- BUGCATEGORY Logic error -->
 
-<!-- BUGFILE /home/ryan/vitunes/src/players/mplayer.c -->
+<!-- BUGFILE /home/ryan/vitunes/src/player/mplayer/mplayer.c -->
 
-<!-- BUGLINE 76 -->
+<!-- BUGLINE 96 -->
 
-<!-- BUGCOLUMN 37 -->
+<!-- BUGCOLUMN 29 -->
 
 <!-- BUGPATHLENGTH 7 -->
 
@@ -72,9 +72,9 @@
 <!-- REPORTHEADER -->
 <h3>Bug Summary</h3>
 <table class="simpletable">
-<tr><td class="rowname">File:</td><td>players/mplayer.c</td></tr>
-<tr><td class="rowname">Location:</td><td><a href="#EndPath">line 76, column 37</a></td></tr>
-<tr><td class="rowname">Description:</td><td>Function call argument is an uninitialized value</td></tr>
+<tr><td class="rowname">File:</td><td>player/mplayer/mplayer.c</td></tr>
+<tr><td class="rowname">Location:</td><td><a href="#EndPath">line 96, column 29</a></td></tr>
+<tr><td class="rowname">Description:</td><td>Assigned value is garbage or undefined</td></tr>
 </table>
 <!-- REPORTSUMMARYEXTRA -->
 <h3>Annotated Source Code</h3>
@@ -147,7 +147,7 @@
 <tr><td class="num" id="LN65">65</td><td class="line">      err(1, <span class='string_literal'>"%s: pipe() failed"</span>, <span class='keyword'>__FUNCTION__</span>);</td></tr>
 <tr><td class="num" id="LN66">66</td><td class="line"> </td></tr>
 <tr><td class="num" id="LN67">67</td><td class="line">   <span class='keyword'>switch</span> (mplayer_state.pid = fork()) {</td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path6" class="msg msgControl" style="margin-left:4ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">6</div></td><td><div class="PathNav"><a href="#Path5" title="Previous event (5)">&#x2190;</a></div></td></td><td>Control jumps to 'case 0:'  at line 72</td><td><div class="PathNav"><a href="#EndPath" title="Next event (7)">&#x2192;</a></div></td></tr></table></div></td></tr>
+<tr><td class="num"></td><td class="line"><div id="Path6" class="msg msgControl" style="margin-left:4ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">6</div></td><td><div class="PathNav"><a href="#Path5" title="Previous event (5)">&#x2190;</a></div></td></td><td>'Default' branch taken. Execution continues on line 92</td><td><div class="PathNav"><a href="#EndPath" title="Next event (7)">&#x2192;</a></div></td></tr></table></div></td></tr>
 <tr><td class="num" id="LN68">68</td><td class="line">   <span class='keyword'>case</span> -1:</td></tr>
 <tr><td class="num" id="LN69">69</td><td class="line">      err(1, <span class='string_literal'>"%s: fork() failed"</span>, <span class='keyword'>__FUNCTION__</span>);</td></tr>
 <tr><td class="num" id="LN70">70</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
@@ -156,8 +156,7 @@
 <tr><td class="num" id="LN73">73</td><td class="line">      <span class='keyword'>if</span> (close(0) == -1 || close(1) == -1 || close(2) == -1)</td></tr>
 <tr><td class="num" id="LN74">74</td><td class="line">         err(1, <span class='string_literal'>"%s: child close()'s failed(1)"</span>, <span class='keyword'>__FUNCTION__</span>);</td></tr>
 <tr><td class="num" id="LN75">75</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN76">76</td><td class="line">      <span class='keyword'>if</span> (close(pwrite[1]) == -1 || close(<span class="mrange">pread[0]</span>) == -1)</td></tr>
-<tr><td class="num"></td><td class="line"><div id="EndPath" class="msg msgEvent" style="margin-left:37ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">7</div></td><td><div class="PathNav"><a href="#Path6" title="Previous event (6)">&#x2190;</a></div></td></td><td>Function call argument is an uninitialized value</td></tr></table></div></td></tr>
+<tr><td class="num" id="LN76">76</td><td class="line">      <span class='keyword'>if</span> (close(pwrite[1]) == -1 || close(pread[0]) == -1)</td></tr>
 <tr><td class="num" id="LN77">77</td><td class="line">         err(1, <span class='string_literal'>"%s: child close()'s failed(2)"</span>, <span class='keyword'>__FUNCTION__</span>);</td></tr>
 <tr><td class="num" id="LN78">78</td><td class="line"> </td></tr>
 <tr><td class="num" id="LN79">79</td><td class="line">      <span class='keyword'>if</span> (dup(pwrite[0]) == -1 || dup(pread[1]) == -1)</td></tr>
@@ -177,7 +176,8 @@
 <tr><td class="num" id="LN93">93</td><td class="line">      err(1, <span class='string_literal'>"%s: parent close()'s failed"</span>, <span class='keyword'>__FUNCTION__</span>);</td></tr>
 <tr><td class="num" id="LN94">94</td><td class="line"> </td></tr>
 <tr><td class="num" id="LN95">95</td><td class="line">   <span class='comment'>/* setup player pipes */</span></td></tr>
-<tr><td class="num" id="LN96">96</td><td class="line">   mplayer_state.pipe_read  = pread[0];</td></tr>
+<tr><td class="num" id="LN96">96</td><td class="line">   mplayer_state.pipe_read  = <span class="mrange">pread[0]</span>;</td></tr>
+<tr><td class="num"></td><td class="line"><div id="EndPath" class="msg msgEvent" style="margin-left:29ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">7</div></td><td><div class="PathNav"><a href="#Path6" title="Previous event (6)">&#x2190;</a></div></td></td><td>Assigned value is garbage or undefined</td></tr></table></div></td></tr>
 <tr><td class="num" id="LN97">97</td><td class="line">   mplayer_state.pipe_write = pwrite[1];</td></tr>
 <tr><td class="num" id="LN98">98</td><td class="line"> </td></tr>
 <tr><td class="num" id="LN99">99</td><td class="line">   <span class='comment'>/* setup read pipe to media player as non-blocking */</span></td></tr>

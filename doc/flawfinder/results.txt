@@ -1,0 +1,485 @@
+Flawfinder version 1.27, (C) 2001-2004 David A. Wheeler.
+Number of dangerous functions in C/C++ ruleset: 160
+Examining src/commands.c
+Examining src/commands.h
+Examining src/paint.h
+Examining src/compat/fparseln.c
+Examining src/compat/strlcat.c
+Examining src/compat/strtonum.c
+Examining src/compat/compat.h
+Examining src/compat/compat.c
+Examining src/config.h
+Examining src/debug.h
+Examining src/uinterface.h
+Examining src/vitunes.h
+Examining src/meta_info.h
+Examining src/enums.h
+Examining src/keybindings.c
+Examining src/keybindings.h
+Examining src/medialib.c
+Examining src/medialib.h
+Examining src/meta_info.c
+Examining src/paint.c
+Examining src/ecommands/ecmd.c
+Examining src/ecommands/ecmd.h
+Examining src/ecommands/ecmd_add.c
+Examining src/ecommands/ecmd_addurl.c
+Examining src/ecommands/ecmd_check.c
+Examining src/ecommands/ecmd_flush.c
+Examining src/ecommands/ecmd_help.c
+Examining src/ecommands/ecmd_init.c
+Examining src/ecommands/ecmd_rmfile.c
+Examining src/ecommands/ecmd_tag.c
+Examining src/ecommands/ecmd_update.c
+Examining src/util/exe_in_path.c
+Examining src/util/exe_in_path.h
+Examining src/util/str2argv.c
+Examining src/util/str2argv.h
+Examining src/playlist.c
+Examining src/playlist.h
+Examining src/socket.c
+Examining src/socket.h
+Examining src/uinterface.c
+Examining src/vitunes.c
+Examining src/player/mplayer/mplayer.c
+Examining src/player/mplayer/mplayer.h
+Examining src/player/mplayer/mplayer_conf.h
+Examining src/player/player.h
+Examining src/player/player.c
+Examining src/player/gstreamer/gstplayer.c
+Examining src/player/gstreamer/gstplayer.h
+src/debug.h:30:  [4] (format) fprintf:
+  If format strings can be influenced by an attacker, they can be
+  exploited. Use a constant for the format specification. 
+src/debug.h:37:  [4] (format) printf:
+  If format strings can be influenced by an attacker, they can be
+  exploited. Use a constant for the format specification. 
+src/ecommands/ecmd_help.c:67:  [4] (shell) execvp:
+  This causes a new program to execute and is difficult to use safely.
+  try using a library call that implements the same functionality if
+  available. 
+src/keybindings.c:1763:  [4] (shell) system:
+  This causes a new program to execute and is difficult to use safely.
+  try using a library call that implements the same functionality if
+  available. 
+src/player/mplayer/mplayer.c:82:  [4] (shell) execvp:
+  This causes a new program to execute and is difficult to use safely.
+  try using a library call that implements the same functionality if
+  available. 
+src/player/player.c:38:  [4] (format) vfprintf:
+  If format strings can be influenced by an attacker, they can be
+  exploited. Use a constant for the format specification. 
+src/util/exe_in_path.c:36:  [4] (race) access:
+  This usually indicates a security flaw.  If an attacker can change
+  anything along the path between the call to access() and the file's actual
+  use (e.g., by moving files), the attacker can exploit the race
+  condition. Set up the correct permissions (e.g., using setuid()) and try to
+  open the file directly. 
+src/ecommands/ecmd_check.c:41:  [3] (buffer) realpath:
+  This function does not protect against buffer overflows, and some
+  implementations can overflow internally. Ensure that the destination buffer
+  is at least of size MAXPATHLEN, andto protect against implementation
+  problems, the input argument should also be checked to ensure it is no
+  larger than MAXPATHLEN. 
+src/ecommands/ecmd_check.c:110:  [3] (buffer) getopt:
+  Some older implementations do not protect against internal buffer
+  overflows . Check implementation on installation, or limit the size of all
+  string inputs. 
+src/ecommands/ecmd_flush.c:33:  [3] (buffer) getopt:
+  Some older implementations do not protect against internal buffer
+  overflows . Check implementation on installation, or limit the size of all
+  string inputs. 
+src/ecommands/ecmd_rmfile.c:35:  [3] (buffer) getopt:
+  Some older implementations do not protect against internal buffer
+  overflows . Check implementation on installation, or limit the size of all
+  string inputs. 
+src/ecommands/ecmd_tag.c:41:  [3] (buffer) getopt:
+  Some older implementations do not protect against internal buffer
+  overflows . Check implementation on installation, or limit the size of all
+  string inputs. 
+src/ecommands/ecmd_update.c:34:  [3] (buffer) getopt:
+  Some older implementations do not protect against internal buffer
+  overflows . Check implementation on installation, or limit the size of all
+  string inputs. 
+src/medialib.c:478:  [3] (buffer) realpath:
+  This function does not protect against buffer overflows, and some
+  implementations can overflow internally. Ensure that the destination buffer
+  is at least of size MAXPATHLEN, andto protect against implementation
+  problems, the input argument should also be checked to ensure it is no
+  larger than MAXPATHLEN. 
+src/meta_info.c:183:  [3] (buffer) realpath:
+  This function does not protect against buffer overflows, and some
+  implementations can overflow internally. Ensure that the destination buffer
+  is at least of size MAXPATHLEN, andto protect against implementation
+  problems, the input argument should also be checked to ensure it is no
+  larger than MAXPATHLEN. 
+src/player/player.c:112:  [3] (random) srand:
+  This function is not sufficiently random for security-related
+  functions such as key and nonce creation. use a more secure technique for
+  acquiring random values. 
+src/util/exe_in_path.c:25:  [3] (buffer) getenv:
+  Environment variables are untrustable input if they can be set by an
+  attacker.  They can have any content and length, and the same variable
+  can be set more than once. Check environment variables carefully before
+  using them. 
+src/vitunes.c:108:  [3] (buffer) getenv:
+  Environment variables are untrustable input if they can be set by an
+  attacker.  They can have any content and length, and the same variable
+  can be set more than once. Check environment variables carefully before
+  using them. 
+src/vitunes.c:475:  [3] (buffer) getopt:
+  Some older implementations do not protect against internal buffer
+  overflows . Check implementation on installation, or limit the size of all
+  string inputs. 
+src/compat/compat.h:92:  [2] (buffer) char:
+  Statically-sized arrays can be overflowed. Perform bounds checking,
+  use functions that limit length, or ensure that the size is larger than
+  the maximum possible length. 
+src/compat/compat.h:93:  [2] (buffer) char:
+  Statically-sized arrays can be overflowed. Perform bounds checking,
+  use functions that limit length, or ensure that the size is larger than
+  the maximum possible length. 
+src/compat/fparseln.c:161:  [2] (buffer) char:
+  Statically-sized arrays can be overflowed. Perform bounds checking,
+  use functions that limit length, or ensure that the size is larger than
+  the maximum possible length. 
+src/compat/fparseln.c:162:  [2] (buffer) char:
+  Statically-sized arrays can be overflowed. Perform bounds checking,
+  use functions that limit length, or ensure that the size is larger than
+  the maximum possible length. 
+src/compat/fparseln.c:165:  [2] (buffer) char:
+  Statically-sized arrays can be overflowed. Perform bounds checking,
+  use functions that limit length, or ensure that the size is larger than
+  the maximum possible length. 
+src/compat/fparseln.c:226:  [2] (buffer) memcpy:
+  Does not check for buffer overflows when copying to destination. Make
+  sure destination can always hold the source data. 
+src/ecommands/ecmd_addurl.c:34:  [2] (buffer) char:
+  Statically-sized arrays can be overflowed. Perform bounds checking,
+  use functions that limit length, or ensure that the size is larger than
+  the maximum possible length. 
+src/ecommands/ecmd_check.c:35:  [2] (buffer) char:
+  Statically-sized arrays can be overflowed. Perform bounds checking,
+  use functions that limit length, or ensure that the size is larger than
+  the maximum possible length. 
+src/ecommands/ecmd_help.c:29:  [2] (buffer) char:
+  Statically-sized arrays can be overflowed. Perform bounds checking,
+  use functions that limit length, or ensure that the size is larger than
+  the maximum possible length. 
+src/ecommands/ecmd_rmfile.c:53:  [2] (buffer) char:
+  Statically-sized arrays can be overflowed. Perform bounds checking,
+  use functions that limit length, or ensure that the size is larger than
+  the maximum possible length. 
+src/medialib.c:181:  [2] (misc) fopen:
+  Check when opening files - can an attacker redirect it (via symlinks),
+  force the opening of special file type (e.g., device files), move
+  things around to create a race condition, control its ancestors, or change
+  its contents?. 
+src/medialib.c:213:  [2] (buffer) char:
+  Statically-sized arrays can be overflowed. Perform bounds checking,
+  use functions that limit length, or ensure that the size is larger than
+  the maximum possible length. 
+src/medialib.c:216:  [2] (misc) fopen:
+  Check when opening files - can an attacker redirect it (via symlinks),
+  force the opening of special file type (e.g., device files), move
+  things around to create a race condition, control its ancestors, or change
+  its contents?. 
+src/medialib.c:266:  [2] (misc) fopen:
+  Check when opening files - can an attacker redirect it (via symlinks),
+  force the opening of special file type (e.g., device files), move
+  things around to create a race condition, control its ancestors, or change
+  its contents?. 
+src/medialib.c:289:  [2] (buffer) char:
+  Statically-sized arrays can be overflowed. Perform bounds checking,
+  use functions that limit length, or ensure that the size is larger than
+  the maximum possible length. 
+src/medialib.c:436:  [2] (buffer) char:
+  Statically-sized arrays can be overflowed. Perform bounds checking,
+  use functions that limit length, or ensure that the size is larger than
+  the maximum possible length. 
+src/meta_info.c:143:  [2] (buffer) char:
+  Statically-sized arrays can be overflowed. Perform bounds checking,
+  use functions that limit length, or ensure that the size is larger than
+  the maximum possible length. 
+src/meta_info.c:172:  [2] (buffer) char:
+  Statically-sized arrays can be overflowed. Perform bounds checking,
+  use functions that limit length, or ensure that the size is larger than
+  the maximum possible length. 
+src/meta_info.c:488:  [2] (buffer) char:
+  Statically-sized arrays can be overflowed. Perform bounds checking,
+  use functions that limit length, or ensure that the size is larger than
+  the maximum possible length. 
+src/meta_info.c:649:  [2] (buffer) char:
+  Statically-sized arrays can be overflowed. Perform bounds checking,
+  use functions that limit length, or ensure that the size is larger than
+  the maximum possible length. 
+src/meta_info.c:693:  [2] (buffer) char:
+  Statically-sized arrays can be overflowed. Perform bounds checking,
+  use functions that limit length, or ensure that the size is larger than
+  the maximum possible length. 
+src/meta_info.h:54:  [2] (buffer) char:
+  Statically-sized arrays can be overflowed. Perform bounds checking,
+  use functions that limit length, or ensure that the size is larger than
+  the maximum possible length. 
+src/meta_info.h:67:  [2] (buffer) char:
+  Statically-sized arrays can be overflowed. Perform bounds checking,
+  use functions that limit length, or ensure that the size is larger than
+  the maximum possible length. 
+src/meta_info.h:111:  [2] (buffer) char:
+  Statically-sized arrays can be overflowed. Perform bounds checking,
+  use functions that limit length, or ensure that the size is larger than
+  the maximum possible length. 
+src/meta_info.h:112:  [2] (buffer) char:
+  Statically-sized arrays can be overflowed. Perform bounds checking,
+  use functions that limit length, or ensure that the size is larger than
+  the maximum possible length. 
+src/paint.c:66:  [2] (buffer) char:
+  Statically-sized arrays can be overflowed. Perform bounds checking,
+  use functions that limit length, or ensure that the size is larger than
+  the maximum possible length. 
+src/paint.c:85:  [2] (buffer) char:
+  Statically-sized arrays can be overflowed. Perform bounds checking,
+  use functions that limit length, or ensure that the size is larger than
+  the maximum possible length. 
+src/paint.c:493:  [2] (buffer) char:
+  Statically-sized arrays can be overflowed. Perform bounds checking,
+  use functions that limit length, or ensure that the size is larger than
+  the maximum possible length. 
+src/player/mplayer/mplayer.c:344:  [2] (buffer) char:
+  Statically-sized arrays can be overflowed. Perform bounds checking,
+  use functions that limit length, or ensure that the size is larger than
+  the maximum possible length. 
+src/playlist.c:208:  [2] (buffer) char:
+  Statically-sized arrays can be overflowed. Perform bounds checking,
+  use functions that limit length, or ensure that the size is larger than
+  the maximum possible length. 
+src/playlist.c:211:  [2] (misc) fopen:
+  Check when opening files - can an attacker redirect it (via symlinks),
+  force the opening of special file type (e.g., device files), move
+  things around to create a race condition, control its ancestors, or change
+  its contents?. 
+src/playlist.c:264:  [2] (misc) fopen:
+  Check when opening files - can an attacker redirect it (via symlinks),
+  force the opening of special file type (e.g., device files), move
+  things around to create a race condition, control its ancestors, or change
+  its contents?. 
+src/socket.c:98:  [2] (buffer) char:
+  Statically-sized arrays can be overflowed. Perform bounds checking,
+  use functions that limit length, or ensure that the size is larger than
+  the maximum possible length. 
+src/util/str2argv.c:98:  [2] (buffer) char:
+  Statically-sized arrays can be overflowed. Perform bounds checking,
+  use functions that limit length, or ensure that the size is larger than
+  the maximum possible length. 
+src/vitunes.c:99:  [2] (misc) fopen:
+  Check when opening files - can an attacker redirect it (via symlinks),
+  force the opening of special file type (e.g., device files), move
+  things around to create a race condition, control its ancestors, or change
+  its contents?. 
+src/vitunes.c:404:  [2] (misc) fopen:
+  Check when opening files - can an attacker redirect it (via symlinks),
+  force the opening of special file type (e.g., device files), move
+  things around to create a race condition, control its ancestors, or change
+  its contents?. 
+src/commands.c:449:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/commands.c:858:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/commands.c:890:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/commands.c:979:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/commands.c:1001:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/commands.c:1026:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/commands.c:1027:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/commands.c:1036:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/commands.c:1057:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/commands.c:1060:  [1] (port) snprintf:
+  On some very old systems, snprintf is incorrectly implemented and
+  permits buffer overflows; there are also incompatible standard definitions
+  of it. Check it during installation, or use something else. 
+src/commands.c:1060:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/compat/fparseln.c:259:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/compat/strlcat.c:94:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/ecommands/ecmd_addurl.c:53:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/ecommands/ecmd_addurl.c:54:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/keybindings.c:381:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/keybindings.c:627:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/keybindings.c:628:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/keybindings.c:1303:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/keybindings.c:1730:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/medialib.c:185:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/medialib.c:220:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/medialib.c:221:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/medialib.c:270:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/meta_info.c:81:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/meta_info.c:86:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/meta_info.c:154:  [1] (port) snprintf:
+  On some very old systems, snprintf is incorrectly implemented and
+  permits buffer overflows; there are also incompatible standard definitions
+  of it. Check it during installation, or use something else. 
+src/meta_info.c:156:  [1] (port) snprintf:
+  On some very old systems, snprintf is incorrectly implemented and
+  permits buffer overflows; there are also incompatible standard definitions
+  of it. Check it during installation, or use something else. 
+src/meta_info.c:158:  [1] (port) snprintf:
+  On some very old systems, snprintf is incorrectly implemented and
+  permits buffer overflows; there are also incompatible standard definitions
+  of it. Check it during installation, or use something else. 
+src/meta_info.c:264:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/meta_info.c:502:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/meta_info.c:665:  [1] (port) snprintf:
+  On some very old systems, snprintf is incorrectly implemented and
+  permits buffer overflows; there are also incompatible standard definitions
+  of it. Check it during installation, or use something else. 
+src/meta_info.c:710:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/paint.c:52:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/paint.c:53:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/paint.c:74:  [1] (port) snprintf:
+  On some very old systems, snprintf is incorrectly implemented and
+  permits buffer overflows; there are also incompatible standard definitions
+  of it. Check it during installation, or use something else. 
+src/paint.c:76:  [1] (port) snprintf:
+  On some very old systems, snprintf is incorrectly implemented and
+  permits buffer overflows; there are also incompatible standard definitions
+  of it. Check it during installation, or use something else. 
+src/paint.c:110:  [1] (port) snprintf:
+  On some very old systems, snprintf is incorrectly implemented and
+  permits buffer overflows; there are also incompatible standard definitions
+  of it. Check it during installation, or use something else. 
+src/paint.c:244:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/paint.c:245:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/paint.c:381:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/paint.c:382:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/paint.c:386:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/paint.c:388:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/paint.c:391:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/paint.c:393:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/paint.c:394:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/paint.c:502:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/paint.c:503:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/player/mplayer/mplayer.c:51:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/player/mplayer/mplayer.c:354:  [1] (buffer) read:
+  Check buffer boundaries if used in a loop. 
+src/socket.c:42:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/socket.c:44:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/socket.c:68:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/util/exe_in_path.c:31:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/util/str2argv.c:52:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/util/str2argv.c:66:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/util/str2argv.c:109:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/util/str2argv.c:237:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated (it could cause a
+  crash if unprotected). 
+src/util/str2argv.c:251:  [1] (port) snprintf:
+  On some very old systems, snprintf is incorrectly implemented and
+  permits buffer overflows; there are also incompatible standard definitions
+  of it. Check it during installation, or use something else. 
+src/util/str2argv.c:253:  [1] (port) snprintf:
+  On some very old systems, snprintf is incorrectly implemented and
+  permits buffer overflows; there are also incompatible standard definitions
+  of it. Check it during installation, or use something else. 
+
+Hits = 116
+Lines analyzed = 10579 in 0.91 seconds (25601 lines/second)
+Physical Source Lines of Code (SLOC) = 6877
+Hits@level = [0]   0 [1]  61 [2]  36 [3]  12 [4]   7 [5]   0
+Hits@level+ = [0+] 116 [1+] 116 [2+]  55 [3+]  19 [4+]   7 [5+]   0
+Hits/KSLOC@level+ = [0+] 16.8678 [1+] 16.8678 [2+] 7.99767 [3+] 2.76283 [4+] 1.01789 [5+]   0
+Minimum risk level = 1
+Not every hit is necessarily a security vulnerability.
+There may be other security vulnerabilities; review your code!
