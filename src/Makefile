@@ -3,10 +3,9 @@ include ../config.mk
 # install locations (overridden in config.mk above)
 PREFIX?=/usr/local
 BINDIR?=$(PREFIX)/bin
-MANDIR?=$(PREFIX)/man/man1
 
 # combine all dependencies (from config.mk ... taglib/gstreamer/etc)
-CDEPS=$(TAGLIB_CFLAGS)  $(GSTREAMER_CFLAGS)
+CDEPS=$(TAGLIB_CFLAGS) $(GSTREAMER_CFLAGS)
 LDEPS=$(TAGLIB_LIBS) $(GSTREAMER_LIBS)
 ODEPS=$(GSTREAMER_OBJS)
 
@@ -27,14 +26,12 @@ CC		  ?= /usr/bin/cc
 CFLAGS  += -c -std=c89 -Wall -Wextra -Wno-unused-value $(CDEBUG) $(CDEPS)
 LIBS    += -lm -lncurses -lutil $(LDEPS)
 
-
 # subdirectories with code (.PATH for BSD make, VPATH for GNU make)
 .PATH:  compat ecommands player player/gstreamer player/mplayer util
 VPATH = compat ecommands player player/gstreamer player/mplayer util
 
 .PHONY: clean debug install uninstall
 
-# main build targets
 .DEFAULT: vitunes
 
 vitunes: $(OBJS)
@@ -55,3 +52,4 @@ install: vitunes
 
 uninstall:
 	rm -f $(BINDIR)/vitunes
+
