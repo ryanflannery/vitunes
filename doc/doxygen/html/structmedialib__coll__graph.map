@@ -1,0 +1,5 @@
+<map id="medialib" name="medialib">
+<area shape="rect" id="node2" href="$structplaylist.html" title="playlist" alt="" coords="10,187,72,213"/>
+<area shape="rect" id="node3" href="$structmeta__info.html" title="meta_info" alt="" coords="20,5,99,32"/>
+<area shape="rect" id="node4" href="$structplaylist__changeset.html" title="playlist_changeset" alt="" coords="73,96,207,123"/>
+</map>

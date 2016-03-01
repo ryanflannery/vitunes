@@ -66,12 +66,6 @@ report.cppcheck: *.h *.c
 	cppcheck --std=c89 --enable=all --inline-suppr  -i compat . 2> $@
 	@cat $@
 
-report.scan-build: *.h *.c
-	@figlet "clang analyzer"
-	make clean
-	mkdir -p $@
-	scan-build -o $@ make
-
 ### wrapper for static checks above
 .PHONY: reports
 reports: report.cppcheck report.scan-build

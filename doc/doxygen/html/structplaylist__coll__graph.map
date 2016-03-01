@@ -1,0 +1,4 @@
+<map id="playlist" name="playlist">
+<area shape="rect" id="node2" href="$structmeta__info.html" title="meta_info" alt="" coords="15,5,93,32"/>
+<area shape="rect" id="node3" href="$structplaylist__changeset.html" title="playlist_changeset" alt="" coords="68,96,201,123"/>
+</map>

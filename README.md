@@ -8,7 +8,7 @@ See [website](http://vitunes.org) for more information about vitunes.
 The rest of this README is for developers interested in tweaking vitunes.
 
 Utilities
- * scan-build runs: [report.scan-build](https://rawgit.com/ryanflannery/vitunes/refactoring/report.scan-build/)
+ * [doxygen](https://rawgit.com/ryanflannery/vitunes/refactoring/doc/doxygen/html/index.html)
  * scan-build latest: [report.scan-build](https://rawgit.com/ryanflannery/vitunes/refactoring/report.scan-build/2016-02-29-201534-28762-1/index.html)
 
 
