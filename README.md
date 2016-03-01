@@ -7,8 +7,15 @@ See [website](http://vitunes.org) for more information about vitunes.
 
 The rest of this README is for developers interested in tweaking vitunes.
 
+Building & Installing
+
+    $ ./configure          // build config.mk
+    $ make                 // build vitunes
+    $ make install         // install binary & man pages
+
 Utilities
  * [doxygen](https://rawgit.com/ryanflannery/vitunes/refactoring/doc/doxygen/html/index.html)
+   Raw for right now. Buidling this out.
  * [cppcheck](https://rawgit.com/ryanflannery/vitunes/refactoring/doc/cppcheck/results.txt)
  * [flawfinder](https://rawgit.com/ryanflannery/vitunes/refactoring/doc/flawfinder/results.txt)
  * [scan-build](https://rawgit.com/ryanflannery/vitunes/refactoring/doc/scan-build/index.html)
