@@ -9,7 +9,7 @@ The rest of this README is for developers interested in tweaking vitunes.
 
 Utilities
  * [doxygen](https://rawgit.com/ryanflannery/vitunes/refactoring/doc/doxygen/html/index.html)
- * scan-build latest: [report.scan-build](https://rawgit.com/ryanflannery/vitunes/refactoring/doc/scan-build/index.html)
+ * [scan-build](https://rawgit.com/ryanflannery/vitunes/refactoring/doc/scan-build/index.html)
 
 
 Introduction
