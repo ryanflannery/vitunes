@@ -19,12 +19,12 @@ MAN_PAGES=vitunes.1 \
 .DEFAULT:
 	@echo Nothing to do here
 
+lint:
+	mandoc -Tlint $(MAN_PAGES)
+
 install:
 	install -c -m 0444 $(MAN_PAGES) $(MANDIR)
 
 uninstall:
 	cd $(MANDIR)
 	rm -f $(MAN_PAGES)
-
-lint:
-	mandoc -Tlint $(MAN_PAGES)
