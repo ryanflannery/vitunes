@@ -1,0 +1,158 @@
+<html>
+<head>
+<title>vitunes - scan-build results</title>
+<link type="text/css" rel="stylesheet" href="scanview.css"/>
+<script src="sorttable.js"></script>
+<script language='javascript' type="text/javascript">
+function SetDisplay(RowClass, DisplayVal)
+{
+  var Rows = document.getElementsByTagName("tr");
+  for ( var i = 0 ; i < Rows.length; ++i ) {
+    if (Rows[i].className == RowClass) {
+      Rows[i].style.display = DisplayVal;
+    }
+  }
+}
+
+function CopyCheckedStateToCheckButtons(SummaryCheckButton) {
+  var Inputs = document.getElementsByTagName("input");
+  for ( var i = 0 ; i < Inputs.length; ++i ) {
+    if (Inputs[i].type == "checkbox") {
+      if(Inputs[i] != SummaryCheckButton) {
+        Inputs[i].checked = SummaryCheckButton.checked;
+        Inputs[i].onclick();
+	  }
+    }
+  }
+}
+
+function returnObjById( id ) {
+    if (document.getElementById)
+        var returnVar = document.getElementById(id);
+    else if (document.all)
+        var returnVar = document.all[id];
+    else if (document.layers)
+        var returnVar = document.layers[id];
+    return returnVar;
+}
+
+var NumUnchecked = 0;
+
+function ToggleDisplay(CheckButton, ClassName) {
+  if (CheckButton.checked) {
+    SetDisplay(ClassName, "");
+    if (--NumUnchecked == 0) {
+      returnObjById("AllBugsCheck").checked = true;
+    }
+  }
+  else {
+    SetDisplay(ClassName, "none");
+    NumUnchecked++;
+    returnObjById("AllBugsCheck").checked = false;
+  }
+}
+</script>
+<!-- SUMMARYENDHEAD -->
+</head>
+<body>
+<h1>vitunes - scan-build results</h1>
+
+<table>
+<tr><th>User:</th><td>ryan@schlipf.home</td></tr>
+<tr><th>Working Directory:</th><td>/home/ryan/vitunes</td></tr>
+<tr><th>Command Line:</th><td>make</td></tr>
+<tr><th>Clang Version:</th><td>clang version 3.5 (trunk)
+</td></tr>
+<tr><th>Date:</th><td>Mon Feb 29 21:13:03 2016</td></tr>
+</table>
+<h2>Bug Summary</h2><table>
+<thead><tr><td>Bug Type</td><td>Quantity</td><td class="sorttable_nosort">Display?</td></tr></thead>
+<tr style="font-weight:bold"><td class="SUMM_DESC">All Bugs</td><td class="Q">21</td><td><center><input type="checkbox" id="AllBugsCheck" onClick="CopyCheckedStateToCheckButtons(this);" checked/></center></td></tr>
+<tr><th>Dead store</th><th colspan=2></th></tr>
+<tr><td class="SUMM_DESC">Dead increment</td><td class="Q">1</td><td><center><input type="checkbox" onClick="ToggleDisplay(this,'bt_dead_store_dead_increment');" checked/></center></td></tr>
+<tr><th>Logic error</th><th colspan=2></th></tr>
+<tr><td class="SUMM_DESC">Assigned value is garbage or undefined</td><td class="Q">1</td><td><center><input type="checkbox" onClick="ToggleDisplay(this,'bt_logic_error_assigned_value_is_garbage_or_undefined');" checked/></center></td></tr>
+<tr><td class="SUMM_DESC">Dereference of null pointer</td><td class="Q">14</td><td><center><input type="checkbox" onClick="ToggleDisplay(this,'bt_logic_error_dereference_of_null_pointer');" checked/></center></td></tr>
+<tr><td class="SUMM_DESC">Uninitialized argument value</td><td class="Q">3</td><td><center><input type="checkbox" onClick="ToggleDisplay(this,'bt_logic_error_uninitialized_argument_value');" checked/></center></td></tr>
+<tr><td class="SUMM_DESC">Unix API</td><td class="Q">2</td><td><center><input type="checkbox" onClick="ToggleDisplay(this,'bt_logic_error_unix_api');" checked/></center></td></tr>
+</table>
+<h2>Reports</h2>
+
+<table class="sortable" style="table-layout:automatic">
+<thead><tr>
+  <td>Bug Group</td>
+  <td class="sorttable_sorted">Bug Type<span id="sorttable_sortfwdind">&nbsp;&#x25BE;</span></td>
+  <td>File</td>
+  <td class="Q">Line</td>
+  <td class="Q">Path Length</td>
+  <td class="sorttable_nosort"></td>
+  <!-- REPORTBUGCOL -->
+</tr></thead>
+<tbody>
+<tr class="bt_logic_error_assigned_value_is_garbage_or_undefined"><td class="DESC">Logic error</td><td class="DESC">Assigned value is garbage or undefined</td><td>players<span class="W"> </span>/mplayer.c</td><td class="Q">96</td><td class="Q">7</td><td><a href="report-bd5ae0.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-bd5ae0.html" -->
+</tr>
+<tr class="bt_dead_store_dead_increment"><td class="DESC">Dead store</td><td class="DESC">Dead increment</td><td>vitunes.c</td><td class="Q">521</td><td class="Q">1</td><td><a href="report-c55cff.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-c55cff.html" -->
+</tr>
+<tr class="bt_logic_error_dereference_of_null_pointer"><td class="DESC">Logic error</td><td class="DESC">Dereference of null pointer</td><td>commands.c</td><td class="Q">101</td><td class="Q">15</td><td><a href="report-64e054.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-64e054.html" -->
+</tr>
+<tr class="bt_logic_error_dereference_of_null_pointer"><td class="DESC">Logic error</td><td class="DESC">Dereference of null pointer</td><td>commands.c</td><td class="Q">115</td><td class="Q">9</td><td><a href="report-e3d650.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-e3d650.html" -->
+</tr>
+<tr class="bt_logic_error_dereference_of_null_pointer"><td class="DESC">Logic error</td><td class="DESC">Dereference of null pointer</td><td>commands.c</td><td class="Q">1035</td><td class="Q">18</td><td><a href="report-56fe4c.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-56fe4c.html" -->
+</tr>
+<tr class="bt_logic_error_dereference_of_null_pointer"><td class="DESC">Logic error</td><td class="DESC">Dereference of null pointer</td><td>keybindings.c</td><td class="Q">1700</td><td class="Q">6</td><td><a href="report-b8143c.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-b8143c.html" -->
+</tr>
+<tr class="bt_logic_error_dereference_of_null_pointer"><td class="DESC">Logic error</td><td class="DESC">Dereference of null pointer</td><td>medialib.c</td><td class="Q">121</td><td class="Q">6</td><td><a href="report-0206c7.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-0206c7.html" -->
+</tr>
+<tr class="bt_logic_error_dereference_of_null_pointer"><td class="DESC">Logic error</td><td class="DESC">Dereference of null pointer</td><td>medialib.c</td><td class="Q">241</td><td class="Q">6</td><td><a href="report-5127d4.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-5127d4.html" -->
+</tr>
+<tr class="bt_logic_error_dereference_of_null_pointer"><td class="DESC">Logic error</td><td class="DESC">Dereference of null pointer</td><td>medialib.c</td><td class="Q">276</td><td class="Q">10</td><td><a href="report-e7e6b9.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-e7e6b9.html" -->
+</tr>
+<tr class="bt_logic_error_dereference_of_null_pointer"><td class="DESC">Logic error</td><td class="DESC">Dereference of null pointer</td><td>player.c</td><td class="Q">155</td><td class="Q">11</td><td><a href="report-1e2003.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-1e2003.html" -->
+</tr>
+<tr class="bt_logic_error_dereference_of_null_pointer"><td class="DESC">Logic error</td><td class="DESC">Dereference of null pointer</td><td>playlist.c</td><td class="Q">47</td><td class="Q">5</td><td><a href="report-d7cfe2.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-d7cfe2.html" -->
+</tr>
+<tr class="bt_logic_error_dereference_of_null_pointer"><td class="DESC">Logic error</td><td class="DESC">Dereference of null pointer</td><td>playlist.c</td><td class="Q">103</td><td class="Q">9</td><td><a href="report-b4b0ab.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-b4b0ab.html" -->
+</tr>
+<tr class="bt_logic_error_dereference_of_null_pointer"><td class="DESC">Logic error</td><td class="DESC">Dereference of null pointer</td><td>playlist.c</td><td class="Q">390</td><td class="Q">4</td><td><a href="report-cf0dec.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-cf0dec.html" -->
+</tr>
+<tr class="bt_logic_error_dereference_of_null_pointer"><td class="DESC">Logic error</td><td class="DESC">Dereference of null pointer</td><td>playlist.c</td><td class="Q">398</td><td class="Q">7</td><td><a href="report-575ba8.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-575ba8.html" -->
+</tr>
+<tr class="bt_logic_error_dereference_of_null_pointer"><td class="DESC">Logic error</td><td class="DESC">Dereference of null pointer</td><td>playlist.c</td><td class="Q">420</td><td class="Q">6</td><td><a href="report-bdb007.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-bdb007.html" -->
+</tr>
+<tr class="bt_logic_error_dereference_of_null_pointer"><td class="DESC">Logic error</td><td class="DESC">Dereference of null pointer</td><td>uinterface.c</td><td class="Q">33</td><td class="Q">6</td><td><a href="report-26e1ce.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-26e1ce.html" -->
+</tr>
+<tr class="bt_logic_error_uninitialized_argument_value"><td class="DESC">Logic error</td><td class="DESC">Uninitialized argument value</td><td>players<span class="W"> </span>/mplayer.c</td><td class="Q">76</td><td class="Q">7</td><td><a href="report-160432.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-160432.html" -->
+</tr>
+<tr class="bt_logic_error_uninitialized_argument_value"><td class="DESC">Logic error</td><td class="DESC">Uninitialized argument value</td><td>players<span class="W"> </span>/mplayer.c</td><td class="Q">79</td><td class="Q">7</td><td><a href="report-c3011e.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-c3011e.html" -->
+</tr>
+<tr class="bt_logic_error_uninitialized_argument_value"><td class="DESC">Logic error</td><td class="DESC">Uninitialized argument value</td><td>players<span class="W"> </span>/mplayer.c</td><td class="Q">92</td><td class="Q">7</td><td><a href="report-9dcf84.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-9dcf84.html" -->
+</tr>
+<tr class="bt_logic_error_unix_api"><td class="DESC">Logic error</td><td class="DESC">Unix API</td><td>str2argv.c</td><td class="Q">52</td><td class="Q">19</td><td><a href="report-1be39d.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-1be39d.html" -->
+</tr>
+<tr class="bt_logic_error_unix_api"><td class="DESC">Logic error</td><td class="DESC">Unix API</td><td>str2argv.c</td><td class="Q">66</td><td class="Q">17</td><td><a href="report-d53d77.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-d53d77.html" -->
+</tr>
+</tbody>
+</table>
+
+</body></html>

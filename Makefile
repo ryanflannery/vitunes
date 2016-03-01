@@ -11,7 +11,7 @@ all: .DEFAULT
 doxygen:
 	doxygen doxygen.conf
 
-report.scan-build:
+scan-build:
 	make clean
-	scan-build -o $@ make
+	scan-build -o doc/scan-build/ make
 	figlet "Update scan-build link in README.md!"
