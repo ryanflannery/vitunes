@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2011 Ryan Flannery <ryan.flannery@gmail.com>
+ * Copyright (c) 2010, 2011, 2012 Ryan Flannery <ryan.flannery@gmail.com>
+ * Copyright (c) 2013 Tiago Cunha <tcunha@gmx.com>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,32 +15,26 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include "player_utils.h"
+#include <stdio.h>
 
-bool
-exe_in_path(const char *e) 
+#include "ecmd.h"
+#include "../medialib.h"
+#include "../vitunes.h"
+
+static void
+ecmd_init_exec(UNUSED int argc, UNUSED char **argv)
 {
-   char *path, *path_copy, *part, *test;
-   bool  found;
+   printf("Creating all necessary files and directories for vitunes...\n");
+   medialib_setup_files(vitunes_dir, db_file, playlist_dir);
 
-   if ((path = strdup(getenv("PATH"))) == NULL)
-      err(1, "%s: strdup/getenv failed for $PATH", __FUNCTION__);
-
-   path_copy = path;
-   found = false;
-   while ((part = strsep(&path, ":")) != NULL && !found) {
-      if (strlen(part) == 0) continue;
-
-      if (asprintf(&test, "%s/%s", part, e) == -1)
-         err(1, "%s: failed to build path", __FUNCTION__);
-
-      if (access(test, X_OK) == 0)
-         found = true;
-
-      free(test);
-   }
-
-   free(path_copy);
-   return found;
+   printf("\nNow use 'vitunes -e add path [...]' to add files to vitunes.\n");
 }
 
+const struct ecmd ecmd_init = {
+   "init", NULL,
+   NULL,
+   0, 0,
+   NULL,
+   NULL,
+   ecmd_init_exec
+};

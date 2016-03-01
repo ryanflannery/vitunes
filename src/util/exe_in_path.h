@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2010, 2011, 2012 Ryan Flannery <ryan.flannery@gmail.com>
- * Copyright (c) 2013 Tiago Cunha <tcunha@gmx.com>
+ * Copyright (c) 2011 Ryan Flannery <ryan.flannery@gmail.com>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -15,29 +14,18 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#ifndef PLAYER_UTILS_H
+#define PLAYER_UTILS_H
+
+#include "../compat/compat.h"
+
+#include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 #include <stdio.h>
+#include <err.h>
 
-#include "ecmd.h"
-#include "medialib.h"
-#include "vitunes.h"
+bool exe_in_path(const char *e);
 
-static void
-ecmd_add_exec(UNUSED int argc, char **argv)
-{
-   printf("Loading existing database...\n");
-   medialib_load(db_file, playlist_dir);
-
-   printf("Scanning directories for files to add to database...\n");
-   medialib_db_scan_dirs(argv);
-
-   medialib_destroy();
-}
-
-const struct ecmd ecmd_add = {
-   "add", NULL,
-   "path [...]",
-   1, -1,
-   NULL,
-   NULL,
-   ecmd_add_exec
-};
+#endif

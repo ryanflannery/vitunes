@@ -15,50 +15,37 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#ifndef ECMD_H
+#define ECMD_H
+
 #include <err.h>
+#include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 
-#include "ecmd.h"
-#include "medialib.h"
-#include "vitunes.h"
+#include "../vitunes.h"
 
-static char *time_format = "%Y %m %d %H:%M:%S";
-
-static int
-ecmd_flush_parse(int argc, char **argv)
-{
-   int ch;
-
-   while ((ch = getopt(argc, argv, "t:")) != -1) {
-      switch (ch) {
-         case 't':
-            if ((time_format = strdup(optarg)) == NULL)
-               err(1, "%s: strdup of time_format failed", argv[0]);
-            break;
-         case '?':
-         case 'h':
-         default:
-            return -1;
-      }
-   }
-
-   return 0;
-}
-
-static void
-ecmd_flush_exec(UNUSED int argc, UNUSED char **argv)
-{
-   medialib_load(db_file, playlist_dir);
-   medialib_db_flush(stdout, time_format);
-   medialib_destroy();
-}
-
-const struct ecmd ecmd_flush = {
-   "flush", NULL,
-   "[-t format]",
-   0, 0,
-   ecmd_flush_parse,
-   NULL,
-   ecmd_flush_exec
+struct ecmd {
+   const char  *name;
+   const char  *alias;      /* may be NULL */
+   const char  *usage;      /* may be NULL */
+   int          args_lower; /* minimum number of arguments */
+   int          args_upper; /* negative number means no limit */
+   int        (*parse)(int argc, char **argv); /* may be NULL */
+   int        (*check)(void);                  /* may be NULL */
+   void       (*exec)(int argc, char **argv);
 };
+
+extern const struct ecmd ecmd_add;
+extern const struct ecmd ecmd_addurl;
+extern const struct ecmd ecmd_check;
+extern const struct ecmd ecmd_flush;
+extern const struct ecmd ecmd_help;
+extern const struct ecmd ecmd_init;
+extern const struct ecmd ecmd_rmfile;
+extern const struct ecmd ecmd_tag;
+extern const struct ecmd ecmd_update;
+
+int ecmd_exec(const char *ecmd, int argc, char **argv);
+
+#endif

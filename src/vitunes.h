@@ -17,7 +17,7 @@
 #ifndef VITUNES_H
 #define VITUNES_H
 
-#include "compat.h"
+#include "compat/compat.h"
 
 #include <sys/time.h>
 
@@ -34,9 +34,9 @@
 #include "commands.h"
 #include "keybindings.h"
 #include "medialib.h"
-#include "player.h"
+#include "player/player.h"
 #include "uinterface.h"
-#include "ecmd.h"
+#include "ecommands/ecmd.h"
 
 /* for unused arguments */
 #if defined(__GNUC__) || defined(__clang__)

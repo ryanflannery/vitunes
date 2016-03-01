@@ -16,7 +16,7 @@ LOCAL_OBJS=commands.o compat.o ecmd.o \
 			  ecmd_flush.o ecmd_help.o ecmd_init.o \
 			  ecmd_rmfile.o ecmd_tag.o ecmd_update.o \
 			  keybindings.o medialib.o meta_info.o \
-			  mplayer.o paint.o player.o player_utils.o \
+			  mplayer.o paint.o player.o exe_in_path.o \
 			  playlist.o socket.o str2argv.o \
 			  uinterface.o vitunes.o
 
@@ -29,8 +29,8 @@ LIBS    += -lm -lncurses -lutil $(LDEPS)
 
 
 # subdirectories with code (.PATH for BSD make, VPATH for GNU make)
-.PATH:  players
-VPATH = players
+.PATH:  compat ecommands player player/gstreamer player/mplayer util
+VPATH = compat ecommands player player/gstreamer player/mplayer util
 
 .PHONY: debug clean clean-all install uninstall
 

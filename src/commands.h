@@ -17,11 +17,11 @@
 #ifndef COMMANDS_H
 #define COMMANDS_H
 
-#include "compat.h"
+#include "compat/compat.h"
 
 #include "enums.h"
 #include "paint.h"
-#include "str2argv.h"
+#include "util/str2argv.h"
 #include "vitunes.h"
 #include "debug.h"
 #include "keybindings.h"

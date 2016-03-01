@@ -17,7 +17,7 @@
 #ifndef KEYBINDINGS_H
 #define KEYBINDINGS_H
 
-#include "compat.h"
+#include "compat/compat.h"
 
 #include "debug.h"
 #include "enums.h"

@@ -17,7 +17,7 @@
 #ifndef MPLAYER_H
 #define MPLAYER_H
 
-#include "../compat.h"
+#include "../../compat/compat.h"
 
 #include <sys/wait.h>
 #include <sys/types.h>
@@ -33,10 +33,10 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "player_utils.h"
+#include "../../util/exe_in_path.h"
 
 #ifdef DEBUG
-#  include "../debug.h"
+#  include "../../debug.h"
 #endif
 
 void mplayer_start();

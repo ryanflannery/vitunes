@@ -17,7 +17,7 @@
 #ifndef META_INFO_H
 #define META_INFO_H
 
-#include "compat.h"
+#include "compat/compat.h"
 
 #include <ctype.h>
 #include <limits.h>

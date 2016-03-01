@@ -17,18 +17,18 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "compat.h"
+#include "../compat/compat.h"
 
 #include <err.h>
 
-#include "playlist.h"
-#include "paint.h"
-#include "debug.h"
+#include "../playlist.h"
+#include "../paint.h"
+#include "../debug.h"
 
 /* "static" backends (those that aren't dynamically loaded) */
-#include "players/mplayer.h"
+#include "mplayer/mplayer.h"
 #if defined(ENABLE_GSTREAMER)
-#  include "players/gstplayer.h"
+#  include "gstreamer/gstplayer.h"
 #endif
 
 /*

@@ -17,7 +17,7 @@
 #ifndef UINTERFACE_H
 #define UINTERFACE_H
 
-#include "compat.h"
+#include "compat/compat.h"
 
 #include <sys/ioctl.h>
 

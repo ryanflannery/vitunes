@@ -15,32 +15,29 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include <stdbool.h>
-#include <stdio.h>
+#include <err.h>
+#include <string.h>
 #include <unistd.h>
 
 #include "ecmd.h"
-#include "medialib.h"
-#include "vitunes.h"
+#include "../medialib.h"
+#include "../vitunes.h"
 
-static bool force_update;
-static bool show_skipped;
+static char *time_format = "%Y %m %d %H:%M:%S";
 
 static int
-ecmd_update_parse(int argc, char **argv)
+ecmd_flush_parse(int argc, char **argv)
 {
    int ch;
 
-   while ((ch = getopt(argc, argv, "fs")) != -1) {
+   while ((ch = getopt(argc, argv, "t:")) != -1) {
       switch (ch) {
-         case 'f':
-            force_update = true;
+         case 't':
+            if ((time_format = strdup(optarg)) == NULL)
+               err(1, "%s: strdup of time_format failed", argv[0]);
             break;
-         case 's':
-            show_skipped = true;
-            break;
-         case 'h':
          case '?':
+         case 'h':
          default:
             return -1;
       }
@@ -50,22 +47,18 @@ ecmd_update_parse(int argc, char **argv)
 }
 
 static void
-ecmd_update_exec(UNUSED int argc, UNUSED char **argv)
+ecmd_flush_exec(UNUSED int argc, UNUSED char **argv)
 {
-   printf("Loading existing database...\n");
    medialib_load(db_file, playlist_dir);
-
-   printf("Updating existing database...\n");
-   medialib_db_update(show_skipped, force_update);
-
+   medialib_db_flush(stdout, time_format);
    medialib_destroy();
 }
 
-const struct ecmd ecmd_update = {
-   "update", NULL,
-   "[-fs]",
+const struct ecmd ecmd_flush = {
+   "flush", NULL,
+   "[-t format]",
    0, 0,
-   ecmd_update_parse,
+   ecmd_flush_parse,
    NULL,
-   ecmd_update_exec
+   ecmd_flush_exec
 };

@@ -21,9 +21,9 @@
 #include <unistd.h>
 
 #include "ecmd.h"
-#include "medialib.h"
-#include "playlist.h"
-#include "vitunes.h"
+#include "../medialib.h"
+#include "../playlist.h"
+#include "../vitunes.h"
 
 static bool forced;
 

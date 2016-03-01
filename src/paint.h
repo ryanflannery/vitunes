@@ -17,7 +17,7 @@
 #ifndef PAINT_H
 #define PAINT_H
 
-#include "compat.h"
+#include "compat/compat.h"
 
 #include <curses.h>
 #include <math.h>
@@ -28,7 +28,7 @@
 
 #include "enums.h"
 #include "meta_info.h"
-#include "player.h"
+#include "player/player.h"
 #include "playlist.h"
 #include "uinterface.h"
 #include "vitunes.h"

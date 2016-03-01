@@ -18,23 +18,26 @@
 #include <stdio.h>
 
 #include "ecmd.h"
-#include "medialib.h"
-#include "vitunes.h"
+#include "../medialib.h"
+#include "../vitunes.h"
 
 static void
-ecmd_init_exec(UNUSED int argc, UNUSED char **argv)
+ecmd_add_exec(UNUSED int argc, char **argv)
 {
-   printf("Creating all necessary files and directories for vitunes...\n");
-   medialib_setup_files(vitunes_dir, db_file, playlist_dir);
+   printf("Loading existing database...\n");
+   medialib_load(db_file, playlist_dir);
 
-   printf("\nNow use 'vitunes -e add path [...]' to add files to vitunes.\n");
+   printf("Scanning directories for files to add to database...\n");
+   medialib_db_scan_dirs(argv);
+
+   medialib_destroy();
 }
 
-const struct ecmd ecmd_init = {
-   "init", NULL,
+const struct ecmd ecmd_add = {
+   "add", NULL,
+   "path [...]",
+   1, -1,
    NULL,
-   0, 0,
    NULL,
-   NULL,
-   ecmd_init_exec
+   ecmd_add_exec
 };

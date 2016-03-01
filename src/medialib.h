@@ -25,7 +25,7 @@
 #ifndef MEDIALIB_H
 #define MEDIALIB_H
 
-#include "compat.h"
+#include "compat/compat.h"
 
 #include <sys/errno.h>
 #include <sys/types.h>

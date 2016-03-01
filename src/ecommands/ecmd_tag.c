@@ -22,7 +22,7 @@
 #include <unistd.h>
 
 #include "ecmd.h"
-#include "meta_info.h"
+#include "../meta_info.h"
 
 static char         *artist;
 static char         *album;

@@ -20,10 +20,10 @@
 #include <string.h>
 
 #include "ecmd.h"
-#include "medialib.h"
-#include "meta_info.h"
-#include "playlist.h"
-#include "vitunes.h"
+#include "../medialib.h"
+#include "../meta_info.h"
+#include "../playlist.h"
+#include "../vitunes.h"
 
 static void
 ecmd_addurl_exec(UNUSED int argc, char **argv)

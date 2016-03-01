@@ -17,7 +17,7 @@
 #ifndef STR2ARGV_H
 #define STR2ARGV_H
 
-#include "compat.h"
+#include "../compat/compat.h"
 
 #include <err.h>
 #include <stdbool.h>
@@ -25,7 +25,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "debug.h"
+#include "../debug.h"
 
 /* hard limits on the size of an argv and each entry/token w/in an argv */
 #define ARGV_MAX_ENTRIES    255

@@ -21,7 +21,7 @@
 #include <unistd.h>
 
 #include "ecmd.h"
-#include "vitunes.h"
+#include "../vitunes.h"
 
 static void
 ecmd_help_exec(UNUSED int argc, char **argv)

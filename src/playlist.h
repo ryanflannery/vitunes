@@ -17,7 +17,7 @@
 #ifndef PLAYLIST_H
 #define PLAYLIST_H
 
-#include "compat.h"
+#include "compat/compat.h"
 
 #include <sys/stat.h>
 #include <sys/types.h>
