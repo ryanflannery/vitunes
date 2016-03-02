@@ -3,23 +3,27 @@ vitunes
 
 A no-fluff media player & indexer, for vi users.
 
-See [website](http://vitunes.org) for more information about vitunes.
+See http://vitunes.org for more information about vitunes.
+The rest of this README is for developers interested in hacking vitunes.
 
-The rest of this README is for developers interested in tweaking vitunes.
-
-Building & Installing
+### Building & Installing
 
     $ ./configure          // build config.mk
     $ make                 // build vitunes
     $ make install         // install binary & man pages
+    $ make test            // run unit tests (sparse for now)
 
-Utilities
- * Link to travis-ci here
+### Utilities
+
  * [doxygen](https://rawgit.com/ryanflannery/vitunes/refactoring/doc/doxygen/html/index.html)
+   Update with `make doxygen`.
    Raw for right now. Buidling this out.
- * [cppcheck](https://rawgit.com/ryanflannery/vitunes/refactoring/doc/cppcheck/results.txt)
- * [flawfinder](https://rawgit.com/ryanflannery/vitunes/refactoring/doc/flawfinder/results.txt)
+ * [cppcheck results](https://rawgit.com/ryanflannery/vitunes/refactoring/doc/cppcheck/results.txt)
+   Update with `make cppcheck`
+ * [flawfinder results](https://rawgit.com/ryanflannery/vitunes/refactoring/doc/flawfinder/results.txt)
+   Update with `make flawfinder`
  * [scan-build](https://rawgit.com/ryanflannery/vitunes/refactoring/doc/scan-build/index.html)
+   Update with `make scan-build` and move results into scan-build directory
 
 
 Introduction
