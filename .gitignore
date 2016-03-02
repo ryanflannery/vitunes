@@ -1,4 +1,4 @@
-*.o
-
-vitunes
-vitunes.core
+src/vitunes
+src/vitunes.core
+src/test
+src/test.core
