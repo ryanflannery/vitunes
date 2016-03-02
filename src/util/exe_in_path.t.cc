@@ -28,3 +28,8 @@ TEST(exe_in_path, TestRandomChars)
 {
    ASSERT_EQ(false, exe_in_path("*!03/;]asdf$FOO"));
 }
+
+TEST(exe_in_path, TestOpenQuote)
+{
+   ASSERT_EQ(false, exe_in_path("'"));
+}
