@@ -6,9 +6,8 @@ compiler:
 
 os:
    - linux
-   - osx
 
 before_install:
    - sudo apt-get -qq update
-   - sudo apt-get install -y libtaglib2.1-cil
-   - sudo apt-get install -y gstreamer
+   - sudo apt-get install -y libtaglib
+   - sudo apt-get install -y libgstreamer
