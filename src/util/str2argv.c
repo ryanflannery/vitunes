@@ -85,7 +85,7 @@ argv_finish_token(int *argc, char ***argv)
  * both argc/argv are set to 0/NULL.
  */
 int
-str2argv(char *str, int *argc, char ***argv, const char **errmsg)
+str2argv(const char *str, int *argc, char ***argv, const char **errmsg)
 {
    bool in_token;
    bool in_container;
@@ -251,10 +251,13 @@ argv2str(int argc, char *argv[])
    /* build result */
    off = 0;
    for (i = 0; i < argc; i++) {
-      if (strstr(argv[i], " ") == NULL)
-         off += snprintf(result + off, len, "%s ", argv[i]);
+      if (NULL == strstr(argv[i], " "))
+         off += snprintf(result + off, len, "%s", argv[i]);
       else
-         off += snprintf(result + off, len, "\'%s\' ", argv[i]);
+         off += snprintf(result + off, len, "\'%s\'", argv[i]);
+
+      if (i < argc - 1)
+         off += snprintf(result + off, len, " ");
    }
 
    return result;

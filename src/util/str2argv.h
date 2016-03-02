@@ -34,7 +34,7 @@
  * quoting, etc., and builds an argc/argv style set of parameters that are
  * suitable for passing to any of the cmd_* or ecmd_* functions.
  */
-int str2argv(char *str, int *argc, char ***argv, const char **errmsg);
+int str2argv(const char *str, int *argc, char ***argv, const char **errmsg);
 
 /*
  * After the above function is used to build an argc/argv set of parameters,
