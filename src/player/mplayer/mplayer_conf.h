@@ -19,10 +19,14 @@
 
 const char *MPLAYER_PATH = "mplayer";
 
-char *MPLAYER_ARGS[] = { "mplayer",
-   "-slave", "-idle", "-quiet", "-msglevel",
-   "cplayer=0:ao=0:vo=0:decaudio=0:decvideo=0:demuxer=0",
-   NULL
+char *MPLAYER_ARGS[] = {
+      "mplayer",
+      "-slave",
+      "-idle",
+      "-quiet",
+      "-vo", "null",
+      "-msglevel", "cplayer=0:ao=0:vo=0:decaudio=0:decvideo=0:demuxer=0",
+      NULL
 };
 
 #endif
