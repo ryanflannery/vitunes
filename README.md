@@ -14,6 +14,7 @@ Building & Installing
     $ make install         // install binary & man pages
 
 Utilities
+ * Link to travis-ci here
  * [doxygen](https://rawgit.com/ryanflannery/vitunes/refactoring/doc/doxygen/html/index.html)
    Raw for right now. Buidling this out.
  * [cppcheck](https://rawgit.com/ryanflannery/vitunes/refactoring/doc/cppcheck/results.txt)
