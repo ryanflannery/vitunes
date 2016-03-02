@@ -9,5 +9,5 @@ os:
 
 before_install:
    - sudo apt-get -qq update
-   - sudo apt-get install -y libtaglib
-   - sudo apt-get install -y libgstreamer
+   - sudo apt-get install -y libtaglib2.0
+   - sudo apt-get install -y libgstreamer0.9
