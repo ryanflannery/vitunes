@@ -15,14 +15,30 @@ CFLAGS  += -c -std=c89 -Wall -Wextra -Wno-unused-value $(CDEBUG) $(CDEPS)
 LIBS    += -lm -lncurses -lutil $(LDEPS)
 
 # object files
-OBJS=commands.o compat.o ecmd.o \
-			  ecmd_add.o ecmd_addurl.o ecmd_check.o \
-			  ecmd_flush.o ecmd_help.o ecmd_init.o \
-			  ecmd_rmfile.o ecmd_tag.o ecmd_update.o \
-			  keybindings.o medialib.o meta_info.o \
-			  mplayer.o paint.o player.o exe_in_path.o \
-			  playlist.o socket.o str2argv.o \
-			  uinterface.o vitunes.o
+OBJS=commands.o \
+	  compat.o \
+	  ecmd.o \
+	  ecmd_add.o \
+	  ecmd_addurl.o \
+	  ecmd_check.o \
+	  ecmd_flush.o \
+	  ecmd_help.o \
+	  ecmd_init.o \
+	  ecmd_rmfile.o \
+	  ecmd_tag.o \
+	  ecmd_update.o \
+	  exe_in_path.o \
+	  keybindings.o \
+	  medialib.o \
+	  meta_info.o \
+	  mplayer.o \
+	  paint.o \
+	  player.o \
+	  playlist.o \
+	  socket.o \
+	  str2argv.o \
+	  uinterface.o \
+	  vitunes.o
 
 # subdirectories with code (.PATH for BSD make, VPATH for GNU make)
 .PATH:  compat ecommands player player/gstreamer player/mplayer util
@@ -42,8 +58,8 @@ clean:
 	rm -f vitunes vitunes.core
 	rm -f $(OBJS)
 	rm -f vitunes-debug.log
-	rm -f $(TESTOBJS)
 	rm -f test test.core
+	rm -f $(TEST_OBJS)
 
 debug:
 	$(MAKE) CDEBUG="-DDEBUG -g"
@@ -54,14 +70,18 @@ install: vitunes
 uninstall:
 	rm -f $(BINDIR)/vitunes
 
-### build test target
-TESTOBJS=exe_in_path.t.o str2argv.t.o
-CXX ?= clang++
+### test build (using gtest)
 
-test: $(TESTOBJS)
-	$(CXX) -L/usr/local/lib -lgtest_main -o $@ $(TESTOBJS)
+CXX 			?= clang++
+TEST_CFLAGS	= -I/usr/local/include -c
+TEST_LIBS	= -L/usr/local/lib -lgtest_main
+TEST_OBJS=exe_in_path.t.o \
+			str2argv.t.o
+
+test: $(TEST_OBJS)
+	$(CXX) $(TEST_LIBS) -o $@ $(TEST_OBJS)
 	./test
 
 .cc.o:
-	$(CXX) -I/usr/local/include -c $<
+	$(CXX) $(TEST_CFLAGS) $<
 
