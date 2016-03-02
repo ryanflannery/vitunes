@@ -99,6 +99,10 @@ str2argv(char *str, int *argc, char ***argv, const char **errmsg)
       "Unmatched quotes",
       "Unused/Dangling escape sequence"
    };
+
+   if (NULL == argc || NULL == argv || NULL == errmsg)
+      return 1;
+
    *errmsg = NULL;
 
    container_start = 0;

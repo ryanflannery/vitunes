@@ -56,10 +56,12 @@ uninstall:
 
 ### build test target
 TESTOBJS=exe_in_path.t.o str2argv.t.o
+CXX ?= clang++
 
 test: $(TESTOBJS)
-	$(CC) -L/usr/local/lib -lgtest_main -o $@ $(TESTOBJS)
+	$(CXX) -L/usr/local/lib -lgtest_main -o $@ $(TESTOBJS)
 	./test
 
 .cc.o:
-	$(CC) -I/usr/local/include -c $<
+	$(CXX) -I/usr/local/include -c $<
+
