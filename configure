@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [[ "$#" != "0" ]];
+if [ "$#" != "0" ];
 then
    echo "usage: $0\n"
    echo "Running this script does the following:"
@@ -68,8 +68,8 @@ echo
 HaveTaglib=0
 
 # Check for taglib
-result=`which taglib-config > /dev/null 2>&1`
-if [[ 0 -eq $? ]];
+which taglib-config > /dev/null 2>&1
+if [ 0 -eq $? ];
 then
    echo "FOUND"
    HaveTaglib=1
@@ -81,7 +81,7 @@ TAGLIB_LIBS=\`taglib-config --libs\` -ltag_c
 fi
 
 # No taglib.  Alert but continue.
-if [[ 0 -eq ${HaveTaglib} ]];
+if [ 0 -eq ${HaveTaglib} ];
 then
    echo "NOT FOUND!"
    echo "   ERROR: TagLib must be installed to build vitunes."
@@ -100,8 +100,8 @@ echo "CHECKING FOR MEDIA BACKENDS... "
 HaveMediaBackend=0
 
 # Check for mplayer
-result=`which mplayer > /dev/null 2>&1`
-if [[ 0 -eq $? ]];
+which mplayer > /dev/null 2>&1
+if [ 0 -eq $? ];
 then
    HaveMediaBackend=1
    echo "   Found mplayer"
@@ -109,8 +109,8 @@ fi
 
 # Check for gstreamer
 gstreamer=gstreamer-1.0
-result=`pkg-config --exists ${gstreamer} > /dev/null 2>&1`
-if [[ 0 -eq $? ]];
+pkg-config --exists ${gstreamer} > /dev/null 2>&1
+if [ 0 -eq $? ];
 then
    HaveMediaBackend=1
    echo "   Found gstreamer"
@@ -123,7 +123,7 @@ GSTREAMER_OBJS    = gstplayer.o
 fi
 
 # None found.  Alert but continue.
-if [[ 0 -eq ${HaveMediaBackend} ]];
+if [ 0 -eq ${HaveMediaBackend} ];
 then
    echo "   ERROR: No media backound found."
    echo "   In order for vitunes to play music, either mplayer or gstreamer"
@@ -142,7 +142,7 @@ echo
 echo "BUILDING config.mk..."
 
 # backup any existing config
-if [[ -f config.mk ]];
+if [ -f config.mk ];
 then
    backup=config.mk.bak
    echo "   Backing up existing config.mk to ${backup}"
