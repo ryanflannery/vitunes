@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 extern "C" {
-#  include "str2argv.h"
+#	include "str2argv.c"
 };
 
 TEST(argv2str, TestEmpty)
@@ -27,7 +27,14 @@ TEST(argv2str, TestSizeTooBig)
    ASSERT_STREQ("foo bar ", argv2str(2, argv));
 }
 
-TEST(argv2str, TestNonZeroSizeWithNULL)
+TEST(argv2str, TestMaryHadALittleLamb)
 {
-   ASSERT_STREQ(NULL, argv2str(10, NULL));
+   char *argv[] = {
+		(char*) "mary",
+		(char*) "had",
+		(char*) "a",
+		(char*) "little",
+		(char*) "lamb"
+	};
+   ASSERT_STREQ("mary had a little lamb ", argv2str(5, argv));
 }

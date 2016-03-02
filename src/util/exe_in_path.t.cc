@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 extern "C" {
-#  include "exe_in_path.h"
+#  include "exe_in_path.c"
 };
 
 TEST(exe_in_path, TestNull)

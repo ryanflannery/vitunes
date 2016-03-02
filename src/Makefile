@@ -9,8 +9,13 @@ CDEPS=$(TAGLIB_CFLAGS) $(GSTREAMER_CFLAGS)
 LDEPS=$(TAGLIB_LIBS) $(GSTREAMER_LIBS)
 ODEPS=$(GSTREAMER_OBJS)
 
+# build variables
+CC		  ?= /usr/bin/cc
+CFLAGS  += -c -std=c89 -Wall -Wextra -Wno-unused-value $(CDEBUG) $(CDEPS)
+LIBS    += -lm -lncurses -lutil $(LDEPS)
+
 # object files
-LOCAL_OBJS=commands.o compat.o ecmd.o \
+OBJS=commands.o compat.o ecmd.o \
 			  ecmd_add.o ecmd_addurl.o ecmd_check.o \
 			  ecmd_flush.o ecmd_help.o ecmd_init.o \
 			  ecmd_rmfile.o ecmd_tag.o ecmd_update.o \
@@ -18,13 +23,6 @@ LOCAL_OBJS=commands.o compat.o ecmd.o \
 			  mplayer.o paint.o player.o exe_in_path.o \
 			  playlist.o socket.o str2argv.o \
 			  uinterface.o vitunes.o
-
-OBJS=$(ODEPS) $(LOCAL_OBJS)
-
-# build variables
-CC		  ?= /usr/bin/cc
-CFLAGS  += -c -std=c89 -Wall -Wextra -Wno-unused-value $(CDEBUG) $(CDEPS)
-LIBS    += -lm -lncurses -lutil $(LDEPS)
 
 # subdirectories with code (.PATH for BSD make, VPATH for GNU make)
 .PATH:  compat ecommands player player/gstreamer player/mplayer util
@@ -34,15 +32,18 @@ VPATH = compat ecommands player player/gstreamer player/mplayer util
 
 .DEFAULT: vitunes
 
-vitunes: $(OBJS)
-	$(CC) -o $@ $(LDFLAGS) $(OBJS) $(LIBS)
+vitunes: $(OBJS) $(ODEPS)
+	$(CC) -o $@ $(LDFLAGS) $(LIBS) $(OBJS) $(ODEPS)
 
 .c.o:
 	$(CC) $(CFLAGS) $<
 
 clean:
-	rm -f $(LOCAL_OBJS)
-	rm -f vitunes vitunes.core vitunes-debug.log
+	rm -f vitunes vitunes.core
+	rm -f $(OBJS)
+	rm -f vitunes-debug.log
+	rm -f $(TESTOBJS)
+	rm -f test test.core
 
 debug:
 	$(MAKE) CDEBUG="-DDEBUG -g"
@@ -53,25 +54,12 @@ install: vitunes
 uninstall:
 	rm -f $(BINDIR)/vitunes
 
-###
+### build test target
+TESTOBJS=exe_in_path.t.o str2argv.t.o
 
-TESTOBJS=exe_in_path.t.o str2argv.t.o gtest.t.o
-
-gtest: $(OBJS) $(TESTOBJS)
-	$(CC) -o $@ exe_in_path.o str2argv.o $(TESTOBJS) -L/usr/local/lib -lgtest
-	./gtest
+test: $(TESTOBJS)
+	$(CC) -L/usr/local/lib -lgtest_main -o $@ $(TESTOBJS)
+	./test
 
 .cc.o:
-	$(CC) -c -I/usr/local/include $<
-
-TESTCFLAGS=-I/usr/local/include
-TESTLDFLAGS=-L/usr/local/lib -lgtest
-test:
-	$(CC) -c -o $@.o $(TESTCFLAGS) util/str2argv.t.cc
-	$(CC) -o $@ $(TESTLDFLAGS) test.o str2argv.o
-	./$@
-
-etest:
-	$(CC) -c -o $@.o $(TESTCFLAGS) util/exe_in_path.t.cc
-	$(CC) -o $@ $(TESTLDFLAGS) $@.o exe_in_path.o
-	./$@
+	$(CC) -I/usr/local/include -c $<

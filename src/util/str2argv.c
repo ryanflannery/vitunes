@@ -20,10 +20,10 @@
 void
 argv_init(int *argc, char ***argv)
 {
-   if ((*argv = calloc(ARGV_MAX_ENTRIES, sizeof(char*))) == NULL)
+   if ((*argv = (char**) calloc(ARGV_MAX_ENTRIES, sizeof(char*))) == NULL)
       err(1, "argv_init: argv calloc fail");
 
-   if (((*argv)[0] = calloc(ARGV_MAX_TOKEN_LEN, sizeof(char))) == NULL)
+   if (((*argv)[0] = (char*) calloc(ARGV_MAX_TOKEN_LEN, sizeof(char))) == NULL)
       err(1, "argv_init: argv[i] calloc fail");
 
    bzero((*argv)[0], ARGV_MAX_TOKEN_LEN * sizeof(char));
@@ -67,7 +67,7 @@ argv_finish_token(int *argc, char ***argv)
       return;
 
    *argc = *argc + 1;
-   if (((*argv)[*argc] = calloc(ARGV_MAX_TOKEN_LEN, sizeof(char))) == NULL)
+   if (((*argv)[*argc] = (char*) calloc(ARGV_MAX_TOKEN_LEN, sizeof(char))) == NULL)
       err(1, "argv_finish_token: failed to calloc argv[i]");
 
    bzero((*argv)[*argc], ARGV_MAX_TOKEN_LEN * sizeof(char));
@@ -240,7 +240,7 @@ argv2str(int argc, char *argv[])
    }
 
    /* allocate result */
-   if ((result = calloc(len, sizeof(char))) == NULL)
+   if ((result = (char*) calloc(len, sizeof(char))) == NULL)
       err(1, "argv2str: calloc failed");
    bzero(result, len);
 
