@@ -15,14 +15,14 @@ The rest of this README is for developers interested in hacking vitunes.
 
 ### Utilities
 
- * [doxygen](https://rawgit.com/ryanflannery/vitunes/refactoring/doc/doxygen/html/index.html)
+ * [doxygen](https://rawgit.com/ryanflannery/vitunes/master/doc/doxygen/html/index.html)
    Update with `make doxygen`.
    Raw for right now. Buidling this out.
- * [cppcheck results](https://rawgit.com/ryanflannery/vitunes/refactoring/doc/cppcheck/results.txt)
+ * [cppcheck results](https://rawgit.com/ryanflannery/vitunes/master/doc/cppcheck/results.txt)
    Update with `make cppcheck`
- * [flawfinder results](https://rawgit.com/ryanflannery/vitunes/refactoring/doc/flawfinder/results.txt)
+ * [flawfinder results](https://rawgit.com/ryanflannery/vitunes/master/doc/flawfinder/results.txt)
    Update with `make flawfinder`
- * [scan-build](https://rawgit.com/ryanflannery/vitunes/refactoring/doc/scan-build/index.html)
+ * [scan-build](https://rawgit.com/ryanflannery/vitunes/master/doc/scan-build/index.html)
    Update with `make scan-build` and move results into scan-build directory
 
 
