@@ -28,7 +28,7 @@ static char         *artist;
 static char         *album;
 static char         *title;
 static char         *genre;
-static char         *comment;
+static char         *fcomment;
 static unsigned int  track;
 static unsigned int  year;
 
@@ -56,8 +56,8 @@ ecmd_tag_parse(int argc, char **argv)
                err(1, "%s: strdup ARTIST failed", argv[0]);
             break;
          case 'c':
-            free(comment);
-            if ((comment = strdup(optarg)) == NULL)
+            free(fcomment);
+            if ((fcomment = strdup(optarg)) == NULL)
                err(1, "%s: strdup COMMENT failed", argv[0]);
             break;
          case 'g':
@@ -89,7 +89,7 @@ static int
 ecmd_tag_check(void)
 {
    if (artist == NULL && album == NULL && title == NULL && genre == NULL
-   &&  track == 0 && year == 0 && comment == NULL)
+   &&  track == 0 && year == 0 && fcomment == NULL)
       return -1;
 
    return 0;
@@ -110,7 +110,7 @@ ecmd_tag_exec(int argc, char **argv)
    if (genre != NULL ) printf("%10.10s => '%s'\n", "genre", genre);
    if (track) printf("%10.10s => %u\n", "track", track);
    if (year) printf("%10.10s => %u\n", "year", year);
-   if (comment != NULL) printf("%10.10s => '%s'\n", "comment", comment);
+   if (fcomment != NULL) printf("%10.10s => '%s'\n", "fcomment", fcomment);
 
    /* tag files ... */
    taglib_set_strings_unicode(false);
@@ -133,7 +133,7 @@ ecmd_tag_exec(int argc, char **argv)
       if (genre != NULL) taglib_tag_set_genre(tag, genre);
       if (track) taglib_tag_set_track(tag, track);
       if (year) taglib_tag_set_year(tag, year);
-      if (comment != NULL) taglib_tag_set_comment(tag, comment);
+      if (fcomment != NULL) taglib_tag_set_comment(tag, fcomment);
 
 
       /* save changes and cleanup */
