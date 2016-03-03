@@ -29,7 +29,7 @@ static gst_player gplayer;
 
 /* callback handler for gapless playback */
 void
-gstplayer_handle_about_to_finish(GstElement *obj UNUSED, gpointer userdata UNUSED)
+gstplayer_handle_about_to_finish(GstElement *obj, gpointer userdata)
 {
    gplayer.about_to_finish = true;
    if (gplayer.playnext_cb)
