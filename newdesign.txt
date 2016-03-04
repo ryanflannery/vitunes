@@ -1,0 +1,218 @@
+vitunes
+
+   - mfile
+      core properties & operational features of a media file/stream
+
+      mfile struct
+         str   realpath/url
+         str   artist/alubum/genre/description/etc
+         int   year
+         int   track/no
+
+      API
+         new()
+         free()
+         compare(mfile* l, mfile* r)   // content compare
+
+   - taglib wrapper
+      wraps all taglib uses behind mfile
+
+      API
+         mfile = taglib_extract(str relativepath)
+
+   - plist
+      core properties & operational features of a playlist
+
+      plist struct
+         str    name
+         str    realpath
+         bool   mutable
+         bool   unsaved_changes
+         mfile* contents
+
+      API
+         new()
+         free()
+         dup(plist*)
+
+
+   - mfiledb
+      houses all mfiles and operations about them
+
+      API
+         load(char*)
+         save()
+
+         add_dir(char*)
+         add_file(char*)
+         update()
+         add_url(url, props)
+
+         mfile* lookup(file)
+
+   - plistdb
+      houses all plists and operations on them
+
+      playlist order
+         plist* all
+
+      API
+         load(char*)
+         save()
+         scan_dir(char*)
+         set_library(plist*)
+
+   - plist operations
+      std operations on playlists
+
+      sort(plist*, sort-spec)
+      filter(plist*, filter-spec)
+
+
+
+
+vitunes main
+
+   db operations
+
+      - command line
+         * vitunes add dir1 [dir2 ...]
+            - mfiledb.load(default)
+            - mfiledb.add_dir(dir1)
+               . log = stdout
+               . recursively scan dir
+               . for each file found...
+                  . mfiledb.add_file(file)
+            - mfiledb.save()
+
+         * vitunes add file1 [file2 ...]
+            - mfiledb.load(default)
+            - mfiledb.add_file(file1)
+               . if (mfile = taglib_extract())
+                  . if (fileindex.find(mfile.path))
+                     . fileindex[file] = mfile
+                     . log: added
+                  . else
+                     . fileindex[file] = mfile
+                     . log: updated
+            - mfiledb.save()
+
+         * vitunes update
+            - mfiledb.load(default)
+            - mfiledb.update()
+               . for each file in fileindex
+                  . mfileV1 = fileindex[i]
+                  . if (mfileV1.type = url)
+                     . continue
+                  . mfileV2 = taglib_extract(mfileV1.path)
+                  . if (mfileV1 != mfileV2)
+                     . filedindex[i] = mfileV2
+                     . log: updated
+            - mfiledb.save()
+
+         * vitunes addurl url [props]
+            - mfiledb.load(default)
+            - mfiledb.addurl(url, props);
+               . if mfile = fileindex.find(url)
+                  . mfile.prop = options.prop (for each prop)
+               . else
+                  . mfile = new()
+                  . mfile.path = url
+                  . mfile.prop = options.prop (for each prop)
+                  . fileindex[url] = mfile
+            - mfiledb.save()
+
+      - needs to sync w/ running version!
+
+   playlist operations
+
+      initial runtime setup(mfiledb, plist_dir, plistdb)
+
+         * plist LIBRARY(mfiledb.all())
+            - p = new()
+            - p.name = LIBRARY
+            - p.mutable = false
+            - p.unsaved_change = false
+            - p.contents = convert(mfiledb)
+            - plistdb_set_library(p)
+
+         * plistdb.scan_dir(plist_dir)
+            - search dir, for each file
+               . plist = plist_load_from_file(file, mfiledb)
+               . plistdb.add(plist)
+
+         * plist_load_from_file(file, db)
+            - p = plist_new(file)
+            - p.name = strip_extension(file)
+            - p.realpath = file
+            - open file
+            - for each file
+               . mfile = mfiledb.lookup(file)
+               . p.contents.add(mfile)
+            - close file
+            - return p
+
+      runtime use
+
+         * adding a playlist
+            . plist = new()
+            . plistdb.add(plist)
+
+         * sorting a playlist
+
+         * filtering a playlist
+
+
+   ux / workflow
+
+      * core startup
+         if [ -f file ] configfile = file else configfile = ~/.vitunes.conf
+         config.load(configfile)
+         config.parse(params)
+
+         mfiledb.load(config.mfiledb)
+         plistdb.load(config.plistdb)
+         mplayer.init(config.mplayer)
+
+         ui.init(config.ui)
+            // this might init multiple ui's
+            // e.g. a console one and a web one
+            // SHOULD NOT INITIATE ANY UI JUST YET, BUT RATHER JUST...
+            //    1. copy any setting sover
+            //    2. inject mfiledb/plistdb/player
+            //    3. ensure the backends *can* start
+
+      * to ANY ui, these are ALL of the
+         - PROPERTIES they must know
+            . mfiledb - contents
+            . plistdb - contents
+         - ACTIONS they can perform
+            . player.mode(mode)              // [linear | loop | random]
+            . player.pause()/resume()/stop() // these are "state"
+            . player.seek(+/- n seconds)
+            . player.volume(+/- n%)
+            . player.play(plist, index)      // <name, number>
+            . player.play_next(int n)         // # next
+            . player.play_prev(int n)         // # prev
+            . plistdb.add_empty_playlist(name)
+            . plistdb.delete_playlist(name)
+            . plistdb.copy_playlist(name, newName)
+            . plistdb.rename_playlist(oldName, newName)
+            . filter plist(plist, filter spec)
+            . sort plist(plist, sort spec)
+            . playlist remove(plist, idx1 [idx2 ...])
+            . playlist add(plist, idx, mfile1 [mfile2 ...])
+         - EVENTS they can respond to
+            . shutdown()
+            . player.mode_changed(newMode)         // [linear | loop | random]
+            . player.state_changed(newState)       // [paused | playing | stopped]
+            . player.progress_changed(newProgress) // <secsTotal, secsDone>
+            . player.volume_changed(n%)            // n%
+            . player.playing_changed(plist, idx)   // <name, number> [mfile]
+            . plistdb.addedPlist(plist)
+            . plistdb.removedPlist(name)
+            . plistdb.renamedPlist(oldName, newName)
+            . plistdb.changedPlist(name, newPlist)
+            . reordered playlists
+
+
