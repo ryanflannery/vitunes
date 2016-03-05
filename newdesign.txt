@@ -8,6 +8,8 @@ vitunes
          str   artist/alubum/genre/description/etc
          int   year
          int   track/no
+         hash  md5sum
+         time  last_mod_timestamp
 
       API
          new()
@@ -19,6 +21,7 @@ vitunes
 
       API
          mfile = taglib_extract(str relativepath)
+         bool  = taglib_save_tags(mfile)
 
    - plist
       core properties & operational features of a playlist
@@ -26,7 +29,6 @@ vitunes
       plist struct
          str    name
          str    realpath
-         bool   mutable
          bool   unsaved_changes
          mfile* contents
 
@@ -34,7 +36,6 @@ vitunes
          new()
          free()
          dup(plist*)
-
 
    - mfiledb
       houses all mfiles and operations about them
@@ -45,22 +46,24 @@ vitunes
 
          add_dir(char*)
          add_file(char*)
-         update()
          add_url(url, props)
+         update()
 
-         mfile* lookup(file)
+         // XXX mfile* lookup(file)
+         expose_contents_somehow(**mfile)
 
    - plistdb
       houses all plists and operations on them
+      NAMES ARE UNIQUE
 
       playlist order
          plist* all
 
       API
-         load(char*)
+         load(mfiledb*, char *dir_to_playlists)
          save()
          scan_dir(char*)
-         set_library(plist*)
+         // XXX set_library(plist*)
 
    - plist operations
       std operations on playlists
@@ -162,9 +165,6 @@ vitunes main
 
          * filtering a playlist
 
-
-   ux / workflow
-
       * core startup
          if [ -f file ] configfile = file else configfile = ~/.vitunes.conf
          config.load(configfile)
@@ -182,33 +182,88 @@ vitunes main
             //    2. inject mfiledb/plistdb/player
             //    3. ensure the backends *can* start
 
-      * to ANY ui, these are ALL of the
-         - PROPERTIES they must know
-            . mfiledb - contents
-            . plistdb - contents
+
+   ux / workflow
+
+      * user stories
+         on start, there are 3 major content areas
+            - player: shows initial play status (probably nothing)
+               . but it can be an ongoing playing if server is playing
+            - library: shows library(all files) and all playlists
+            - file window: shows contents of 'library' (all files)
+            - IF something is playing THEN the playlist/file are indicated as
+               such
+         user can then
+            - select a playlist in the library to load contents in file window
+            - select a file in file window to play
+            - pause/play/stop, seek, volume +/-, change play mode
+            - can also play a playlist (starts at the begining of that plist)
+         when viewing a playlist, in the file window they can
+            - sort that playlist by the various fields (artist, album, etc)
+               . that sort is NOT sticky for that playlist
+                  . unless "auto save" is enabled
+               . -or- can chose to save results to a new, named playlist
+            - filter that playlist by a freetext spec
+               . any changes are NOT sticky / playlist is marked "modified"
+                  . unless "auto save" is enabled
+               . -or- can chose to save results to a new, named playlist
+            - copy files from this playlist [move to another] and paste them
+               . any changes are NOT sticky / playlist is marked "modified"
+                  . unless "auto save" is enabled
+            - cut/remove files from a playlist
+               . any changes are NOT sticky / playlist is marked "modified"
+                  . unless "auto save" is enabled
+         for managing contents, user can
+            - scan directories recursively to add content
+            - add files explicitly
+            - view raw tag info from a file
+            - modify tag info in a file
+         the playing playlist and file are indicated
+            - the library view indicates the playing playlist
+            - the file view view indicates the playing file
+            - the player view shows details on the playing file
+         to create new playlists the user can
+            - add a new empty playlist, with a name
+            - save the results of a filter/sort from another playlist to a new
+               named playlist
+            - create a copy of a playlist, with a new name
+
+      * For ANY ui capable of the above, these are ALL of the....
+
+         - PROPERTIES they must know (static, initial state)
+            . player  - initial state of player
+            . plistdb - all playlists and their order
+            . mfiledb - all known mfiles
+
          - ACTIONS they can perform
             . player.mode(mode)              // [linear | loop | random]
             . player.pause()/resume()/stop() // these are "state"
             . player.seek(+/- n seconds)
             . player.volume(+/- n%)
             . player.play(plist, index)      // <name, number>
-            . player.play_next(int n)         // # next
-            . player.play_prev(int n)         // # prev
+            . player.play_next(int n)        // # next
+            . player.play_prev(int n)        // # prev
+
             . plistdb.add_empty_playlist(name)
             . plistdb.delete_playlist(name)
             . plistdb.copy_playlist(name, newName)
             . plistdb.rename_playlist(oldName, newName)
-            . filter plist(plist, filter spec)
-            . sort plist(plist, sort spec)
-            . playlist remove(plist, idx1 [idx2 ...])
-            . playlist add(plist, idx, mfile1 [mfile2 ...])
+
+            . plistdb.plist_add_file(name, mfile*)
+            . plistdb.plist_add_files(name, mfile**)
+            . plistdb.plist_delete_file(name, mfile*)
+            . plistdb.plist_delete_files(name, mfile**)
+            . plistdb.plist_sort(name, sort-spec)
+            . plistdb.plist_filter(name, filter-spec)
+
          - EVENTS they can respond to
             . shutdown()
             . player.mode_changed(newMode)         // [linear | loop | random]
             . player.state_changed(newState)       // [paused | playing | stopped]
             . player.progress_changed(newProgress) // <secsTotal, secsDone>
             . player.volume_changed(n%)            // n%
-            . player.playing_changed(plist, idx)   // <name, number> [mfile]
+            . player.content_changed(plist, idx)   // <name, number> [mfile]
+
             . plistdb.addedPlist(plist)
             . plistdb.removedPlist(name)
             . plistdb.renamedPlist(oldName, newName)
