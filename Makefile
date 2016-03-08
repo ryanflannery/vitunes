@@ -7,7 +7,7 @@
 all: .DEFAULT
 
 # docs
-doc: cppcheck doxygen flawfinder scan-build
+doc: cppcheck doxygen flawfinder scan-build shellcheck
 
 cppcheck:
 	cppcheck --std=c89 --enable=all --inline-suppr src 2> doc/cppcheck/results.txt
@@ -22,3 +22,6 @@ scan-build:
 	make clean
 	scan-build -o doc/scan-build/ make
 	figlet "Update scan-build link in README.md!"
+
+shellcheck:
+	shellcheck configure
