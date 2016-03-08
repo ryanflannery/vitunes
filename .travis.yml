@@ -10,6 +10,7 @@ branches:
    only:
       - master
       - stable
+      - rewrite
 
 before_install:
    - sudo apt-get -qq update
