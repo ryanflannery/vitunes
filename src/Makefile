@@ -74,9 +74,8 @@ uninstall:
 
 CXX 			?= clang++
 TEST_CFLAGS	= -I/usr/local/include -c
-TEST_LIBS	= -L/usr/local/lib -lgtest_main
-TEST_OBJS=exe_in_path.t.o \
-			str2argv.t.o
+TEST_LIBS	= -L/usr/local/lib -lgtest -lgtest_main -lpthread
+TEST_OBJS=mfile.t.o
 
 test: $(TEST_OBJS)
 	$(CXX) $(TEST_LIBS) -o $@ $(TEST_OBJS)
