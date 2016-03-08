@@ -1,18 +1,27 @@
 language: c
 
 compiler:
-   - clang
    - gcc
 
 os:
    - linux
 
-before_install:
-   - sudo apt-get -qq update
-   - sudo apt-get install -y libtaglib2.0
-   - sudo apt-get install -y libgstreamer0.9
-
 branches:
    only:
       - master
       - stable
+
+before_install:
+   - sudo apt-get -qq update
+   - sudo apt-get install -y libtagc
+   - sudo apt-get install -y libgstreamer0.9
+
+install:
+   - git clone https://github.com/google/googletest
+   - cd googletest
+   - cmake .
+   - make
+   - sudo cp googlemock/gtest/libgtest.a /usr/lib
+   - sudo cp googlemock/gtest/libgtest_main.a /usr/lib
+   - sudo cp -R googletest/include/gtest /usr/include/
+   - cd "${TRAVIS_BUILD_DIR}"
