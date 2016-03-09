@@ -38,11 +38,13 @@ OBJS=commands.o \
 	  socket.o \
 	  str2argv.o \
 	  uinterface.o \
-	  vitunes.o
+	  vitunes.o \
+	  mfile.o \
+	  mfile_taglib.o
 
 # subdirectories with code (.PATH for BSD make, VPATH for GNU make)
-.PATH:  compat ecommands player player/gstreamer player/mplayer util
-VPATH = compat ecommands player player/gstreamer player/mplayer util
+.PATH:  compat ecommands player player/gstreamer player/mplayer taglib util
+VPATH = compat ecommands player player/gstreamer player/mplayer taglib util
 
 .PHONY: clean debug install uninstall test
 
@@ -73,11 +75,12 @@ uninstall:
 ### test build (using gtest)
 
 CXX 			?= clang++
-TEST_CFLAGS	= -I/usr/local/include -c
-TEST_LIBS	= -L/usr/local/lib -lgtest -lgtest_main -lpthread
-TEST_OBJS=mfile.t.o
+TEST_CFLAGS	= $(CFLAGS) -I/usr/local/include -c
+TEST_LIBS	= $(LIBS) -L/usr/local/lib -lgtest -lgtest_main -lpthread
+TEST_OBJS=mfile.t.o \
+			 mfile_taglib.t.o
 
-test: $(TEST_OBJS)
+test: $(TEST_OBJS) $(OBJS)
 	$(CXX) $(TEST_LIBS) -o $@ $(TEST_OBJS)
 	./test
 

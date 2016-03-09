@@ -17,11 +17,16 @@
 #ifndef MFILE_H
 #define MFILE_H
 
-#include <time.h>
 #include <stdbool.h>
+#include <stdio.h>
+#include <time.h>
 
-typedef struct {
+typedef struct
+{
    char  *filename;     /* realpath(3) of a file -or- url of stream */
+   bool   is_url;       /* true IFF filename is a url */
+
+   /* core meta info (can read and write this) */
    char  *artist;
    char  *album;
    char  *title;
@@ -29,16 +34,42 @@ typedef struct {
    char  *genre;
    int    year;
    int    track;
+
+   /* audio properties (read only) */
    int    length;       /* seconds */
    int    bitrate;      /* in kb/s */
    int    samplerate;   /* in Hz */
    int    channels;     /* #channels in the stream */
-   time_t last_update;  /* time of last file modification */
-   bool   is_url;       /* true IFF filename is a url */
+
+   time_t last_update;  /* time of last file modification TODO unused */
 } mfile;
 
 
-mfile* mfile_new();
-void   mfile_free(mfile* m);
+/*
+ * Allocate a new mfile object. All parameters are NULL/0.
+ */
+mfile*
+mfile_new();
+
+/*
+ * free() an mfile object, include all non-NULL strings within it.
+ */
+void
+mfile_free(mfile* m);
+
+/*
+ * Compare two mfile objects on all properties EXCEPT the filename, is_url,
+ * and last_update.
+ * Returns true if both are identical, false otherwise.
+ * This is not a suitable comparator for any ordering. Useful only for debug.
+ */
+bool
+mfile_cmp(const mfile *left, const mfile *right);
+
+/*
+ * Write an mfile object to the provided FILE stream. Useful for debugging.
+ */
+void
+mfile_fwrite(const mfile *m, FILE *fout);
 
 #endif

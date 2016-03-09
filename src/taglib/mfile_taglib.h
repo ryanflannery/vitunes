@@ -19,7 +19,20 @@
 
 #include "../mfile.h"
 
-mfile *taglib_extract(const char* realpath);
-bool   taglib_save_tags(const mfile* mfile);
+/*
+ * Scan the file passed for any media meta information using TagLib and return
+ * the results in a newly allocated mfile object.
+ */
+mfile*
+taglib_extract(const char* realpath);
+
+/*
+ * Take the given mfile object and store the media meta information contained
+ * within it to the mfile's path.
+ * Returns 0 on success. On failure, it's an int indicating...
+ *    TODO
+ */
+int
+taglib_save_tags(const mfile* mfile);
 
 #endif

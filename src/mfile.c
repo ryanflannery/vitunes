@@ -17,6 +17,7 @@
 #include "mfile.h"
 
 #include <stdlib.h>
+#include <string.h>
 #include <err.h>
 
 
@@ -50,7 +51,7 @@ mfile_new()
 void
 mfile_free(mfile* m)
 {
-   if (m->filename)  free (m->filename);
+   if (m->filename)  free(m->filename);
    if (m->artist)    free(m->artist);
    if (m->album)     free(m->album);
    if (m->title)     free(m->title);
@@ -59,3 +60,50 @@ mfile_free(mfile* m)
    free(m);
 }
 
+bool
+mfile_cmp(const mfile *left, const mfile *right)
+{
+   if (!strcmp(left->artist,  right->artist))
+      fprintf(stderr, "artist differ");
+   if (!strcmp(left->album,  right->album))
+      fprintf(stderr, "album differ");
+   if (!strcmp(left->title,  right->title))
+      fprintf(stderr, "title differ");
+   if (!strcmp(left->comment,  right->comment))
+      fprintf(stderr, "comment differ");
+   if (!strcmp(left->genre,  right->genre))
+      fprintf(stderr, "genre differ");
+
+   if (strcmp(left->artist,  right->artist)
+   &&  strcmp(left->album,   right->album)
+   &&  strcmp(left->title,   right->title)
+   &&  strcmp(left->comment, right->comment)
+   &&  strcmp(left->genre,   right->genre)
+   &&  left->year       == right->year
+   &&  left->track      == right->track
+   &&  left->length     == right->length
+   &&  left->bitrate    == right->bitrate
+   &&  left->samplerate == right->samplerate
+   &&  left->channels   == right->channels
+   )
+      return true;
+
+   return false;
+}
+
+void
+mfile_fwrite(const mfile *m, FILE *fout)
+{
+   fprintf(fout, "%50s = '%s'\n", "filename", m->filename);
+   fprintf(fout, "%50s = '%s'\n", "artist", m->artist);
+   fprintf(fout, "%50s = '%s'\n", "album", m->album);
+   fprintf(fout, "%50s = '%s'\n", "title", m->title);
+   fprintf(fout, "%50s = '%s'\n", "comment", m->comment);
+   fprintf(fout, "%50s = '%s'\n", "genre", m->genre);
+   fprintf(fout, "%50s = '%d'\n", "year", m->year);
+   fprintf(fout, "%50s = '%d'\n", "track", m->track);
+   fprintf(fout, "%50s = '%d'\n", "length", m->length);
+   fprintf(fout, "%50s = '%d'\n", "bitrate", m->bitrate);
+   fprintf(fout, "%50s = '%d'\n", "samplerate", m->samplerate);
+   fprintf(fout, "%50s = '%d'\n", "channels", m->channels);
+}
