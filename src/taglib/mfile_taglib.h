@@ -29,10 +29,14 @@ taglib_extract(const char* realpath);
 /*
  * Take the given mfile object and store the media meta information contained
  * within it to the mfile's path.
- * Returns 0 on success. On failure, it's an int indicating...
- *    TODO provide rcodes here
+ * Returns 0 on success. On failure, it's an int. See constants below for
+ * possible values.
  */
 int
 taglib_save_tags(const mfile* mfile);
+
+/* possible rcodes to taglib_save_tags */
+#define MFILE_TAGLIB_NO_SUCH_FILE -1
+#define MFILE_TAGLIB_NO_TAGS      -2
 
 #endif

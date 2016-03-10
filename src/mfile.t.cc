@@ -4,26 +4,6 @@ extern "C" {
 #  include "mfile.c"
 };
 
-const mfile TestMfile1 = {
-   (char*)"filename",
-   false,
-
-   (char*)"artist",
-   (char*)"album",
-   (char*)"title",
-   (char*)"comment",
-   (char*)"genre",
-   1981,
-   33,
-
-   4,
-   101,
-   102,
-   103,
-
-   0,
-};
-
 TEST(mfile, mfile_new)
 {
    mfile *m = mfile_new();
@@ -62,5 +42,45 @@ TEST(mfile, mfile_cmp)
 
    mfile_free(left);
    mfile_free(right);
+}
+
+TEST(mfile, mfile_construct)
+{
+   mfile *m1 = mfile_construct("artist", "album", "title", "comment", "genre",
+         1981, 33);
+   mfile *m2 = mfile_construct("artist", "album", "title", "comment", "genre",
+         1981, 33);
+
+   EXPECT_TRUE(mfile_cmp(m1, m2));
+}
+
+TEST(mfile, mfile_construct_against_static)
+{
+   const mfile test =
+   {
+      (char*)"filename",
+      false,
+
+      (char*)"artist",
+      (char*)"album",
+      (char*)"title",
+      (char*)"comment",
+      (char*)"genre",
+      1981,
+      33,
+
+      0,
+      0,
+      0,
+      0,
+
+      0,
+   };
+
+   /* same as the TestMfile1 above */
+   mfile *m = mfile_construct("artist", "album", "title", "comment", "genre",
+         1981, 33);
+
+   EXPECT_TRUE(mfile_cmp(&test, m));
 }
 

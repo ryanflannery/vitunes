@@ -86,11 +86,13 @@ taglib_save_tags(const mfile* mfile)
    TagLib_Tag  *tlibTag;
 
    if (NULL == (tlibFile = taglib_file_new(mfile->filename)))
-      return -1; /* TODO magic num / document in .h */
+      return MFILE_TAGLIB_NO_SUCH_FILE;
 
+printf("got file info '%s'\n", mfile->filename);fflush(stdout);
    if (NULL == (tlibTag = taglib_file_tag(tlibFile)))
-      return -2; /* TODO same as above */
+      return MFILE_TAGLIB_NO_TAGS;
 
+printf("got tags\n");fflush(stdout);
    /* string properties */
    if (NULL != mfile->artist) taglib_tag_set_artist(tlibTag,   mfile->artist);
    if (NULL != mfile->album)  taglib_tag_set_album(tlibTag,    mfile->album);
@@ -101,6 +103,8 @@ taglib_save_tags(const mfile* mfile)
    /* non strings */
    taglib_tag_set_track(tlibTag,  mfile->track);
    taglib_tag_set_year(tlibTag,   mfile->year);
+
+   /* none of the other properties are extrinsic -- can't/don't save them */
 
    /* save and free */
    taglib_file_save(tlibFile);

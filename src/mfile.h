@@ -72,4 +72,14 @@ mfile_cmp(const mfile *left, const mfile *right);
 void
 mfile_fwrite(const mfile *m, FILE *fout);
 
+/*
+ * Constructors used for debugging.
+ */
+mfile*
+mfile_construct(const char *artist, const char *album,
+                const char *title,  const char *comment,
+                const char *genre,
+                int year,
+                int track);
+
 #endif

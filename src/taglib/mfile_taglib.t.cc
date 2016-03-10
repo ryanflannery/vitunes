@@ -39,7 +39,7 @@ get_static_winamp_mfile_info()
 
 /* Begin Tests */
 
-TEST(mfile_taglib, taglib_extract)
+TEST(mfile_taglib, taglib_extract_valid_file)
 {
    mfile *dynamic   = taglib_extract("taglib/test_files/winamp.mp3");
    mfile *reference = get_static_winamp_mfile_info();
@@ -54,6 +54,35 @@ TEST(mfile_taglib, taglib_extract)
    mfile_free(reference);
 }
 
+TEST(mfile_taglib, taglib_extract_no_such_file)
+{
+   EXPECT_EQ(NULL, taglib_extract("/path/to/no/such/file"));
+   EXPECT_EQ(NULL, taglib_extract("!$^*!(!@)*$&!&/!@!*@!"));
+}
+
 TEST(mfile_taglib, taglib_save_tags)
 {
+   /* copy static mfile info into RW test file */
+   mfile *m = get_static_winamp_mfile_info();
+   free(m->filename);
+   m->filename = strdup(TestFileRW);
+   EXPECT_EQ(0, taglib_save_tags(m));
+
+   /* now check that the saved info matches the extracted */
+   mfile *extracted = taglib_extract(TestFileRW);
+   EXPECT_TRUE(mfile_cmp(m, extracted));
+
+   mfile_free(m);
+   mfile_free(extracted);
+   //mfile *custom = mfile_construct("artist", "album", "title", "comment",
+   //   "genre", 1981, 33);
+}
+
+TEST(mfile_taglib, taglib_save_tags_no_such_file)
+{
+   mfile *m = get_static_winamp_mfile_info();
+   free(m->filename);
+   m->filename = strdup("/path/to/no/such/file/foooooo.mp3");
+
+   EXPECT_EQ(MFILE_TAGLIB_NO_SUCH_FILE, taglib_save_tags(m));
 }

@@ -109,3 +109,23 @@ mfile_fwrite(const mfile *m, FILE *fout)
    fprintf(fout, "%50s = '%d'\n", "samplerate", m->samplerate);
    fprintf(fout, "%50s = '%d'\n", "channels", m->channels);
 }
+
+mfile*
+mfile_construct(const char *artist, const char *album,
+                const char *title,  const char *comment,
+                const char *genre,
+                int year,
+                int track)
+{
+   mfile *m = mfile_new();
+
+   m->artist   = strdup(artist);
+   m->album    = strdup(album);
+   m->title    = strdup(title);
+   m->comment  = strdup(comment);
+   m->genre    = strdup(genre);
+   m->track    = track;
+   m->year     = year;
+
+   return m;
+}
