@@ -82,7 +82,7 @@ TEST_OBJS=mfile.t.o \
 
 test: $(TEST_OBJS) $(OBJS)
 	$(CXX) $(TEST_LIBS) -o $@ $(TEST_OBJS)
-	./test
+	./test --gtest_color=yes
 
 .cc.o:
 	$(CXX) $(TEST_CFLAGS) $<
