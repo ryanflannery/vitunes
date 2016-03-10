@@ -7,13 +7,22 @@ extern "C" {
 #  include "mfile_taglib.c"
 };
 
+const char *TestFileRO = "taglib/test_files/winamp.mp3";
+const char *TestFileRW = "taglib/test_files/winamp_mod.mp3";
+
 /* Utilities */
 
+/*
+ * This returns a COPY of what SHOULD be extracted from the TestFileRO
+ * (the read-only test file).
+ * It does NOT extract that info -- rather it explicitly builds it, so we
+ * can test the extraction.
+ */
 mfile*
-test_mfile_get_winamp_mfile()
+get_static_winamp_mfile_info()
 {
    mfile *m = mfile_new();
-   m->filename = strdup("taglib/test_files/winamp.mp3");
+   m->filename = strdup("/some/random/path");
    m->artist   = strdup("DJ Mike Llama");
    m->album    = strdup("Beats of Burdon");
    m->title    = strdup("Llama Whippin' Intro");
@@ -30,36 +39,21 @@ test_mfile_get_winamp_mfile()
 
 /* Begin Tests */
 
-TEST(mfile_taglib, MFILE_Extract)
+TEST(mfile_taglib, taglib_extract)
 {
-   mfile *m = taglib_extract("taglib/test_files/winamp.mp3");
+   mfile *dynamic   = taglib_extract("taglib/test_files/winamp.mp3");
+   mfile *reference = get_static_winamp_mfile_info();
 
-   ASSERT_NE((mfile*)NULL, m);
-   const mfile *WINAMP_FILE_INFO = test_mfile_get_winamp_mfile();
+   ASSERT_NE((mfile*)NULL, dynamic);
+   ASSERT_NE((mfile*)NULL, reference);
 
-   EXPECT_STREQ(m->filename,  "taglib/test_files/winamp.mp3");
-   EXPECT_STREQ(m->artist,    "DJ Mike Llama");
-   EXPECT_STREQ(m->album,     "Beats of Burdon");
-   EXPECT_STREQ(m->title,     "Llama Whippin' Intro");
-   EXPECT_STREQ(m->comment,   "");
-   EXPECT_STREQ(m->genre,     "Rock");
-   EXPECT_EQ(m->year,         0);
-   EXPECT_EQ(m->track,        1);
-   EXPECT_EQ(m->length,       5);
-   EXPECT_EQ(m->bitrate,      56);
-   EXPECT_EQ(m->samplerate,   22050);
-   EXPECT_EQ(m->channels,     2);
+   EXPECT_TRUE(mfile_cmp(dynamic, reference));
+   EXPECT_TRUE(mfile_cmp(reference, dynamic));
 
-   mfile_free(m);
+   mfile_free(dynamic);
+   mfile_free(reference);
 }
 
-TEST(mfile_taglib, MFILE_Cmp)
+TEST(mfile_taglib, taglib_save_tags)
 {
-   mfile *m = taglib_extract("taglib/test_files/winamp.mp3");
-   ASSERT_NE((mfile*)NULL, m);
-   const mfile *WINAMP_FILE_INFO = test_mfile_get_winamp_mfile();
-   ASSERT_STREQ(WINAMP_FILE_INFO->artist, m->artist);
-   mfile_fwrite(m, stdout);
-   mfile_fwrite(WINAMP_FILE_INFO, stdout);
-   EXPECT_TRUE(mfile_cmp(m, WINAMP_FILE_INFO));
 }

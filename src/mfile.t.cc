@@ -56,4 +56,11 @@ TEST(mfile, mfile_cmp)
 {
    mfile *left  = mfile_new();
    mfile *right = mfile_new();
+
+   EXPECT_TRUE(mfile_cmp(left, right));
+   EXPECT_TRUE(mfile_cmp(right, left));
+
+   mfile_free(left);
+   mfile_free(right);
 }
+

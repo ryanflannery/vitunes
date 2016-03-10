@@ -24,7 +24,6 @@
 mfile*
 mfile_new()
 {
-
    mfile *m;
 
    if (NULL == (m = (mfile*) malloc(sizeof(mfile))))
@@ -60,35 +59,38 @@ mfile_free(mfile* m)
    free(m);
 }
 
+static int
+strcmpWithNulls(const char *l, const char *r)
+{
+   if (NULL == l && NULL == r)
+      return 0;
+   else if (NULL == l && NULL != r)
+      return -1;
+   else if (NULL != l && NULL == r)
+      return 1;
+   else
+      return strcmp(l, r);
+}
+
 bool
 mfile_cmp(const mfile *left, const mfile *right)
 {
-   if (!strcmp(left->artist,  right->artist))
-      fprintf(stderr, "artist differ");
-   if (!strcmp(left->album,  right->album))
-      fprintf(stderr, "album differ");
-   if (!strcmp(left->title,  right->title))
-      fprintf(stderr, "title differ");
-   if (!strcmp(left->comment,  right->comment))
-      fprintf(stderr, "comment differ");
-   if (!strcmp(left->genre,  right->genre))
-      fprintf(stderr, "genre differ");
-
-   if (strcmp(left->artist,  right->artist)
-   &&  strcmp(left->album,   right->album)
-   &&  strcmp(left->title,   right->title)
-   &&  strcmp(left->comment, right->comment)
-   &&  strcmp(left->genre,   right->genre)
-   &&  left->year       == right->year
-   &&  left->track      == right->track
-   &&  left->length     == right->length
-   &&  left->bitrate    == right->bitrate
-   &&  left->samplerate == right->samplerate
-   &&  left->channels   == right->channels
+   /* compare everything EXCEPT filename */
+   if (strcmpWithNulls(left->artist,  right->artist)
+   ||  strcmpWithNulls(left->album,   right->album)
+   ||  strcmpWithNulls(left->title,   right->title)
+   ||  strcmpWithNulls(left->comment, right->comment)
+   ||  strcmpWithNulls(left->genre,   right->genre)
+   ||  left->year       != right->year
+   ||  left->track      != right->track
+   ||  left->length     != right->length
+   ||  left->bitrate    != right->bitrate
+   ||  left->samplerate != right->samplerate
+   ||  left->channels   != right->channels
    )
-      return true;
+      return false;
 
-   return false;
+   return true;
 }
 
 void
