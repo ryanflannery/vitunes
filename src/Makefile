@@ -10,9 +10,9 @@ LDEPS=$(TAGLIB_LIBS) $(GSTREAMER_LIBS)
 ODEPS=$(GSTREAMER_OBJS)
 
 # build variables
-CC		  ?= /usr/bin/cc
+CC		  ?= clang
 CFLAGS  += -c -std=c89 -Wall -Wextra -Wno-unused-value $(CDEBUG) $(CDEPS)
-LIBS    += -lm -lncurses -lutil $(LDEPS)
+LDFLAGS += -lm -lncurses -lutil $(LDEPS)
 
 # object files
 OBJS=commands.o \
@@ -40,7 +40,8 @@ OBJS=commands.o \
 	  uinterface.o \
 	  vitunes.o \
 	  mfile.o \
-	  mfile_taglib.o
+	  mfile_taglib.o \
+	  plist.o
 
 # subdirectories with code (.PATH for BSD make, VPATH for GNU make)
 .PATH:  compat ecommands player player/gstreamer player/mplayer taglib util
@@ -51,7 +52,7 @@ VPATH = compat ecommands player player/gstreamer player/mplayer taglib util
 .DEFAULT: vitunes
 
 vitunes: $(OBJS) $(ODEPS)
-	$(CC) -o $@ $(LDFLAGS) $(LIBS) $(OBJS) $(ODEPS)
+	$(CC) -o $@ $(LDFLAGS) $(OBJS) $(ODEPS)
 
 .c.o:
 	$(CC) $(CFLAGS) $<
@@ -75,10 +76,11 @@ uninstall:
 ### test build (using gtest)
 
 CXX 			?= clang++
-TEST_CFLAGS	= $(CFLAGS) -I/usr/local/include -c
-TEST_LIBS	= $(LIBS) -L/usr/local/lib -lgtest -lgtest_main -lpthread
+TEST_CFLAGS	 = $(CDEPS) -c -Wall -Wextra -I/usr/local/include
+TEST_LIBS	 = $(LDEPS) -L/usr/local/lib -lgtest -lgtest_main -lpthread
 TEST_OBJS=mfile.t.o \
-			 mfile_taglib.t.o
+			 mfile_taglib.t.o \
+			 plist.t.o \
 
 test: $(TEST_OBJS) $(OBJS)
 	$(CXX) $(TEST_LIBS) -o $@ $(TEST_OBJS)

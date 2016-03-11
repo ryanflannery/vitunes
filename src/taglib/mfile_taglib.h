@@ -24,7 +24,7 @@
  * the results in a newly allocated mfile object.
  */
 mfile*
-taglib_extract(const char* realpath);
+mfile_extract_tags(const char* realpath);
 
 /*
  * Take the given mfile object and store the media meta information contained
@@ -33,10 +33,11 @@ taglib_extract(const char* realpath);
  * possible values.
  */
 int
-taglib_save_tags(const mfile* mfile);
+mfile_save_tags(const mfile* mfile);
 
 /* possible rcodes to taglib_save_tags */
-#define MFILE_TAGLIB_NO_SUCH_FILE -1
-#define MFILE_TAGLIB_NO_TAGS      -2
+#define MFILE_SAVE_NO_SUCH_FILE   -1
+#define MFILE_SAVE_NO_TAGS        -2
+#define MFILE_SAVE_FAILED_TO_SAVE -3
 
 #endif

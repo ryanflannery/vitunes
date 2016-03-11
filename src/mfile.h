@@ -73,7 +73,7 @@ void
 mfile_fwrite(const mfile *m, FILE *fout);
 
 /*
- * Constructors used for debugging.
+ * Constructor -- used for debugging.
  */
 mfile*
 mfile_construct(const char *artist, const char *album,

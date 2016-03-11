@@ -23,7 +23,7 @@
 #include <tag_c.h>
 
 mfile*
-taglib_extract(const char* file)
+mfile_extract_tags(const char* file)
 {
    const TagLib_AudioProperties *tlibAP;
    TagLib_File *tlibFile;
@@ -79,20 +79,24 @@ taglib_extract(const char* file)
    return m;
 }
 
+/*
+ * TODO for parameters where the filename doesn't exist, this still succeeds.
+ * I'd expect either the "taglib_file_new()" to file (but it doesn't) -or-
+ * the "taglib_file_save()" to fail (but it doesn't either).
+ * Need to take a further look at taglib.
+ */
 int
-taglib_save_tags(const mfile* mfile)
+mfile_save_tags(const mfile* mfile)
 {
    TagLib_File *tlibFile;
    TagLib_Tag  *tlibTag;
 
    if (NULL == (tlibFile = taglib_file_new(mfile->filename)))
-      return MFILE_TAGLIB_NO_SUCH_FILE;
+      return MFILE_SAVE_NO_SUCH_FILE;
 
-printf("got file info '%s'\n", mfile->filename);fflush(stdout);
    if (NULL == (tlibTag = taglib_file_tag(tlibFile)))
-      return MFILE_TAGLIB_NO_TAGS;
+      return MFILE_SAVE_NO_TAGS;
 
-printf("got tags\n");fflush(stdout);
    /* string properties */
    if (NULL != mfile->artist) taglib_tag_set_artist(tlibTag,   mfile->artist);
    if (NULL != mfile->album)  taglib_tag_set_album(tlibTag,    mfile->album);
@@ -106,8 +110,10 @@ printf("got tags\n");fflush(stdout);
 
    /* none of the other properties are extrinsic -- can't/don't save them */
 
-   /* save and free */
-   taglib_file_save(tlibFile);
+   /* save and free TODO this does NOT fail when the file doesn't exist!? */
+   if (!taglib_file_save(tlibFile))
+      return MFILE_SAVE_FAILED_TO_SAVE;
+
    taglib_tag_free_strings();
    taglib_file_free(tlibFile);
 

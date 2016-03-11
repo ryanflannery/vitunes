@@ -1,0 +1,23 @@
+
+mfile -+
+  |    +------+
+  V           V
+mfiledb --> plist --> plistdb
+
+
+mfile
+   - new
+   - free
+   - cmp
+   - fwrite
+   -  DEBUG construct
+
+plist
+   - new()
+   - free()
+   - copy(const plist*)
+   - add_file(const mfile*, [ int pos; ]);
+   - add_files
+
+plist_
+   -

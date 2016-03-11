@@ -6,19 +6,25 @@ vitunes
          on start, there are 3 major content areas
             - player: shows initial play status (probably nothing)
                . but it can be an ongoing playing if server is playing
-               ! PROPERTY: player
+               ! PROPERTY: player.[mode|state|progress|volume|plist+mfile]
             - library: shows library(all files) and all playlists
-               ! PROPERTY: plistdb + mfiledb
-            - file window: shows contents of 'library' (all files)
+                  ! PROPERTY: plistdb.[nameS] [ + mfiledb.* ]
+              -or- IF a playlist is playing it shows that playlist scrolled
+                  ! PROPERTY: player.* + plistdb.* + mfiledb.*
+            - file window: shows contents of playlist (all files)
                ! PROPERTY: above + load "library" view
             - IF something is playing THEN the playlist/file are indicated as
                such
                ! PROPERTY: player + plistdb + mfiledb
          user can then
             - select a playlist in the library to load contents in file window
+               ! PROPERTY: plistdb + mfiledb[if selected 'all']
             - select a file in file window to play
+               ! ACTION: player.play(plist, mfile#)
             - pause/play/stop, seek, volume +/-, change play mode
+               ! ACTION: player
             - can also play a playlist (starts at the begining of that plist)
+               ! ACTION: player
          when viewing a playlist, in the file window they can
             - sort that playlist by the various fields (artist, album, etc)
                . that sort is NOT sticky for that playlist
@@ -59,12 +65,17 @@ vitunes
                . player.mode     = [linear | loop | random]
                . player.state    = [pauseed | playing | stopped]
                . player.progress = <secsTotal, secsDone>
-               . player.voluem   = n%
-               . player.content  = <name, number> [mfile]
+               . player.volume   = n%
+               . player.content  = plist(name) + mfile(number)
             . plistdb - all playlists and their order
                . plistdb.all     = list of all plists
+               . for each playlist
+                  - name
+                  - contents  = array of mfiles
             . mfiledb - all known mfiles
                . mfiledb.all     = list of all mfiles
+               . for each mfile
+                  - all the metainfo
 
          - ACTIONS they can perform
             . player.mode(mode)              // [linear | loop | random]
@@ -146,9 +157,6 @@ vitunes
          void   free(plist*)
          plist* dup(plist*)
 
-         int    write_to_file(plist*, char* realpath)
-         plist* load_from_file(plist*, char* realpath)
-
    - plist operations
       std operations on playlists
 
@@ -183,7 +191,9 @@ vitunes
          load(mfiledb*, char *dir_to_playlists)
          save()
          scan_dir(char*)
-         // XXX set_library(plist*)
+         int    write_to_file(plist*, char* realpath)
+         plist* load_from_file(plist*, char* realpath)
+
 
 vitunes main
 

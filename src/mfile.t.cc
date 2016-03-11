@@ -32,11 +32,16 @@ TEST(mfile, mfile_free)
    EXPECT_NO_THROW(mfile_free(m));
 }
 
-TEST(mfile, mfile_cmp)
+TEST(mfile, mfile_cmp_with_empty_mfiles)
 {
    mfile *left  = mfile_new();
    mfile *right = mfile_new();
 
+   /* reflexive */
+   EXPECT_TRUE(mfile_cmp(left,  left));
+   EXPECT_TRUE(mfile_cmp(right, right));
+
+   /* symmetric */
    EXPECT_TRUE(mfile_cmp(left, right));
    EXPECT_TRUE(mfile_cmp(right, left));
 
@@ -51,7 +56,13 @@ TEST(mfile, mfile_construct)
    mfile *m2 = mfile_construct("artist", "album", "title", "comment", "genre",
          1981, 33);
 
+   /* reflexive */
+   EXPECT_TRUE(mfile_cmp(m1, m1));
+   EXPECT_TRUE(mfile_cmp(m2, m2));
+
+   /* symmetric */
    EXPECT_TRUE(mfile_cmp(m1, m2));
+   EXPECT_TRUE(mfile_cmp(m2, m1));
 }
 
 TEST(mfile, mfile_construct_against_static)
