@@ -70,10 +70,10 @@ mfile_cmp(const mfile *left, const mfile *right);
  * Write an mfile object to the provided FILE stream. Useful for debugging.
  */
 void
-mfile_fwrite(const mfile *m, FILE *fout);
+mfile_fwrite(const mfile *m, FILE *fout, unsigned int indent_level);
 
 /*
- * Constructor -- used for debugging.
+ * Arbitrary constructor - used for debugging
  */
 mfile*
 mfile_construct(const char *artist, const char *album,

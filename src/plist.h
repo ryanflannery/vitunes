@@ -62,4 +62,8 @@ plist_remove_files(plist *p, size_t idx, size_t n);
 void
 plist_replace_file(plist *p, size_t idx, mfile* m);
 
+/* dump a plist to a file stream */
+void
+plist_fwrite(const plist *p, FILE *fout, unsigned int indent_level);
+
 #endif

@@ -41,7 +41,8 @@ OBJS=commands.o \
 	  vitunes.o \
 	  mfile.o \
 	  mfile_taglib.o \
-	  plist.o
+	  plist.o \
+	  indent.o
 
 # subdirectories with code (.PATH for BSD make, VPATH for GNU make)
 .PATH:  compat ecommands player player/gstreamer player/mplayer taglib util
@@ -82,8 +83,12 @@ TEST_OBJS=mfile.t.o \
 			 mfile_taglib.t.o \
 			 plist.t.o \
 
+# XXX this needs work - either...
+# 	add $(OBJS) to the link and have the test include .h's instead
+# -or-
+#  something else
 test: $(TEST_OBJS) $(OBJS)
-	$(CXX) $(TEST_LIBS) -o $@ $(TEST_OBJS)
+	$(CXX) $(TEST_LIBS) -o $@ $(TEST_OBJS) indent.o
 	./test --gtest_color=yes
 
 .cc.o:
