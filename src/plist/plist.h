@@ -17,7 +17,7 @@
 #ifndef PLIST_H
 #define PLIST_H
 
-#include "mfile.h"
+#include "../mfile/mfile.h"
 
 #include <stdbool.h>
 

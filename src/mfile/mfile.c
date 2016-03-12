@@ -16,7 +16,7 @@
 
 #include "mfile.h"
 
-#include "util/indent.h"
+#include "../util/indent.h"
 #include <stdlib.h>
 #include <string.h>
 #include <err.h>

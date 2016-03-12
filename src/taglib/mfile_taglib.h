@@ -17,7 +17,7 @@
 #ifndef MFILE_TAGLIB_H
 #define MFILE_TAGLIB_H
 
-#include "../mfile.h"
+#include "../mfile/mfile.h"
 
 /*
  * Scan the file passed for any media meta information using TagLib and return

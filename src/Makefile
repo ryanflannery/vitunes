@@ -45,8 +45,8 @@ OBJS=commands.o \
 	  indent.o
 
 # subdirectories with code (.PATH for BSD make, VPATH for GNU make)
-.PATH:  compat ecommands player player/gstreamer player/mplayer taglib util
-VPATH = compat ecommands player player/gstreamer player/mplayer taglib util
+.PATH:  compat ecommands player player/gstreamer player/mplayer taglib util mfile plist
+VPATH = compat ecommands player player/gstreamer player/mplayer taglib util mfile plist
 
 .PHONY: clean debug install uninstall test
 
