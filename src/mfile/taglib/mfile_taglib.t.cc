@@ -7,8 +7,8 @@ extern "C" {
 #  include "mfile_taglib.c"
 };
 
-const char *TestFileRO = "taglib/test_files/winamp.mp3";
-const char *TestFileRW = "taglib/test_files/winamp_mod.mp3";
+const char *TestFileRO = "mfile/taglib/test_files/winamp.mp3";
+const char *TestFileRW = "mfile/taglib/test_files/winamp_mod.mp3";
 
 /* Utilities */
 
@@ -41,7 +41,7 @@ get_static_winamp_mfile_info()
 
 TEST(mfile_taglib, taglib_extract_valid_file)
 {
-   mfile *dynamic   = mfile_extract_tags("taglib/test_files/winamp.mp3");
+   mfile *dynamic   = mfile_extract_tags(TestFileRO);
    mfile *reference = get_static_winamp_mfile_info();
 
    ASSERT_NE((mfile*)NULL, dynamic);
