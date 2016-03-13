@@ -42,7 +42,9 @@ vitunes
                   . unless "auto save" is enabled
          for managing contents, user can
             - scan directories recursively to add content
+               . PERMENANTLY
             - add files explicitly
+               . PERMENANTLY
             - view raw tag info from a file
             - modify tag info in a file
          the playing playlist and file are indicated
@@ -172,9 +174,10 @@ vitunes
          load(char*)
          save()
 
-         add_dir(char*)
-         add_file(char*)
-         add_url(url, props)
+         scan_dirs(char*,     TEMP_OR_PERMENANT)
+         scan_files(char*,    TEMP_OR_PERMENANT)
+         add_url(url, props,  TEMP_OR_PERMENANT)
+
          update()
 
          // XXX mfile* lookup(file)

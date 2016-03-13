@@ -97,20 +97,20 @@ mfile_cmp(const mfile *left, const mfile *right)
 void
 mfile_fwrite(const mfile *m, FILE *fout, unsigned int d)
 {
-   indent(d);   fprintf(fout, "[MFILE] {\n");
-   indent(d+1); fprintf(fout, "%s = '%s',\n", "filename", m->filename);
-   indent(d+1); fprintf(fout, "%s = '%s',\n", "artist", m->artist);
-   indent(d+1); fprintf(fout, "%s = '%s',\n", "album", m->album);
-   indent(d+1); fprintf(fout, "%s = '%s',\n", "title", m->title);
-   indent(d+1); fprintf(fout, "%s = '%s',\n", "comment", m->comment);
-   indent(d+1); fprintf(fout, "%s = '%s',\n", "genre", m->genre);
-   indent(d+1); fprintf(fout, "%s = '%d',\n", "year", m->year);
-   indent(d+1); fprintf(fout, "%s = '%d',\n", "track", m->track);
-   indent(d+1); fprintf(fout, "%s = '%d',\n", "length", m->length);
-   indent(d+1); fprintf(fout, "%s = '%d',\n", "bitrate", m->bitrate);
-   indent(d+1); fprintf(fout, "%s = '%d',\n", "samplerate", m->samplerate);
-   indent(d+1); fprintf(fout, "%s = '%d'\n", "channels", m->channels);
-   indent(d);   fprintf(fout, "}\n");
+   indent(d,fout);   fprintf(fout, "[MFILE] {\n");
+   indent(d+1,fout); fprintf(fout, "%s = '%s',\n", "filename", m->filename);
+   indent(d+1,fout); fprintf(fout, "%s = '%s',\n", "artist", m->artist);
+   indent(d+1,fout); fprintf(fout, "%s = '%s',\n", "album", m->album);
+   indent(d+1,fout); fprintf(fout, "%s = '%s',\n", "title", m->title);
+   indent(d+1,fout); fprintf(fout, "%s = '%s',\n", "comment", m->comment);
+   indent(d+1,fout); fprintf(fout, "%s = '%s',\n", "genre", m->genre);
+   indent(d+1,fout); fprintf(fout, "%s = '%d',\n", "year", m->year);
+   indent(d+1,fout); fprintf(fout, "%s = '%d',\n", "track", m->track);
+   indent(d+1,fout); fprintf(fout, "%s = '%d',\n", "length", m->length);
+   indent(d+1,fout); fprintf(fout, "%s = '%d',\n", "bitrate", m->bitrate);
+   indent(d+1,fout); fprintf(fout, "%s = '%d',\n", "samplerate", m->samplerate);
+   indent(d+1,fout); fprintf(fout, "%s = '%d'\n", "channels", m->channels);
+   indent(d,fout);   fprintf(fout, "}\n");
 }
 
 mfile*

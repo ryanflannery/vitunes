@@ -14,15 +14,52 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#ifndef INDENT_H
-#define INDENT_H
+#ifndef MEDIADB_H
+#define MEDIADB_H
 
-#include <stdio.h>
+#include <sqlite3.h>
+#include <stdbool.h>
 
-/* preferred abbreviation used through vitunes */
-void print_indent(unsigned int depth, char c, FILE *fout);
+typedef struct
+{
+   char     *dbfile;
+   sqlite3  *dbhandle;
 
-/* preferred abbreviation used through vitunes */
-#define indent(d,f) { print_indent((d),' ',(f)); }
+} mediadb;
+
+/*
+ * Load a new mediadb object from the database file specified
+ */
+mediadb*
+mdb_init(const char *db);
+
+mediadb*
+mdb_open(const char *dbfile);
+
+void
+mdb_close(mediadb *mdb);
+
+bool
+mdb_scan_file(mediadb *mdb, const char *file);
+
+void
+mdb_scan_dirs(mediadb *mdb, char *dirs[]);
+
+void
+mdb_rescan_files(mediadb *mdb);
+
+/*
+void
+mdb_get_playlists(mediadb *mdb, plist **playlists, size_t *nplaylists);
+
+plist*
+mdb_get_playlist(mediadb *mdb, const char *name);
+
+void
+mdb_add_empty_playlist(mediadb *mdb, const char *name);
+
+void
+mdb_remove_playlist(mediadb *mdb, const char *name);
+*/
 
 #endif

@@ -142,16 +142,16 @@ plist_fwrite(const plist *p, FILE *fout, unsigned int d)
 {
    size_t i;
 
-   indent(d);   fprintf(fout, "[PLIST] {\n");
-   indent(d+1); fprintf(fout, "%s = '%s',\n", "filename", p->filename);
-   indent(d+1); fprintf(fout, "%s = '%s',\n", "name", p->filename);
-   indent(d+1); fprintf(fout, "%s = '%zu',\n", "capacity", p->capacity);
-   indent(d+1); fprintf(fout, "%s = '%zu',\n", "nfiles", p->nfiles);
-   indent(d+1); fprintf(fout, "%s = {\n", "mfiles");
+   indent(d,fout);   fprintf(fout, "[PLIST] {\n");
+   indent(d+1,fout); fprintf(fout, "%s = '%s',\n", "filename", p->filename);
+   indent(d+1,fout); fprintf(fout, "%s = '%s',\n", "name", p->filename);
+   indent(d+1,fout); fprintf(fout, "%s = '%zu',\n", "capacity", p->capacity);
+   indent(d+1,fout); fprintf(fout, "%s = '%zu',\n", "nfiles", p->nfiles);
+   indent(d+1,fout); fprintf(fout, "%s = {\n", "mfiles");
 
    for (i = 0; i < p->nfiles; ++i)
       mfile_fwrite(p->mfiles[i], fout, d+2);
 
-   indent(d+1); fprintf(fout, "}\n");
-   indent(d);   fprintf(fout, "}\n");
+   indent(d+1,fout); fprintf(fout, "}\n");
+   indent(d,fout);   fprintf(fout, "}\n");
 }

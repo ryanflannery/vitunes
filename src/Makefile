@@ -11,8 +11,8 @@ ODEPS=$(GSTREAMER_OBJS)
 
 # build variables
 CC		  ?= clang
-CFLAGS  += -c -std=c89 -Wall -Wextra -Wno-unused-value $(CDEBUG) $(CDEPS)
-LDFLAGS += -lm -lncurses -lutil $(LDEPS)
+CFLAGS  += -c -std=c89 -Wall -Wextra -Wno-unused-value -g $(CDEPS)
+LDFLAGS += -lm -lncurses -lutil -lpthread -lsqlite3 $(LDEPS)
 
 # object files
 OBJS=commands.o \
@@ -42,11 +42,12 @@ OBJS=commands.o \
 	  mfile.o \
 	  mfile_taglib.o \
 	  plist.o \
-	  indent.o
+	  indent.o \
+	  mediadb.o
 
 # subdirectories with code (.PATH for BSD make, VPATH for GNU make)
-.PATH:  compat ecommands player player/gstreamer player/mplayer util mfile mfile/taglib plist
-VPATH = compat ecommands player player/gstreamer player/mplayer util mfile mfile/taglib plist
+.PATH:  compat ecommands player player/gstreamer player/mplayer util mfile mfile/taglib plist mediadb
+VPATH = compat ecommands player player/gstreamer player/mplayer util mfile mfile/taglib plist mediadb
 
 .PHONY: clean debug install uninstall test
 
@@ -65,6 +66,11 @@ clean:
 	rm -f test test.core
 	rm -f $(TEST_OBJS)
 
+mediadb.o: schema.c
+
+schema.c: schema.sql
+	xxd -i schema.sql > $@
+
 debug:
 	$(MAKE) CDEBUG="-DDEBUG -g"
 
@@ -77,18 +83,20 @@ uninstall:
 ### test build (using gtest)
 
 CXX 			?= clang++
-TEST_CFLAGS	 = $(CDEPS) -c -Wall -Wextra -I/usr/local/include
-TEST_LIBS	 = $(LDEPS) -L/usr/local/lib -lgtest -lgtest_main -lpthread
+TEST_CFLAGS	 = $(CDEPS) -c -g -Wall -Wextra -I/usr/local/include
+TEST_LIBS	 = $(LDEPS) -L/usr/local/lib -lgtest -lgtest_main -lpthread -lsqlite3
 TEST_OBJS=mfile.t.o \
 			 mfile_taglib.t.o \
 			 plist.t.o \
+			 indent.t.o \
+			 mediadb.t.o
 
 # XXX this needs work - either...
 # 	add $(OBJS) to the link and have the test include .h's instead
 # -or-
 #  something else
-test: $(TEST_OBJS) $(OBJS)
-	$(CXX) $(TEST_LIBS) -o $@ $(TEST_OBJS) indent.o
+test: $(TEST_OBJS)
+	$(CXX) $(TEST_LIBS) -o $@ $(TEST_OBJS)
 	./test --gtest_color=yes
 
 .cc.o:

@@ -91,3 +91,8 @@ TEST(mfile_taglib, taglib_save_tags_no_such_file)
    EXPECT_NE(MFILE_SAVE_NO_SUCH_FILE,   mfile_save_tags(m));
    EXPECT_NE(MFILE_SAVE_FAILED_TO_SAVE, mfile_save_tags(m));
 }
+
+TEST(mfile_taglib, taglib_extract_dir_should_fail)
+{
+   ASSERT_EQ(NULL, mfile_extract_tags("/dev"));
+}
