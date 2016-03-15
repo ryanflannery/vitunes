@@ -26,6 +26,6 @@
 const int DEFAULT_LIBRARY_WINDOW_WIDTH = 18;
 
 playmode DEFAULT_PLAYER_MODE = MODE_LOOP;
-const char *DEFAULT_PLAYER_BACKEND = "mplayer";
+const char *DEFAULT_PLAYER_BACKEND = "libvlc";
 
 #endif

@@ -5,13 +5,13 @@ PREFIX?=/usr/local
 BINDIR?=$(PREFIX)/bin
 
 # combine all dependencies (from config.mk ... taglib/gstreamer/etc)
-CDEPS=$(TAGLIB_CFLAGS) $(GSTREAMER_CFLAGS)
-LDEPS=$(TAGLIB_LIBS) $(GSTREAMER_LIBS)
+CDEPS=$(TAGLIB_CFLAGS) $(GSTREAMER_CFLAGS) `pkg-config --cflags libvlc`
+LDEPS=$(TAGLIB_LIBS) $(GSTREAMER_LIBS) `pkg-config --libs libvlc`
 ODEPS=$(GSTREAMER_OBJS)
 
 # build variables
 CC		  ?= /usr/bin/cc
-CFLAGS  += -c -std=c89 -Wall -Wextra -Wno-unused-value $(CDEBUG) $(CDEPS)
+CFLAGS  += -c -std=c99 -Wall -Wextra -Wno-unused-value $(CDEBUG) $(CDEPS)
 LIBS    += -lm -lncurses -lutil $(LDEPS)
 
 # object files
@@ -29,6 +29,7 @@ OBJS=commands.o \
 	  ecmd_update.o \
 	  exe_in_path.o \
 	  keybindings.o \
+	  libvlc.o \
 	  medialib.o \
 	  meta_info.o \
 	  mplayer.o \
@@ -41,8 +42,8 @@ OBJS=commands.o \
 	  vitunes.o
 
 # subdirectories with code (.PATH for BSD make, VPATH for GNU make)
-.PATH:  compat ecommands player player/gstreamer player/mplayer util
-VPATH = compat ecommands player player/gstreamer player/mplayer util
+.PATH:  compat ecommands player player/gstreamer player/mplayer player/libvlc util
+VPATH = compat ecommands player player/gstreamer player/mplayer player/libvlc util
 
 .PHONY: clean debug install uninstall test
 

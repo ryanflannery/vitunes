@@ -46,8 +46,28 @@ callback_fatal(char *fmt, ...)
 
 
 /* definition of backends */
-const player_backend_t PlayerBackends[] = { 
-   {   
+const player_backend_t PlayerBackends[] = {
+   {
+      BACKEND_LIBVLC, "libvlc", false, NULL,
+      libvlc_start,
+      libvlc_finish,
+      libvlc_sigchld,
+      libvlc_play,
+      libvlc_stop,
+      libvlc_pause,
+      libvlc_seek,
+      libvlc_volume_step,
+      libvlc_get_position,
+      libvlc_get_volume,
+      libvlc_get_playing,
+      libvlc_get_paused,
+      libvlc_set_callback_playnext,
+      libvlc_set_callback_notice,
+      libvlc_set_callback_error,
+      libvlc_set_callback_fatal,
+      libvlc_monitor
+   },
+   {
       BACKEND_MPLAYER, "mplayer", false, NULL,
       mplayer_start,
       mplayer_finish,

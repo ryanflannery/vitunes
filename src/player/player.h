@@ -23,6 +23,7 @@
 #include "../paint.h"
 
 /* "static" backends (those that aren't dynamically loaded) */
+#include "libvlc/libvlc.h"
 #include "mplayer/mplayer.h"
 #if defined(ENABLE_GSTREAMER)
 #  include "gstreamer/gstplayer.h"
@@ -63,6 +64,7 @@ void player_monitor();
 
 /* Available back-end players */
 typedef enum {
+   BACKEND_LIBVLC,
    BACKEND_MPLAYER,
    BACKEND_GSTREAMER
 } backend_id;
