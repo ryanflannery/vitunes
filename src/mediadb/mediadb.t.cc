@@ -68,3 +68,11 @@ TEST(mediadb, mediadb_rescan_files)
    mdb_rescan_files(mdb);
    mdb_close(mdb);
 }
+
+TEST(mediadb, mediadb_extract_filenames)
+{
+   mediadb *mdb = mdb_open(TEST_DB);
+   ASSERT_TRUE(NULL != mdb);
+   extract_files(mdb);
+   mdb_close(mdb);
+}

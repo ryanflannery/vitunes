@@ -21,6 +21,7 @@
 #include "../mfile/mfile.h"
 #include "../mfile/taglib/mfile_taglib.h"
 #include "../plist/plist.h"
+#include "../util/dparray.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -201,4 +202,40 @@ mdb_scan_dirs(mediadb *mdb, char *dirs[])
 void
 mdb_rescan_files(mediadb *mdb)
 {
+}
+
+void
+extract_files(mediadb *mdb)
+{
+   static const char *SQL = "SELECT filename FROM mfiles";
+   dparray *d = dparray_new(1000);
+   size_t count = 0;
+
+   sqlite3_stmt *select = NULL;
+   if (SQLITE_OK != sqlite3_prepare_v2(mdb->dbhandle, SQL, -1, &select, NULL))
+   {
+      errx(1, "%s: failed to execute %s: %s", __FUNCTION__, SQL,
+            sqlite3_errmsg(mdb->dbhandle));
+   }
+
+   int rc;
+   while(SQLITE_ROW == (rc = sqlite3_step(select)))
+   {
+      const unsigned char *filename = sqlite3_column_text(select, 0);
+      dparray_append_record(d, (void*)filename);
+
+      count++;
+   }
+
+   if(SQLITE_DONE != rc)
+   {
+      fprintf(stderr, "select statement didn't finish with DONE (%i): %s\n",
+            rc, sqlite3_errmsg(mdb->dbhandle));
+   }
+
+   sqlite3_finalize(select);
+
+   /*mdb_scan_file(mdb, (const char*)filename);*/
+
+   printf("extracted %zu filenames\n", count);
 }

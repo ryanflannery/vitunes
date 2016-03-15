@@ -18,6 +18,7 @@
 #define PLIST_H
 
 #include "../mfile/mfile.h"
+#include "../util/dparray.h"
 
 #include <stdbool.h>
 
@@ -26,15 +27,7 @@ typedef struct
    char  *filename;  /* realpath(3) of the file containing the plist */
    char  *name;      /* name of the playlist */
 
-   /* the contents of the playlist
-    * XXX Assumptions XXX
-    * 1. all mfile objects themselves are managed elsewhere
-    * 2. this interface is not responsible for free()'ing any mfile*'s
-    * 3. only the memory for the array of mfile*'s itself is managed here
-    */
-   mfile **mfiles;   /* array of mfiles */
-   size_t  nfiles;   /* # of mfiles (# of entries in above array used) */
-   size_t  capacity; /* size of the mfiles array */
+   dparray *mfiles;
 
 } plist;
 

@@ -10,9 +10,9 @@ TEST(plist, plist_new)
 
    EXPECT_STREQ(NULL, p->filename);
    EXPECT_STREQ(NULL, p->name);
-   EXPECT_EQ(NULL, p->mfiles);
-   EXPECT_TRUE(0 == p->nfiles);
-   EXPECT_TRUE(0 == p->capacity);
+   EXPECT_EQ(NULL, p->mfiles->records);
+   EXPECT_TRUE(0 == p->mfiles->nrecords);
+   EXPECT_TRUE(0 == p->mfiles->capacity);
 
    plist_free(p);
 }
@@ -31,8 +31,8 @@ TEST(plist, plist_copy_bland)
    EXPECT_STREQ("filename", p2->filename);
    EXPECT_STREQ("name", p2->name);
 
-   EXPECT_EQ(p1->nfiles,   p2->nfiles);
-   EXPECT_EQ(p1->capacity, p2->capacity);
+   EXPECT_EQ(p1->mfiles->nrecords, p2->mfiles->nrecords);
+   EXPECT_EQ(p1->mfiles->capacity, p2->mfiles->capacity);
 
    EXPECT_NO_THROW(plist_free(p1));
    EXPECT_NO_THROW(plist_free(p2));
@@ -48,13 +48,13 @@ TEST(plist, plist_add_files)
    mfiles[2] = mfile_construct("a3", "A3", "t3", "c3", "g3", 5, 6);
 
    plist_add_files(p, 0, mfiles, 3);
-   EXPECT_EQ((size_t)3, p->nfiles);
+   EXPECT_EQ((size_t)3, p->mfiles->nrecords);
 
-   plist_add_files(p, p->nfiles, mfiles, 3);
-   EXPECT_EQ((size_t)6, p->nfiles);
+   plist_add_files(p, p->mfiles->nrecords, mfiles, 3);
+   EXPECT_EQ((size_t)6, p->mfiles->nrecords);
 
    plist_add_files(p, 2, mfiles, 3);
-   EXPECT_EQ((size_t)9, p->nfiles);
+   EXPECT_EQ((size_t)9, p->mfiles->nrecords);
 
    mfile_free(mfiles[0]);
    mfile_free(mfiles[1]);
@@ -72,16 +72,16 @@ TEST(plist, plist_remove_files)
    mfiles[2] = mfile_construct("a3", "A3", "t3", "c3", "g3", 5, 6);
 
    plist_add_files(p, 0, mfiles, 3);
-   EXPECT_EQ((size_t)3, p->nfiles);
+   EXPECT_EQ((size_t)3, p->mfiles->nrecords);
 
    plist_remove_files(p, 0, 1);
-   EXPECT_EQ((size_t)2, p->nfiles);
+   EXPECT_EQ((size_t)2, p->mfiles->nrecords);
 
    plist_remove_files(p, 1, 1);
-   EXPECT_EQ((size_t)1, p->nfiles);
+   EXPECT_EQ((size_t)1, p->mfiles->nrecords);
 
    plist_remove_files(p, 0, 1);
-   EXPECT_EQ((size_t)0, p->nfiles);
+   EXPECT_EQ((size_t)0, p->mfiles->nrecords);
 
    mfile_free(mfiles[0]);
    mfile_free(mfiles[1]);
@@ -103,13 +103,13 @@ TEST(plist, plist_replace_files)
    plist_add_files(p, 0, mfiles, 3);
 
    plist_replace_file(p, 0, replacement);
-   EXPECT_STREQ("a", p->mfiles[0]->artist);
+   EXPECT_STREQ("a", ((mfile*)p->mfiles->records[0])->artist);
 
    plist_replace_file(p, 1, replacement);
-   EXPECT_STREQ("a", p->mfiles[0]->artist);
+   EXPECT_STREQ("a", ((mfile*)p->mfiles->records[0])->artist);
 
    plist_replace_file(p, 2, replacement);
-   EXPECT_STREQ("a", p->mfiles[0]->artist);
+   EXPECT_STREQ("a", ((mfile*)p->mfiles->records[0])->artist);
 
    mfile_free(replacement);
    mfile_free(mfiles[0]);

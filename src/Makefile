@@ -43,7 +43,8 @@ OBJS=commands.o \
 	  mfile_taglib.o \
 	  plist.o \
 	  indent.o \
-	  mediadb.o
+	  mediadb.o \
+	  dparray.o
 
 # subdirectories with code (.PATH for BSD make, VPATH for GNU make)
 .PATH:  compat ecommands player player/gstreamer player/mplayer util mfile mfile/taglib plist mediadb
@@ -89,7 +90,8 @@ TEST_OBJS=mfile.t.o \
 			 mfile_taglib.t.o \
 			 plist.t.o \
 			 indent.t.o \
-			 mediadb.t.o
+			 mediadb.t.o \
+			 dparray.t.o
 
 # XXX this needs work - either...
 # 	add $(OBJS) to the link and have the test include .h's instead
